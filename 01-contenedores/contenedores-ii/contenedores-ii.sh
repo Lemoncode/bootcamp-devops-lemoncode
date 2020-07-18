@@ -45,6 +45,13 @@ docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
 
 
+#Crear un contenedor a partir de una imagen de docker
+docker run --rm -p 9090:80 nginx
+
+#Crear múltiples contenedores de una imagen
+docker run -d --rm -p 7070:80 nginx
+docker run -d --rm -p 6060:80 nginx
+
 #### Crear tu propia imagen ####
 
 # Dockerfile en contenedores-ii/Dockerfile
