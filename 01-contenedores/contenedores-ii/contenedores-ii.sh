@@ -8,6 +8,7 @@ docker images
 docker pull mysql
 
 #Escoger una versión/tag específica
+docker pull redis:6.0.5
 
 # 2.2 pull desde un registro diferente a Docker Hub
 # Google
@@ -17,6 +18,12 @@ docker pull mcr.microsoft.com/mcr/hello-world
 
 #descargar todas las versiones/tags de una imagen
 docker pull -a nginx
+
+#Digest
+docker images --digests
+
+#Descargar una imagen por su digest en lugar de por el tag
+docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 
 # 3. Buscar imágenes en Docker Hub
 docker search microsoft
@@ -57,6 +64,10 @@ docker inspect simple-nginx
 
 #Cada instrucción en el Dockerfile genera una capa
 
+#Manifiesto de una imagen (hay que habilitar el modo experimental)
+docker manifest inspect nginx
+docker manifest inspect nginx | grep 'architecture\|os'
+
 #The NGINX image exposes ports 80 and 443 in the container and the -P option tells Docker to map 
 #those ports to ports on the Docker host that are randomly selected from the range between 49153 and 65535. 
 docker run -p 8080:80 simple-nginx 
@@ -80,5 +91,9 @@ docker images --filter="dangling=true"
 #Listar los ids de las imágenes en local
 docker images -q
 
+#Eliminar una imagen
+docker image rm 039a2a6425c5
+docker image rm 48fdbab01aa6 a24bb4013296
+
 #Eliminar todas las imágenes
-docker rmi $(docker images -q)
+docker rmi $(docker images -q) -f
