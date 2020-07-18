@@ -50,6 +50,8 @@ docker rename nifty_snyder hello-world
 docker rm hello-world
 
 
+#Todo esto también es posible verlo desde la interfaz de Docker Desktop (A través de la opción Dashboard)
+
 #### Demo 4: Attach ###
 #Si quiero atacharme a un contenedor
 docker run --name webserver -d nginx  #Con -d desatacho
