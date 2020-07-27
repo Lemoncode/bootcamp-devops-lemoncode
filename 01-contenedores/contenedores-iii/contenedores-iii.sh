@@ -34,8 +34,22 @@ docker rmi hello-world 0gis0/hello-world
 #Ejecutar un nuevo contenedor usando mi nueva imagen en Docker Hub
 docker run -p 4000:3000 0gis0/hello-world
 
+### Multi-stage Builds ###
+
+
+### Squash de una imagen ###
+
 
 #### Ejemplo de contenerización de una aplicación en .NET #####
+#Visual Studio 2019
+#1. Creación de un nuevo proyecto del tipo ASP.NET Core Web Application 
+#2. Dejar seleccionado el tipo MVC (Dejar el check de Enable Docker Support deshabilitado)
+#3. Create
+#4. Botón derecho sobre el proyecto > Add > Docker Support > Target OS > Linux
+# Generará un Dockerfile con Multi-stage 
+
+
+#Visual Studio Code
 
 
 
@@ -48,7 +62,3 @@ docker run -p 4000:3000 0gis0/hello-world
 
 
 
-### Multi-stage Builds ###
-
-
-### Squash de una imagen ###
