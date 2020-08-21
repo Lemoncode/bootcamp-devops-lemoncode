@@ -1,3 +1,5 @@
+# Parte 2: Trabajando con imágenes #
+
 cd contenedores-ii
 
 # 1. Ver todas las imagenes en local hasta ahora
@@ -104,3 +106,9 @@ docker image rm 48fdbab01aa6 a24bb4013296
 
 #Eliminar todas las imágenes
 docker rmi $(docker images -q) -f
+
+
+#Deberes:
+# 1.
+# 2.
+# 3.

@@ -1,3 +1,5 @@
+# Parte 3: contenerización de aplicaciones #
+
 #Mi primera applicación a contenerizar > Node.js
 cd 01-contenedores/contenedores-iii/hello-world
 
@@ -28,7 +30,7 @@ docker images #El image ID es el mismo para ambas etiquetas porque apuntan a la 
 docker push 0gis0/hello-world:latest
 
 #Elimina la imagen de local
-docker rm 09c212370c89 34690fc1adf8 --force
+docker rm 5bfeba90ec4d  --force
 docker rmi hello-world 0gis0/hello-world
 
 #Ejecutar un nuevo contenedor usando mi nueva imagen en Docker Hub
@@ -49,16 +51,21 @@ docker run -p 4000:3000 0gis0/hello-world
 # Generará un Dockerfile con Multi-stage 
 
 
+
 #Visual Studio Code
 
 
+### Ejemplo de aplicación en Java - IntelliJ IDEA/Eclipse ####
+https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
 
-### Ejemplo de aplicación en Java ####
 
-
+#Ejemplo de aplicación con un contenedor Windows
 
 
 ##### Buenas prácticas en la construcción de imágenes #########
 
 
-
+#Deberes: 
+# 1.
+# 2.
+# 3.

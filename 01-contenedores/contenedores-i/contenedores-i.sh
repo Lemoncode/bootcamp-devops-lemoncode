@@ -1,3 +1,6 @@
+
+# Parte I: Introducción a los contenedores de Docker #
+
 #Demo 0: ver información del cliente y el servidor que forman Docker Engine.
 docker version 
 
@@ -121,3 +124,9 @@ docker ps
 
 #Eliminar todos los contenedores
 docker rm $(docker ps -aq)
+
+
+#Deberes:
+# 1.
+# 2.
+# 3.
