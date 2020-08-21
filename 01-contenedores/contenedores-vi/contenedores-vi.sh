@@ -1,6 +1,10 @@
-# Parte 6: Docker compose #
+# Parte 6: Docker Compose #
+docker-compose up
 
 
+# Docker Swarm #
+
+# Docker Stacks #
 
 
 #Deberes:
