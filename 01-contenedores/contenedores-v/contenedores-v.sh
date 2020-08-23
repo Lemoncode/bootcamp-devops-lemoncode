@@ -50,9 +50,29 @@ ls -l /vol
 cat /vol/file1
 exit
 
+# Backups
+docker run -v /dbdata --name dbstore ubuntu /bin/bash
+docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 
+## Bind mounts ##
 
+#Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
+cd 01-contenedores/contenedores-v
+#dev-folder es el directorio que voy a montar dentro de mi contenedor
+docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+docker inspect devtest
+#Ahora cambia en el host el contenido de la carpeta dev-folder
 
+#Usar el bind mount como read-only
+docker rm -f devtest
+docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker inspect devtest
+
+#Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
+docker container exec -it devtest sh
+ls /usr/share/nginx/html
+touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
+exit
 
 
 #Deberes:
