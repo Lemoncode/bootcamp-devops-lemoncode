@@ -3,6 +3,11 @@
 #Listar las redes disponibles en este host
 docker network ls
 
+#Por defecto, ya hay una red creada en un host de Docker (En Linux se llama bridge y el Docker se llama nat)
+
+#De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que no especifiquemos una red a través de --network
+docker network inspect bridge --format '{{json .Containers}}' | jq
+
 #Inspeccionar la configuración de una red
 docker network inspect bridge
 

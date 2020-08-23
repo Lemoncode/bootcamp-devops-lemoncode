@@ -53,7 +53,7 @@ docker run -p 4000:3000 0gis0/hello-world
 
 
 #Visual Studio Code
-
+https://code.visualstudio.com/docs/containers/overview
 
 ### Ejemplo de aplicación en Java - IntelliJ IDEA/Eclipse ####
 https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
