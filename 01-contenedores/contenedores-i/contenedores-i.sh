@@ -4,6 +4,8 @@
 #Demo 0: ver información del cliente y el servidor que forman Docker Engine.
 docker version 
 
+#Revisar Docker Desktop - Dashboard
+
 #Por defecto se asume que se utilizarán contenedores Linux ( OS/Arch:  linux/amd64 en el apartado de Server).
 
 #Si estás en Windows puedes cambiar al tipo de contenedores Windows haciendo click con el botón derecho sobre el icono de Docker en la barra de tareas y eligiendo Switch to Windows Containers
