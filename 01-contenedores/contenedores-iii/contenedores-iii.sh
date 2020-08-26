@@ -64,6 +64,27 @@ https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
 
 
 #Ejemplo de aplicación con un contenedor Windows
+#Windows Base OS images: https://hub.docker.com/_/microsoft-windows-base-os-images
+docker pull mcr.microsoft.com/windows/nanoserver:1903
+docker images
+
+docker run -it mcr.microsoft.com/windows/nanoserver:1903 cmd.exe
+echo "Hello World!" > Hello.txt
+exit
+
+docker ps -a
+
+#Crea una nueva imagen que incluya los cambios del primer contenedor que has ejecutado
+#https://docs.docker.com/engine/reference/commandline/commit/
+docker commit 7e5e29758e43 helloworld
+
+#Cuando se complete tendrás una nueva imagen con el archivo Hello.txt
+docker images
+
+#Ahora ejecuta un nuevo contenedor con la imagen que acabas de crear
+docker run --rm helloworld cmd.exe /s /c type Hello.txt
+
+
 
 
 ##### Buenas prácticas en la construcción de imágenes #########
