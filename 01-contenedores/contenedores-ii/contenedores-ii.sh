@@ -73,6 +73,10 @@ docker inspect simple-nginx
 
 #Cada instrucción en el Dockerfile genera una capa
 
+
+#Dive: herramienta para explorar imagenes
+https://github.com/wagoodman/dive
+
 #Manifiesto de una imagen (hay que habilitar el modo experimental)
 docker manifest inspect nginx
 docker manifest inspect nginx | grep 'architecture\|os'

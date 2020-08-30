@@ -51,8 +51,12 @@ cat /vol/file1
 exit
 
 # Backups
+#Creo un contenedor con un volumen llamado dbdata
 docker run -v /dbdata --name dbstore ubuntu /bin/bash
+#Creo un nuevo contenedor y monto el volumen del contenedor dbstore
+#Ejecuto el comando tar que comprime el contenido
 docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
+
 
 ## Bind mounts ##
 
@@ -74,6 +78,14 @@ ls /usr/share/nginx/html
 touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
 exit
 
+
+#Tmpfs mount
+docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
+docker container inspect tmptest
+
+
+#docker logs
+docker logs devtest
 
 #Deberes:
 # 1.
