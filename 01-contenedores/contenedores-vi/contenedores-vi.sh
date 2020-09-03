@@ -157,6 +157,16 @@ docker-machine ip master-1 #(192.168.99.101:9090) #Esto es así porque a nivel d
 
 #Modo Ingress vs. Host
 
+
+# Docker Machine loves Azure
+#https://docs.docker.com/machine/drivers/azure/
+export AZURE_SUBSCRIPTION_ID=e39a6423-dbba-44c8-aff0-3308926843fc
+export AZURE_LOCATION="northeurope"
+export AZURE_RESOURCE_GROUP="north-docker"
+
+docker-machine create --driver azure docker-on-azure
+
+
 # Docker Stacks #
 
 
