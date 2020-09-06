@@ -84,8 +84,9 @@ docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/h
 docker container inspect tmptest
 
 
-#docker logs
+#Cómo ver los logs de un contenedor
 docker logs devtest
+
 
 #Recolectar métricas de Docker con Prometheus
 #Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  
@@ -104,6 +105,13 @@ docker run -d alpine ping docker.com
 
 #Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
 docker rm -f $(docker ps -aq)
+
+#Métricas de un contenedor
+
+#Puedes ver las métricas de un contenedor con docker stats. Este comando muestra CPU, memoria en uso, límite de memoria y red
+docker run --name ping-service -d alpine ping docker.com 
+
+docker stats ping-service
 
 
 #Deberes:
