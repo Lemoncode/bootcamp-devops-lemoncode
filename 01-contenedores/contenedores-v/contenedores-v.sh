@@ -87,6 +87,25 @@ docker container inspect tmptest
 #docker logs
 docker logs devtest
 
+#Recolectar métricas de Docker con Prometheus
+#Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  
+# {
+#   "metrics-addr" : "127.0.0.1:9323",
+#   "experimental" : true
+# }
+
+#Con esta configuración Docker expondrá las metricas por el puerto 9323.
+#Lo siguiente que necesitamos es ejecutar un servidor de Prometheus. El archivo prometheus-config.yml tiene la configuración de este.
+docker run --name prometheus-srv --mount type=bind,source=/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/contenedores-v/prometheus-config.yml,target=/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus
+
+#Ahora puedes acceder a tu servidor de Prometheus a través de http://localhost:9090. Verás que aparece en Targets pero no podrás acceder a los endpoints si utilizas Docker for Mac/Windows
+#Para comprobar que las gráficas funcionan correctamente, genera N contenedores que estén haciendo continuamente ping
+docker run -d alpine ping docker.com 
+
+#Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
+docker rm -f $(docker ps -aq)
+
+
 #Deberes:
 # 1.
 # 2. 
