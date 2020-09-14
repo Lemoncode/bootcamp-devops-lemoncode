@@ -17,7 +17,7 @@ docker info
 
 #Ejecuta tu primer contenedor
 #CLI  command  image name
-docker run hello-world∫
+docker run hello-world
 #hello-world es la imagen que estás usando para crear tu contenedor. Una imagen es un objeto que contiene un SO, una aplicación y las dependencias que esta necesita. Si eres desarrollador puedes pensar en una imagen como si fuera una clase.
 
 #Lista las imágenes que tienes descargadas en tu local
@@ -152,5 +152,9 @@ exit
     # - Revisa que tu colección está dentro de la base de datos test y que aparece el libro que insertaste.
     # - Intenta añadir otro documento
 
-# 2. Crea un servidor Nginx y copia el contenido de la carpeta lemoncoders-web en la ruta que sirve este servidor web. Hacer que el servidor web sea accesible desde el puerto 9999 de tu local
-# 3. Eliminar todos los contenedores que tienes ejecutándose en tu máquina. 
+# 2. Servidor Nginx
+#    - Crea un servidor Nginx llamado lemoncoders-web y copia el contenido de la carpeta lemoncoders-web en la ruta que sirve este servidor web. 
+#    - Ejecuta dentro del contenedor la acción ls, para comprobar que los archivos se han copiado correctamente.
+#    - Hacer que el servidor web sea accesible desde el puerto 9999 de tu local.
+
+# 3. Eliminar todos los contenedores que tienes ejecutándose en tu máquina en una sola línea. 
