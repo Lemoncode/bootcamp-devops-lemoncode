@@ -17,8 +17,7 @@ docker info
 
 #Ejecuta tu primer contenedor
 #CLI  command  image name
-docker run hello-world
-
+docker run hello-world∫
 #hello-world es la imagen que estás usando para crear tu contenedor. Una imagen es un objeto que contiene un SO, una aplicación y las dependencias que esta necesita. Si eres desarrollador puedes pensar en una imagen como si fuera una clase.
 
 #Lista las imágenes que tienes descargadas en tu local
@@ -41,6 +40,7 @@ docker port my-nginx
 docker ps #¿Y los otros contenedores que he ejecutado?
 
 docker ps --all #con --all puedo ver todos los contenedores, incluso los que ya terminaron de ejecutarse, como hello-world
+docker ps -a
 
 # ¿Cómo paro un contenedor?
 docker stop my-nginx
@@ -49,20 +49,22 @@ docker stop my-nginx
 docker start my-nginx
 
 #Es importante hacer uso de nombres personalizados porque será más sencillo luego referirnos a él como veremos después.
-docker rename nifty_snyder hello-world
+docker rename gifted_goldberg hello-world
+docker ps -a
 
 #¿Y si quiero eliminarlo del todo de mi ordenador?
 docker rm hello-world
+docker ps -a #El contenedor hello-world ya no aparece en el listado
 
 
 #Todo esto también es posible verlo desde la interfaz de Docker Desktop (A través de la opción Dashboard)
 
 #### Demo 4: Attach ###
-#Si quiero atacharme a un contenedor
+#Si quiero conectarme a un contenedor
 docker run --name webserver -d nginx  #Con -d desatacho
 docker exec -it webserver bash #Ejecuto el proceso bash dentro del contenedor y con -it me atacho a él
 cat /etc/nginx/nginx.conf 
-
+exit
 
 #### Demo 5: Copiar un archivo desde mi local a dentro del contenedor ####
 #https://docs.docker.com/engine/reference/commandline/cp/
@@ -84,7 +86,7 @@ docker exec my-nginx ls /var/log/nginx
 # Imagínate que estás desarrollando una aplicación que necesita de un SQL Server y no quieres tener que montarte uno y ensuciar tu máquina, o tener que crearte una máquina virtual, configurarla, bla, bla, bla
 # https://hub.docker.com/_/microsoft-mssql-server
 docker run --name mysqlserver -p 1433:1433 \
--e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Lem0nCode!' \
+-e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Lem0nCode!' \ #-e son variables de entorno
 -d mcr.microsoft.com/mssql/server:2019-latest #-d significa detach, lo cual permite que el terminal no se quede enganchado como en el caso anterior.
 
 #También puedes utilizar sqlcmd para conectarte con tu instancia
@@ -111,6 +113,7 @@ GO
 #Ahora conectate con Azure Data Studio a tu localhost:1433 y tendrás tu acceso a tu SQL Server dockerizado!
 
 #Una vez que termines, ya puedes parar y eliminar tu SQL Server dockerizado
+exit
 docker stop mysqlserver && docker rm mysqlserver
 
 
@@ -129,6 +132,25 @@ docker rm $(docker ps -aq)
 
 
 #Deberes:
-# 1.
-# 2.
-# 3.
+# 1. Crear un contenedor con MongoDB, protegido con usuario y contraseña, añadir una colección, crear un par de documentos y acceder a ella a través de MongoDB Compass
+    # Pasos:
+    # - Localizar la imagen en Docker Hub para crear un MongoDB
+    # - Ver qué parámetros necesito para crearlo
+    # - Acceder a través del CLI para mongo y crear una colección llamada books con este formato {name: 'Kubernetes in Action', author: 'Marko Luksa'} en la base de datos test
+# >>>>> Comando para conectarse a mongo aquí <<<<
+db.getName()
+use test
+db.books.insert({
+    name: 'Kubernetes in Action',
+    author: 'Marko Luksa'
+})
+db.books.find({})
+exit
+    # - Ver los logs de tu nuevo mongo
+    # - Descargar MongoDB Compass (https://www.mongodb.com/try/download/compass)
+    # - Accede a tu MongoDB en Docker con la siguiente cadena de conexión: mongodb://mongoadmin:secret@localhost:27017 y tus credenciales
+    # - Revisa que tu colección está dentro de la base de datos test y que aparece el libro que insertaste.
+    # - Intenta añadir otro documento
+
+# 2. Crea un servidor Nginx y copia el contenido de la carpeta lemoncoders-web en la ruta que sirve este servidor web. Hacer que el servidor web sea accesible desde el puerto 9999 de tu local
+# 3. Eliminar todos los contenedores que tienes ejecutándose en tu máquina. 
