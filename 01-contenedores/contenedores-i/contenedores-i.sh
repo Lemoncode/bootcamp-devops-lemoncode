@@ -138,6 +138,8 @@ docker rm $(docker ps -aq)
     # - Ver qué parámetros necesito para crearlo
     # - Acceder a través del CLI para mongo y crear una colección llamada books con este formato {name: 'Kubernetes in Action', author: 'Marko Luksa'} en la base de datos test
 # >>>>> Comando para conectarse a mongo aquí <<<<
+
+#Por si no sabes los comandos a ejecutar en MongoDB :-) 
 db.getName()
 use test
 db.books.insert({
