@@ -133,5 +133,5 @@ docker image rm 48fdbab01aa6 a24bb4013296
 docker rmi $(docker images -q) -f
 
 #Deberes:
-# 1. Crear una imagen con un servidor web Apache y el mismo contenido que en la carpeta content
+# 1. Crear una imagen con un servidor web Apache y el mismo contenido que en la carpeta content (fijate en el Dockerfile con el que cree simple-nginx)
 # 2. Averiguar cuántas capas tiene mi nueva imagen

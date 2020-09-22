@@ -10,6 +10,13 @@ node server.js
 #Revisar el archivo Dockerfile
 cat Dockerfile
 
+#Diferencia entre CMD y ENTRYPOINT
+#Un Dockerfile nos permite definir un comando a ejecutar por defecto, para cuando se inicien los contenedores a partir de nuestra imagen. Para ello tenemos dos comandos a nuestra disposición:
+# CMD (comando): Docker ejecutará el comando que indiques usando el ENTRYPOINT por defecto, que es /bin/sh -c
+# ENTRYPOINT (punto de entrada): Docker usará el ejecutable que le indiques, y la instrucción CMD te permitirá definir un parámetro por defecto.
+
+#Diferencia entre ADD y COPY
+
 #Revisar el archivo .dockerignore
 cat .dockerignore
 
@@ -29,15 +36,21 @@ docker images #El image ID es el mismo para ambas etiquetas porque apuntan a la 
 #Publicar tu nueva imagen en Docker Hub
 docker push 0gis0/hello-world:latest
 
+#Si accedes a tu cuenta en Docker Hub verás tu nueva imagen, la cual acaba de ser publicada
+https://hub.docker.com/
+
 #Elimina la imagen de local
 docker rm 5bfeba90ec4d  --force
-docker rmi hello-world 0gis0/hello-world
+docker rmi -f hello-world 0gis0/hello-world
 
 #Ejecutar un nuevo contenedor usando mi nueva imagen en Docker Hub
 docker run -p 4000:3000 0gis0/hello-world
 
 ### Multi-stage Builds ###
+#Ejemplo sin multi-stage
 
+#Ejemplo con multi-stage
+docker build . -t multi-stage -f Dockerfile.multistages
 
 ### Squash de una imagen ###
 
@@ -84,10 +97,25 @@ docker images
 #Ahora ejecuta un nuevo contenedor con la imagen que acabas de crear
 docker run --rm helloworld cmd.exe /s /c type Hello.txt
 
-
-
-
 ##### Buenas prácticas en la construcción de imágenes #########
+# - Una aplicación por contenedor (que el contenedor tenga el mismo ciclo de vida que una aplicación. Además, facilita la monitorización).
+# - Utiliza .dockerignore para omitir aquellos archivos/carpetas que no son necesarias para la construcción de la imagen.
+# - Durante la generación de la imagen, siempre que se pueda, intenta colocar las instrucciones que tienden a cambiar en la parte final del fichero, para que Docker reutilice la caché en para las capas anteriores.
+# - Agrupa instrucciones en una misma capa (el ejemplo claro de esto es cuando instalamos dependencias con apt o yum > instaladores de paquetes de Linux)
+#   En vez de esto:
+
+    # FROM debian:9
+    # RUN apt-get update
+    # RUN apt-get install -y nginx
+
+#   Haz esto:
+
+    # FROM debian:9
+    # RUN apt-get update && \
+    #     apt-get install -y nginx
+
+# - Elimina herramientas innecesarias de la imagen: wget, netcat, etc. para evitar que los atacantes puedan usarlas si se diera el caso.
+# - Utilizar imágenes base reducidas
 
 
 #Deberes: 
