@@ -31,6 +31,9 @@ docker search nginx
 #### Demo 2: exponer puertos en localhost (Nginx) ####
 docker run --name my-nginx -p 8080:80 nginx #Puedes ver cuando se ejecuta este comando que el terminal te muestra los logs que van surgiendo de este contenedor que acabas de crear.
 
+#Ejecutar un contenedor en segundo plano
+docker run -d --name my-nginx -p 8080:80 nginx
+
 #### Ver qué puertos tiene un contenedor expuestos ####
 docker port my-nginx
 
