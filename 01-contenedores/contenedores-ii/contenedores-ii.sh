@@ -132,6 +132,9 @@ docker image rm 48fdbab01aa6 a24bb4013296
 #Eliminar todas las imágenes
 docker rmi $(docker images -q) -f
 
+#Eliminar SOLO las imágenes que no se están utilizando
+docker image prune -a 
+
 #Deberes:
 # 1. Crear una imagen con un servidor web Apache y el mismo contenido que en la carpeta content (fijate en el Dockerfile con el que cree simple-nginx)
 # 2. Averiguar cuántas capas tiene mi nueva imagen

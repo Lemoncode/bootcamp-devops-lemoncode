@@ -1,7 +1,7 @@
 
 # Parte I: Introducción a los contenedores de Docker #
 
-#Demo 0: ver información del cliente y el servidor que forman Docker Engine.
+#Ver información del cliente y el servidor que forman Docker Engine.
 docker version 
 
 #Revisar Docker Desktop - Dashboard
@@ -13,7 +13,7 @@ cd c:\Program Files\Docker\Docker> .\dockercli -SwitchDaemon
 
 docker info
 
-#### Demo 1: Ejecuta tu primer contenedor ####
+#### Ejecuta tu primer contenedor ####
 
 #Ejecuta tu primer contenedor
 #CLI  command  image name
@@ -28,16 +28,19 @@ docker image ls
 #O bien a través del CLI
 docker search nginx
 
-#### Demo 2: exponer puertos en localhost (Nginx) ####
+#### Exponer puertos en localhost (Nginx) ####
 docker run --name my-nginx -p 8080:80 nginx #Puedes ver cuando se ejecuta este comando que el terminal te muestra los logs que van surgiendo de este contenedor que acabas de crear.
 
 #Ejecutar un contenedor en segundo plano
 docker run -d --name my-nginx -p 8080:80 nginx
 
+#Ejecutar un contenedor y lanzar un shell interactivo en él
+docker run -it --name my_ubuntu_container ubuntu /bin/bash
+
 #### Ver qué puertos tiene un contenedor expuestos ####
 docker port my-nginx
 
-#### Demo 3: Gestionar contenedores en tu máquina ####
+#### Gestionar contenedores en tu máquina ####
 
 #Lista los contenedores ejecutándose en tu máquina
 docker ps #¿Y los otros contenedores que he ejecutado?
