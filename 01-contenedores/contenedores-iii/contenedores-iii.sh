@@ -16,6 +16,10 @@ cat Dockerfile
 # ENTRYPOINT (punto de entrada): Docker usará el ejecutable que le indiques, y la instrucción CMD te permitirá definir un parámetro por defecto.
 
 #Diferencia entre ADD y COPY
+#Ambas te permiten copiar archivos de local dentro de una imagen de Docker.
+#COPY coge una fuente y un destino dentro de tu máquina local.
+#ADD te permite hacer lo mismo que COPY, pero además puedes especificar una URL como origen o incluso extraer un archivo .tar y descomprimirlo directamente en destino.
+
 
 #Revisar el archivo .dockerignore
 cat .dockerignore
@@ -50,6 +54,9 @@ docker run -p 4000:3000 0gis0/hello-world
 #Ejemplo sin multi-stage
 
 #Ejemplo con multi-stage
+#Con multi-stage lo que se hace es utilizar múltiples FROM dentro del mismo Dockerfile.
+#Cada FROM utiliza una imagen base diferente y cada una inicia un nuevo stage.
+#Puedes copiar archivos de un stage a otro, dejando atrás todo lo que no quieres para la imagen final.
 docker build . -t multi-stage -f Dockerfile.multistages
 
 ### Squash de una imagen ###
