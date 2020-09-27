@@ -297,7 +297,6 @@ File found: ./folder0/file1.txt
 File found: ./file1.txt
 ```
 
-
 ## grep
 
 El comando `grep` se utiliza para buscar ocurrencias de cadenas de texto en uno o más ficheros. En este ejemplo vamos a buscar el modelo de CPU del sistema.
@@ -330,7 +329,6 @@ user1:x:1001:1001::/home/user1:/bin/bash
 $ grep "/bin/bash" /etc/passwd | grep -v vagrant
 root:x:0:0:root:/root:/bin/bash
 user1:x:1001:1001::/home/user1:/bin/bash
-$
 ```
 
 Podemos combinar múltiples flags. En este caso vamos a buscar todas las opciones de configuración del servidor SSH pero excluyendo comentarios y líneas vacías:
@@ -382,3 +380,77 @@ $ grep -R "^Aug 20 15:17" /var/log/
 ```
 
 El comando `grep` acepta diferentes tipos de tokens para utilizar expresiones regulares. [Aquí](https://linuxize.com/post/regular-expressions-in-grep/) se recopilan varios ejemplos sobre expresiones regulares.
+
+## head
+
+El comando `head` se utiliza para mostrar líneas del principio de un fichero. Por defecto muestra las 10 primeras líneas, pero podemos especificar cuántas utilizando el flag `-n <number>` o `-<number>`:
+
+```shell
+$ head /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+```
+
+```shell
+$ head -n 3 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+```
+
+```shell
+$ head -3 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+```
+
+## tail
+
+El comando `tail` se utiliza para mostrar las últimas líneas de un fichero. Por defecto muestra las últimas 10 líneas pero podemos especificar cuántas utilizando el flag `-n <number>` o `-<number>`:
+
+```shell
+$ tail /etc/passwd
+tcpdump:x:108:114::/nonexistent:/usr/sbin/nologin
+landscape:x:109:116::/var/lib/landscape:/usr/sbin/nologin
+pollinate:x:110:1::/var/cache/pollinate:/bin/false
+sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
+_rpc:x:112:65534::/run/rpcbind:/usr/sbin/nologin
+statd:x:113:65534::/var/lib/nfs:/usr/sbin/nologin
+vagrant:x:1000:1000:vagrant,,,:/home/vagrant:/bin/bash
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+vboxadd:x:998:1::/var/run/vboxadd:/bin/false
+user1:x:1001:1001::/home/user1:/bin/bash
+```
+
+```shell
+$ tail -n 3 /etc/passwd
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+vboxadd:x:998:1::/var/run/vboxadd:/bin/false
+user1:x:1001:1001::/home/user1:/bin/bash
+```
+
+```shell
+$ tail -3 /etc/passwd
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+vboxadd:x:998:1::/var/run/vboxadd:/bin/false
+user1:x:1001:1001::/home/user1:/bin/bash
+```
+
+Otro flag útil es `-f` para mostrar las líneas nuevas que se hayan añadido al fichero en tiempo real.
+
+## less
+
+El comando `less` se utiliza para visualizar el contenido de un fichero. El contenido es mostrado de forma interactiva y podemos navegar por el fichero utilizando las flechas del teclado. Presionando la tecla `h` podemos ver el menú de ayuda con sus atajos disponibles.
+
+```shell
+$ less /etc/passwd
+```

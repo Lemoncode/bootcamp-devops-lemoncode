@@ -1,4 +1,4 @@
-# Comandos de gestión del sistema
+# Comandos de gestión del entorno
 
 ## top
 
@@ -183,7 +183,6 @@ tcp6       0      0 :::111                  :::*                    LISTEN
 tcp6       0      0 :::22                   :::*                    LISTEN
 ```
 
-
 ## ps
 
 El comando `ps` muestra un reporte de los procesos actuales del sistema.
@@ -206,8 +205,45 @@ vagrant    13528   13527  0 19:07 pts/2    00:00:00 -bash
 vagrant    16167   13528  0 19:38 pts/2    00:00:00 ps -fu vagrant
 ```
 
-## networking
-ping
-nslookup
-ip
-ifconfig
+## kill
+
+El comando `kill` se utiliza para enviar señales al _PID_ o _Process ID_ que represente a un proceso. Existen diferentes señales que podemos ver mediante:
+
+```shell
+$ kill -L
+```
+
+Para enviar señales a un proceso podemos escribirlo de varias formas:
+
+- `-<ID-SEÑAL>`: `kill -15 229`
+- `-SIG<SEÑAL>`: `kill -SIGTERM 229`
+- `<SEÑAL>`: `kill SIGTERM 229`
+- `-s <SEÑAL>`: kill -s SIGTERM 229
+
+Para ver el objetivo de cada señal podemos verlos con `man signal 7`. También un programa puede actuar de una forma u otra dependiendo de la señal que enviemos, por ejemplo, la señal `SIGHUP` en un proceso Nginx recarga su configuración o `SIGQUIT` espera a que todas las conexiones establecidas sean cerradas antes de abortar el proceso, a diferencia de `SIGTERM` que corta las conexiones y sale directamente.
+
+Si no especificamos una señal por defecto se enviará `TERM`.
+
+```shell
+$ yes > /dev/null &
+[3] 13402
+$ ps 13402
+    PID TTY      STAT   TIME COMMAND
+  13402 pts/0    R      0:03 yes
+$ kill -SIGSTOP 13402
+$ ps 13402
+    PID TTY      STAT   TIME COMMAND
+  13402 pts/0    T      0:17 yes
+
+[3]+  Stopped                 yes > /dev/null
+$ kill -SIGCONT 13402
+$ ps 13402
+    PID TTY      STAT   TIME COMMAND
+  13402 pts/0    R      0:18 yes
+$ kill -SIGTERM 13402
+$ ps 13402
+    PID TTY      STAT   TIME COMMAND
+[3]-  Terminated              yes > /dev/null
+$ ps 13402
+    PID TTY      STAT   TIME COMMAND
+```

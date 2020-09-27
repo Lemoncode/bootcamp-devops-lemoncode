@@ -146,7 +146,7 @@ usuario host = (usuario_privilegiado_opcional:especificación) comandos
 
 Ejemplos:
 
-```
+```shell
 # Permitir al grupo `sudo` en cualquier definición de host ejecutar cualquier comando
 %sudo ALL=(ALL) ALL
 

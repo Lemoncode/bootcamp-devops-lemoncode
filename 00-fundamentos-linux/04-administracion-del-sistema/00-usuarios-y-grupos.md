@@ -72,7 +72,7 @@ Los ficheros `/etc/passwd` y `/etc/shadow` no están pensados para ser manipulad
 
 El comando `useradd` se utiliza para crear usuarios. Acepta numerosas opciones como la ruta al directorio personal, fecha de expiración, inactividad, _UID_, _GID_, grupos, contraseña, _shell_, etc.
 
-```
+```shell
 # useradd -m -s /bin/sh user2
 ```
 
@@ -82,7 +82,7 @@ Cuando se crea un usuario se le añaden una serie de ficheros y configuraciones.
 
 El comando `userdel` se utiliza para borrar usuarios. Admite varios parámetros como borrar su directorio personal, etc.
 
-```
+```shell
 # userdel -r user2
 ```
 
@@ -90,7 +90,7 @@ El comando `userdel` se utiliza para borrar usuarios. Admite varios parámetros 
 
 El comando `usermod` se utiliza para modificar parámetros de un usuario como su nombre, la pista para contraseña, la ruta de su directorio personal, fecha de expiración, inactividad, _UID_, etc.
 
-```
+```shell
 # usermod user1 -l user
 $ ls -la /home/user1
 total 20
@@ -137,7 +137,7 @@ $ passwd
 
 El comando `groupadd` se utiliza para crear grupos. Comparte algunos parámetros con `useradd`.
 
-```
+```shell
 # groupadd developers
 $ grep developers /etc/group
 developers:x:1002:
@@ -147,7 +147,7 @@ developers:x:1002:
 
 El comando `groupmod` se utiliza para cambiar la definición de un grupo como el nombre, _GID_, contraseña, etc.
 
-```
+```shell
 # groupmod -p `openssl passwd -1` developers
 ```
 
@@ -155,6 +155,6 @@ El comando `groupmod` se utiliza para cambiar la definición de un grupo como el
 
 El comando `groupdel` se utiliza para eliminar grupos.
 
-```
+```shell
 # groupdel developers
 ```
