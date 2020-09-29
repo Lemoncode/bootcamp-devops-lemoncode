@@ -63,6 +63,7 @@ docker run -p 4000:3000 0gis0/hello-world
 
 #Sin multi-stages (102MB)
 docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
+docker run -p 4000:3000 no-multi-stage
 
 #Mismo ejemplo con multi-stages
 docker build hello-world -t multi-stage -f Dockerfile.multistages --no-cache
