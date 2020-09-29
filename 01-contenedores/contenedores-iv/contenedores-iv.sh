@@ -3,6 +3,10 @@
 #Listar las redes disponibles en este host
 docker network ls
 
+#En linux puedes ver que hay una interfaz más llamada docker0
+ssh gis@137.135.216.143
+ifconfig
+
 #Por defecto, ya hay una red creada en un host de Docker (En Linux se llama bridge y el Docker se llama nat)
 
 #De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que NO especifiquemos una red a través de --network
@@ -52,9 +56,7 @@ docker network prune
 #Crear una red de tipo overlay
 docker network create -d overlay multihost-net
 
-#Veras que la misma se ha creado con el driver overlay
-docker network ls
-
+#Para poder crear redes del tipo overlay es necesario tener Docker en modo clúster (lo veremos en el último módulo)
 
 #Deberes:
 # 1. Crea una nueva red de tipo bridge/nat llamada lemoncode

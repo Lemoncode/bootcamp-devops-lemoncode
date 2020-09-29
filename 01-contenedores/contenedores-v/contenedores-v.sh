@@ -90,10 +90,10 @@ docker logs devtest
 
 #Recolectar métricas de Docker con Prometheus
 #Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  
-# {
-#   "metrics-addr" : "127.0.0.1:9323",
-#   "experimental" : true
-# }
+{
+  "metrics-addr" : "127.0.0.1:9323",
+  "experimental" : true
+}
 
 #Con esta configuración Docker expondrá las metricas por el puerto 9323.
 #Lo siguiente que necesitamos es ejecutar un servidor de Prometheus. El archivo prometheus-config.yml tiene la configuración de este.
@@ -115,6 +115,6 @@ docker stats ping-service
 
 
 #Deberes:
-# 1.
-# 2. 
-# 3.
+# 1. Crea un contenedor que utilice un volumen llamado datos y copia dentro de él algunas imágenes
+# 2. Elimina el contenedor anterior y comprueba que tu volumen sigue estando disponible.
+# 3. Mapea una carpeta local a un contenedor. Cambia el contenido de dicha carpeta y comprueba que ves los cambios dentro del contenedor.
