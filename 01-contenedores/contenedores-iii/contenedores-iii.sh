@@ -52,19 +52,15 @@ docker run -p 4000:3000 0gis0/hello-world
 
 ### Multi-stage Builds ###
 #Ejemplo sin multi-stage
+docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
+docker run -p 4000:3000 no-multi-stage
 
-#Ejemplo con multi-stage
 #Con multi-stage lo que se hace es utilizar múltiples FROM dentro del mismo Dockerfile.
 #Cada FROM utiliza una imagen base diferente y cada una inicia un nuevo stage.
 #El último FROM produce la imagen final, el resto solo serán intermediarios.
 #Puedes copiar archivos de un stage a otro, dejando atrás todo lo que no quieres para la imagen final.
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
-
-#Sin multi-stages (102MB)
-docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
-docker run -p 4000:3000 no-multi-stage
-
 #Mismo ejemplo con multi-stages
 docker build hello-world -t multi-stage -f Dockerfile.multistages --no-cache
 docker run -p 5000:3000 multi-stage
@@ -93,11 +89,15 @@ https://code.visualstudio.com/docs/containers/overview
 
 #Demos con la extensión de Docker para Visual Studio Code
 # Ejecutar un contenedor desde el explorador de imágenes
-
+# Registros
 
 ### Ejemplo de aplicación en Java - IntelliJ IDEA/Eclipse ####
 https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
 
+# FROM openjdk:12.0.1
+# COPY ./out/production/HelloWorld /tmp
+# WORKDIR /tmp
+# ENTRYPOINT ["java", "HelloWorld"]
 
 #Ejemplo de aplicación con un contenedor Windows
 #Windows Base OS images: https://hub.docker.com/_/microsoft-windows-base-os-images
@@ -142,6 +142,6 @@ docker run --rm helloworld cmd.exe /s /c type Hello.txt
 
 
 #Deberes: 
-# 1.
-# 2.
-# 3.
+# 1. Dockeriza la aplicación de la carpeta hello-lemoncoder
+# 2. Ejecutar un contenedor con tu nueva imagen
+# 3. Añade un archivo de prueba en el contenedor y crea una nueva imagen a partir de dicho contenedor.
