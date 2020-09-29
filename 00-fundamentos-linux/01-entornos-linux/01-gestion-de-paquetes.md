@@ -32,7 +32,7 @@ El gestor de paquetes `apt` está separado en diferentes programas independiente
 - `apt-cache`: Encargado de servir información relacionada con los paquetes (buscar paquetes, mostrar información de paquetes, etc).
 - `apt`: Sucesor de `apt-get` y `apt-cache` cuya API aún no es del todo estable, pero es bastante funcional.
 - `apt-key`: Encargado de manipular la lista de claves para autenticar paquetes. Útil si utilizamos repositorios externos, ya que las claves de los repositorios oficiales son manejadas automáticamente.
-`add-apt-repository`: Encargado de añadir o eliminar un repositorio de la lista de repositorios.
+- `add-apt-repository`: Encargado de añadir o eliminar un repositorio de la lista de repositorios.
 
 El listado de repositorios habilitados se encuentra en `/etc/apt/sources.list`.
 
@@ -144,7 +144,7 @@ O utilizando `apt`:
 
 Para buscar paquetes en los repositorios utilizaremos:
 
-```
+```shell
 $ apt-cache search <package>
 ```
 
@@ -152,13 +152,13 @@ Esto buscará en los repositorios los paquetes que tengan relación directa o in
 
 Ejemplo:
 
-```
+```shell
 $ apt-cache search npm
 ```
 
 Utilizando `apt`:
 
-```
+```shell
 $ apt search npm
 ```
 
@@ -166,20 +166,19 @@ $ apt search npm
 
 Para obtener información de uno o varios paquetes utilizaremos:
 
-```
+```shell
 $ apt-cache show <package1> <package2> ... <packageN>
 ```
 
 Ejemplo:
 
-```
+```shell
 $ apt-cache show npm
 ```
 
-````
 O si utilizamos `apt`:
 
-```
+```shell
 $ apt show npm
 ```
 
@@ -187,7 +186,7 @@ $ apt show npm
 
 La interfaz de `apt-cache` no tiene ningún flag para obtener un listado de paquetes instalado, pero el comando `dpkg` sí:
 
-```
+```shell
 $ dpkg -l
 ```
 
@@ -195,8 +194,6 @@ Todos los paquetes que comiencen por `ii` están instalados en el sistema.
 
 Utilizando `apt`:
 
-```
+```shell
 $ apt list --installed
 ```
-
-

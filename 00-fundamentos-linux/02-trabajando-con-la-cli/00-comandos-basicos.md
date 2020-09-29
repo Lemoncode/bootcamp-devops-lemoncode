@@ -51,7 +51,6 @@ Podemos combinar múltiples flags para mostrar información adicional:
 - `-a`: Muestra directorios y ficheros ocultos.
 - `-h`: Muestra el tamaño humanamente legible (KB, MB, GB..)
 
-
 ## mkdir
 
 El comando `mkdir` se utiliza para crear directorios. El nombre del comando `mkdir` proviene de _make directory_
@@ -110,7 +109,7 @@ file.txt  file1.txt
 
 ## cp
 
-El comando `cp` se utiliza para copiar ficheros y/o directorios de una ruta origen a una ruta destino. El nombre viene de _copy_`_.
+El comando `cp` se utiliza para copiar ficheros y/o directorios de una ruta origen a una ruta destino. El nombre viene de _copy_.
 
 ```shell
 $ cp /var/log/syslog ./
@@ -222,7 +221,6 @@ Flags a destacar:
 - `-f`: Eliminación a la fuerza sin confirmación previa.
 - `-i`: Muestra el fichero o directorio a borrar y pide confirmación
 
-
 ## echo
 
 El comando `echo` se utiliza para mostrar una línea de texto.
@@ -243,7 +241,6 @@ DISTRIB_RELEASE=20.04
 DISTRIB_CODENAME=focal
 DISTRIB_DESCRIPTION="Ubuntu 20.04.1 LTS"
 ```
-
 
 ## find
 

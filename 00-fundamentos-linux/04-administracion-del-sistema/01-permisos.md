@@ -8,7 +8,7 @@ En linux cada fichero y directorio tienen permisos de:
 
 El comando `ls -l` lista los archivos y directorios incluyendo información de sus permisos:
 
-```
+```shell
 $ touch file.txt
 $ ls -l
 total 0
@@ -16,6 +16,7 @@ total 0
 ```
 
 El primer carácter indica si el fichero es un archivo regular:
+
 - `-` para fichero regulares.
 - `d` para directorios.
 - `l` para enlaces simbólicos.

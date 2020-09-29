@@ -108,6 +108,7 @@ Esta vez hemos utilizado el flag `-a 100` para incrementar el número de rondas 
 > ```bash
 > vagrant@ubuntu-client:~$ ssh-keygen -t rsa -b 4096
 > ```
+>
 > Más información sobre los diferentes tipos de claves y su seguridad [en este enlace](https://medium.com/risan/upgrade-your-ssh-key-to-ed25519-c6e8d60d3c54).
 
 Añadiremos nuestra nueva clave Ed25519 al fichero `authorized_keys` del usuario `user1`. Para ello entraremos con el usuario `user1` y añadiremos nuestra nueva clave
@@ -122,7 +123,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKZonEU9JAtjdkdwSN8ycL9FvqhQ7JBAaHY4qOVJgtTi
 Desde el servidor realizaremos los siguientes pasos:
 
 - Nos autentificaremos como `user1`
-- Crearemos la carpeta `.ssh/` **dentro del `$HOME` de `user1`
+- Crearemos la carpeta `.ssh/` dentro del `$HOME` de `user1`
 - Volcaremos el contenido de la clave pública del cliente en el fichero `authorized_keys`
 - Saldremos de la sesión de `user1`
 
@@ -201,7 +202,6 @@ user1@ubuntu-server:~$
 ```
 
 Podemos añadir la clave que generamos para `user1` a nuestro fichero `.ssh/config` para que la utilice de forma automática. El fichero quedará de la siguiente manera:
-
 
 ```
 Host 192.168.33.10 ubuntu-server

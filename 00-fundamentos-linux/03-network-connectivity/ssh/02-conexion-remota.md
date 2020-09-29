@@ -1,6 +1,7 @@
 # Conexión remota
 
 Para establecer una conexión SSH al servidor nos hará falta al menos:
+
 - Login del usuario remoto (por defecto el usuario actual)
 - IP o dominio del servidor
 - Puerto (22 por defecto)
@@ -120,6 +121,7 @@ HostKey
         Specifies a file containing a private host key used by SSH.  The defaults are /etc/ssh/ssh_host_ecdsa_key, /etc/ssh/ssh_host_ed25519_key and
         /etc/ssh/ssh_host_rsa_key.
 ```
+
 > Información recogida de `man sshd_config`
 
 ## Comandos remotos

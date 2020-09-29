@@ -1,15 +1,15 @@
 # Modulo 1 - Fundamentos Linux
 
-## Agenda 
+## Agenda
 
 ### Linux Overview
 
 - Introducción
 - El Sistema Operativo Linux
-    - Características
-        * cgroups
-        * namespaces
-        ...
+  - Características
+    - cgroups
+    - namespaces
+      ...
 - Distribuciones de Linux
 
 ### Configurando un entorno Linux
@@ -22,16 +22,16 @@
 
 - Usando el terminal de Linux
 - Trabajando con el sitema de ficheros en Linux
-    * Navegar por el sistema de Ficheros
-    * Gestión de ficheros: Crear, actualizar, mover y borrar.
-    * Busqueda de ficheros: _find_
-    * Busqueda de texto en ficheros: _grep_
+  - Navegar por el sistema de Ficheros
+  - Gestión de ficheros: Crear, actualizar, mover y borrar.
+  - Busqueda de ficheros: _find_
+  - Busqueda de texto en ficheros: _grep_
 - Utilzando _curl_
 - Bash scripting
-    - Crear y lanzar scripts
-    - Uso de variables
-    - Creación de funciones
-    - Bucles y condicionales
+  - Crear y lanzar scripts
+  - Uso de variables
+  - Creación de funciones
+  - Bucles y condicionales
 
 ### Linux Network Connectivity
 

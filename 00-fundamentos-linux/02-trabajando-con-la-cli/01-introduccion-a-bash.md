@@ -22,4 +22,3 @@ Para lanzarlo ejecutaremos el intérprete bash:
 $ bash  -c ./helloworld.sh
 Hello world!
 ```
-

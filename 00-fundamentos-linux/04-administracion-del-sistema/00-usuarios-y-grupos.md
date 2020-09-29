@@ -10,7 +10,6 @@ En un sistema Linux existen varios ficheros que contienen información de los us
 
 El fichero `/etc/passwd` almacena información de los usuarios y sus características. Cada fila corresponde a un usuario y cada campo está separado por `:`.
 
-
 ```
 vagrant:x:1000:1000:vagrant,,,:/home/vagrant:/bin/bash
 user1:x:1001:1001::/home/user1:/bin/bash
@@ -105,7 +104,7 @@ drwxr-xr-x 4 root root  4096 Aug 24 19:04 ..
 
 El comando `chsh` se utiliza para cambiar la shell de inicio del usuario. El listado de shells válidas se encuentran en el fichero `/etc/shells` y los cambios de la shell se aplicarán en el próximo inicio de sesión.
 
-```
+```shell
 $ chsh -s /bin/sh
 ```
 
@@ -113,7 +112,7 @@ $ chsh -s /bin/sh
 
 El comando `id` ofrece información del usuario y sus grupos.
 
-```
+```shell
 $ id -u
 1000
 $ id -un
@@ -129,7 +128,7 @@ vagrant adm cdrom sudo dip plugdev lxd lpadmin sambashare
 
 El comando `passwd` se utiliza para cambiar la contraseña. Admite diferentes parámetros para configurar fecha de expiración, bloqueos contra nuevos cambios, etc.
 
-```
+```shell
 $ passwd
 ```
 

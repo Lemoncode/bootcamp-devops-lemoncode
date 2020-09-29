@@ -58,7 +58,6 @@ Name:   as.com
 Address: 199.232.198.133
 ```
 
-
 ## ip
 
 El comando `ip` se utiliza para manipular interfaces, redes y enrutamiento. Tiene una gran variedad de sub-comandos (`link`, `route`, `address`, `tunnel`, `rule`, etc), veremos algunos más útiles.

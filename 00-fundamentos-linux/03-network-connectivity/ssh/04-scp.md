@@ -102,4 +102,3 @@ vagrant@ubuntu-client:~$ ls log
 alternatives.log  auth.log       dist-upgrade  dmesg.0   faillog  kern.log   lastlog  syslog.1     vboxadd-install.log  vboxadd-setup.log.1  wtmp
 apt               bootstrap.log  dmesg         dpkg.log  journal  landscape  syslog   syslog.2.gz  vboxadd-setup.log    vboxadd-setup.log.2
 ```
-

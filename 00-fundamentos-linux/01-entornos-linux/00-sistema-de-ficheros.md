@@ -59,7 +59,7 @@ Los siguientes ejemplos representan directorios con espacios:
 La estructura de ficheros del sistema suelen seguir el [Estandar de Jerarquía de Sistema de Ficheros](https://www.pathname.com/fhs/pub/fhs-2.3.html) aunque algunos directorios pueden variar ligeramente según la distribución:
 
 - `/bin` contiene los comandos de terminal más comunes.
-- `/boot` contiene los ficheros necesarios para arrancar el sistema, incluyendo el kernel, la imagen disco RAM  y los ficheros de configuración del gestor de arranque.
+- `/boot` contiene los ficheros necesarios para arrancar el sistema, incluyendo el kernel, la imagen disco RAM y los ficheros de configuración del gestor de arranque.
 - `/dev` contiene todos los ficheros que representan los dispositivos. Estos son tipos de ficheros especiales que apuntan a diferentes.dispositivos hardware en el sistema, incluyendo discos duros.
 - `/etc` contiene los ficheros de configuración del sistema, que afectan al comportamiento del sistema para todos los usuarios.
 - `/home` contiene los directorios principales de los usuarios.

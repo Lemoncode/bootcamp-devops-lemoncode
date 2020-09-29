@@ -13,6 +13,7 @@ El comando `top` es un comando para monitorizar los procesos en tiempo real. Se 
 - Estado de la SWAP (Memoria virtual)
 
 Por cada proceso se puede ver:
+
 - PID - identificador de proceso.
 - USER - login del usuario que ejecutó el proceso.
 - PR - prioridad del proceso a nivel de kernel (`rt` significa tiempo real).
@@ -32,7 +33,6 @@ Por cada proceso se puede ver:
 - %MEM - Porcentaje de RAM utilizada por el proceso.
 - TIME+ - Tiempo total que el sistema ha tenido el proceso activo.
 - COMMAND - Comando para iniciar el proceso.
-
 
 El comando `top` es interactivo y permite al usuario alterar la visualización. Presionando `h` vemos un menú de ayuda.
 
@@ -131,7 +131,6 @@ Device     Boot   Start       End   Sectors  Size Id Type
 /dev/sda2       1052670 134215679 133163010 63.5G  5 Extended
 /dev/sda5       1052672 134215679 133163008 63.5G 8e Linux LVM
 ```
-
 
 ## iotop
 
