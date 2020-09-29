@@ -60,8 +60,16 @@ docker run -p 4000:3000 0gis0/hello-world
 #Puedes copiar archivos de un stage a otro, dejando atrás todo lo que no quieres para la imagen final.
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
-git clone https://github.com/sdelements/lets-chat.git
-docker build lets-chat -t multi-stage -f Dockerfile.multistages
+
+#Sin multi-stages (102MB)
+docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
+
+#Mismo ejemplo con multi-stages
+docker build hello-world -t multi-stage -f Dockerfile.multistages --no-cache
+
+docker images
+
+docker build hello-world -t multi-stage -f Dockerfile.multistages
 # First image FROM alpine:3.5 AS bas – is a base Node image with: node, npm, tini (init app) and package.json
 # Second image FROM base AS dependencies – contains all node modules from dependencies and devDependencies with additional copy of dependencies required for final image only
 # Third image FROM dependencies AS test – runs linters, setup and tests (with mocha); if this run command fail not final image is produced
