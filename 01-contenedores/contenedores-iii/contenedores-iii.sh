@@ -72,6 +72,10 @@ docker run -p 5000:3000 multi-stage
 docker images
 
 ### Squash de una imagen ###
+docker inspect no-multi-stage
+docker build hello-world -t image-squashed -f Dockerfile.no.multistages --no-cache --squash
+docker images
+docker inspect image-squashed
 
 
 #### Ejemplo de contenerización de una aplicación en .NET #####
