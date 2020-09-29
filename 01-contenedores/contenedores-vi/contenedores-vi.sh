@@ -84,17 +84,18 @@ docker-machine create --driver virtualbox worker-1
 #Ver el resumen de todas las máquinas creadas
 docker-machine ls
 
+#Si abres Virtual Box verás que efectivamente tienes creadas todas esas máquinas.
+
 #Ahora en el master-0 iniciamos el cluster con Docker Swarm
 eval $(docker-machine env master-0)
-docker swarm init --advertise-addr 192.168.99.100
+docker swarm init --advertise-addr 192.168.99.108
 
 #En master-1 y master-2 los unimos como master
 docker swarm join-token manager
 eval $(docker-machine env master-1)
-docker swarm join --token SWMTKN-1-61kwj3i06oy2n3pc7ngkfnel00uiubxduv8u9eekbnb4etfxnx-94ytkt0byoappiemcxto4p2y2 192.168.99.100:2377
+docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-09gviao4tsmo3suwpbucqpqqu 192.168.99.108:2377
 eval $(docker-machine env master-2)
-docker swarm join --token SWMTKN-1-61kwj3i06oy2n3pc7ngkfnel00uiubxduv8u9eekbnb4etfxnx-94ytkt0byoappiemcxto4p2y2 192.168.99.100:2377
-
+docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-09gviao4tsmo3suwpbucqpqqu 192.168.99.108:2377
 #Chequeamos el estado actual del cluster
 docker node ls
 
@@ -102,12 +103,12 @@ docker node ls
 
 #En worker-0 y worker-1 los unimos como workers
 eval $(docker-machine env worker-0)
-docker swarm join --token SWMTKN-1-61kwj3i06oy2n3pc7ngkfnel00uiubxduv8u9eekbnb4etfxnx-8s5t60n2cyqasxfm5mzeifi4w 192.168.99.100:2377
+docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-1ynw61hj7of7ix4dfhijgzfgt 192.168.99.108:2377
 eval $(docker-machine env worker-1)
-docker swarm join --token SWMTKN-1-61kwj3i06oy2n3pc7ngkfnel00uiubxduv8u9eekbnb4etfxnx-8s5t60n2cyqasxfm5mzeifi4w 192.168.99.100:2377
+docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-1ynw61hj7of7ix4dfhijgzfgt 192.168.99.108:2377
 
 #Necesitas estar en un master para lanzar el siguiente comando
-eval $(docker-machine env master-2)
+eval $(docker-machine env master-1)
 docker node ls
 #El asterisco te dice desde dónde estás lanzando el comando.
 
@@ -153,7 +154,7 @@ docker service ls
 docker service ps viz
 
 #En mi ejemplo se ha desplegado en el master-0 pero puedo acceder desde cualquier nodo
-docker-machine ip master-1 #(192.168.99.101:9090) #Esto es así porque a nivel de networking se configura por defecto el modo Ingress
+docker-machine ip master-1 #(192.168.99.109:9090) #Esto es así porque a nivel de networking se configura por defecto el modo Ingress
 
 #Modo Ingress vs. Host
 
