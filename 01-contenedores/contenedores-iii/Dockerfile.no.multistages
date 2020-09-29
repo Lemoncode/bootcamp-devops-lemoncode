@@ -1,20 +1,17 @@
-# ---- Base Node ----
 FROM alpine:3.12 AS base
 # install node
-RUN apk add --no-cache nodejs-current nodejs-npm tini
+RUN apk add --no-cache nodejs-current nodejs-npm
 # set working directory
-WORKDIR /root/chat
+WORKDIR /app
 # copy project file
-COPY package.json .
+COPY package*.json ./
 # install ALL node_modules, including 'devDependencies'
 RUN npm install
 #copying the rest of the files
 COPY . .
-#execute eslint
+#Execute eslint
 RUN  npm run test
-#say what port you'll use
+#What port you'll use
 EXPOSE 3000
-# Set tini as entrypoint
-ENTRYPOINT ["/sbin/tini", "--"]
 #specify what command it'll execute when you create a container
 CMD npm run start
