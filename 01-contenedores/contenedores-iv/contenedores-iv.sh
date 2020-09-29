@@ -5,7 +5,7 @@ docker network ls
 
 #Por defecto, ya hay una red creada en un host de Docker (En Linux se llama bridge y el Docker se llama nat)
 
-#De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que no especifiquemos una red a través de --network
+#De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que NO especifiquemos una red a través de --network
 docker network inspect bridge --format '{{json .Containers}}' | jq
 
 #Inspeccionar la configuración de una red
@@ -31,7 +31,7 @@ docker container run -d --name container-b \
   --network localnet \
   alpine sleep 1d 
 
-#Atacha el termina a container-b y haz un ping al container-a utilizando su nombre
+#Atacha el terminal a container-b y haz un ping al container-a utilizando su nombre
 docker exec -it container-b sh
 ping container-a
 exit
@@ -55,13 +55,8 @@ docker network create -d overlay multihost-net
 #Veras que la misma se ha creado con el driver overlay
 docker network ls
 
-#TODO: mostrar el ejemplo con dos Docker host y ver cómo un contenedor en el host 1 se puede comunicar con un contenedor en el host 2 de la misma forma que vimos anteriormente
-
-
-
-
 
 #Deberes:
-# 1. 
-# 2. 
-# 3.
+# 1. Crea una nueva red de tipo bridge/nat llamada lemoncode
+# 2. Crea dos contenedores dentro de la red que acabas de crear, uno de ellos con la imagen nginx
+# 3. Con cURL y el nombre del contenedor solicita la web que se está ejecutando con Nginx
