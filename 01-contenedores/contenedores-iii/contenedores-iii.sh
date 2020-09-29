@@ -67,14 +67,9 @@ docker run -p 4000:3000 no-multi-stage
 
 #Mismo ejemplo con multi-stages
 docker build hello-world -t multi-stage -f Dockerfile.multistages --no-cache
+docker run -p 5000:3000 multi-stage
 
 docker images
-
-docker build hello-world -t multi-stage -f Dockerfile.multistages
-# First image FROM alpine:3.5 AS bas – is a base Node image with: node, npm, tini (init app) and package.json
-# Second image FROM base AS dependencies – contains all node modules from dependencies and devDependencies with additional copy of dependencies required for final image only
-# Third image FROM dependencies AS test – runs linters, setup and tests (with mocha); if this run command fail not final image is produced
-# The final image FROM base AS release – is a base Node image with application code and all node modules from dependencies
 
 ### Squash de una imagen ###
 
