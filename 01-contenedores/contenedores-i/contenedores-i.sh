@@ -43,7 +43,7 @@ docker run --detach -p 8080:80 nginx
 #o
 docker run -d -p 8080:80 nginx
 
-#Después de haber lanzado cvarios contenedores te preguntarás ¿cómo puedo ver los que tengo ahora mismo ejecutándose?
+#Después de haber lanzado varios contenedores te preguntarás ¿cómo puedo ver los que tengo ahora mismo ejecutándose?
 docker ps
 
 #Pero... yo he lanzado muchos más ¿dónde están?
@@ -60,11 +60,11 @@ docker run -d --name my-web -p 9090:80 nginx
 docker ps
 
 #También puedes renombrar existentes
-docker rename gifted_goldberg hello-world
+docker rename NOMBRE_ASIGNADO_POR_DOCKER hello-world
 docker ps -a
 
 #Ejecutar un contenedor y lanzar un shell interactivo en él
-docker run -it --name my_ubuntu_container ubuntu /bin/bash
+docker run -it ubuntu /bin/bash
 cat /etc/os-release
 exit
 
@@ -87,7 +87,7 @@ docker cp my-web:/var/log/nginx/access.log access.log
 
 ## Copiar múltiples archivos dentro de una carpeta ####
 mkdir nginx-logs
-docker cp my-nginx:/var/log/nginx/. nginx-logs
+docker cp my-web:/var/log/nginx/. nginx-logs
 
 
 # ¿Cómo paro un contenedor?
@@ -97,7 +97,8 @@ docker stop my-web
 docker start my-web
 
 #¿Y si quiero eliminarlo del todo de mi ordenador?
-docker rm hello-world
+docker stop my-web
+docker rm my-web
 docker ps -a #El contenedor hello-world ya no aparece en el listado
 
 
@@ -107,9 +108,7 @@ docker ps -a #El contenedor hello-world ya no aparece en el listado
 ## SQL Server dockerizado ####
 # Imagínate que estás desarrollando una aplicación que necesita de un SQL Server y no quieres tener que montarte uno y ensuciar tu máquina, o tener que crearte una máquina virtual, configurarla, bla, bla, bla
 # https://hub.docker.com/_/microsoft-mssql-server
-docker run --name mysqlserver -p 1433:1433 \
--e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Lem0nCode!' \ #-e son variables de entorno
--d mcr.microsoft.com/mssql/server:2019-latest #-d significa detach, lo cual permite que el terminal no se quede enganchado como en el caso anterior.
+docker run --name mysqlserver -p 1433:1433 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Lem0nCode!' -d mcr.microsoft.com/mssql/server:2019-latest 
 
 #También puedes utilizar sqlcmd para conectarte con tu instancia
 docker exec -it mysqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Lem0nCode! #### -it No quiero que el terminal se quede "esperando" al contenedor ####
@@ -137,6 +136,8 @@ GO
 #Una vez que termines, ya puedes parar y eliminar tu SQL Server dockerizado
 exit
 docker stop mysqlserver && docker rm mysqlserver
+#también puedes pararlo y eliminarlo de golpe
+docker rm -f mysqlserver
 
 
 #### Bonus track: Eliminar todos los contenedores e imágenes de local ####
@@ -151,7 +152,6 @@ docker ps
 
 #Eliminar todos los contenedores
 docker rm $(docker ps -aq)
-
 
 #Deberes:
 # 1. Crear un contenedor con MongoDB, protegido con usuario y contraseña, añadir una colección, crear un par de documentos y acceder a ella a través de MongoDB Compass
