@@ -106,8 +106,8 @@ $ vagrant@ubuntu-client:~$ systemctl status resolvconf
      Memory: 0B
      CGroup: /system.slice/resolvconf.service
 
-Sep 27 21:10:02 ubuntu-client systemd[1]: Started Nameserver information manager.
-Sep 27 21:10:02 ubuntu-client resolvconf[1730]: /etc/resolvconf/update.d/libc: Warning: /etc/resolv.conf is not a symbolic link to /run/resolvconf/resolv.conf
+Aug 27 21:10:02 ubuntu-client systemd[1]: Started Nameserver information manager.
+Aug 27 21:10:02 ubuntu-client resolvconf[1730]: /etc/resolvconf/update.d/libc: Warning: /etc/resolv.conf is not a symbolic link to /run/resolvconf/resolv.conf
 ```
 
 Vemos que el servicio está iniciado y configurado para que inicie al arrancar el sistema, pero detecta que el fichero `/etc/resolv.conf` sigue apuntando a `/run/systemd/resolve/stub-resolv.conf` y no a `/run/resolvconf/resolv.conf`. Para arreglarlo reiniciamos el servicio `resolvconf`:
@@ -120,7 +120,7 @@ Vemos ahora que el fichero `/etc/resolv.conf` es manejado ahora por el servicio 
 
 ```shell
 $ ls -l /etc/resolv.conf
-lrwxrwxrwx 1 root root 29 Sep 27 21:10 /etc/resolv.conf -> ../run/resolvconf/resolv.conf
+lrwxrwxrwx 1 root root 29 Aug 27 21:10 /etc/resolv.conf -> ../run/resolvconf/resolv.conf
 ```
 
 Los ficheros de configuración se encuentran en `/etc/resolvconf/resolv.conf.d/`. En ellos tenemos:

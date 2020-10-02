@@ -1,6 +1,6 @@
 # Sistema de ficheros
 
-En Linux y Unix todo es un fichero. Los directorios son ficheros y los dispositivos son ficheros. Los ficheros están organizados en un árbol jerárquico donde existe la relación padre-hijos (los directorios pueden contener otros directorios u otros ficheros). Todos los ficheros parten de una ruta raíz que se representa con el carácter `/`. Cualquier fichero puede ser referenciado por un nombre de ruta.
+En Linux y Unix todo es un fichero. Los directorios son ficheros y los dispositivos son ficheros. Los ficheros están organizados en un árbol jerárquico donde existe la relación padre-hijos (los directorios pueden contener otros directorios u otros ficheros). Todos los ficheros parten de una ruta raíz que se representa con el carácter `/`. Cualquier fichero puede ser referenciado por un nombre de ruta. El directorio `/` sirve como punto de montaje para el resto de directorios del sistema. Un punto de montaje no es más que un directorio vacío que sirve para que sean montados otros directorios de una partición de un disco.
 
 Un nombre de ruta absoluto comienza con el carácter `/` del que siguen todos los directorios hijos que deben ser atravesados para llegar al fichero, cada uno separado por el signo `/`.
 

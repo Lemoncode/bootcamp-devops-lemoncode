@@ -19,7 +19,7 @@ Los campos que presenta son los siguientes:
 
 - Nombre del usuario
 - La contraseña del usuario en texto plano, o un asterisco `*` o una `x` si está encriptada.
-- _User ID_ o número de identificación único del usuario. Los usuarios pueden cambiar muchos parámetros, uncluso su nombre de usuario, pero el UID no debe cambiar nunca. El UID del usuario root es `0`. Los usuarios que ejecutan servicios y demonios tienen los UIDs más bajos mientras que los usuarios finales comienzan en el valor definido en `UID_MIN` del fichero `/etc/login.defs` y terminan por el valor `UID_MAX`.
+- _User ID_ o número de identificación único del usuario. Los usuarios pueden cambiar muchos parámetros, incluso su nombre de usuario, pero el UID no debe cambiar nunca. El UID del usuario root es `0`. Los usuarios que ejecutan servicios y demonios tienen los UIDs más bajos mientras que los usuarios finales comienzan en el valor definido en `UID_MIN` del fichero `/etc/login.defs` y terminan por el valor `UID_MAX`.
 - _Group ID_ o número de identificación único de grupo. Los usuarios pueden compartir un mismo grupo, aunque por defecto al crear un usuario se genera un grupo con el mismo nombre del usuario salvo que se especifique lo contrario. Los datos del grupo aparecen en el fichero `/etc/groups` y los valores posibles están entre `GID_MIN` y `GID_MAX` del fichero `/etc/login.defs`.
 - _General Comprehensive Operating System_ o campo de comentarios, incluye información extra sobre el usuario (nombre real, dirección, teléfono, etc). Informalmente se le llama información _finger_.
 - _Home directory_ o directorio de inicio del usuario. Los usuarios finales suelen tener el directorio personal dentro de `/home`.
@@ -27,7 +27,7 @@ Los campos que presenta son los siguientes:
 
 ## /etc/shadow
 
-El fichero `/etc/shadow` contiene información sobre contraseás de los usuarios definidos en `/etc/passwd` que se almacena de forma cifrada. El formato es el mismo, una serie de columnas separadas por `:`.
+El fichero `/etc/shadow` contiene información sobre contraseñas de los usuarios definidos en `/etc/passwd` que se almacena de forma cifrada. El formato es el mismo, una serie de columnas separadas por `:`.
 
 ```
 vagrant:$6$5Nl7vlFx8.WGzceB$V3wSTv0pwh6X6tR5.Ifcxs7g7QqwBEYOS7SGu0g56TF0tZFiMragbovJHFfHWyZK66yTRJ8qBhdX0LpI5UGQx/:18490:0:99999:7:::

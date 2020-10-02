@@ -2,7 +2,7 @@
 
 ## ping
 
-El comando ping se utiliza para enviar mensajes ICMP a un host (IP o dominio). Generalmente se utiliza para verificar que la máquina destino responde.
+El comando ping se utiliza para enviar mensajes ICMP a un host (IP o dominio). ICMP (Internet Control Message Protocol) es un protocolo que pertenece al grupo de protocolos de internet como DHCP, FTP, HTTP, etc que se utiliza con fines de diagnóstico o comprobación de respuestas de un equipo. Básicamente utilizaremos ping verificar que la máquina destino responde y su tiempo de respuesta.
 
 ```shell
 $ ping www.google.com

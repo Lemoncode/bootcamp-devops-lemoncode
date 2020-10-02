@@ -31,7 +31,7 @@ El gestor de paquetes `apt` está separado en diferentes programas independiente
 - `apt-get`: Encargado de instalar, desinstalar, actualizar paquetes y sincronizar la lista de paquetes con los repositorios.
 - `apt-cache`: Encargado de servir información relacionada con los paquetes (buscar paquetes, mostrar información de paquetes, etc).
 - `apt`: Sucesor de `apt-get` y `apt-cache` cuya API aún no es del todo estable, pero es bastante funcional.
-- `apt-key`: Encargado de manipular la lista de claves para autenticar paquetes. Útil si utilizamos repositorios externos, ya que las claves de los repositorios oficiales son manejadas automáticamente.
+- `apt-key`: Encargado de manipular la lista de claves para autenticar paquetes. Útil si utilizamos repositorios externos, ya que las claves de los repositorios oficiales son manejadas automáticamente. Cuando descargamos un paquete está firmado digitalmente para asegurar su autenticifidad.
 - `add-apt-repository`: Encargado de añadir o eliminar un repositorio de la lista de repositorios.
 
 El listado de repositorios habilitados se encuentra en `/etc/apt/sources.list`.
