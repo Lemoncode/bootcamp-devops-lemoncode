@@ -1,5 +1,11 @@
 # Parte 4: Networking #
 
+docker run -d --name mynginx2 --publish-all simple-nginx:v1
+docker port mynginx2
+
+docker run --rm --name hello-nginx -P simple-nginx:v1
+
+
 #Listar las redes disponibles en este host
 docker network ls
 
