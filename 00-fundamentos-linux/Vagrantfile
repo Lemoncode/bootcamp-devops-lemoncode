@@ -10,6 +10,7 @@ Vagrant.configure(2) do |config|
     server.vm.provider "virtualbox" do |vb|
       vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
       vb.name = "ubuntu-server"
+      vb.gui = true
       vb.memory = 1024
     end
 
@@ -25,6 +26,7 @@ Vagrant.configure(2) do |config|
     client.vm.provider "virtualbox" do |vb|
       vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
       vb.name = "ubuntu-client"
+      vb.gui = true
       vb.memory = 1024
     end
   end
