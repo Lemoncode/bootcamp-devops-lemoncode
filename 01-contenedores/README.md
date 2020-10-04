@@ -29,11 +29,12 @@
 ### Día II: Trabajando con imágenes
 
 - Ver todas las imágenes en local hasta ahora
+- Buscar entre las imágenes descargadas
 - Descargar una imagen sin tener que ejecutar un contenedor
 - Descargar una versión/tag específico de una imagen
-- Pull desde un registro diferente a Docker Hub
-- Descargar todas las versiones/tags de una imagen
 - Descargar una imagen a través de su digest
+- Descargar todas las versiones/tags de una imagen
+- Pull desde un registro diferente a Docker Hub
 - Buscar imágenes en Docker Hub con docker search
 - Crear un contenedor a partir de una imagen de docker
 - Crea tu propia imagen
@@ -42,7 +43,7 @@
   * Histórico de una imagen
   * Inspeccionando una imagen
   * Dive: herramienta para explorar imágenes
-- Ejecutar un contenedor con tu nueva imagen
-- Buscar entre las imágenes descargadas
+  * Ejecutar un contenedor con tu nueva imagen
+  * Subir tu imagen a Docker Hub
 - Eliminar imágenes
 - Deberes

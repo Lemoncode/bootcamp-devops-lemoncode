@@ -7,6 +7,16 @@ docker images
 # o bien
 docker image ls
 
+#Filtrar por nombre del repositorio
+docker images nginx
+
+#Filtrar por nombre del repositorio y tag
+docker images simple-nginx:v1
+
+#Usando --filter
+#SHOW UNTAGGED IMAGES (DANGLING)
+docker images --filter="dangling=true"
+
 # Pulling o descargar una imagen
 # pull desde Docker Hub (Registro configurado por defecto)
 docker pull mysql
@@ -35,7 +45,7 @@ docker run mcr.microsoft.com/mcr/hello-world
 docker search microsoft
 
 # El CLI no te devuelve los tags, pero puedes hacerlo así
-curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' |sort
+curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 
 docker search google
 docker search aws
@@ -94,24 +104,30 @@ go get github.com/wagoodman/dive
 dive simple-nginx:v1
 
 #Ahora crea un contenedor con tu nueva imagen
-docker run --rm -d --name my_nginx -p 8080:80 simple-nginx:v1
+docker run -d --name my_nginx -p 8080:80 simple-nginx:v1
 
-docker ps -a #my_nginx no está entre los contenedores
+docker ps
 
-#Manifiesto de una imagen (hay que habilitar el modo experimental)
-docker manifest inspect nginx
-docker manifest inspect nginx | grep 'architecture\|os'
+#Reetiquetar una imagen para subirla a Docker Hub
+docker tag simple-nginx:v1 0gis0/simple-nginx
 
-#Filtrar por nombre del repositorio
-docker images nginx
+#Comprobamos que la nueva etiqueta se ha generado correctamente
+docker images
 
-#Filtrar por nombre del repositorio y tag
-docker images simple-nginx:v1
+#Subirla a Docker Hub
+docker push 0gis0/simple-nginx
 
-#Usando --filter
-#SHOW UNTAGGED IMAGES (DANGLING)
-docker images --filter="dangling=true"
 
+#Borramos la imagen de local, utilizando el ID
+docker rmi c64c12bacbee
+#No nos va a dejar porque tenemos un contenedor ejecutandose con dicha imagen
+docker rm -f my_nginx
+#Ahora debería de dejarnos
+docker rmi c64c12bacbee #como tiene varias etiquetas tampoco le molará.
+docker rmi simple-nginx 0gis0/simple-nginx
+
+#Ahora intentamos crear un contenedor pero con la imagen que ahora está en Docker Hub
+docker run -d --name my_nginx -p 8080:80 0gis0/simple-nginx:latest
 
 #Si intentamos eliminar una imagen y hay algún contenedor que la está utilizando no será posible, dará error, incluso si este ya terminó de ejecutarse.
 docker rmi simple-nginx:v1
@@ -120,14 +136,14 @@ docker rmi simple-nginx:v1
 docker image rm c5bb82490acc
 docker image rm 48fdbab01aa6 a24bb4013296
 
+#Eliminar SOLO las imágenes que no se están utilizando
+docker image prune -a 
+
 #Listar los ids de las imágenes en local
 docker images -q
 
 #Eliminar todas las imágenes
 docker rmi $(docker images -q) -f
-
-#Eliminar SOLO las imágenes que no se están utilizando
-docker image prune -a 
 
 #Deberes:
 # 1. Crear una imagen con un servidor web Apache y el mismo contenido que en la carpeta content (fijate en el Dockerfile con el que cree simple-nginx)
