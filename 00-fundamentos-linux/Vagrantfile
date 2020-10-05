@@ -1,0 +1,33 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "ubuntu-server" do |server|
+    server.vm.box = "bento/ubuntu-20.04"
+    server.vm.hostname = "ubuntu-server"
+    server.vm.network "private_network", ip: "192.168.33.10"
+    server.vm.provider "virtualbox" do |vb|
+      vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
+      vb.name = "ubuntu-server"
+      vb.gui = true
+      vb.memory = 1024
+    end
+
+    config.vm.provision "shell", inline: <<-SHELL
+      useradd -m -p $(openssl passwd -6 user1) -s /bin/bash user1
+    SHELL
+  end
+
+  config.vm.define "ubuntu-client" do |client|
+    client.vm.box = "bento/ubuntu-20.04"
+    client.vm.hostname = "ubuntu-client"
+    client.vm.network "private_network", ip: "192.168.33.20"
+    client.vm.provider "virtualbox" do |vb|
+      vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
+      vb.name = "ubuntu-client"
+      vb.gui = true
+      vb.memory = 1024
+    end
+  end
+end
