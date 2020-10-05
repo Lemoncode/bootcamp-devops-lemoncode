@@ -8,43 +8,7 @@ Para establecer una conexión SSH al servidor nos hará falta al menos:
 
 ## Prerrequisitos
 
-Para esta demo se han aprovisionado dos máquinas virtuales mediante la el fichero de configuración de Vagrant:
-
-```ruby
-# encoding: utf-8
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-Vagrant.configure(2) do |config|
-  config.vm.define "ubuntu-server" do |server|
-    server.vm.box = "bento/ubuntu-20.04"
-    server.vm.hostname = "ubuntu-server"
-    server.vm.network "private_network", ip: "192.168.33.10"
-    server.vm.provider "virtualbox" do |vb|
-      vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
-      vb.name = "ubuntu-server"
-      vb.gui = true
-      vb.memory = 2048
-    end
-
-    config.vm.provision "shell", inline: <<-SHELL
-      useradd -m -p $(openssl passwd -crypt user1) -s /bin/bash user1
-    SHELL
-  end
-
-  config.vm.define "ubuntu-client" do |client|
-    client.vm.box = "bento/ubuntu-20.04"
-    client.vm.hostname = "ubuntu-client"
-    client.vm.network "private_network", ip: "192.168.33.20"
-    client.vm.provider "virtualbox" do |vb|
-      vb.customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']
-      vb.name = "ubuntu-client"
-      vb.gui = true
-      vb.memory = 2048
-    end
-  end
-end
-```
+Para esta demo se han aprovisionado dos máquinas virtuales utilizando el fichero de configuración de Vagrant.
 
 Para inicializar las máquinas virtuales nos situaremos desde una terminal en el directorio donde tenemos el fichero `Vagrantfile` y ejecutaremos:
 
