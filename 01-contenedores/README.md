@@ -2,7 +2,7 @@
 
 ## Agenda
 
-### Día I: Introducción a Docker
+### Día I: Introducción a Docker (6 de Octubre)
 
 - ¿Por dónde empiezo?
     * Docker Desktop
@@ -26,7 +26,7 @@
 - Ejemplo práctico: SQL Server dockerizado
 - Deberes
 
-### Día II: Trabajando con imágenes
+### Día II: Trabajando con imágenes (13 de Octubre)
 
 - Ver todas las imágenes en local hasta ahora
 - Buscar entre las imágenes descargadas
@@ -47,3 +47,7 @@
   * Subir tu imagen a Docker Hub
 - Eliminar imágenes
 - Deberes
+
+
+### Día III: Contenerización de aplicaciones (19 de Octubre)
+
