@@ -3,6 +3,7 @@ FROM nginx:alpine
 
 #Etiquetado
 LABEL maintainer="gisela.torres@returngis.net"
+LABEL project="lemoncode"
 
 #Como metadato, indicamos que el contenedor utiliza el puerto 80
 EXPOSE 80

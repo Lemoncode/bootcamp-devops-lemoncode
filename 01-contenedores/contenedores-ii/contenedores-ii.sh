@@ -11,17 +11,18 @@ docker image ls
 docker images nginx
 
 #Filtrar por nombre del repositorio y tag
-docker images simple-nginx:v1
+docker images mcr.microsoft.com/mssql/server:2019-latest
 
 #Usando --filter
-#SHOW UNTAGGED IMAGES (DANGLING)
-docker images --filter="dangling=true"
+docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
 
 # Pulling o descargar una imagen
 # pull desde Docker Hub (Registro configurado por defecto)
 docker pull mysql
+
 # Ahora la imagen de mysql está descargada en tu local
 docker images
+#Al no especificar ninguna etiqueta se baja la por defecto, que es latest
 
 # Descargar una versión/tag específica de una imagen
 docker pull redis:6.0.5
@@ -33,7 +34,7 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 
 # Descargar todas las versiones/tags de una imagen
-docker pull -a nginx
+docker pull -a jenkins
 
 # Pull desde un registro diferente a Docker Hub
 # Google
@@ -44,14 +45,14 @@ docker run mcr.microsoft.com/mcr/hello-world
 # 3. Buscar imágenes en Docker Hub
 docker search microsoft
 
-# El CLI no te devuelve los tags, pero puedes hacerlo así
+# El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
 curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 
 docker search google
 docker search aws
 
-# Al menos 100 estrellas
-docker search --filter=stars=100 --no-trunc nginx
+# Al menos 50 estrellas
+docker search --filter=stars=50 --no-trunc nginx
 
 #Devuelve solo la oficial
 docker search --filter is-official=true nginx
@@ -62,7 +63,7 @@ docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.
 
 
 #Crear un contenedor a partir de una imagen de docker
-docker run --rm -p 9090:80 nginx
+docker run -d --rm -p 9090:80 nginx
 
 #Crear múltiples contenedores de una imagen
 docker run -d --rm -p 7070:80 nginx
@@ -109,25 +110,26 @@ docker run -d --name my_nginx -p 8080:80 simple-nginx:v1
 docker ps
 
 #Reetiquetar una imagen para subirla a Docker Hub
-docker tag simple-nginx:v1 0gis0/simple-nginx
+docker tag simple-nginx:v1 0gis0/simple-nginx:v1
 
 #Comprobamos que la nueva etiqueta se ha generado correctamente
 docker images
 
 #Subirla a Docker Hub
-docker push 0gis0/simple-nginx
+docker push 0gis0/simple-nginx:v1
 
+#Para comprobar que podemos utilizar nuestra imagen ya en Docker Hub, debemos eliminar la copia que tenemos en local:
 
 #Borramos la imagen de local, utilizando el ID
-docker rmi c64c12bacbee
+docker rmi 53a5fb4d6607
 #No nos va a dejar porque tenemos un contenedor ejecutandose con dicha imagen
 docker rm -f my_nginx
 #Ahora debería de dejarnos
-docker rmi c64c12bacbee #como tiene varias etiquetas tampoco le molará.
-docker rmi simple-nginx 0gis0/simple-nginx
+docker rmi 53a5fb4d6607 #como tiene varias etiquetas tampoco le molará.
+docker rmi simple-nginx:v1 0gis0/simple-nginx:v1
 
 #Ahora intentamos crear un contenedor pero con la imagen que ahora está en Docker Hub
-docker run -d --name my_nginx -p 8080:80 0gis0/simple-nginx:latest
+docker run -d --name my_nginx -p 8080:80 0gis0/simple-nginx:v1
 
 #Si intentamos eliminar una imagen y hay algún contenedor que la está utilizando no será posible, dará error, incluso si este ya terminó de ejecutarse.
 docker rmi simple-nginx:v1
@@ -145,6 +147,6 @@ docker images -q
 #Eliminar todas las imágenes
 docker rmi $(docker images -q) -f
 
-#Deberes:
-# 1. Crear una imagen con un servidor web Apache y el mismo contenido que en la carpeta content (fijate en el Dockerfile con el que cree simple-nginx)
-# 2. Averiguar cuántas capas tiene mi nueva imagen
+#Automatizar una build a partir del código fuente de tu aplicación
+#Accede a https://hub.docker.com con tu usuario y selecciona el repositorio simple-nginx. 
+#En el apartado BUILDS puedes configurar como fuente tanto GitHub como Bitbucket para la generación de la imagen.
