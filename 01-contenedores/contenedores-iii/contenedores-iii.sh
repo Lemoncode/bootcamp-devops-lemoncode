@@ -5,7 +5,13 @@ cd 01-contenedores/contenedores-iii/hello-world
 
 #Ejecutar la app sin contenerizar
 npm install
+npm run test
 node server.js
+npm run start-dev
+
+#Para crear el archivo Dockerfile y .dockerignore que vimos en la parte teórica, puedes hacerlo con la extensión de Docker de manera sencilla.
+#Basta con  ejecutar Cmd + P > Add Docker Files to Workspace y seleccionar Node.js. Te pedirá que le selecciones el package.json y el puerto que utiliza tu app.
+#Le diremos que no queremos el archivo de Docker compose, lo dejaremos para más adelante :-)
 
 #Revisar el archivo Dockerfile
 cat Dockerfile
@@ -20,18 +26,35 @@ cat Dockerfile
 #COPY coge una fuente y un destino dentro de tu máquina local.
 #ADD te permite hacer lo mismo que COPY, pero además puedes especificar una URL como origen o incluso extraer un archivo .tar y descomprimirlo directamente en destino.
 
-
 #Revisar el archivo .dockerignore
 cat .dockerignore
 
 #Generar la imagen en base al Dockerfile
 docker build --tag=hello-world . 
 
+#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de hello-world
+docker images
+
 #Ver el historico generado para la imagen
 docker history hello-world #Los que tienen valor 0B son metadatos
 
 #Ejecutar un nuevo contenedor usando tu nueva imagen:
 docker run -p 4000:3000 hello-world
+
+#Modifica el Dockerfile para ejecutar el test con eslint:
+# FROM node:12.18-alpine
+# LABEL maintainer="Gisela Torres"
+# # ENV NODE_ENV production
+# WORKDIR /usr/src/app
+# COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+# RUN npm install
+# COPY . .
+# RUN npm run test
+# EXPOSE 3000
+# CMD ["npm", "start"]
+
+#Si vuelves a generar tu imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado
+docker images
 
 #Añadir una nueva etiqueta a tu nueva imagen
 docker image tag hello-world 0gis0/hello-world:latest
@@ -139,9 +162,3 @@ docker run --rm helloworld cmd.exe /s /c type Hello.txt
 
 # - Elimina herramientas innecesarias de la imagen: wget, netcat, etc. para evitar que los atacantes puedan usarlas si se diera el caso.
 # - Utilizar imágenes base reducidas
-
-
-#Deberes: 
-# 1. Dockeriza la aplicación de la carpeta hello-lemoncoder
-# 2. Ejecutar un contenedor con tu nueva imagen
-# 3. Añade un archivo de prueba en el contenedor y crea una nueva imagen a partir de dicho contenedor.
