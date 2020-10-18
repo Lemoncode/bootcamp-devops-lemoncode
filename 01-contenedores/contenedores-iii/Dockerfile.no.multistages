@@ -1,17 +1,10 @@
-FROM alpine:3.12 AS base
-# install node
-RUN apk add --no-cache nodejs-current nodejs-npm
-# set working directory
-WORKDIR /app
-# copy project file
-COPY package*.json ./
-# install ALL node_modules, including 'devDependencies'
+FROM node:12.18-alpine
+LABEL maintainer="Gisela Torres"
+# ENV NODE_ENV production
+WORKDIR /usr/src/app
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install
-#copying the rest of the files
 COPY . .
-#Execute eslint
-RUN  npm run test
-#What port you'll use
+RUN npm run test
 EXPOSE 3000
-#specify what command it'll execute when you create a container
-CMD npm run start
+CMD ["npm", "start"]
