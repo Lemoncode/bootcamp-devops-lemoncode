@@ -51,3 +51,25 @@
 
 ### Día III: Contenerización de aplicaciones (19 de Octubre)
 
+- Mi primera aplicación a contenerizar > Node.js y Visual Studio Code
+  * El Dockerfile
+  * Ejecutar eslint como parte de la build  
+- Multistage build
+- Ejemplo de contenerización de una aplicación en un entorno .NET
+- Ejemplo de aplicación Java con IntelliJ
+- Ejemplo de aplicación web en PHP con Eclipse
+- Ejemplo con contenedores Windows
+
+### Día IV: Networking (20 de Octubre)
+
+- Port Mapping
+- Exponer todos los puertos descritos como EXPOSE
+- docker0
+- Listar las redes disponibles en un host
+- Los contenedores por defecto se meten en la red bridge/NAT
+- Inspeccionar una red
+- Crear una nueva red
+- Crear un contenedor asociado a una red específica
+- Descubrimiento de servicios y comunicación entre contenedores de la misma red
+- Un contenedor con dos endpoints
+- Crear una red de tipo overlay
