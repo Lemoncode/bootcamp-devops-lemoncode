@@ -2,11 +2,23 @@
 # 1. Crear un contenedor con MongoDB, protegido con usuario y contraseña, añadir una colección, crear un par de documentos y acceder a ella a través de MongoDB Compass
     # Pasos:
     # - Localizar la imagen en Docker Hub para crear un MongoDB
+docker search mongo
+https://hub.docker.com/_/mongo
     # - Ver qué parámetros necesito para crearlo
-    # - Acceder a través del CLI para mongo y crear una colección llamada books con este formato {name: 'Kubernetes in Action', author: 'Marko Luksa'} en la base de datos test
-# >>>>> Comando para conectarse a mongo aquí <<<<
 
-#Por si no sabes los comandos a ejecutar en MongoDB :-) 
+# Mac #
+
+docker run -d --name some-mongo \
+    -p 27017:27017 \
+    -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
+    -e MONGO_INITDB_ROOT_PASSWORD=secret \
+    mongo
+
+# Windows #
+
+docker ps
+    # - Acceder a través del CLI para mongo y crear una colección llamada books con este formato {name: 'Kubernetes in Action', author: 'Marko Luksa'} en la base de datos test
+docker exec -it some-mongo  mongo --username mongoadmin --password secret
 db.getName()
 use test
 db.books.insert({
@@ -16,6 +28,7 @@ db.books.insert({
 db.books.find({})
 exit
     # - Ver los logs de tu nuevo mongo
+docker logs some-mongo
     # - Descargar MongoDB Compass (https://www.mongodb.com/try/download/compass)
     # - Accede a tu MongoDB en Docker con la siguiente cadena de conexión: mongodb://mongoadmin:secret@localhost:27017 y tus credenciales
     # - Revisa que tu colección está dentro de la base de datos test y que aparece el libro que insertaste.
@@ -25,5 +38,9 @@ exit
 #    - Crea un servidor Nginx llamado lemoncoders-web y copia el contenido de la carpeta lemoncoders-web en la ruta que sirve este servidor web. 
 #    - Ejecuta dentro del contenedor la acción ls, para comprobar que los archivos se han copiado correctamente.
 #    - Hacer que el servidor web sea accesible desde el puerto 9999 de tu local.
+docker run --name lemoncoders-web -d -p 9999:80 nginx 
+docker cp lemoncoders-web/. lemoncoders-web:/usr/share/nginx/html/
+docker exec lemoncoders-web ls /usr/share/nginx/html/
 
 # 3. Eliminar todos los contenedores que tienes ejecutándose en tu máquina en una sola línea. 
+docker rm -f $(docker ps -aq)
