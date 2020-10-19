@@ -1,11 +1,19 @@
 # Parte 3: contenerización de aplicaciones #
 
 #Mi primera applicación a contenerizar > Node.js
+#Para esta demo usaremos VS Code.
+https://code.visualstudio.com/docs/containers/overview
 cd 01-contenedores/contenedores-iii/hello-world
 
 #Ejecutar la app sin contenerizar
 npm install
+npm run test
 node server.js
+npm run start-dev
+
+#Para crear el archivo Dockerfile y .dockerignore que vimos en la parte teórica, puedes hacerlo con la extensión de Docker de manera sencilla.
+#Basta con  ejecutar Cmd + P > Add Docker Files to Workspace y seleccionar Node.js. Te pedirá que le selecciones el package.json y el puerto que utiliza tu app.
+#Le diremos que no queremos el archivo de Docker compose, lo dejaremos para más adelante :-)
 
 #Revisar el archivo Dockerfile
 cat Dockerfile
@@ -20,12 +28,14 @@ cat Dockerfile
 #COPY coge una fuente y un destino dentro de tu máquina local.
 #ADD te permite hacer lo mismo que COPY, pero además puedes especificar una URL como origen o incluso extraer un archivo .tar y descomprimirlo directamente en destino.
 
-
 #Revisar el archivo .dockerignore
 cat .dockerignore
 
 #Generar la imagen en base al Dockerfile
 docker build --tag=hello-world . 
+
+#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de hello-world
+docker images
 
 #Ver el historico generado para la imagen
 docker history hello-world #Los que tienen valor 0B son metadatos
@@ -33,28 +43,22 @@ docker history hello-world #Los que tienen valor 0B son metadatos
 #Ejecutar un nuevo contenedor usando tu nueva imagen:
 docker run -p 4000:3000 hello-world
 
-#Añadir una nueva etiqueta a tu nueva imagen
-docker image tag hello-world 0gis0/hello-world:latest
-docker images #El image ID es el mismo para ambas etiquetas porque apuntan a la misma imagen
+#Modifica el Dockerfile para ejecutar el test con eslint:
+# FROM node:12.18-alpine
+# LABEL maintainer="Gisela Torres"
+# # ENV NODE_ENV production
+# WORKDIR /usr/src/app
+# COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+# RUN npm install
+# COPY . .
+# RUN npm run test
+# EXPOSE 3000
+# CMD ["npm", "start"]
 
-#Publicar tu nueva imagen en Docker Hub
-docker push 0gis0/hello-world:latest
-
-#Si accedes a tu cuenta en Docker Hub verás tu nueva imagen, la cual acaba de ser publicada
-https://hub.docker.com/
-
-#Elimina la imagen de local
-docker rm 5bfeba90ec4d  --force
-docker rmi -f hello-world 0gis0/hello-world
-
-#Ejecutar un nuevo contenedor usando mi nueva imagen en Docker Hub
-docker run -p 4000:3000 0gis0/hello-world
+#Si vuelves a generar tu imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado
+docker images
 
 ### Multi-stage Builds ###
-#Ejemplo sin multi-stage
-docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
-docker run -p 4000:3000 no-multi-stage
-
 #Con multi-stage lo que se hace es utilizar múltiples FROM dentro del mismo Dockerfile.
 #Cada FROM utiliza una imagen base diferente y cada una inicia un nuevo stage.
 #El último FROM produce la imagen final, el resto solo serán intermediarios.
@@ -62,19 +66,16 @@ docker run -p 4000:3000 no-multi-stage
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
 #Mismo ejemplo con multi-stages
-docker build hello-world -t multi-stage -f Dockerfile.multistages --no-cache
+docker build hello-world -t multi-stage -f Dockerfile.multistages
 docker run -p 5000:3000 multi-stage
 
 docker images
 
-### Squash de una imagen ###
-docker inspect no-multi-stage
-docker build hello-world -t image-squashed -f Dockerfile.no.multistages --no-cache --squash
-docker images
-docker inspect image-squashed
+#Si comparas con la versión de la misma aplicación sin multi-stages, la diferencia es notable
+docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
 
 
-#### Ejemplo de contenerización de una aplicación en .NET #####
+#### Ejemplo de contenerización de una aplicación en un entorno .NET #####
 #Visual Studio 2019
 #1. Creación de un nuevo proyecto del tipo ASP.NET Core Web Application 
 #2. Dejar seleccionado el tipo MVC (Dejar el check de Enable Docker Support deshabilitado)
@@ -83,21 +84,13 @@ docker inspect image-squashed
 # Generará un Dockerfile con Multi-stage 
 
 
-
-#Visual Studio Code
-https://code.visualstudio.com/docs/containers/overview
-
-#Demos con la extensión de Docker para Visual Studio Code
-# Ejecutar un contenedor desde el explorador de imágenes
-# Registros
-
 ### Ejemplo de aplicación en Java - IntelliJ IDEA/Eclipse ####
 https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
 
-# FROM openjdk:12.0.1
-# COPY ./out/production/HelloWorld /tmp
+# FROM openjdk:14
+# COPY ./out/production/HelloDocker/ /tmp
 # WORKDIR /tmp
-# ENTRYPOINT ["java", "HelloWorld"]
+# ENTRYPOINT ["java","HelloWorld"]
 
 #Ejemplo de aplicación con un contenedor Windows
 #Windows Base OS images: https://hub.docker.com/_/microsoft-windows-base-os-images
@@ -139,9 +132,3 @@ docker run --rm helloworld cmd.exe /s /c type Hello.txt
 
 # - Elimina herramientas innecesarias de la imagen: wget, netcat, etc. para evitar que los atacantes puedan usarlas si se diera el caso.
 # - Utilizar imágenes base reducidas
-
-
-#Deberes: 
-# 1. Dockeriza la aplicación de la carpeta hello-lemoncoder
-# 2. Ejecutar un contenedor con tu nueva imagen
-# 3. Añade un archivo de prueba en el contenedor y crea una nueva imagen a partir de dicho contenedor.
