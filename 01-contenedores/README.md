@@ -72,4 +72,5 @@
 - Crear un contenedor asociado a una red específica
 - Descubrimiento de servicios y comunicación entre contenedores de la misma red
 - Un contenedor con dos endpoints
+- Deshabilitar la red para un contenedor
 - Crear una red de tipo overlay
