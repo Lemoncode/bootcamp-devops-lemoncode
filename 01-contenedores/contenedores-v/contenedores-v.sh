@@ -114,9 +114,33 @@ exit
 docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
 docker container inspect tmptest
 
+#También se puede usar el parámetro --tmpfs
+docker run -dit --name tmptest2 --tmpfs /app nginx:latest
+
+docker container inspect tmptest2
+
+
+### Monitorización ###
+
 
 #Cómo ver los logs de un contenedor
 docker logs devtest
+
+
+#docker logs en fluentd
+
+#Archivo de configuración de fluentd
+cat fluentd/in_docker.conf
+
+#Inicia fluentd en un contenedor. Utilizo bind mount para montar el contenido de in_docker.conf en el archivo fluentd/etc/fluent.conf
+#asegurate de que estás en 01-contenedores/contenedores-v
+docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
+
+#Arranca un contenedor y lanza algunos mensajes a la salida estándar
+docker run -p 8080:80 --log-driver=fluentd nginx
+
+#UI para ver los logs de Fluentd
+docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui
 
 
 #Recolectar métricas de Docker con Prometheus

@@ -74,3 +74,24 @@
 - Un contenedor con dos endpoints
 - Deshabilitar la red para un contenedor
 - Crear una red de tipo overlay
+
+### Día V: Almacenamiento y monitorización (26 de Octubre)
+- Almacenamiento
+  * Ver todos los volúmenes en el host
+  * Crear un nuevo volumen
+  * Inspeccionar un volumen
+  * Añadir datos dentro de un volumen
+  * Eliminar un contenedor con un volumen montado
+  * Asociar un nuevo contendor a un volumen existente
+  * Backup de un volumen
+  * Eliminar un volumen
+  * Un volumen no puede eliminarse mientras esté montado
+  * Eliminar todos los volúmenes sin usar
+  * Ejemplo de bind mount
+  * Usar bind mount en modo lectura
+  * Tmpfs mount
+- Monitorización
+  * Cómo ver los logs de un contenedor
+  * Ejemplo de los drivers de logging con Fluentd
+  * Métricas
+  * Ejemplo con Prometheus
