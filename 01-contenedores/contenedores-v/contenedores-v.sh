@@ -1,30 +1,43 @@
 # Parte 5: Volúmenes #
 
+cd 01-contenedores/contenedores-v
+
 #Listar los volumenes en el host
 docker volume ls
 
-#Crear un nuevo volumen
+#Crear un nuevo volumen con create
 docker volume create data
-
-#Inspeccionar el volumen
-docker volume inspect data
-
-#Eliminar un volumen específico 
-docker volume rm data
-
-#Eliminar todos los volumenes que no esté atachados a un contenedor
-docker volume prune -f
+docker volume ls
 
 #Crear un contenedor que a su vez crea un volumen
 docker container run -dit --name my-container \
     --mount source=my-data,target=/vol \
     alpine
 
+#Se puede utilizar tanto --mount como -v (o --volume)). Originalmente --mount solo se usaba para el modo clúster. Sin embargo, desde la versión 17.06 (Vamos por la 10.03.13) se puede utilizar para contenedores independientes.
+
+
 #Puedes comprobar que el volumen se ha creado correctamente
 docker volume ls
 
-#No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
-docker volume rm my-data
+#Inspeccionar el volumen
+docker volume inspect my-data
+
+#En Mac y Windows no podemos ver el contenido de la ruta donde se guardan los volúmenes. 
+#En Linux podríamos:
+ssh gis@137.135.216.143
+
+#Creamos en este tipo de host los volumenes anteriores, si no estás trabajando en Linux
+sudo docker container run -dit --name my-container \
+    --mount source=my-data,target=/vol \
+    alpine
+sudo docker volume create data
+
+#Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando
+sudo docker volume inspect my-data
+#Esta es la ruta donde Docker almacena los volúmenes
+sudo ls -l /var/lib/docker/volumes
+exit
 
 #Ahora vamos a añadir algunos datos a nuestro volumen
 docker container exec -it my-container sh
@@ -51,12 +64,30 @@ cat /vol/file1
 exit
 
 # Backups
-#Creo un contenedor con un volumen llamado dbdata
-docker run -v /dbdata --name dbstore ubuntu /bin/bash
+#Creo un contenedor con un volumen llamado dbdata. En este caso voy a utilizar la opción -v en lugar de --mount
+docker run -dit -v dbdata:/dbdata --name dbstore ubuntu /bin/bash
+
+#Compruebo que efectivamente el volumen dbdata se ha generado utilizando el parámetro -v
+docker volume ls
+
+#Ahora copio algunos ficheros dentro del volumen
+docker cp some-files/. dbstore:/dbdata
+
+#Compruebo que los archivos están ahí
+docker exec dbstore ls /dbdata
+
 #Creo un nuevo contenedor y monto el volumen del contenedor dbstore
 #Ejecuto el comando tar que comprime el contenido
 docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 
+#Eliminar un volumen específico 
+docker volume rm data
+
+#No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
+docker volume rm my-data
+
+#Eliminar todos los volumenes que no esté atachados a un contenedor
+docker volume prune -f
 
 ## Bind mounts ##
 
