@@ -137,10 +137,18 @@ cat fluentd/in_docker.conf
 docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
 
 #Arranca un contenedor y lanza algunos mensajes a la salida estándar
-docker run -p 8080:80 --log-driver=fluentd nginx
+docker run --rm -p 8080:80 --log-driver=fluentd nginx
 
 #UI para ver los logs de Fluentd
-docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui
+docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui #copia el contenido del archivo de configuración en 
+
+
+#Métricas de un contenedor
+
+#Puedes ver las métricas de un contenedor con docker stats. Este comando muestra CPU, memoria en uso, límite de memoria y red
+docker run --name ping-service -d alpine ping docker.com 
+
+docker stats ping-service
 
 
 #Recolectar métricas de Docker con Prometheus
@@ -160,14 +168,6 @@ docker run -d alpine ping docker.com
 
 #Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
 docker rm -f $(docker ps -aq)
-
-#Métricas de un contenedor
-
-#Puedes ver las métricas de un contenedor con docker stats. Este comando muestra CPU, memoria en uso, límite de memoria y red
-docker run --name ping-service -d alpine ping docker.com 
-
-docker stats ping-service
-
 
 #Deberes:
 # 1. Crea un contenedor que utilice un volumen llamado datos y copia dentro de él algunas imágenes
