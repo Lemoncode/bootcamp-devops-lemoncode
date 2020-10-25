@@ -37,6 +37,38 @@ docker-compose up & #con el & al final te deja utilizar el terminal, además de 
 #Parar y eliminar
 docker-compose down
 
+#Otro de los escenarios que te puedes encontrar es que quieras que cada vez que haces un compose up
+#se genere la imagen de tu app
+docker-compose -f docker-compose-app.yml up --build
+docker-compose -f docker-compose-app.yml ps
+docker-compose -f docker-compose-app.yml down
+
+#Ejecutar en segundo plano tu aplicación con Docker Compose
+docker-compose up -d 
+
+#Como siempre, puedes ver todos los contenedores con docker ps
+docker ps
+
+#Con docker compose puedes ver todas las aplicaciones que se están ejecutando
+docker-compose ps
+
+#Añadir un nombre a la aplicación
+docker-compose --project-name my_wordpress up -d
+
+#Si quisieramos reiniciar la aplicación
+docker-compose -p my_wordpress restart
+
+#Parar las aplicaciones sin eliminar los contenedores
+docker-compose -p my_wordpress stop
+docker-compose -p my_wordpress ps
+
+#Si quisiera parar y eliminar, todo a la vez
+docker-compose -p my_wordpress down
+docker-compose -p my_wordpress ps
+
+#Si solo quisiera eliminar podría usar
+docker-compose -p my_wordpress rm -y
+
 # Docker Swarm #
 
 #Antes de trabajar con el orquestador Docker Swarm es necesario crear el cluster a través del siguiente comando:
