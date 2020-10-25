@@ -150,6 +150,8 @@ docker run --name ping-service -d alpine ping docker.com
 
 docker stats ping-service
 
+#Otro comando que puede ser útil es el que nos dice cuánto espacio estamos usando del disco por "culpa" de Docker
+docker system df
 
 #Recolectar métricas de Docker con Prometheus
 #Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  

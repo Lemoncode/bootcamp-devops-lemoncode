@@ -1,6 +1,37 @@
 # Parte 6: Docker Compose #
 cd 01-contenedores/contenedores-vi
 
+#Imagínate un escenario donde quieres desplegar un blog con Wordpress. 
+#Este, necesita de una base de datos MySQL para funcionar, por lo que antes de desplegar esta aplicación necesitas una base de datos de este tipo
+#Si quisieramos hacerlo de forma manual, sería de la siguiente manera:
+
+#1. Creo la red donde ambos contenedores van poder comunicarse
+docker network create wordpress-network
+#2. Creo la base de datos MySQL, conectada a la red anterior, con un volumen que guarde la información de /var/lib/mysql.
+docker run -it --name mysqldb --network wordpress-network --rm --mount source=mysql_data,target=/var/lib/mysql \
+ -e MYSQL_ROOT_PASSWORD=somewordpress -e MYSQL_DATABASE=wpdb -e MYSQL_USER=wp_user -e MYSQL_PASSWORD=wp_pwd \
+  mysql:5.7
+
+#2.1 Esto habrá hecho que se genere un volumen nuevo llamado mysql_data
+docker volume ls
+
+#3. Ahora que ya tenemos la base de datos, el siguiente paso sería generar el contenedor de Wordpress
+# dentro de la misma red y apuntando al contenedor de MySQL
+docker run -it --name wordpress --network wordpress-network --rm \
+-e WORDPRESS_DB_HOST=mysqldb:3306 -e WORDPRESS_DB_USER=wp_user -e WORDPRESS_DB_PASSWORD=wp_pwd -e WORDPRESS_DB_NAME=wpdb \
+-p 8000:80 wordpress:latest
+
+#Si quisiera eliminar todo el proceso debería de hacer
+docker rm -f wordpress mysqldb
+docker network rm wordpress-network
+docker volume rm mysql_data
+
+#Y volver a relanzar todo si quisiera volver a crearlo
+
+#Lo mismo pero con Docker Compose
+
+cat docker-compose.yml
+
 docker-compose up & #con el & al final te deja utilizar el terminal, además de ver la salida
 
 #Parar y eliminar
@@ -174,4 +205,4 @@ docker-machine create --driver azure docker-on-azure
 #Deberes:
 # 1. Desplegar con Docker Compose una aplicación que conste de un frontal y un backend (buscar ejemplo)
 # 2. Crear un cluster con Docker Machine con dos masters y 3 worker nodes en Mac o Windows.
-# 3.
+# 3. Despliega Wordpress dentro del clúster
