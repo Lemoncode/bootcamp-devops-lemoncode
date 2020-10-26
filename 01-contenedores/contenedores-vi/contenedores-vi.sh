@@ -75,6 +75,8 @@ docker-compose -p my_wordpress rm -y
 docker swarm init
 #El primer nodo que lance este comando se convertirá en master. El terminal devolverá el comando a ejecutar para unir workers, y masters, al cluster
 #Cuando trabajas con Windows y Mac se están utilizando virtualizaciones para Docker por lo que no es posible probar este escenario. es fácil verlo porque el comando anterior devuelve una IP que no es la de tu máquina local.
+#Para salirse del cluster:
+docker swarm leave --force
 
 #Docker Machine
 https://docs.docker.com/machine/overview/
@@ -104,24 +106,29 @@ docker-machine create --driver hyperv master-0
 #Listar las máquinas que están ejecutándose
 docker-machine ls
 
-#Conectar tu Docker Client a master-0
-docker-machine env master-0
-eval $(docker-machine env master-0)
+#Para conocer el estado de una máquina
 docker-machine status master-0
-docker-machine url master-0
-docker ps
+
+#Conectar tu Docker Client a master-0
+docker-machine env master-0 #Mac
+docker-machine env --shell powershell master-0 #Windows
+eval $(docker-machine env master-0) #Mac
+# docker-machine url master-0
 docker info #Comprueba que el nombre de la máquina sea el mismo que elegiste en la creación con docker-machine
+docker ps
 #Comprueba que las variables de entorno apuntan a la máquina creada
-env | grep DOCKER
+env | grep DOCKER #Mac
+Get-ChildItem Env: | Where-Object { $_.Name -Match "DOCKER"} #PowerShell
 
 #Ejecuta un contenedor en la máquina que tienes como contexto
 docker run busybox echo hello world
-
-#Recuperar la IP de uno de los nodos
-docker-machine ip master-0
+docker ps -a
 
 #Ejecutar un Nginx 
 docker run -d -p 8000:80 nginx
+
+#Recuperar la IP de uno de los nodos
+docker-machine ip master-0
 
 #Hacer una petición al servidor web
 curl $(docker-machine ip master-0):8000
@@ -133,9 +140,12 @@ docker-machine stop master-0
 docker-machine start master-0
 
 #Para hacer que el terminal vuelva a apuntar a Docker Desktop
-docker-machine env -u
+docker-machine env -u --shell poweshell #Windows
+docker-machine env -u #Mac
 eval $(docker-machine env -u)
-env | grep DOCKER
+env | grep DOCKER #Mac
+Get-ChildItem Env: | Where-Object { $_.Name -Match "DOCKER"} #PowerShell
+
 docker info #volverás a apuntar a Docker Desktop
 
 #Crear un cluster con Docker Swarm y Docker Machine
