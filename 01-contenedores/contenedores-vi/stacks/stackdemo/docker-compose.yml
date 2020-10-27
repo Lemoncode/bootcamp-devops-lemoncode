@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  web:
+    image: stackdemo
+    build: .
+    ports:
+      - "8000:8000"
+  redis:
+    image: redis:alpine

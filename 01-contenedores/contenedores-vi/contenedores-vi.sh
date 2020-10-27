@@ -18,18 +18,21 @@ docker volume ls
 #3. Ahora que ya tenemos la base de datos, el siguiente paso sería generar el contenedor de Wordpress
 # dentro de la misma red y apuntando al contenedor de MySQL
 docker run -it --name wordpress --network wordpress-network --rm \
+-v wordpress_data:/var/www/html \
 -e WORDPRESS_DB_HOST=mysqldb:3306 -e WORDPRESS_DB_USER=wp_user -e WORDPRESS_DB_PASSWORD=wp_pwd -e WORDPRESS_DB_NAME=wpdb \
 -p 8000:80 wordpress:latest
 
+#Este es el contenido en el volumen wordpress_data
+docker exec wordpress ls -l /var/www/html
+
 #Si quisiera eliminar todo el proceso debería de hacer
-docker rm -f wordpress mysqldb
-docker network rm wordpress-network
-docker volume rm mysql_data
+docker rm -f wordpress mysqldb && \
+docker network rm wordpress-network && \
+docker volume rm mysql_data wordpress_data
 
 #Y volver a relanzar todo si quisiera volver a crearlo
 
 #Lo mismo pero con Docker Compose
-
 cat docker-compose.yml
 
 docker-compose up & #con el & al final te deja utilizar el terminal, además de ver la salida
@@ -37,20 +40,25 @@ docker-compose up & #con el & al final te deja utilizar el terminal, además de 
 #Parar y eliminar
 docker-compose down
 
-#Otro de los escenarios que te puedes encontrar es que quieras que cada vez que haces un compose up
-#se genere la imagen de tu app
-docker-compose -f docker-compose-app.yml up --build
-docker-compose -f docker-compose-app.yml ps
-docker-compose -f docker-compose-app.yml down
-
 #Ejecutar en segundo plano tu aplicación con Docker Compose
 docker-compose up -d 
 
-#Como siempre, puedes ver todos los contenedores con docker ps
-docker ps
+#Otro de los escenarios que te puedes encontrar es que quieras que cada vez que haces un compose up
+#se genere la imagen de tu app
+cd my-app
+docker-compose up --build &
+docker-compose ps
+# docker-compose stop
 
 #Con docker compose puedes ver todas las aplicaciones que se están ejecutando
-docker-compose ps
+docker-compose ps #Pero sólo se ven los contenedores del proyecto que está en la carpeta actual con el nombre actual.
+
+#Como siempre, puedes ver todos los contenedores con docker ps
+docker ps -a
+
+#Listar todos los proyectos que se están ejecutando
+docker ps -a --filter "label=com.docker.compose.project" -q | xargs docker inspect --format='{{index .Config.Labels "com.docker.compose.project"}}'| sort | uniq
+
 
 #Añadir un nombre a la aplicación
 docker-compose --project-name my_wordpress up -d
@@ -66,8 +74,8 @@ docker-compose -p my_wordpress ps
 docker-compose -p my_wordpress down
 docker-compose -p my_wordpress ps
 
-#Si solo quisiera eliminar podría usar
-docker-compose -p my_wordpress rm -y
+#Si solo quisiera eliminar  una vez parada
+docker-compose -p my_wordpress rm
 
 # Docker Swarm #
 
@@ -120,6 +128,17 @@ docker-machine create --driver virtualbox master-0
 #Hyper-V
 docker-machine create --driver hyperv master-0
 
+#Crear un cluster con Docker Swarm y Docker Machine
+docker-machine create --driver virtualbox master-1
+docker-machine create --driver virtualbox master-2
+docker-machine create --driver virtualbox worker-0
+docker-machine create --driver virtualbox worker-1
+
+#Ver el resumen de todas las máquinas creadas
+docker-machine ls
+
+#Si abres Virtual Box verás que efectivamente tienes creadas todas esas máquinas.
+
 #Listar las máquinas que están ejecutándose
 docker-machine ls
 
@@ -165,27 +184,16 @@ Get-ChildItem Env: | Where-Object { $_.Name -Match "DOCKER"} #PowerShell
 
 docker info #volverás a apuntar a Docker Desktop
 
-#Crear un cluster con Docker Swarm y Docker Machine
-docker-machine create --driver virtualbox master-1
-docker-machine create --driver virtualbox master-2
-docker-machine create --driver virtualbox worker-0
-docker-machine create --driver virtualbox worker-1
-
-#Ver el resumen de todas las máquinas creadas
-docker-machine ls
-
-#Si abres Virtual Box verás que efectivamente tienes creadas todas esas máquinas.
-
 #Ahora en el master-0 iniciamos el cluster con Docker Swarm
 eval $(docker-machine env master-0)
-docker swarm init --advertise-addr 192.168.99.108
+docker swarm init --advertise-addr 192.168.99.118
 
 #En master-1 y master-2 los unimos como master
 docker swarm join-token manager
 eval $(docker-machine env master-1)
-docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-09gviao4tsmo3suwpbucqpqqu 192.168.99.108:2377
+docker swarm join --token SWMTKN-1-2fzf6vaz6lndlp99njo38dccdxzvnknj8o0p2472g82lc8q83m-cb4kkn43ogrxse9suup2c9b5k 192.168.99.118:2377
 eval $(docker-machine env master-2)
-docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-09gviao4tsmo3suwpbucqpqqu 192.168.99.108:2377
+docker swarm join --token SWMTKN-1-2fzf6vaz6lndlp99njo38dccdxzvnknj8o0p2472g82lc8q83m-cb4kkn43ogrxse9suup2c9b5k 192.168.99.118:2377
 #Chequeamos el estado actual del cluster
 docker node ls
 
@@ -193,9 +201,9 @@ docker node ls
 
 #En worker-0 y worker-1 los unimos como workers
 eval $(docker-machine env worker-0)
-docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-1ynw61hj7of7ix4dfhijgzfgt 192.168.99.108:2377
+docker swarm join --token SWMTKN-1-2fzf6vaz6lndlp99njo38dccdxzvnknj8o0p2472g82lc8q83m-3zznmj72ed3yb84klclnid9qs 192.168.99.118:2377
 eval $(docker-machine env worker-1)
-docker swarm join --token SWMTKN-1-3czeva7osjv5mxe699jlph03lcsd75del6v5hgfi62r7v9vw8r-1ynw61hj7of7ix4dfhijgzfgt 192.168.99.108:2377
+docker swarm join --token SWMTKN-1-2fzf6vaz6lndlp99njo38dccdxzvnknj8o0p2472g82lc8q83m-3zznmj72ed3yb84klclnid9qs 192.168.99.118:2377
 
 #Necesitas estar en un master para lanzar el siguiente comando
 eval $(docker-machine env master-1)
@@ -231,10 +239,13 @@ docker service ps web-nginx
 
 #Los servicios se despliegan indistintamente en masters y en workers. Para evitarlo, puedes usar constraints
 docker service create \
+    --replicas 3 \
     --name nginx-workers-only \
     --constraint node.role==worker \
     nginx
 
+#Comprobamos que las replicas solo están en los workers
+docker service ps nginx-workers-only
 
 #Visualizador de Docker Swarm
 https://github.com/dockersamples/docker-swarm-visualizer
@@ -257,9 +268,23 @@ docker-machine ip master-1 #(192.168.99.109:9090) #Esto es así porque a nivel d
 
 #Modo Ingress vs. Host
 #Ingress: da igual a qué nodo pregunte, aunque no tenga réplica me va a contestar bien
-docker service create --name my_web --replicas 2 --publish published=8080,target=80 nginx
+docker service create --name my_web_ingress --replicas 2 --publish published=8090,target=80 nginx
+#Identificamos un nodo en el que no esté la replica:
+docker service ps my_web_ingress #en mi ejemplo está desplegado en el master-0 y el master-1
+#Intentamos acceder al nginx a través del worker-0, por ejemplo, porque no tiene ninguna réplica
+#recupero la ip del worker-0
+docker-machine ip worker-0
+#y ahora hago simplemente un curl a esa IP con el puerto donde está mi app
+curl $(docker-machine ip worker-0):8090 #funciona!
+
 #Host: solo me contestará bien si tiene una réplica
-docker service create --name my_web --replicas 2 --publish published=8080,target=80,mode=host nginx
+docker service create --name my_web_host --replicas 2 --publish published=8070,target=80,mode=host nginx
+#Comprobamos en qué nodos está desplegado para no usarlos
+docker service ps my_web_host #En mi ejemplo en el master-0 y el worker-0
+#Vamos a utilizar el worker-1 para intentar acceder al servicio
+curl $(docker-machine ip worker-1):8070 #no funciona
+#probamos lo mismo con una de las máquinas que si que tiene una réplica
+curl $(docker-machine ip worker-0):8070 #funciona
 
 # Docker Machine loves Azure
 #https://docs.docker.com/machine/drivers/azure/
@@ -270,12 +295,16 @@ export AZURE_RESOURCE_GROUP="north-docker"
 docker-machine create --driver azure docker-on-azure
 
 # Docker Stacks #
-
-#Con Docker Stacks podemos utilizar archivos de la misma forma que hacíamos con Docker Compose pero orientados a Docker Swarm.
-
-
-
-#Deberes:
-# 1. Desplegar con Docker Compose una aplicación que conste de un frontal y un backend (buscar ejemplo)
-# 2. Crear un cluster con Docker Machine con dos masters y 3 worker nodes en Mac o Windows.
-# 3. Despliega Wordpress dentro del clúster
+#Con Docker Stacks podemos utilizar archivos de la misma forma que hacíamos con Docker Compose pero en clústers.
+cd 01-contenedores/contenedores-vi/stacks/stackdemo
+eval $(docker-machine env master-2)
+docker-compose up -d #si utilizamos docker-compose no lo va a poner en modo clúster sino que va a poner todos los contendores en el nodo actual
+docker-compose ps
+curl $(docker-machine ip master-2):8000
+#Para que lo despliegue en formato cluster debemos utilizar el siguiente comando:
+docker stack deploy -c docker-compose.yml stackdemo
+#Para ver todos los servicios desplegados con Docker stack
+docker stack ls
+docker stack ps stackdemo
+#Ahora si que podremos verlo como un servicio
+docker stack services stackdemo

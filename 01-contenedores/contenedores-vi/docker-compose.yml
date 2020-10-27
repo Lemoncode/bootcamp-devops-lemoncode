@@ -10,11 +10,14 @@ services:
        MYSQL_DATABASE: wpdb
        MYSQL_USER: wp_user
        MYSQL_PASSWORD: wp_pwd
-
+     networks: 
+        - wordpress-network
    wordpress:
      depends_on:
        - db
      image: wordpress:latest
+     volumes:
+      - wordpress_data:/var/www/html
      ports:
        - "8000:80"
      restart: always
@@ -23,5 +26,10 @@ services:
        WORDPRESS_DB_USER: wp_user
        WORDPRESS_DB_PASSWORD: wp_pwd
        WORDPRESS_DB_NAME: wpdb
+     networks: 
+       - wordpress-network
 volumes:
-    db_data:
+    db_data: 
+    wordpress_data:
+networks:
+    wordpress-network:
