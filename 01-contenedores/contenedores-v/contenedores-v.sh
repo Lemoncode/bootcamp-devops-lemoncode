@@ -20,6 +20,14 @@ docker container run -dit --name my-container \
 #Puedes comprobar que el volumen se ha creado correctamente
 docker volume ls
 
+#Puedo asociar varios contenedores al mismo volumen a la vez
+docker container run -dit --name my-container2 \
+    --mount source=my-data,target=/vol2 \
+    alpine
+
+#Para comprobar a qué contenedores está asociado un volumen
+docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
+
 #Inspeccionar el volumen
 docker volume inspect my-data
 
