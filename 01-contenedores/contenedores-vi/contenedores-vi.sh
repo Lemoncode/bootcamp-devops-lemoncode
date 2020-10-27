@@ -94,10 +94,27 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
   curl -L $base/docker-machine-Windows-x86_64.exe > "$HOME/bin/docker-machine.exe" &&
   chmod +x "$HOME/bin/docker-machine.exe"
 
+#Linux
+ssh gis@137.135.216.143
+wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install virtualbox -y
+
+base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+  curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+  sudo mv /tmp/docker-machine /usr/local/bin/docker-machine &&
+  chmod +x /usr/local/bin/docker-machine
+
+
 #Comprueba que la instalación se ha hecho correctamente
 docker-machine version
 
 #Cómo crear una máquina con Docker Engine con docker-machine
+#Linux
+sudo docker-machine create master-0
+sudo docker-machine create master-0 --virtualbox-no-vtx-check
+vboxmanage list vms
 #Virtual Box
 docker-machine create --driver virtualbox master-0
 #Hyper-V
@@ -185,6 +202,12 @@ eval $(docker-machine env master-1)
 docker node ls
 #El asterisco te dice desde dónde estás lanzando el comando.
 
+#En el master podemos lanzar este comando para inspeccionarse a si mismo
+docker node inspect self --pretty
+
+#o bien a otro nodo
+docker node inspect worker-0 --pretty
+
 #Lo siguiente es desplegar una aplicación en este cluster
 docker service create --name web-nginx \
    -p 8080:8080 \
@@ -207,7 +230,10 @@ docker service ls
 docker service ps web-nginx
 
 #Los servicios se despliegan indistintamente en masters y en workers. Para evitarlo, puedes usar constraints
-
+docker service create \
+    --name nginx-workers-only \
+    --constraint node.role==worker \
+    nginx
 
 
 #Visualizador de Docker Swarm
@@ -230,7 +256,10 @@ docker service ps viz
 docker-machine ip master-1 #(192.168.99.109:9090) #Esto es así porque a nivel de networking se configura por defecto el modo Ingress
 
 #Modo Ingress vs. Host
-
+#Ingress: da igual a qué nodo pregunte, aunque no tenga réplica me va a contestar bien
+docker service create --name my_web --replicas 2 --publish published=8080,target=80 nginx
+#Host: solo me contestará bien si tiene una réplica
+docker service create --name my_web --replicas 2 --publish published=8080,target=80,mode=host nginx
 
 # Docker Machine loves Azure
 #https://docs.docker.com/machine/drivers/azure/
@@ -240,8 +269,10 @@ export AZURE_RESOURCE_GROUP="north-docker"
 
 docker-machine create --driver azure docker-on-azure
 
-
 # Docker Stacks #
+
+#Con Docker Stacks podemos utilizar archivos de la misma forma que hacíamos con Docker Compose pero orientados a Docker Swarm.
+
 
 
 #Deberes:
