@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: web1
+  name: web1
+spec:
+  containers:
+  - image: lemoncodersbc/hello-world-web:latest
+    name: web1
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: web2
+  name: web2
+spec:    
+  containers:
+  - image: lemoncodersbc/hello-world-web:latest
+    name: web2
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
