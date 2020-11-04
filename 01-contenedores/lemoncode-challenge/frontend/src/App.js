@@ -20,7 +20,7 @@ export default class App extends Component {
     try {
 
       this.setState({ isLoading: true });
-      let response = await fetch('http://localhost:5000/api/topics');
+      let response = await fetch(`${process.env.REACT_APP_API_URL}`);
       let data = await response.json();
 
       this.setState({
