@@ -11,3 +11,6 @@ apt update && apt upgrade
 apt-get install curl -y
 curl http://nginx-container
 exit
+
+
+docker run -d --name frontend -p 3000:3000 --network lemoncode-challenge frontend
