@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  labels:
+    app: api
+  name: api2
+spec:
+  rules:
+  - host: api.lemoncoders.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - backend:
+          serviceName: api
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - api.lemoncoders.westeurope.cloudapp.azure.com
+    secretName: my-cert
