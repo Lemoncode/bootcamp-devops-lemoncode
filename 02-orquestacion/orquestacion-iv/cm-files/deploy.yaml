@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: info
+  name: info
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: info
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: info
+    spec:
+      volumes:
+      - name: settings-vol
+        configMap:
+          name: settings
+      - name: temp-vol
+        emptyDir: {}
+      containers:
+      - image: lemoncodersbc/showinfo:v1
+        name: showinfo2
+        volumeMounts:
+        - name: settings-vol
+          mountPath: /app/settings
+        - name: temp-vol
+          mountPath: /app/tmp
+        envFrom:
+        - configMapRef:
+            name: config
+        - secretRef:
+            name: private-data
+        resources: {}
+status: {}

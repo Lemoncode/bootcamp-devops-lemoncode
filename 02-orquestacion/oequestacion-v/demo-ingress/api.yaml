@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api
+  name: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: api
+    spec:
+      containers:
+      - image: lemoncodersbc/go-hello-world
+        name: go-hello-world-web
+        resources: {}
+status: {}
