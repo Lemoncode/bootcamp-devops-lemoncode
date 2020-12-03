@@ -6,20 +6,19 @@ DATA_VOLUME=$4
 
 # Reference: https://forums.docker.com/t/how-to-filter-docker-ps-by-exact-name/2880/3
 
-if [[ $(docker network ls --filter name=^/$NETWORK$) ]]; then
-  echo 'hello'
+if [[ ! $(docker network ls --filter name=^/$NETWORK$) ]]; then
   docker network create jenkins
-  echo 'network jenkins created'
+  echo network jenkins ${$NETWORK}
 fi
 
-if [[ $(docker volume ls --filter name=^/$CERTS_VOLUME$) ]]; then
+if [[ ! $(docker volume ls --filter name=^/$CERTS_VOLUME$) ]]; then
   docker volume create $CERTS_VOLUME
-  echo network jenkins "$CERTS_VOLUME"
+  echo jenkins certs "$CERTS_VOLUME"
 fi 
 
-if [[ $(docker volume ls --filter name=^/$CERTS_VOLUME$) ]]; then
+if [[ ! $(docker volume ls --filter name=^/$CERTS_VOLUME$) ]]; then
   docker volume create $DATA_VOLUME
-  echo network jenkins "$DATA_VOLUME"
+  echo jenkins data "$DATA_VOLUME"
 fi 
 
 # StartDocker in Docker into jenkins network
