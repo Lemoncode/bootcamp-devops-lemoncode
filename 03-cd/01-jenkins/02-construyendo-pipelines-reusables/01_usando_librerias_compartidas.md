@@ -12,15 +12,15 @@ def call() { // 2
             docker version
             node --version
             npm version
-        '''   
+        '''
     }
 }
 ```
 
-* Para que este disponible como parte de una librería compartida tendremos que hacer 3 cosas:
-    1. El código tiene que estar envuelto en un bloque _node_
-    2. El nombre del método tiene que ser _call_. Ese es el nombre por defecto que _Jenkins_ espera cunado invoque un de los `custom steps` 
-    3. El nombre del fichero `auditTools.groovy`, coincidirá cone el nombre del paso que qeremos utilizar.
+- Para que este disponible como parte de una librería compartida tendremos que hacer 3 cosas:
+  1. El código tiene que estar envuelto en un bloque _node_
+  2. El nombre del método tiene que ser _call_. Ese es el nombre por defecto que _Jenkins_ espera cunado invoque un de los `custom steps`
+  3. El nombre del fichero `auditTools.groovy`, coincidirá cone el nombre del paso que queremos utilizar.
 
 Push changes
 
@@ -42,14 +42,13 @@ Crear un nuevo repositorio de git `jenkins-pipeline-demo-library`
 
 Hemos movido el código de `audit tools` a su propio _script file_.
 
-
 > Notar que todos los scripts se encuentran dentro del mismo directorio _vars_, y ese es otro requisito. Así que para encontrar estos pasos _custom_ que son parte de la librería tienen que estar en este directorio,
 
 > Usado en [2.1 Jenkinsfile](./01/demo2/2.1/Jenkinsfile)
 
-* Crear `01/demo2/2.1/Jenkinsfile`. 
+- Crear `01/demo2/2.1/Jenkinsfile`.
 
-> Debemos apuntar al reppositorio correcto
+> Debemos apuntar al repositorio correcto
 
 ```groovy
 library identifier: 'bootcamp-jenkins-library@main',
@@ -67,7 +66,7 @@ pipeline {
 }
 ```
 
-1. Así es como referencíamos la librería. La primera parte es el _identifier_, que es el nombre del proyecto y la rama del código funete en _GitHub_. Después Jenkins necesita saber como puede recuperar ese código, eso es lo que hace el bloque _retriever_.
+1. Así es como referenciamos la librería. La primera parte es el _identifier_, que es el nombre del proyecto y la rama del código fuente en _GitHub_. Después Jenkins necesita saber como puede recuperar ese código, eso es lo que hace el bloque _retriever_.
 
 2. Para ejecutarlo necesitamos el nombre del script.
 
@@ -77,7 +76,7 @@ pipeline {
 - Run
 - Check pipeline log - fetches library
 
-## 2.2 Errores en las liberías
+## 2.2 Errores en las librerías
 
 > Crear auditTools2.groovy en el library repo
 
@@ -90,7 +89,7 @@ def call(Map config) {
             docker version
             node --version
             npm version
-        '''   
+        '''
     }
 }
 ```
@@ -148,16 +147,15 @@ VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: 
 ```
 
 1. La manera en la que funcionan los parámetros es que el método toma este objeto map llamado _config_ que puede tener muchos pares clave valor.
-2. Dentro está buscando una clave que sea _isReleaseCandidate_, este es un _boolean_, que la `pipeline` alimetará. 
+2. Dentro está buscando una clave que sea _isReleaseCandidate_, este es un _boolean_, que la `pipeline` alimentará.
 3. También espera la clave _rcNumber_
-
 
 Crear `01/demo2/2.3/Jenkinsfile`, comenzando desde `01/demo1/1.3/Jenkinsfile`
 
 ```groovy
 library identifier: 'jenkins-pipeline-demo-library@main',
         retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/Lemoncode/bootcamp-jenkins-library.git'])
-        
+
 pipeline {
     agent any
     parameters {
@@ -177,7 +175,7 @@ pipeline {
             environment {
                 VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isRealeaseCandidate: params.RC
             }
-            steps { 
+            steps {
                 dir('./01/src') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
@@ -199,7 +197,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/src/app/')
+                archiveArtifacts('01/app/')
             }
         }
     }
@@ -219,4 +217,3 @@ pipeline {
 
 - _Manage Jenkins_ ... _Configure System_
 - Expand _Global Pipeline libraries_; implicit load and trusted
-

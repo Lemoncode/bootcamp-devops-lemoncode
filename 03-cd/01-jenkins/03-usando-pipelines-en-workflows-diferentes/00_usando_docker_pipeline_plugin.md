@@ -10,12 +10,11 @@ Ejecutar Jenkins en [Docker](https://www.docker.com/products/docker-desktop):
 $ ./start_jenkins.sh <jenkins-image> <jenkins-network> <jenkins-volume-certs> <jenkins-volume-data>
 ```
 
-Antes de comenazr borrar las pipelines anetriores
+Antes de comenzar borrar las pipelines anteriores
 
 ## 1.1 Usando un contenedor como build agent
 
-
-Create a new directory *05_declarative_pipelines/src_tmp/jenkins-demos-review/02*. Unzip code from `05_declarative_pipelines` directory
+Create a new directory _05_declarative_pipelines/src_tmp/jenkins-demos-review/02_. Unzip code from `05_declarative_pipelines` directory
 
 ```bash
 $ unzip code.zip -d ./src_temp/jenkins-demos-review/02
@@ -25,7 +24,7 @@ Create `02/demo1/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
-    agent { 
+    agent {
         docker {
             image 'node:alpine3.12'
         }
@@ -67,28 +66,28 @@ Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
 - New item, pipeline, `demo1-1`
 - Select pipeline from source control
 - Git - https://github.com/JaimeSalas/jenkins-pipeline-demos
-- Path to Jenkinsfile  - `02/demo1/1.1/Jenkinsfile`
+- Path to Jenkinsfile - `02/demo1/1.1/Jenkinsfile`
 - Run
 
 > Walk through the [Jenkinsfile](./02/demo1/1.1/Jenkinsfile)
 
 ```groovy
-agent { 
+agent {
     docker {
         image 'node:alpine3.12'
     }
 }
 ```
 
-Esta parte es ahora diferente, estamos especificando que el agante es un `contenedor de Docker`, y la imagen `node:alpine3.12` es la que queremos usar. Lo que ocurre cuando esta build arranca, Jenkins arranca un contenedor utilizando como base esta imagen.
+Esta parte es ahora diferente, estamos especificando que el agente es un `contenedor de Docker`, y la imagen `node:alpine3.12` es la que queremos usar. Lo que ocurre cuando esta build arranca, Jenkins arranca un contenedor utilizando como base esta imagen.
 
 Todos los `shell commands` son ejecutados dentro del contenedor.
 
-Puedo usar `Docker` como mi agnete de build , y no necesito tener una máquina con `node` instalado. Culaquier servidor de Jenkins, con `Docker` instalado puede levantar una agente con `node` y ejecutar toda la pipeline dentro del contenedor, con Jenkins tomando la responsabilidad de mover los ficheros necesarios y estableciendo el entorno del contenedor por mi.
+Puedo usar `Docker` como mi agente de build , y no necesito tener una máquina con `node` instalado. Cualquier servidor de Jenkins, con `Docker` instalado puede levantar una agente con `node` y ejecutar toda la pipeline dentro del contenedor, con Jenkins tomando la responsabilidad de mover los ficheros necesarios y estableciendo el entorno del contenedor por mi.
 
 ## 1.2 Custom container agents
 
-* Crear `02/Dockerfile`
+- Crear `02/Dockerfile`
 
 ```Dockerfile
 FROM node:alpine3.12 as builder
@@ -116,8 +115,7 @@ RUN npm i --only=production
 ENTRYPOINT ["node", "app.js"]
 ```
 
-
-* Create `02/demo1/1.2/Jenkinsfile`
+- Create `02/demo1/1.2/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -182,24 +180,23 @@ pipeline {
 }
 ```
 
-
 1. En el `agent block` estamos especificando un `Dockerfile`, le estamos diciendo a Jenkins que es un Dockerfile dentro de nuestro repo, en el directorio `02`, y quiero construir una imagen a partir de ese `Dockerfile`. Si inspeccionamos este `Dockerfile` nos damos cuenta de que se trata de una imagen para construir una aplicación, y Jenkins no esta esperando esto.
 
-But what people often do when they're looking at this approach is they get confused as to what that `Dockerfile` is meant to do. So if I look at that `Dockerfile`, this `Dockerfile` is actually a full build of my project. 
+But what people often do when they're looking at this approach is they get confused as to what that `Dockerfile` is meant to do. So if I look at that `Dockerfile`, this `Dockerfile` is actually a full build of my project.
 
 Esto crea confusión acerca de que hace este `Dockerfile`. Este `Dockerfile` es la `build` completa de mi proyecto.
 
-Comienza desde `node:alpine3.12` e instala los paquetes y realiza una build. Después empaquete la aplicación instalando sólo las dependencias de producción, creando una imagen de Docker que representa nuestra aplicaicón. Y esto no es lo que espera Jenkins. Cuando Jenkins nos ofrece la opción de fichero Docker, dentro del agente arranca una imagen para ser usada como `build agent` no correr la aplicación.
+Comienza desde `node:alpine3.12` e instala los paquetes y realiza una build. Después empaquete la aplicación instalando sólo las dependencias de producción, creando una imagen de Docker que representa nuestra aplicación. Y esto no es lo que espera Jenkins. Cuando Jenkins nos ofrece la opción de fichero Docker, dentro del agente arranca una imagen para ser usada como `build agent` no correr la aplicación.
 
-En esta pipeline estamos pensando que pedimos a Jenkinsque compile la aplicación, usando el `Dockerfile` en el repositorio, y después usar `verify` para imprimir node y npm y por último ejecutar un smoke test ejecutando el contenedor previamente generado.
+En esta pipeline estamos pensando que pedimos a Jenkins que compile la aplicación, usando el `Dockerfile` en el repositorio, y después usar `verify` para imprimir node y npm y por último ejecutar un smoke test ejecutando el contenedor previamente generado.
 
-But these are separate things, the image that was built as part of the `Dockerfile` that's an SDK may just not meant to be used by Jenkins taken part of your application. 
+But these are separate things, the image that was built as part of the `Dockerfile` that's an SDK may just not meant to be used by Jenkins taken part of your application.
 
 Pero esto son cosas separadas, la imagen construida a como parte del `Dockerfile`, para construir la aplicación, no esta pensada para ser parte de la aplicación.
 
-So it's going to see how that looks. So if we check this build its failed as expected, we go and look at the output. I could see all the lines for my `Dockerfile` being executed, and then I get these really weird Jenkins error messages telling me it is trying to do something with the container on. 
+So it's going to see how that looks. So if we check this build its failed as expected, we go and look at the output. I could see all the lines for my `Dockerfile` being executed, and then I get these really weird Jenkins error messages telling me it is trying to do something with the container on.
 
-La build falla como esperabamos, echemos un ojo. Podemos ver todas las líneas ejecutadas del `Dockerfile`, y después vemos este mensaje que nos dice que tenemos un fallo al intentar ejecutar el contenedor.
+La build falla como esperábamos, echemos un ojo. Podemos ver todas las líneas ejecutadas del `Dockerfile`, y después vemos este mensaje que nos dice que tenemos un fallo al intentar ejecutar el contenedor.
 
 ```
 [Pipeline] withDockerContainer
@@ -222,7 +219,7 @@ La razón por la que falla es que Jenkins está tratando de ejecutar el contened
 
 > Walk through the fixed [Dockerfile.node](../Dockerfile.node) and [Jenkinsfile.fixed](./1.2/Jenkinsfile.fixed)
 
-* Crear `Dockerfile.node`
+- Crear `Dockerfile.node`
 
 ```Dockerfile
 FROM node:alpine3.12 as builder
@@ -230,7 +227,7 @@ FROM node:alpine3.12 as builder
 ENV LEMONCODE_VAR=lemon
 ```
 
-* Y creamos `02/demo1/1.2/Jenkinsfile.fixed` de la siguiente manera:
+- Y creamos `02/demo1/1.2/Jenkinsfile.fixed` de la siguiente manera:
 
 ```groovy
 pipeline {
@@ -288,7 +285,7 @@ agent {
 
 ## 1.3 Docker pipeline plugin
 
-* Crear `02/demo1/1.3/Jenkinsfile`
+- Crear `02/demo1/1.3/Jenkinsfile`
 
 ```groovy
 def image
