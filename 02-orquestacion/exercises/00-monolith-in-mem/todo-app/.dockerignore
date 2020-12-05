@@ -5,17 +5,9 @@ dist/
 # local build
 wwwroot/
 
-
 # local development
 nodemon.json
-jest.config.js
-jest.e2e.config.js
 
-# database development
-data/ 
-migrations/
-create_todos_db.sql
-knexfile.js
 
 # environment variables
 .env

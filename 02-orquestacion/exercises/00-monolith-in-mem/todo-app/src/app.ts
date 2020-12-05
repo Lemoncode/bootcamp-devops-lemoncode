@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
 import 'dotenv/config';
 import express from 'express';
-import { startConnection } from './dals/dataAccess';
 import { todoDALFactory } from './dals/todos/todo.dal';
 import { mapTodoEntity, mapTodoEntityCollection, mapTodoModel } from './models/todo.model';
 
@@ -13,27 +12,11 @@ app.use(bodyParser.json());
 // ------ Static files for frontend
 app.use(express.static('public'));
 
-// TODO: Use https://stackoverflow.com/questions/56876141/how-to-retry-database-connection-in-node-js-when-first-connect-is-failed
-// ------ The API implementation
-export let db;
-try {
-  db = startConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: +process.env.DB_PORT!,
-    database: process.env.DB_NAME,
-    dbVersion: process.env.DB_VERSION!,
-  });
-} catch (error) {
-  console.log('no database available');
-}
-
 let todoDAL;
 
 const retrieveTodoDAL = () => {
   if (!todoDAL) {
-    return todoDALFactory(db);
+    return todoDALFactory();
   }
   return todoDAL;
 };
@@ -56,8 +39,6 @@ app.get('/api/:id/', async (req, res) => {
 app.post('/api/', async (req, res) => {
   try {
     todoDAL = retrieveTodoDAL();
-    const s = mapTodoModel(req.body);
-    console.log(s);
     await todoDAL.createTodo(mapTodoModel(req.body));
     res.status(201);
     res.send('ok');

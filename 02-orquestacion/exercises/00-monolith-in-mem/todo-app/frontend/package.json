@@ -10,7 +10,7 @@
     "start:dev": "webpack serve --config ./config/webpack.dev.js",
     "start:server": "cd .. && npm start",
     "start:dev:server": "run-p -l start:server start:dev",
-    "prebuild": "rimraf dist",
+    "prebuild": "rm -rf dist",
     "build": "npm run type-check && webpack --config ./config/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
