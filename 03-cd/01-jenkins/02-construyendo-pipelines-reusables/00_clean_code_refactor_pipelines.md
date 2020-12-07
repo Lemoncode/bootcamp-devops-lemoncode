@@ -126,7 +126,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/app/')
+                archiveArtifacts('01/src/app/')
             }
         }
         /*diff*/
@@ -151,7 +151,7 @@ stage('Publish') {
         expression { return params.RC }
     }
     steps {
-        archiveArtifacts('01/app/')
+        archiveArtifacts('01/src/app/')
     }
 }
 ```
@@ -214,7 +214,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/app/')
+                archiveArtifacts('01/src/app/')
             }
         }
     }
