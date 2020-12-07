@@ -2,11 +2,11 @@
 
 ## 1.1 Una pipeline multi-stage
 
-* Crear un nuevo Jenkinsfile en `demo1/1.1/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `demo1/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
-    agent any 
+    agent any
     environment {
         RELEASE='0.0.1'
     }
@@ -39,7 +39,7 @@ Log in Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
 
 > Walk through the [Jenkinsfile](./1.1/Jenkinsfile)
 
-- Run and check 
+- Run and check
 - Fails because step in second stage uses unknown variable `LOG_LEVEL`
 
 ```
@@ -50,7 +50,7 @@ groovy.lang.MissingPropertyException: No such property: LOG_LEVEL for class: gro
 
 ## 1.2 Solicitando el input del Usuario
 
-* Crear un nuevo Jenkinsfile en `demo1/1.2/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `demo1/1.2/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -96,25 +96,25 @@ pipeline {
 
 Back to http://localhost:8080
 
-- Copy item, `demo1-1.1` from `demo1-1.2`
+- Copy item, `demo1-1.2` from `demo1-1.1`
 - Path to Jenkinsfile `demo1/1.2/Jenkinsfile`
 
 > Walk through the [Jenkinsfile](./1.2/Jenkinsfile)
 
-```
-    input {
-        message 'Deploy?'
-        ok 'Do it!'
-        parameters {
-            string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
-        }
+```groovy
+input {
+    message 'Deploy?'
+    ok 'Do it!'
+    parameters {
+        string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
     }
-    steps {
-        echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
-    }
+}
+steps {
+    echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
+}
 ```
 
-Este paso solicitará una entrada del usuario. Notar que en el siguiente `stage`, podemos acceder a *TARGET_ENVIRONMENT*. Si seleccionamos _abort_ los pasos siguientes no se realizarán.
+Este paso solicitará una entrada del usuario. Notar que en el siguiente `stage`, podemos acceder a _TARGET_ENVIRONMENT_. Si seleccionamos _abort_ los pasos siguientes no se realizarán.
 
 ```
 post {
@@ -133,7 +133,7 @@ En el comando _post_ podemos tener diferentes condiciones aquí estamos usando _
 
 ## 1.3 Parallel stages
 
-* Crear un nuevo Jenkinsfile en `demo1/1.3/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `demo1/1.3/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -217,7 +217,7 @@ parallel {
 }
 ```
 
-Con _parallel_ podemos ejecutar mútiples `stages` en paralelo.
+Con _parallel_ podemos ejecutar múltiples `stages` en paralelo.
 
 - Run and check
 - Parallel stages complete in any order

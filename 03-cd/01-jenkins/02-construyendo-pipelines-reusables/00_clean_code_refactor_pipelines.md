@@ -8,10 +8,10 @@ Eliminar las pipelines anteriores
 
 Ejecutar Jenkins en Docker [Docker](https://www.docker.com/products/docker-desktop)
 
-Crear un nuevo directorio *src_tmp/jenkins-demos-review/01*. `unzip` del fichero `01-jenkins/code.zip`
+Crear un nuevo directorio _src_tmp/jenkins-demos-review/01_. `unzip` del fichero `01-jenkins/code.zip`
 
 ```bash
-$ unzip code.zip -d ./src_temp/jenkins-demos-review/01
+$ unzip code.zip -d ./src_tmp/jenkins-demos-review/01
 ```
 
 Hacemos `push` de los cambios al repositorio remoto
@@ -37,7 +37,7 @@ pipeline {
             }
         }
         stage('Build') {
-            steps { 
+            steps {
                 dir('./01/src') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
                     sh '''
@@ -65,7 +65,7 @@ Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
 - New item, pipeline, `demo1-1`
 - Select pipeline from source control
 - Git - https://github.com/JaimeSalas/jenkins-pipeline-demos.git https://github.com/Lemoncode/bootcamp-jenkins-demo.git
-- Path to Jenkinsfile  - `01/demo1/1.1/Jenkinsfile`
+- Path to Jenkinsfile - `01/demo1/1.1/Jenkinsfile`
 - Open in Blue Ocean
 - Run
 
@@ -102,7 +102,7 @@ pipeline {
                 VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
             }
             /*diff*/
-            steps { 
+            steps {
                 dir('./01/src') {
                     // echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
@@ -143,7 +143,7 @@ Push changes to remote repository
 
 > Walk through the [Jenkinsfile](./1.2/Jenkinsfile)
 
-Lo importanet es notar aquí, es este paso condicional que sólo se ejecutará si `RC` vale **true**.
+Lo importante que hay que tener en cuenta es este paso condicional que sólo se ejecutará si `RC` vale **true**.
 
 ```groovy
 stage('Publish') {
@@ -163,7 +163,7 @@ stage('Publish') {
 
 ## 1.3 Usando métodos de Groovy
 
-Crear `01/demo1/1.3/Jenkinsfile` empezando desde el anterior y editandolo de la siguiente manera_
+Crear `01/demo1/1.3/Jenkinsfile` empezando desde el anterior y editándolo de la siguiente manera\_:
 
 ```diff
 pipeline {
@@ -192,7 +192,7 @@ pipeline {
 -               VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
 +               VERSION_SUFFIX = getVersionSuffix()
             }
-            steps { 
+            steps {
                 dir('./01/src') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
@@ -234,7 +234,7 @@ pipeline {
 +        docker version
 +        node --version
 +        npm version
-+    '''   
++    '''
 +}
 ```
 
