@@ -1,1 +1,15 @@
+# environments
+.env
+
+# dependencies
+node_modules/
+
+# build
+wwwroot
+dist/
+
+# vs code
 .DS_Store
+
+# exercise solution
+exercise-solution/
