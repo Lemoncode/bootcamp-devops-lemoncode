@@ -1,1 +1,7 @@
 .DS_Store
+
+# code Jenkins demos
+node_modules/
+
+.env
+app/
