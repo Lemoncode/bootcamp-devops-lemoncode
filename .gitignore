@@ -13,3 +13,7 @@ dist/
 
 # exercise solution
 exercise-solution/
+.DS_Store
+
+# code Jenkins demos
+app/

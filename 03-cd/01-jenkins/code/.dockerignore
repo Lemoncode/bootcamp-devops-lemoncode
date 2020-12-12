@@ -1,0 +1,27 @@
+# Local Devolpment
+nodemon.json
+
+# environment setup
+.env
+.env.test
+.env.template
+
+# Test files
+/**/*.spec.ts 
+/**/*.test.ts
+
+# Dependencies
+node_modules/
+
+# Local build directory
+app/
+
+# Database setup
+data/
+migrations/
+knexfile.js
+create_todos_db.sql
+Dockerfile.todos_db
+
+# Guides
+README.md
