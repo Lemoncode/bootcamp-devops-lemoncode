@@ -1,7 +1,19 @@
+# environments
+.env
+
+# dependencies
+node_modules/
+
+# build
+wwwroot
+dist/
+
+# vs code
+.DS_Store
+
+# exercise solution
+exercise-solution/
 .DS_Store
 
 # code Jenkins demos
-node_modules/
-
-.env
 app/

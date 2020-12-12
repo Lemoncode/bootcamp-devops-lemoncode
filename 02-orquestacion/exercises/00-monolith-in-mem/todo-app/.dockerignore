@@ -1,0 +1,23 @@
+# local installed dependenies
+node_modules/
+dist/
+
+# local build
+wwwroot/
+
+# local development
+nodemon.json
+
+
+# environment variables
+.env
+.env.template
+.env.test
+
+# tools configuration
+.prettierrc
+
+# project info
+README.md
+
+

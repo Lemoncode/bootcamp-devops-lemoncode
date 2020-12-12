@@ -1,0 +1,49 @@
+{
+  "name": "todo-app-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon",
+    "prebuild": "rimraf wwwroot",
+    "build": "tsc && cd frontend && npm run build",
+    "postbuild": "copyfiles -Vf frontend/dist/* wwwroot/public",
+    "pretest": "jest --clearCache",
+    "test": "jest -c ./jest.config.js --detectOpenHandles --verbose -i",
+    "test:watch": "jest -c ./jest.config.js --watch --verbose -i",
+    "test:e2e": "jest -c ./jest.e2e.config.js --detectOpenHandles --verbose -i",
+    "test:watch:e2e": "jest -c ./jest.e2e.config.js --watch --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.lemoncode.com/jaimesalas/todo-app-react.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-typescript": "^7.6.0",
+    "@babel/register": "^7.6.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^4.17.1",
+    "@types/jest": "^26.0.15",
+    "@types/supertest": "^2.0.8",
+    "copyfiles": "^2.4.1",
+    "jest": "^26.6.3",
+    "nodemon": "^1.19.4",
+    "rimraf": "^3.0.0",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "core-js": "^3.2.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
