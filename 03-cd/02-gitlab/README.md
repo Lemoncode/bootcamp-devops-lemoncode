@@ -21,7 +21,7 @@ insecure-registries : [gitlab.local:5001]
 2a. Preparando el entorno con docker(Linux y windows). 
 >> Es necesario permisos sudo (Linux) o Administrador(Windows)
 ```bash
-user@localhost:~$ cd 02-gitlab/02-gitlab/itlab/docker/
+user@localhost:~$ cd 02-gitlab/gitlab/docker/
 user@localhost:~02-gitlab/gitlab/docker$ docker-compose up -d
 ```
 2b. Preparando el entorno con Vagrant y Virtualbox
