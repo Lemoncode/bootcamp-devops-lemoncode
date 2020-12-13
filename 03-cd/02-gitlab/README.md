@@ -22,14 +22,14 @@ insecure-registries : [gitlab.local:5001]
 >> Es necesario permisos sudo (Linux) o Administrador(Windows)
 ```bash
 user@localhost:~$ cd 02-gitlab/gitlab/docker/
-user@localhost:~02-gitlab/gitlab/docker$ docker-compose up -d
+user@localhost:~02-gitlab/gitlab/docker$ sudo docker-compose up -d
 ```
 2b. Preparando el entorno con Vagrant y Virtualbox
 ```bash
 user@localhost:~$ cd 02-gitlab/
-user@localhost:~02-gitlab/$ vagrant up
+user@localhost:~02-gitlab/$ sudo vagrant up
 ```
-3. Añadimos entrada al fichero hosts la entrada -> <Direccion_ip_local> gitlab.local"
+3. Añadimos entrada al fichero hosts la entrada -> <Direccion_ip_local> gitlab.local
 * Linux en el fichero /etc/hosts 
 * Windows en el fichero c:\windows\system32\drivers\etc\hosts 
 
@@ -41,12 +41,12 @@ user@localhost:~02-gitlab/$ vagrant up
 ## ¿Qué vamos a aprender?
 - Gestion de Usuarios
 - Gestión de proyectos(repositorios)
-- Entiendo los pipelines
+- Entendiendo los pipelines
 - Creacion de pipelines de build,test y deploy
-- Variables predefinidas de gitlab y custom
 - Uso de container registry
 - Pipelines de creación de imagenes Base
 - Usar nuestras Imágenes
+- Gitlab Pages
 
 ## Cheatsheet
 ### [Variables Predefinidas](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
