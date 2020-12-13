@@ -21,13 +21,13 @@ insecure-registries : [gitlab.local:5001]
 2a. Preparando el entorno con docker(Linux y windows). 
 >> Es necesario permisos sudo (Linux) o Administrador(Windows)
 ```bash
-user@localhost:~$ cd bootcamp_vagrant/gitlab/docker/
-user@localhost:~bootcamp_vagrant/gitlab/docker$ docker-compose up -d
+user@localhost:~$ cd 02-gitlab/02-gitlab/itlab/docker/
+user@localhost:~02-gitlab/gitlab/docker$ docker-compose up -d
 ```
 2b. Preparando el entorno con Vagrant y Virtualbox
 ```bash
-user@localhost:~$ cd bootcamp_vagrant/
-user@localhost:~bootcamp_vagrant$ vagrant up
+user@localhost:~$ cd 02-gitlab/
+user@localhost:~02-gitlab/$ vagrant up
 ```
 3. Añadimos entrada al fichero hosts la entrada -> <Direccion_ip_local> gitlab.local"
 * Linux en el fichero /etc/hosts 
