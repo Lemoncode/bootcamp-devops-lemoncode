@@ -57,28 +57,29 @@ user@localhost:~02-gitlab/$ sudo vagrant up
 2. Damos de alta un usuario sin role de administrador
 3. Creamos nuestro primer grupo para contener los proyectos de la bootcamp
 4. Creamos nuestro primer repositorio hola_mundo con el user creado
-5. Validamos que con user2 no podemos acceder y le damos permisos de developer
-6. Con user1(owner) creamos nuestro primer pipeline en el repositorio hola_mundo
-- Creamos el branch developer
+5. Creamos nuestro primer pipeline en el repositorio hola_mundo
+- Creamos el branch develop
 - ¿Cuando se ejecuta un pipeline? ¿Un commit, un merge, manual? ¿y en que branch? ¿AutoDevOps? Vaya lio!
+- Conociendo LINT y Web IDE
 - Estructura básica de un pipeline con Hola Mundo
 - Mostrando las variables predefinidias
 - Control sobre que branch se ejecuta cada job
+- Merge Request
 - ¿y si falla un job? ¿Se puede puede omitir el fallo?
 - ¿y un Environment qué es? ¿Para que sirve?
 - ¿Se puede hacer un redeploy?
 - La hemos liado! Necesito un rollback!
-7. El juego de las variables de grupo, proyecto y pipeline
-8. Nuestra primera aplicación en flask
+6. El juego de las variables de grupo, proyecto y pipeline
+7. Nuestra primera aplicación en flask
 - Como se hace un build de una app en docker
-- Deploy ficticio en docker in docker
+- Deploy
 - Redeploy de la aplicación
 - Rollback de la aplicación
-9. Ejemplo de aplicación de spring con tests
-10. Conatiner Registry
+8. Ejemplo de aplicación spring con tests
+9. Conatiner Registry
 - Creando nuestras propias imágenes base
 - usando nuestras propias imágenes base
-12. Gitlab Pages
+10. Gitlab Pages
 
 
 
