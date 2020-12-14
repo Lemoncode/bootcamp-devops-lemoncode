@@ -10,7 +10,7 @@
 
 ## Creación del entorno
 1. Permitimos registry inseguro a docker
-* En Linux En el fichero /etc/docker/dameon.json
+* En Linux En el fichero /etc/docker/daemon.json
 ```
 {"insecure-registries" : ["gitlab.local:5001"]}
 ```
