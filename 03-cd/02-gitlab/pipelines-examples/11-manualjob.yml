@@ -1,0 +1,39 @@
+variables:
+  artifact: "fichero.txt"
+  artifact_content: "Esto es el contenido de mi artifact"
+
+
+stages:
+    - stage0
+    - stage1
+    - stage2
+
+allbranches:
+    stage: stage0
+    script:
+        - echo "Esto lo ejecuto en todas las branches"
+
+testjob:
+    variables:
+       artifact_content: "Esto es una variable de job"
+    image: docker:19.03.13
+    stage: stage1
+    script:
+      - echo $artifact_content >> $artifact
+    artifacts:
+        when: on_success
+        paths:
+            - $artifact
+    only:
+      - develop
+      
+testjob2:
+    stage: stage2
+    script:
+      - cat $artifact
+    only:
+      - master
+    when: manual
+    allow_failure: true
+    environment:
+      name: test

@@ -12,9 +12,7 @@
 1. Permitimos registry inseguro a docker
 * En Linux En el fichero /etc/docker/dameon.json
 ```
-{
-insecure-registries : [gitlab.local:5001]
-}
+{"insecure-registries" : ["gitlab.local:5001"]}
 ```
 * En windows lo hacemos via Docker Desktop
 

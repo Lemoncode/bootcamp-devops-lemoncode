@@ -1,0 +1,8 @@
+stages:
+    - stage1
+image: python:3.8-slim 
+
+testjob:
+    stage: stage1
+    script:
+        - echo "Hola mundo"
