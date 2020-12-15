@@ -32,7 +32,7 @@ user@localhost:~02-gitlab/$ sudo vagrant up
 * Windows en el fichero c:\windows\system32\drivers\etc\hosts 
 
 
-## Enlaces de docuemntación necesaria
+## Enlaces de documentación necesaria
 - [¿Què es gitlab?](https://about.gitlab.com/)
 - [Un poco de arquitectura](https://docs.gitlab.com/ee/development/img/architecture_simplified.png)
 
