@@ -1,0 +1,1 @@
+# https://www.returngis.net/2020/06/autoescalar-tus-aplicaciones-en-kubernetes-con-keda/
