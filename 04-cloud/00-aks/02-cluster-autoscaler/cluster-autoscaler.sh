@@ -38,5 +38,7 @@ az aks update \
 #Si comprobamos pasados unos minutos verás que los pods han sido alocados en nuevos nodos
 kubectl get po -o wide --watch
 
+#Configurar el perfil del autoescalado: https://docs.microsoft.com/es-es/azure/aks/cluster-autoscaler#using-the-autoscaler-profile
+
 #Si eliminamos el grupo de recursos eliminaremos el clúster
 az group delete -n ${RESOURCE_GROUP} --yes --no-wait

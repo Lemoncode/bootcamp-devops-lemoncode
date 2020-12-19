@@ -1,0 +1,31 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: trigger-auth-queue
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: storage-secret
+      key: connection-string
+
+---
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: queue-scaledobject
+  labels:
+    deploymentName: web-deployment
+spec:
+  scaleTargetRef:
+    name: web-deployment
+  pollingInterval: 15
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+   - type: azure-queue
+     metadata:
+      queueName: tasks
+      queueLength: '5' # Optional. Queue length target for HPA. Default: 5 messages
+     authenticationRef:
+       name: trigger-auth-queue
