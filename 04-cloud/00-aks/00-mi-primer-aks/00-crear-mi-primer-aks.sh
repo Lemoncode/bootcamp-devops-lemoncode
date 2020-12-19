@@ -42,4 +42,4 @@ az aks scale -g ${RESOURCE_GROUP} -n ${AKS_NAME} --node-count 3
 kubectl get nodes
 
 #Si eliminamos el grupo de recursos eliminaremos el clúster
-az group delete -n ${RESOURCE_GROUP}
+az group delete -n ${RESOURCE_GROUP} --yes --no-wait
