@@ -1,46 +1,45 @@
 # https://www.returngis.net/2019/04/azure-kubernetes-service-tu-cluster-manejado-en-la-nube/
-#Create an azure-cli container
+
+#Antes de empezar a interactuar con nuestro clúster en AKS necesitamos instalar Azure CLI
+#Install the Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+brew install azure-cli
+
+#También podemos crear un contenedor con Azure CLI. Así no tenemos que instalarlo en nuestro local ;-)
 docker run -it --rm microsoft/azure-cli sh
 
-#Login
+#Iniciamos sesión en nuestra cuenta de Azure
 az login
 
-#Select your subscription account
-az account set -s "Microsoft Azure Internal Consumption"
-
-#Create a resource group
-RESOURCE_GROUP="AKS-Demo"
+#Creamos un grupo de recursos en una ubicación concreta
+RESOURCE_GROUP="Mi-Primer-AKS"
 LOCATION="northeurope"
 
 az group create -n ${RESOURCE_GROUP} -l ${LOCATION}
 
-#Create a cluster
-AKS_NAME="gisaks"
+#Creamos el clúster de AKS
+AKS_NAME="lemoncode-aks"
 
+#https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az_aks_create
 az aks create -g ${RESOURCE_GROUP} -n ${AKS_NAME} \
 --node-count 1 --generate-ssh-keys
 
-#Install kubectl if you don't have it
+#Instalamos kubectl en local si no lo tenemos. En este caso en el contenedor con Azure CLI
 az aks install-cli
 
-#configure kubectl to comunicate with out AKS cluster
+#Configuramos kubectl para comunicarnos con nuestro nuevo clúster
 az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME}
 
-#Check kubectl version
-kubectl version --short
-
+#Recuperamos los nodos de nuestro clúster (en este ejemplo solo deberíamos de tener 1)
 kubectl get nodes
 
+#Recuperamos todos los servicios desplegados en nuestro clúster
 kubectl get services --all-namespaces
 
-#Access Kubernetes Dashboard
-az aks browse -g ${RESOURCE_GROUP} -n ${AKS_NAME}
-
-#Giving permissions
-kubectl create clusterrolebinding kubernetes-dashboard -n kube-system --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
-
-#Scale cluster
+#Escalar el número de nodos en el clúster
 az aks scale -g ${RESOURCE_GROUP} -n ${AKS_NAME} --node-count 3
 
-#delete the resource group and the cluster
+#Ahora deberíamos tener 3 nodos en lugar de 1
+kubectl get nodes
+
+#Si eliminamos el grupo de recursos eliminaremos el clúster
 az group delete -n ${RESOURCE_GROUP}
