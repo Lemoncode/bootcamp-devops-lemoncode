@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lc-age-service
+  labels:
+    app: lc-age-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lc-age-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: lc-age-service
+    spec:
+      containers:
+        - image: jaimesalas/lc-age-service:latest
+          imagePullPolicy: Always
+          name: lc-age-service
+          ports:
+            - containerPort: 3000
+              protocol: TCP
