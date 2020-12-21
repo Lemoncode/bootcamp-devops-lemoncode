@@ -86,6 +86,9 @@ Execute a while loop to continue getting http://php-cache
 ```bash
 while true; do wget -q -O - http://php-apache; done
 ``` 
+* **-q** quiet no output on conosole
+* **-O** dump results into a file
+
 
 In the previous tab, watch the HPA with the following command
 
