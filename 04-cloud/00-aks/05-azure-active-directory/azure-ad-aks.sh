@@ -7,20 +7,13 @@ LOCATION="northeurope"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
 #Crear un cluster integrado con Azure AD
-az aks create -g $RESOURCE_GROUP -n $AKS_NAME --enable-aad 
+az aks create -g $RESOURCE_GROUP -n $AKS_NAME --enable-aad --node-count 1
 
 #Recuperar las credenciales de administrador para acceder al cluster
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --admin
 
 #Comprueba que puedes acceder a los recursos del cluster
 kubectl get nodes
-
-### Escenario 1: Soy Gisela y quiero tener permisos de administrador dentro del cluster
-kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/cluster-role-binding.yaml
-az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
-
-#Ahora pruebo con un usario que no tiene credenciales de admin total
-kubectl get pods #ESTO NO VA
 
 #Para que un usuario pueda interactuar con el clúster debemos asignar el Id del grupo de Azure AD al que pertenece al role
 #Estos son los ids de todos los grupos de mi directorio activo:
@@ -52,10 +45,10 @@ az role assignment create \
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --admin
 
 #Creamos el namespace, el role y el role binding (asociación) con el grupo Stack
-kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/the-north-remembers.yaml
+kubectl apply -f 04-cloud/00-aks/05-azure-active-directory/manifests/the-north-remembers.yaml
 
-#Creamos el namespace, el role y el role binding (asociación) con el grupo Stack
-kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/kings-landing.yaml
+#Creamos el namespace, el role y el role binding (asociación) con el grupo Lanister
+kubectl apply -f 04-cloud/00-aks/05-azure-active-directory/manifests/kings-landing.yaml
 
 #Ahora vamos a probar que los accesos funcionan correctamente. Lo primero que tenemos que hacer ese resetear el archivo
 #kubeconfig, ya que ahora lo tenemos con credenciales de admin, y este pasa por alto la autenticación con Azure AD. Sin el 
