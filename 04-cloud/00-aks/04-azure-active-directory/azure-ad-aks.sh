@@ -48,16 +48,37 @@ az role assignment create \
 
 #Si lo ves desde el portal tendríamos que tener estos dos grupos asignados a este rol en el cluster.
 
-# Namespace para los Stark #
-
 #Ahora vamos a crear dos namespaces como admin
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --admin
 
-#Creamos el role
-kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/role-the-north-remembers-ns.yaml
-#Hacemos la asociación del role a un grupo, en este caso los Stark
-kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/ns-the-north-remembers-and-role-binding.yml
+#Creamos el namespace, el role y el role binding (asociación) con el grupo Stack
+kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/the-north-remembers.yaml
 
-# Namespace para los Lanister #
+#Creamos el namespace, el role y el role binding (asociación) con el grupo Stack
+kubectl apply -f 04-cloud/00-aks/04-azure-active-directory/manifests/kings-landing.yaml
 
+#Ahora vamos a probar que los accesos funcionan correctamente. Lo primero que tenemos que hacer ese resetear el archivo
+#kubeconfig, ya que ahora lo tenemos con credenciales de admin, y este pasa por alto la autenticación con Azure AD. Sin el 
+#parámetro --admin el contexto de usuario normal es el que aplica y requerirá que todas las peticiones pasen por Azure AD.
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
 
+#Vamos a probar the north remembers creando un pod dentro de este namespace
+#Lanzar este comando te pedirá autenticación
+kubectl run --generator=run-pod/v1 nginx-north --image=nginx --namespace the-north-remembers
+kubectl get po -n the-north-remembers
+
+#Si intentamos acceder al namespace de los Lanister o el default nos dará error
+kubectl get po -n kings-landing
+kubectl get po
+
+#Ahora vamos a probar lo mismo con los Lanister. 
+#Reseteamos las credenciales de nuevo
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
+
+#Intentamos la misma operación pero en el namespace de los Lanister
+kubectl run --generator=run-pod/v1 nginx-kings-landing --image=nginx --namespace kings-landing
+#Si intentamos entrar en The North Remembers da un error
+kubectl get po -n the-north-remembers
+
+#Si eliminamos el grupo de recursos eliminaremos el clúster
+az group delete -n ${RESOURCE_GROUP} --yes --no-wait

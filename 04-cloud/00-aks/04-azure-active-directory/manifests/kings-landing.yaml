@@ -19,4 +19,19 @@ rules:
   - jobs
   - cronjobs
   verbs: ["*"]
-  
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: lanister-access
+  namespace: kings-landing
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kings-landing-full-access
+subjects:
+- kind: Group
+  namespace: kings-landing
+  name: fe055b1b-2df8-44bc-8a3b-292608ca4702 #Lanister's Object Id
