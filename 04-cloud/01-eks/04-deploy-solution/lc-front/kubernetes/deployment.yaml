@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lc-front
+  labels:
+    app: lc-front
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lc-front
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: lc-front
+    spec:
+      containers:
+        - image: jaimesalas/lc-front:latest
+          imagePullPolicy: Always
+          name: lc-front
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          env:
+            - name: AGE_SERVICE_URL
+              value: "http://lc-age-service.default.svc.cluster.local/"
+            - name: NAME_SERVICE_URL
+              value: "http://lc-name-service.default.svc.cluster.local/"

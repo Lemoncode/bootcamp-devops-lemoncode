@@ -1,0 +1,20 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: lc-cluster
+  region: eu-west-3
+  version: "1.18"
+
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: lc-nodes
+    instanceType: t2.small
+    desiredCapacity: 3
+    minSize: 1
+    maxSize: 4
+    ssh:
+      allow: true
+      publicKeyPath: "./eks_key.pub"

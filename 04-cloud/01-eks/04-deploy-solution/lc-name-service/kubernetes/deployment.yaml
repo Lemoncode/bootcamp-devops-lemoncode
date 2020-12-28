@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lc-name-service
+  labels:
+    app: lc-name-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lc-name-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: lc-name-service
+    spec:
+      containers:
+        - image: jaimesalas/lc-name-service:latest
+          imagePullPolicy: Always
+          name: lc-name-service
+          ports:
+            - containerPort: 3000
+              protocol: TCP
