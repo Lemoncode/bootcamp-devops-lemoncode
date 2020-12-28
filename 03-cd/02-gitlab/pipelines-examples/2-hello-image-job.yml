@@ -1,0 +1,10 @@
+stages:
+    - stage1
+    
+image: docker:19.03.13 
+
+testjob:
+    image: python:3.8-slim
+    stage: stage1
+    script:
+        - echo "Hola mundo"
