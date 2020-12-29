@@ -2,7 +2,15 @@
 
 ## Ejercios Jenkins
 
-### 1. CI/CD de una aplicación NodeJS + TypeScript
+### 1. CI/CD de una Java + Gradle
+
+En el directorio raíz de este [codigo fuente](), crea un `Jenkinsfile` que contenga un pipeline declarativa con los siguinetes stages:
+
+* **Checkout** descarga de código desde un repositorio remoto, preferentemente utiliza GitHub.
+* **Compile** compilar el código fuente, para ello utilizar `gradlew compileJava`
+* **Unit Tests** ejecutar los test unitarios, para ello utilizar `gradlew test`
+
+Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles podemos contruir una imagen a partir de [este Dockerfile](./jenkins-resources/gradle.Dockerfile)
 
 ## Ejercicios GitLab
 
@@ -51,6 +59,6 @@ En resumen, la `pipeline` de `CI/CD`, debe hacer la build de la aplicación gene
   
 > Pista: https://docs.gitlab.com/ee/ci/ssh_keys/
 
-## Ejercicios AzureDevops
+## Ejercicios Azure DevOps (Opcional)
 
-
+### 1. Crea una pipeline con cualquiera de los proyectos anteriores
