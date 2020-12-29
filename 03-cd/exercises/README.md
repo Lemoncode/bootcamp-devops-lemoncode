@@ -12,6 +12,8 @@ En el directorio raíz de este [codigo fuente](), crea un `Jenkinsfile` que cont
 
 Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles podemos contruir una imagen a partir de [este Dockerfile](./jenkins-resources/gradle.Dockerfile)
 
+### 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runners 
+
 ## Ejercicios GitLab
 
 ### 1. CI/CD de una aplicación spring
@@ -58,7 +60,3 @@ En resumen, la `pipeline` de `CI/CD`, debe hacer la build de la aplicación gene
     - Crear pipeline que usando la deploy key
   
 > Pista: https://docs.gitlab.com/ee/ci/ssh_keys/
-
-## Ejercicios Azure DevOps (Opcional)
-
-### 1. Crea una pipeline con cualquiera de los proyectos anteriores
