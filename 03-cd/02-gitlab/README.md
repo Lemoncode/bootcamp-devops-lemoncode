@@ -74,7 +74,7 @@ user@localhost:~02-gitlab/$ sudo vagrant up
 - Redeploy de la aplicación
 - Rollback de la aplicación
 8. Ejemplo de aplicación spring con tests
-9. Conatiner Registry
+9. Container Registry
 - Creando nuestras propias imágenes base
 - usando nuestras propias imágenes base
 10. Gitlab Pages
