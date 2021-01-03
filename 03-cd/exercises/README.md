@@ -12,7 +12,7 @@ En el directorio raíz de este [código fuente](./jenkins-resources/calcultor), 
  
 Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles podemos contruir una imagen a partir de [este Dockerfile](./jenkins-resources/gradle.Dockerfile)
  
-### 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runners
+### 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runner
  
 ## Ejercicios GitLab
  
