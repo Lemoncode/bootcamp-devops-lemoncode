@@ -46,3 +46,7 @@ Si se le pasa un texto vacío al invocar el script, el texto de los ficheros, el
 ```
 Que me gusta la bash!!!!
 ```
+
+### 4. Opcional - Crea un script de bash que descargue el conetenido de una página web a un fichero.
+
+Una vez descargado el fichero, que busque en el mismo una palabra dada (esta se pasará por parametro) y muestre por panatalla el núemro de linea donde aparece.
