@@ -14,25 +14,18 @@ docker run -d --name some-mongo \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
     mongo
 
-# Windows #
+# Desde Compass conectate a tu nuevo MongoDB. Haz clic en la opción Fill in connection fields individually y añade los valores:
+# hostname: localhost
+# port: 27017
+# Authentication: Username and Password
+# Las credenciales que hayas puesto
+# y haz clic en conectar
 
-docker ps
-    # - Acceder a través del CLI para mongo y crear una colección llamada books con este formato {name: 'Kubernetes in Action', author: 'Marko Luksa'} en la base de datos test
-docker exec -it some-mongo  mongo --username mongoadmin --password secret
-db.getName()
-use test
-db.books.insert({
-    name: 'Kubernetes in Action',
-    author: 'Marko Luksa'
-})
-db.books.find({})
-exit
-    # - Ver los logs de tu nuevo mongo
+#Crea una base de datos que se llame Library y una colección llamada Books. 
+# Accede a ella e importa el archivo llamado books.json que se encuentra en el directorio de este ejercicio.
+# - Ver los logs de tu nuevo mongo
 docker logs some-mongo
-    # - Descargar MongoDB Compass (https://www.mongodb.com/try/download/compass)
-    # - Accede a tu MongoDB en Docker con la siguiente cadena de conexión: mongodb://mongoadmin:secret@localhost:27017 y tus credenciales
-    # - Revisa que tu colección está dentro de la base de datos test y que aparece el libro que insertaste.
-    # - Intenta añadir otro documento
+
 
 # 2. Servidor Nginx
 #    - Crea un servidor Nginx llamado lemoncoders-web y copia el contenido de la carpeta lemoncoders-web en la ruta que sirve este servidor web. 
