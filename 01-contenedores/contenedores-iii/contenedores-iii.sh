@@ -6,9 +6,13 @@ https://code.visualstudio.com/docs/containers/overview
 cd 01-contenedores/contenedores-iii/hello-world
 
 #Ejecutar la app sin contenerizar
+#1. Instalar las dependencias de la aplicación 
 npm install
+#2. Ejecutar ESLint
 npm run test
+#3. Ejecutar la app
 node server.js
+#4. Ejecutar la app usando Nodemon
 npm run start-dev
 
 #Para crear el archivo Dockerfile y .dockerignore que vimos en la parte teórica, puedes hacerlo con la extensión de Docker de manera sencilla.
@@ -32,28 +36,53 @@ cat Dockerfile
 cat .dockerignore
 
 #Generar la imagen en base al Dockerfile
-docker build --tag=hello-world . 
+docker build -t hello-world:prod .
 
-#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de hello-world
+#Ejecutar un nuevo contenedor usando tu nueva imagen:
+docker run -p 4000:3000 hello-world:prod
+
+# Hacer lo mismo con la extensión de Visual Studio Code
+# 1. Generar la imagen
+# 2. Ejecutar un contenedor en base a la imagen
+# 3. Abrir el navegador usando la extensión
+# 4. Engancharse al terminal del contenedor
+
+# El por qué del multi-stage
+
+#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de helloworld
 docker images
 
 #Ver el historico generado para la imagen
-docker history hello-world #Los que tienen valor 0B son metadatos
+docker history helloworld #Los que tienen valor 0B son metadatos
 
-#Ejecutar un nuevo contenedor usando tu nueva imagen:
-docker run -p 4000:3000 hello-world
 
 #Modifica el Dockerfile para ejecutar el test con eslint:
-# FROM node:12.18-alpine
-# LABEL maintainer="Gisela Torres"
-# # ENV NODE_ENV production
+# FROM node:14-alpine
+
+# LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
+
+# # ENV NODE_ENV=production
+
 # WORKDIR /usr/src/app
+
 # COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+# # RUN npm install --production --silent && mv node_modules ../
 # RUN npm install
+
 # COPY . .
-# RUN npm run test
+# #Ejecuta los tests de eslint
+# RUN npm test
+
 # EXPOSE 3000
+
+# RUN chown -R node /usr/src/app
+
+# USER node
+
 # CMD ["npm", "start"]
+docker build --tag=helloworld . -f Dockerfile.dev
+
 
 #Si vuelves a generar tu imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado
 docker images
@@ -66,13 +95,14 @@ docker images
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
 #Mismo ejemplo con multi-stages
-docker build hello-world -t multi-stage -f Dockerfile.multistages
-docker run -p 5000:3000 multi-stage
+DOCKER_BUILDKIT=0 docker  build -t hello-world:multi-stage . -f Dockerfile.multistages
+
+#
 
 docker images
 
-#Si comparas con la versión de la misma aplicación sin multi-stages, la diferencia es notable
-docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
+#El resultado de hello-world:prod y hello-world:multi-stage son iguales, pero hello-world:multi-stage es más eficiente.
+
 
 
 #### Ejemplo de contenerización de una aplicación en un entorno .NET #####

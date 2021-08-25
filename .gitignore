@@ -9,6 +9,7 @@ wwwroot
 dist/
 
 # vs code
+.vscode
 .DS_Store
 
 # exercise solution
