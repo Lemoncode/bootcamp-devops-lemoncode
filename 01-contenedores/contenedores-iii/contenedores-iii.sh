@@ -95,15 +95,13 @@ docker images
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
 #Mismo ejemplo con multi-stages
-DOCKER_BUILDKIT=0 docker  build -t hello-world:multi-stage . -f Dockerfile.multistages
+DOCKER_BUILDKIT=0 docker  build -t helloworld:multi-stage . -f Dockerfile.multistages
 
-#
-
+# si revisamos las imágenes finales, helloworld:multi-stage y helloworld:prod deberían de tener el mismo peso
 docker images
 
-#El resultado de hello-world:prod y hello-world:multi-stage son iguales, pero hello-world:multi-stage es más eficiente.
-
-
+#Limpiar las imagenes dangling (intermedias de los multi-stages)
+docker image prune
 
 #### Ejemplo de contenerización de una aplicación en un entorno .NET #####
 #Visual Studio 2019
