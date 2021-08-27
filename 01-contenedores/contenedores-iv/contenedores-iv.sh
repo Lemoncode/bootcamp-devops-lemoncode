@@ -1,6 +1,6 @@
 # Parte 4: Volúmenes #
 
-cd 01-contenedores/contenedores-v
+cd 01-contenedores/contenedores-iv
 
 #Listar los volumenes en el host
 docker volume ls
@@ -71,7 +71,30 @@ ls -l /vol
 cat /vol/file1
 exit
 
-# Backups
+
+## Bind mounts ##
+
+#Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
+cd 01-contenedores/contenedores-iv
+#dev-folder es el directorio que voy a montar dentro de mi contenedor
+docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+docker inspect devtest
+#Ahora cambia en el host el contenido de la carpeta dev-folder
+
+#Usar el bind mount como read-only
+docker rm -f devtest
+docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker inspect devtest
+
+#Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
+docker container exec -it devtest sh
+ls /usr/share/nginx/html
+touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
+exit
+
+
+
+####  Backups ####
 #Creo un contenedor con un volumen llamado dbdata. En este caso voy a utilizar la opción -v en lugar de --mount
 docker run -dit -v dbdata:/dbdata --name dbstore ubuntu /bin/bash
 
@@ -96,26 +119,6 @@ docker volume rm my-data
 
 #Eliminar todos los volumenes que no esté atachados a un contenedor
 docker volume prune -f
-
-## Bind mounts ##
-
-#Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
-cd 01-contenedores/contenedores-v
-#dev-folder es el directorio que voy a montar dentro de mi contenedor
-docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
-docker inspect devtest
-#Ahora cambia en el host el contenido de la carpeta dev-folder
-
-#Usar el bind mount como read-only
-docker rm -f devtest
-docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
-docker inspect devtest
-
-#Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
-docker container exec -it devtest sh
-ls /usr/share/nginx/html
-touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
-exit
 
 
 #Tmpfs mount
