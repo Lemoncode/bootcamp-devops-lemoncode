@@ -76,14 +76,17 @@ exit
 
 #Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
 cd 01-contenedores/contenedores-iv
+
 #dev-folder es el directorio que voy a montar dentro de mi contenedor
-docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+#con pwd recupero la carpeta actual
+pwd
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
 docker inspect devtest
 #Ahora cambia en el host el contenido de la carpeta dev-folder
 
 #Usar el bind mount como read-only
 docker rm -f devtest
-docker run -dit --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
 docker inspect devtest
 
 #Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
@@ -91,7 +94,6 @@ docker container exec -it devtest sh
 ls /usr/share/nginx/html
 touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
 exit
-
 
 
 ####  Backups ####
@@ -123,36 +125,24 @@ docker volume prune -f
 
 #Tmpfs mount
 docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
-docker container inspect tmptest
+docker container inspect tmptest 
 
 #También se puede usar el parámetro --tmpfs
 docker run -dit --name tmptest2 --tmpfs /app nginx:latest
 
-docker container inspect tmptest2
+docker container inspect tmptest2 | grep "Tmpfs" -A 2
 
 
 ### Monitorización ###
 
+# Eventos de docker
+docker events
 
-#Cómo ver los logs de un contenedor
-docker logs devtest
-
-
-#docker logs en fluentd
-
-#Archivo de configuración de fluentd
-cat fluentd/in_docker.conf
-
-#Inicia fluentd en un contenedor. Utilizo bind mount para montar el contenido de in_docker.conf en el archivo fluentd/etc/fluent.conf
-#asegurate de que estás en 01-contenedores/contenedores-v
-docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
-
-#Arranca un contenedor y lanza algunos mensajes a la salida estándar
-docker run --rm -p 8080:80 --log-driver=fluentd nginx
-
-#UI para ver los logs de Fluentd
-docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui #copia el contenido del archivo de configuración en 
-
+#Como los eventos son en tiempo real, necesitamos crear/modificar/eliminar algo que nos permita generar dichos eventos.
+#Abre otro terminal y ejecuta estos comando:
+docker run --name prueba -d ubuntu sleep 100
+docker volume create prueba
+docker pull busybox
 
 #Métricas de un contenedor
 
@@ -173,11 +163,31 @@ docker system df
 
 #Con esta configuración Docker expondrá las metricas por el puerto 9323.
 #Lo siguiente que necesitamos es ejecutar un servidor de Prometheus. El archivo prometheus-config.yml tiene la configuración de este.
-docker run --name prometheus-srv --mount type=bind,source=/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/contenedores-v/prometheus-config.yml,target=/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus
+docker run --name prometheus-srv --mount type=bind,source="$(pwd)"/prometheus-config.yml,target=/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus
 
 #Ahora puedes acceder a tu servidor de Prometheus a través de http://localhost:9090. Verás que aparece en Targets pero no podrás acceder a los endpoints si utilizas Docker for Mac/Windows
 #Para comprobar que las gráficas funcionan correctamente, genera N contenedores que estén haciendo continuamente ping
 docker run -d alpine ping docker.com 
 
 #Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
-docker rm -f $(docker ps -aq)
+
+#Ver esta información en un Dashboard de Grafana
+docker run -d -p 3000:3000 grafana/grafana
+
+#Cómo ver los logs de un contenedor
+docker logs devtest
+
+#docker logs en fluentd
+
+#Archivo de configuración de fluentd
+cat fluentd/in_docker.conf
+
+#Inicia fluentd en un contenedor. Utilizo bind mount para montar el contenido de in_docker.conf en el archivo fluentd/etc/fluent.conf
+#asegurate de que estás en 01-contenedores/contenedores-v
+docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
+
+#Arranca un contenedor y lanza algunos mensajes a la salida estándar
+docker run --rm -p 3030:80 --log-driver=fluentd nginx
+
+#UI para ver los logs de Fluentd
+docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui #copia el contenido del archivo de configuración en 
