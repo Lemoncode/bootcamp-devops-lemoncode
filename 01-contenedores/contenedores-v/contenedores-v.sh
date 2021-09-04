@@ -1,26 +1,5 @@
 # Parte 5: Networking #
 
-#Lo que habíamos visto hasta ahora: Port Mapping
-
-#Vimos el ejemplo con Nginx, en el que mapeábamos un puerto del host al puerto 80, que es el que teníamos configurado como servidor web.
-docker run -d -p 9090:80 nginx
-
-#Podemos aprovecharnos de la información de EXPOSE para publicar todos los puertos que
-#Utiliza el contenedor
-#A través de inspect puedo saber qué puertos utilizará esta imagen
-docker inspect hello-world
-docker run -d --name hello-world-with-a-lot-of-ports --publish-all hello-world:latest
-#o bien
-docker run -d --name hello-world-with-a-lot-of-ports -P hello-world:latest
-
-#Para poder visualizar cuáles son los puertos expuestos y cuáles han sido asignados del host:
-docker port hello-world-with-a-lot-of-ports
-
-#En linux puedes ver que hay una interfaz más llamada docker0
-ssh gis@137.135.216.143
-ifconfig
-exit
-
 #Listar las redes disponibles en este host
 docker network ls
 #Por defecto, ya hay una red creada en un host de Docker (En Linux se llama bridge y el Docker se llama nat)
@@ -31,119 +10,129 @@ docker network ls
 #De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que NO especifiquemos una red a través de --network
 docker network inspect bridge #En el apartado Containers es donde verás todos los contenedores que están conectados a esta red.
 
+# Creo un nuevo contenedor sin especificar la red
+docker run -d --name web nginx
+
+# BONUS: otra forma de mostrar el resultado
 docker network inspect bridge --format '{{json .Containers}}' | jq
 
-#A modo de ejemplo vamos a crear dos contenedores que se conecten a la red por defecto
-docker run -dit --name container-1 alpine ash
-docker run -dit --name container-2 alpine ash
+#Ahora creamos otro contenedor sin especificar tampoco la red, por lo tanto también se conectará a bridge
+docker run -d --name web-apache httpd
 
-#El comando -d significa que estos dos contenedores estarán desatachados del terminal. Sin embargo con -it indicamos
-#que ambos serán interactivos (es decir que podemos escribir en el terminal de estos) y la t significa que podemos ver
-#tanto lo que escribimos como lo que nos devuelve como resultado.
-#ash es el shell que utiliza por defecto Alpine, en lugar de bash que se utiliza en otras distros.
-docker ps
-
-#Elimina el anterior para que quede más limpia la salida
-docker rm -f hello-world-with-a-lot-of-ports
+#Comprobamos cuántos contenedores se están ejecutando
 docker ps
 
 #Inspeccionar la configuración de una red
 docker network inspect bridge --format '{{json .Containers}}' | jq
 
-#Conectate al primer contenedor alpine1
-docker attach container-1
-#visualiza las interfaces de red de este contenedor
-ip addr show
-#La primera interfaz es la llamada loopback, esta permite al contenedor hablar consigo mismo.
-#La llamada eth0 es la que tiene la IP adjudicada para la red bridge
-#Otra prueba que puedes hacer es comprobar que el contenedor está conectado a internet
-ping -c 2 172.17.0.4
-ping -c 2 container-2 #En la red por defecto, bridge, los contenedores no se conocen por su nombre, solo por la IP
+#Conectate al contenedor web
+docker exec -ti web /bin/bash
+
+#En esta distribución de debian no está instalado net-tools
+apt update && apt -y install net-tools iputils-ping
+#Ver las interfaces de red del contenedor
+ifconfig
+#Hace ping al contenedor web-apache
+ping 172.17.0.3
+#Hace ping usando el nombre del contenedor
+ping web-apache
+#Salir del terminal asociado al contenedor
 exit
 
-
 #Crear una nueva red
-docker network create network-a
+docker network create lemoncode-net
 
 #Por defecto la crea de tipo bridge en Linux (y tipo NAT en Windows)
 docker network ls
 
-#Ahora crea un contenedor que esté asociado a tu nueva red
-docker container run -dit --name container-a --network network-a alpine ash
-
-#Con el siguiente comando puedes saber qué contenedores están asociados a una red
-docker network inspect network-a --format '{{json .Containers}}' | jq
-
-#Ahora vamos a añadir un segundo contenedor a nuestra nueva red
-docker container run -dit --name container-b --network network-a alpine ash
-
-#Ahora tienes dos contenedores dentro de la misma red:
-docker network inspect network-a --format '{{json .Containers}}' | jq
-
-#Atacha el terminal a container-b y haz un ping al container-a utilizando su nombre
-docker attach container-b
-ping -c 3 container-a
-exit
-
+#Inspeccionamos la nueva red
 #En las redes definidas por el usuario los contenedores no solo pueden comunicarse a través de su IP
 #sino que también pueden hacerlo a través del nombre del contenedor
 
-#Un contenedor con dos endpoints
-#Para conectar un contenedor a una segunda, tercera, etc red necesitas hacerlo a posteriori.
-#Es decir que solo puedes conectar un contenedor a una sola red en el momento de su creación con docker run
-docker network create network-b
-docker container run -dit --name container-c --network network-b alpine ash
-docker network connect network-b container-b
+docker network inspect lemoncode-net
 
-#Revisa los contenedores que tienes
-docker ps
+# Creo un nuevo contenedor en la red lemoncode-net
+docker run -d --name web2 --network lemoncode-net nginx
 
-#Inspecciona qué contenedores tienes en cada red
-docker network inspect network-a --format '{{json .Containers}}' | jq
-docker network inspect network-b --format '{{json .Containers}}' | jq
-
-#El contenedor a y b están en localnet y b también está en localnet-2
-
-#Por lo tanto, el contenedor b podrá hablar tanto con el a, al estar ambos en localnet, y con el c, al estar ambos en localnet-2
-docker attach container-b
-ping -c 2 container-a
-ping -c 2 container-c
-
-#Sin embargo, el A no podrá hablar con el C
-docker attach container-a
-ping -c 2 container-c
-#Solo con el b
-ping -c 2 container-b
-
-
-
-#Por otro lado, si conectamos al container-b a la red bridge también
-docker network connect bridge container-b
-#E intentamos hacer un ping al contenedor alpine2 no podremos hacerlo a través de su nombre
-docker attach container-b
-ping container-1
-#Tendremos que usar su IP
-ping -c 3 172.17.0.3
+# Me conecto a un terminal como hice anteriormente
+#Conectate al contenedor web
+docker exec -ti web2 /bin/bash
+#Instalo las herramientas
+apt update && apt -y install net-tools iputils-ping
+#Compruebo las interfaces de red
+ifconfig
+#Intento hacer ping a uno de los contenedores de la otra red
+ping 172.17.0.2
+#Salimos del terminal asociado al contenedor
 exit
 
+# Creo otro contenedor en la misma red que el anterior
+docker run -d --name web-apache2 --network lemoncode-net httpd
+
+#Inspeccionamos la nueva red
+docker network inspect lemoncode-net
+
+#Si vuelvo a conectarme al contenedor de antes
+docker exec -ti web2 /bin/bash
+#Hago ping al nuevo contenedor por IP
+ping 172.18.0.3
+#Hago ping a través del nombre del contenedor
+ping web-apache2
+#cURL al contenedor
+curl http://web-apache2
+#Salimos del terminal asociado al contenedor
+exit
+
+#¿Y si queremos que un contenedor esté en dos redes?
+docker network connect bridge web2
+
+#Inspeccionamos la red bridge para ver si está web2
+docker network inspect bridge
+
+#Vuelvo a conectarme al contenedor
+docker exec -ti web2 /bin/bash
+#Compruebo las interfaces de red
+ifconfig
+#Intento hacer ping a uno de los contenedores de la red bridge
+ping 172.17.0.2
+#Intento hacer ping a uno de los contenedores de la red bridge
+ping 172.18.0.2
+
+#Lo que habíamos visto hasta ahora: Port Mapping
+
+#Vimos el ejemplo con Nginx, en el que mapeábamos un puerto del host al puerto 80, que es el que teníamos configurado como servidor web.
+docker run -d -p 9090:80 nginx
+
+#Creo una imagen súper sencilla que usa como base la de nginx
+docker build -t nginx-custom .
+
+#Inspecciono la imagen
+docker inspect nginx-custom
+
+#Podemos aprovecharnos de la información de EXPOSE para publicar todos los puertos que utiliza el contenedor
+docker run -d --publish-all nginx-custom
+#O bien 
+docker run -d -P nginx-custom
+
+#En docker ps se ven todos los puertos asociado
+docker ps
+
+#O más claro
+docker port 1fc1f692cf14
+
+
 # Red de tipo host
-#Para este escenario necesito conectarme a un host Linux
-ssh gis@137.135.216.143
-#El objetivo es poder crear un contenedor con la imagen de nginx dentro de esta red 
-#y comunicarme con él a través del puerto 80 de host directamente, sin mapeos.
-sudo docker run --rm -d --network host --name my_nginx nginx
-sudo docker ps
-sudo netstat -tulpn | grep :80
-curl 137.135.216.143
-#Si paras el contenedor se eliminará automáticamente
-sudo docker container stop my_nginx
+docker run -d --name web-apache3 --network host httpd
+#Inspeccionamos la misma para ver si el contenedor está asociado a ella
+docker network inspect host
 
 #Deshabilitar completamente la red de un contenedor
-docker run --rm -dit --network none --name no-net-alpine alpine ash
+docker run -dit --network none --name no-net-alpine alpine ash
 #Ahora comprueba que efectivamente no tienes eth0 creado, solo loopback
 docker exec no-net-alpine ip link show
-#Si paras el contenedor este será eliminado automáticamente, debido al flag --rm
-docker stop no-net-alpine
+
+#Eliminar una red
+docker network rm lemoncode-net
 
 #Eliminar todos las redes que están en desuso en un host
 docker network prune
