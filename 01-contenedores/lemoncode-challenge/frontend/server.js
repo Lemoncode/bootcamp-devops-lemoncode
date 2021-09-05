@@ -1,26 +1,22 @@
 //Módulos
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const express = require('express'),
-    app = express(),
-    mongodb = require('mongodb');
+    app = express();
+
+const LOCAL = 'http://localhost:5000/api/topics';
 
 app.set('view engine', 'ejs');
 
 app.get('/', async (req, res) => {
 
-    //Recuperar topics de mongodb
-    const client = await new mongodb.MongoClient('mongodb://localhost:27017').connect();
-
-    const db = client.db('TopicstoreDb');
-
-    const topics = await db.collection('Topics').find().toArray();
-
-    console.log(`Topics: ${topics.length}`);
-    console.log(topics);
+    //Recuperar topics de la API
+    const response = await fetch(process.env.API_URI || LOCAL);
+    const topics = await response.json();
 
     res.render('index', { topics });
 
 });
 
 app.listen(3000, () => {
-    console.log('Server running on port 3000');
+    console.log(`Server running on port 3000 with ${process.env.API_URI || LOCAL}`);
 });
