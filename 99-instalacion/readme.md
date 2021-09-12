@@ -3,6 +3,8 @@
 Correr Docker en `WSL 1` no es el método recomendado. Existen ocasiones, en que no es posible poder instalar en nuestras máquinas `WSL 2`. Una buena alternativa a esto es usar un `VMs` y ejecutar los contenedores de manera nativa (en Linux).
  
 Con respecto a tener `K8s` corriendo en local, uno de los métodos existentes más directo que existe, es utilizar `minikube`. Existen distintas maneras de correr `minikube`, pero básicamente, se trata de un máquina virtual, a la cuál la tenemos que proveer de un *driver* (VirtualBox, VMWare...) para que pueda correr el *clúster* de `K8s`. 
+
+>IMPORTANTE: Ejecutar Vagrant con WSL como driver está en beta. Para seguir esta guía de manera directa, la mejor opción es no tener hábilitadas las características de WSL en nuestar máquina.
  
 ## Instalando en Windows - Chocolatey
  
