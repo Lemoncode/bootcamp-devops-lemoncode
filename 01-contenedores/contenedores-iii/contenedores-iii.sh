@@ -6,9 +6,13 @@ https://code.visualstudio.com/docs/containers/overview
 cd 01-contenedores/contenedores-iii/hello-world
 
 #Ejecutar la app sin contenerizar
+#1. Instalar las dependencias de la aplicación 
 npm install
+#2. Ejecutar ESLint
 npm run test
+#3. Ejecutar la app
 node server.js
+#4. Ejecutar la app usando Nodemon
 npm run start-dev
 
 #Para crear el archivo Dockerfile y .dockerignore que vimos en la parte teórica, puedes hacerlo con la extensión de Docker de manera sencilla.
@@ -32,28 +36,53 @@ cat Dockerfile
 cat .dockerignore
 
 #Generar la imagen en base al Dockerfile
-docker build --tag=hello-world . 
+docker build -t hello-world:prod .
 
-#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de hello-world
+#Ejecutar un nuevo contenedor usando tu nueva imagen:
+docker run -p 4000:3000 hello-world:prod
+
+# Hacer lo mismo con la extensión de Visual Studio Code
+# 1. Generar la imagen
+# 2. Ejecutar un contenedor en base a la imagen
+# 3. Abrir el navegador usando la extensión
+# 4. Engancharse al terminal del contenedor
+
+# El por qué del multi-stage
+
+#Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de helloworld
 docker images
 
 #Ver el historico generado para la imagen
-docker history hello-world #Los que tienen valor 0B son metadatos
+docker history helloworld #Los que tienen valor 0B son metadatos
 
-#Ejecutar un nuevo contenedor usando tu nueva imagen:
-docker run -p 4000:3000 hello-world
 
 #Modifica el Dockerfile para ejecutar el test con eslint:
-# FROM node:12.18-alpine
-# LABEL maintainer="Gisela Torres"
-# # ENV NODE_ENV production
+# FROM node:14-alpine
+
+# LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
+
+# # ENV NODE_ENV=production
+
 # WORKDIR /usr/src/app
+
 # COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+# # RUN npm install --production --silent && mv node_modules ../
 # RUN npm install
+
 # COPY . .
-# RUN npm run test
+# #Ejecuta los tests de eslint
+# RUN npm test
+
 # EXPOSE 3000
+
+# RUN chown -R node /usr/src/app
+
+# USER node
+
 # CMD ["npm", "start"]
+docker build --tag=helloworld . -f Dockerfile.dev
+
 
 #Si vuelves a generar tu imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado
 docker images
@@ -66,14 +95,13 @@ docker images
 #La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
 #El objetivo final es tener una imagen productiva lo más slim posible y segura.
 #Mismo ejemplo con multi-stages
-docker build hello-world -t multi-stage -f Dockerfile.multistages
-docker run -p 5000:3000 multi-stage
+DOCKER_BUILDKIT=0 docker  build -t helloworld:multi-stage . -f Dockerfile.multistages
 
+# si revisamos las imágenes finales, helloworld:multi-stage y helloworld:prod deberían de tener el mismo peso
 docker images
 
-#Si comparas con la versión de la misma aplicación sin multi-stages, la diferencia es notable
-docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cache
-
+#Limpiar las imagenes dangling (intermedias de los multi-stages)
+docker image prune
 
 #### Ejemplo de contenerización de una aplicación en un entorno .NET #####
 #Visual Studio 2019
@@ -87,31 +115,11 @@ docker build hello-world -t no-multi-stage -f Dockerfile.no.multistages --no-cac
 ### Ejemplo de aplicación en Java - IntelliJ IDEA/Eclipse ####
 https://www.jetbrains.com/help/idea/running-a-java-app-in-a-container.html
 
-# FROM openjdk:14
-# COPY ./out/production/HelloDocker/ /tmp
-# WORKDIR /tmp
-# ENTRYPOINT ["java","HelloWorld"]
+# FROM openjdk:16
+# WORKDIR /app
+# COPY ./out/production/HelloDocker/ .
+# ENTRYPOINT ["java","com.example.lemoncode.HelloWorld"]
 
-#Ejemplo de aplicación con un contenedor Windows
-#Windows Base OS images: https://hub.docker.com/_/microsoft-windows-base-os-images
-docker pull mcr.microsoft.com/windows/nanoserver:1903
-docker images
-
-docker run -it mcr.microsoft.com/windows/nanoserver:1903 cmd.exe
-echo "Hello World!" > Hello.txt
-exit
-
-docker ps -a
-
-#Crea una nueva imagen que incluya los cambios del primer contenedor que has ejecutado
-#https://docs.docker.com/engine/reference/commandline/commit/
-docker commit 7e5e29758e43 helloworld
-
-#Cuando se complete tendrás una nueva imagen con el archivo Hello.txt
-docker images
-
-#Ahora ejecuta un nuevo contenedor con la imagen que acabas de crear
-docker run --rm helloworld cmd.exe /s /c type Hello.txt
 
 ##### Buenas prácticas en la construcción de imágenes #########
 # - Una aplicación por contenedor (que el contenedor tenga el mismo ciclo de vida que una aplicación. Además, facilita la monitorización).

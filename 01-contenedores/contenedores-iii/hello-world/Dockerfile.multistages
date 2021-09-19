@@ -1,0 +1,36 @@
+# ---- Base Node ----
+FROM node:14-alpine AS base
+# set working directory
+WORKDIR /app
+
+#
+# ---- Dependencies ----
+FROM base AS dependencies
+# Copy project file
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+#
+# ---- Test ----
+# run linters, setup and tests
+FROM dependencies AS test
+# Install ALL node_modules, including 'devDependencies'
+RUN npm install
+COPY . .
+RUN  npm run test
+
+
+#
+# ---- Release ----
+FROM base AS release
+#Add environment variables
+ENV NODE_ENV production
+# copy production node_modules
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"] --from=dependencies
+#Install app dependencies
+RUN npm install --silent --production && mv node_modules ../
+# copy app sources
+COPY . .
+# expose port and define CMD
+EXPOSE 3000
+#specify what command it'll execute when you create a container
+CMD ["npm", "start"]

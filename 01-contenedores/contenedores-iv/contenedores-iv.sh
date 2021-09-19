@@ -1,153 +1,193 @@
-# Parte 4: Networking #
+# Parte 4: Volúmenes #
 
-#Lo que habíamos visto hasta ahora: Port Mapping
+cd 01-contenedores/contenedores-iv
 
-#Vimos el ejemplo con Nginx, en el que mapeábamos un puerto del host al puerto 80, que es el que teníamos configurado como servidor web.
-docker run -d -p 9090:80 nginx
+#Listar los volumenes en el host
+docker volume ls
 
-#Podemos aprovecharnos de la información de EXPOSE para publicar todos los puertos que
-#Utiliza el contenedor
-#A través de inspect puedo saber qué puertos utilizará esta imagen
-docker inspect hello-world
-docker run -d --name hello-world-with-a-lot-of-ports --publish-all hello-world:latest
-#o bien
-docker run -d --name hello-world-with-a-lot-of-ports -P hello-world:latest
+#Crear un nuevo volumen con create
+docker volume create data
+docker volume ls
 
-#Para poder visualizar cuáles son los puertos expuestos y cuáles han sido asignados del host:
-docker port hello-world-with-a-lot-of-ports
+#Crear un contenedor que a su vez crea un volumen
+docker container run -dit --name my-container \
+    --mount source=my-data,target=/vol \
+    alpine
 
-#En linux puedes ver que hay una interfaz más llamada docker0
+#Se puede utilizar tanto --mount como -v (o --volume)). Originalmente --mount solo se usaba para el modo clúster. Sin embargo, desde la versión 17.06 (Vamos por la 10.03.13) se puede utilizar para contenedores independientes.
+
+
+#Puedes comprobar que el volumen se ha creado correctamente
+docker volume ls
+
+#Puedo asociar varios contenedores al mismo volumen a la vez
+docker container run -dit --name my-container2 \
+    --mount source=my-data,target=/vol2 \
+    alpine
+
+#Para comprobar a qué contenedores está asociado un volumen
+docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
+
+#Inspeccionar el volumen
+docker volume inspect my-data
+
+#En Mac y Windows no podemos ver el contenido de la ruta donde se guardan los volúmenes. 
+#En Linux podríamos:
 ssh gis@137.135.216.143
-ifconfig
+
+#Creamos en este tipo de host los volumenes anteriores, si no estás trabajando en Linux
+sudo docker container run -dit --name my-container \
+    --mount source=my-data,target=/vol \
+    alpine
+sudo docker volume create data
+
+#Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando
+sudo docker volume inspect my-data
+#Esta es la ruta donde Docker almacena los volúmenes
+sudo ls -l /var/lib/docker/volumes
 exit
 
-#Listar las redes disponibles en este host
-docker network ls
-#Por defecto, ya hay una red creada en un host de Docker (En Linux se llama bridge y el Docker se llama nat)
+#Ahora vamos a añadir algunos datos a nuestro volumen
+docker container exec -it my-container sh
+echo "Hola Lemoncoders!" > /vol/file1
+ls -l /vol
+cat /vol/file1
+exit
 
-#Usando el bridge por defecto#
-#Esta red no es la mejor opción para entornos productivos
+#Ahora voy a eliminar el contenedor
+docker rm my-container -f
 
-#De forma predeterminada, esta es la red  a la que se conectarán todos los contenedores para los que NO especifiquemos una red a través de --network
-docker network inspect bridge #En el apartado Containers es donde verás todos los contenedores que están conectados a esta red.
+#Pero el volumen todavía existe
+docker volume ls
 
-docker network inspect bridge --format '{{json .Containers}}' | jq
+#Por lo que puedo crear un nuevo contenedor y volver a atachar el volumen que tenía con mis datos
+docker container run -dit --name another-container \
+    --mount source=my-data,target=/vol \
+    alpine
 
-#A modo de ejemplo vamos a crear dos contenedores que se conecten a la red por defecto
-docker run -dit --name container-1 alpine ash
-docker run -dit --name container-2 alpine ash
-
-#El comando -d significa que estos dos contenedores estarán desatachados del terminal. Sin embargo con -it indicamos
-#que ambos serán interactivos (es decir que podemos escribir en el terminal de estos) y la t significa que podemos ver
-#tanto lo que escribimos como lo que nos devuelve como resultado.
-#ash es el shell que utiliza por defecto Alpine, en lugar de bash que se utiliza en otras distros.
-docker ps
-
-#Elimina el anterior para que quede más limpia la salida
-docker rm -f hello-world-with-a-lot-of-ports
-docker ps
-
-#Inspeccionar la configuración de una red
-docker network inspect bridge --format '{{json .Containers}}' | jq
-
-#Conectate al primer contenedor alpine1
-docker attach container-1
-#visualiza las interfaces de red de este contenedor
-ip addr show
-#La primera interfaz es la llamada loopback, esta permite al contenedor hablar consigo mismo.
-#La llamada eth0 es la que tiene la IP adjudicada para la red bridge
-#Otra prueba que puedes hacer es comprobar que el contenedor está conectado a internet
-ping -c 2 172.17.0.4
-ping -c 2 container-2 #En la red por defecto, bridge, los contenedores no se conocen por su nombre, solo por la IP
+#Comprueba que tu archivo file1 sigue ahí
+docker container exec -it another-container sh
+ls -l /vol
+cat /vol/file1
 exit
 
 
-#Crear una nueva red
-docker network create network-a
+## Bind mounts ##
 
-#Por defecto la crea de tipo bridge en Linux (y tipo NAT en Windows)
-docker network ls
+#Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
+cd 01-contenedores/contenedores-iv
 
-#Ahora crea un contenedor que esté asociado a tu nueva red
-docker container run -dit --name container-a --network network-a alpine ash
+#dev-folder es el directorio que voy a montar dentro de mi contenedor
+#con pwd recupero la carpeta actual
+pwd
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+docker inspect devtest
+#Ahora cambia en el host el contenido de la carpeta dev-folder
 
-#Con el siguiente comando puedes saber qué contenedores están asociados a una red
-docker network inspect network-a --format '{{json .Containers}}' | jq
+#Usar el bind mount como read-only
+docker rm -f devtest
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker inspect devtest
 
-#Ahora vamos a añadir un segundo contenedor a nuestra nueva red
-docker container run -dit --name container-b --network network-a alpine ash
-
-#Ahora tienes dos contenedores dentro de la misma red:
-docker network inspect network-a --format '{{json .Containers}}' | jq
-
-#Atacha el terminal a container-b y haz un ping al container-a utilizando su nombre
-docker attach container-b
-ping -c 3 container-a
+#Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
+docker container exec -it devtest sh
+ls /usr/share/nginx/html
+touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
 exit
 
-#En las redes definidas por el usuario los contenedores no solo pueden comunicarse a través de su IP
-#sino que también pueden hacerlo a través del nombre del contenedor
 
-#Un contenedor con dos endpoints
-#Para conectar un contenedor a una segunda, tercera, etc red necesitas hacerlo a posteriori.
-#Es decir que solo puedes conectar un contenedor a una sola red en el momento de su creación con docker run
-docker network create network-b
-docker container run -dit --name container-c --network network-b alpine ash
-docker network connect network-b container-b
+####  Backups ####
+#Creo un contenedor con un volumen llamado dbdata. En este caso voy a utilizar la opción -v en lugar de --mount
+docker run -dit -v dbdata:/dbdata --name dbstore ubuntu /bin/bash
 
-#Revisa los contenedores que tienes
-docker ps
+#Compruebo que efectivamente el volumen dbdata se ha generado utilizando el parámetro -v
+docker volume ls
 
-#Inspecciona qué contenedores tienes en cada red
-docker network inspect network-a --format '{{json .Containers}}' | jq
-docker network inspect network-b --format '{{json .Containers}}' | jq
+#Ahora copio algunos ficheros dentro del volumen
+docker cp some-files/. dbstore:/dbdata
 
-#El contenedor a y b están en localnet y b también está en localnet-2
+#Compruebo que los archivos están ahí
+docker exec dbstore ls /dbdata
 
-#Por lo tanto, el contenedor b podrá hablar tanto con el a, al estar ambos en localnet, y con el c, al estar ambos en localnet-2
-docker attach container-b
-ping -c 2 container-a
-ping -c 2 container-c
+#Creo un nuevo contenedor y monto el volumen del contenedor dbstore
+#Ejecuto el comando tar que comprime el contenido
+docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 
-#Sin embargo, el A no podrá hablar con el C
-docker attach container-a
-ping -c 2 container-c
-#Solo con el b
-ping -c 2 container-b
+#Eliminar un volumen específico 
+docker volume rm data
+
+#No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
+docker volume rm my-data
+
+#Eliminar todos los volumenes que no esté atachados a un contenedor
+docker volume prune -f
 
 
+#Tmpfs mount
+docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
+docker container inspect tmptest 
 
-#Por otro lado, si conectamos al container-b a la red bridge también
-docker network connect bridge container-b
-#E intentamos hacer un ping al contenedor alpine2 no podremos hacerlo a través de su nombre
-docker attach container-b
-ping container-1
-#Tendremos que usar su IP
-ping -c 3 172.17.0.3
-exit
+#También se puede usar el parámetro --tmpfs
+docker run -dit --name tmptest2 --tmpfs /app nginx:latest
 
-# Red de tipo host
-#Para este escenario necesito conectarme a un host Linux
-ssh gis@137.135.216.143
-#El objetivo es poder crear un contenedor con la imagen de nginx dentro de esta red 
-#y comunicarme con él a través del puerto 80 de host directamente, sin mapeos.
-sudo docker run --rm -d --network host --name my_nginx nginx
-sudo docker ps
-sudo netstat -tulpn | grep :80
-curl 137.135.216.143
-#Si paras el contenedor se eliminará automáticamente
-sudo docker container stop my_nginx
+docker container inspect tmptest2 | grep "Tmpfs" -A 2
 
-#Deshabilitar completamente la red de un contenedor
-docker run --rm -dit --network none --name no-net-alpine alpine ash
-#Ahora comprueba que efectivamente no tienes eth0 creado, solo loopback
-docker exec no-net-alpine ip link show
-#Si paras el contenedor este será eliminado automáticamente, debido al flag --rm
-docker stop no-net-alpine
 
-#Eliminar todos las redes que están en desuso en un host
-docker network prune
+### Monitorización ###
 
-#Crear una red de tipo overlay
-docker network create --driver overlay multihost-net
-#Para poder crear redes del tipo overlay es necesario tener Docker en modo clúster (lo veremos en el último módulo)
+# Eventos de docker
+docker events
+
+#Como los eventos son en tiempo real, necesitamos crear/modificar/eliminar algo que nos permita generar dichos eventos.
+#Abre otro terminal y ejecuta estos comando:
+docker run --name prueba -d ubuntu sleep 100
+docker volume create prueba
+docker pull busybox
+
+#Métricas de un contenedor
+
+#Puedes ver las métricas de un contenedor con docker stats. Este comando muestra CPU, memoria en uso, límite de memoria y red
+docker run --name ping-service -d alpine ping docker.com 
+
+docker stats ping-service
+
+#Otro comando que puede ser útil es el que nos dice cuánto espacio estamos usando del disco por "culpa" de Docker
+docker system df
+
+#Recolectar métricas de Docker con Prometheus
+#Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  
+{
+  "metrics-addr" : "127.0.0.1:9323",
+  "experimental" : true
+}
+
+#Con esta configuración Docker expondrá las metricas por el puerto 9323.
+#Lo siguiente que necesitamos es ejecutar un servidor de Prometheus. El archivo prometheus-config.yml tiene la configuración de este.
+docker run --name prometheus-srv --mount type=bind,source="$(pwd)"/prometheus-config.yml,target=/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus
+
+#Ahora puedes acceder a tu servidor de Prometheus a través de http://localhost:9090. Verás que aparece en Targets pero no podrás acceder a los endpoints si utilizas Docker for Mac/Windows
+#Para comprobar que las gráficas funcionan correctamente, genera N contenedores que estén haciendo continuamente ping
+docker run -d alpine ping docker.com 
+
+#Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
+
+#Ver esta información en un Dashboard de Grafana
+docker run -d -p 3000:3000 grafana/grafana
+
+#Cómo ver los logs de un contenedor
+docker logs devtest
+
+#docker logs en fluentd
+
+#Archivo de configuración de fluentd
+cat fluentd/in_docker.conf
+
+#Inicia fluentd en un contenedor. Utilizo bind mount para montar el contenido de in_docker.conf en el archivo fluentd/etc/fluent.conf
+#asegurate de que estás en 01-contenedores/contenedores-v
+docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
+
+#Arranca un contenedor y lanza algunos mensajes a la salida estándar
+docker run --rm -p 3030:80 --log-driver=fluentd nginx
+
+#UI para ver los logs de Fluentd
+docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui #copia el contenido del archivo de configuración en 

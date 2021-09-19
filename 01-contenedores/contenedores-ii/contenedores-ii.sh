@@ -45,9 +45,6 @@ docker run mcr.microsoft.com/mcr/hello-world
 # 3. Buscar imágenes en Docker Hub
 docker search microsoft
 
-# El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
-curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
-
 docker search google
 docker search aws
 
@@ -60,6 +57,9 @@ docker search --filter is-official=true nginx
 #Formateo de la salida usando Go
 docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
+
+# El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
+curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 
 
 #Crear un contenedor a partir de una imagen de docker
@@ -79,6 +79,16 @@ docker build . --tag simple-nginx:v1
 
 #o bien
 docker build . -t simple-nginx:v1
+
+cd ..
+docker build . -t simple-nginx:v1
+
+#Le decimos dónde está el Dockerfile, pero sigue fallando
+docker build . -f contenedores-ii/Dockerfile -t simple-nginx:v1
+
+#Cambio el contexto
+docker build contenedores-ii/ -t simple-nginx:v1
+
 
 docker images
 #Ahora verás que tienes la imagen alpine descargada, al utilizarla como base, y una nueva llamada simple-nginx que tiene el tag v1
@@ -109,7 +119,7 @@ docker run -d --name my_nginx -p 8080:80 simple-nginx:v1
 
 docker ps
 
-#Reetiquetar una imagen para subirla a Docker Hub
+#Etiquetar una imagen para subirla a Docker Hub
 docker tag simple-nginx:v1 0gis0/simple-nginx:v1
 
 #Comprobamos que la nueva etiqueta se ha generado correctamente
@@ -121,11 +131,11 @@ docker push 0gis0/simple-nginx:v1
 #Para comprobar que podemos utilizar nuestra imagen ya en Docker Hub, debemos eliminar la copia que tenemos en local:
 
 #Borramos la imagen de local, utilizando el ID
-docker rmi 53a5fb4d6607
+docker rmi simple-nginx:v1
 #No nos va a dejar porque tenemos un contenedor ejecutandose con dicha imagen
 docker rm -f my_nginx
 #Ahora debería de dejarnos
-docker rmi 53a5fb4d6607 #como tiene varias etiquetas tampoco le molará.
+docker rmi simple-nginx #como tiene varias etiquetas tampoco le molará.
 docker rmi simple-nginx:v1 0gis0/simple-nginx:v1
 
 #Ahora intentamos crear un contenedor pero con la imagen que ahora está en Docker Hub
@@ -135,8 +145,9 @@ docker run -d --name my_nginx -p 8080:80 0gis0/simple-nginx:v1
 docker rmi simple-nginx:v1
 
 #Eliminar una imagen
-docker image rm c5bb82490acc
-docker image rm 48fdbab01aa6 a24bb4013296
+docker image rm 0gis0/simple-nginx:v1
+docker rmi 0eb3967e4af2
+docker image rm nginx 0gis0/simple-nginx:v1
 
 #Eliminar SOLO las imágenes que no se están utilizando
 docker image prune -a 

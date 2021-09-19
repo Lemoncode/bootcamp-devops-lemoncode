@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.9"  # optional since v1.27.0
 services:
    db:
      image: mysql:5.7
@@ -30,6 +30,6 @@ services:
        - wordpress-network
 volumes:
     db_data: 
-    wordpress_data:
+    wordpress_data: 
 networks:
-    wordpress-network:
+    wordpress-network: 

@@ -1,9 +1,13 @@
 # Día I: Introducción a Docker #
 
+#### Cómo instalar Docker Engine ###
+
 #Si estás en Windows o Mac: Revisar Docker Desktop:
 https://docs.docker.com/docker-for-windows/
 https://docs.docker.com/docker-for-mac/    
-#Si trabajas con Linux elige tu distro aquí: https://docs.docker.com/engine/install/
+
+#Si trabajas con Linux elige tu distro aquí
+https://docs.docker.com/engine/install/
 
 # Una vez que tienes Docker instalado en tu máquina...
 
@@ -24,6 +28,8 @@ docker run hello-world
 
 #Lista las imágenes que tienes descargadas en tu local
 docker image ls
+# O bien
+docker images
 
 #¿Y estas imágenes de dónde vienen? 
 #De Docker Hub :-) https://hub.docker.com/
@@ -64,12 +70,12 @@ docker rename NOMBRE_ASIGNADO_POR_DOCKER hello-world
 docker ps -a
 
 #Ejecutar un contenedor y lanzar un shell interactivo en él
+docker run --interactive --tty ubuntu /bin/bash
+#o
 docker run -it ubuntu /bin/bash
+#Revisa la versión del SO que está instalado en tu contenedor
 cat /etc/os-release
 exit
-
-# Ejecutar comandos desde mi local dentro del contenedor ####
-docker exec my-web ls /var/log/nginx
 
 #Si quiero conectarme a un contenedor
 docker run --name webserver -d nginx  #Con -d desatacho
@@ -77,6 +83,8 @@ docker exec -it webserver bash #Ejecuto el proceso bash dentro del contenedor y 
 cat /etc/nginx/nginx.conf 
 exit
 
+# Ejecutar comandos desde mi local dentro del contenedor ####
+docker exec my-web ls /var/log/nginx
 
 ## Copiar un archivo desde mi local a dentro del contenedor ####
 #https://docs.docker.com/engine/reference/commandline/cp/
@@ -89,21 +97,18 @@ docker cp my-web:/var/log/nginx/access.log access.log
 mkdir nginx-logs
 docker cp my-web:/var/log/nginx/. nginx-logs
 
-
 # ¿Cómo paro un contenedor?
 docker stop my-web
 
-# ¿Y si quiero volver a iniciarlo?
-docker start my-web
+    # ¿Y si quiero volver a iniciarlo?
+    docker start my-web
 
 #¿Y si quiero eliminarlo del todo de mi ordenador?
 docker stop my-web
 docker rm my-web
 docker ps -a #El contenedor hello-world ya no aparece en el listado
 
-
 #Todo esto también es posible verlo desde la interfaz de Docker Desktop (A través de la opción Dashboard)
-
 
 ## SQL Server dockerizado ####
 # Imagínate que estás desarrollando una aplicación que necesita de un SQL Server y no quieres tener que montarte uno y ensuciar tu máquina, o tener que crearte una máquina virtual, configurarla, bla, bla, bla
