@@ -134,6 +134,8 @@ fi
 echo $(($1 + $2))
 ```
 
+> Más información sobre [codigos de salida](https://tldp.org/LDP/abs/html/exitcodes.html#EXITCODESREF).
+
 ```shell
 $ ./calculadora.sh
 Error: missing arguments

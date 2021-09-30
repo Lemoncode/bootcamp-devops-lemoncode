@@ -219,7 +219,7 @@ Para enviar señales a un proceso podemos escribirlo de varias formas:
 - `<SEÑAL>`: `kill SIGTERM 229`
 - `-s <SEÑAL>`: kill -s SIGTERM 229
 
-Para ver el objetivo de cada señal podemos verlos con `man signal 7`. También un programa puede actuar de una forma u otra dependiendo de la señal que enviemos, por ejemplo, la señal `SIGHUP` en un proceso Nginx recarga su configuración o `SIGQUIT` espera a que todas las conexiones establecidas sean cerradas antes de abortar el proceso, a diferencia de `SIGTERM` que corta las conexiones y sale directamente.
+Para ver el objetivo de cada señal podemos verlos con `man 7 signal`. También un programa puede actuar de una forma u otra dependiendo de la señal que enviemos, por ejemplo, la señal `SIGHUP` en un proceso Nginx recarga su configuración o `SIGQUIT` espera a que todas las conexiones establecidas sean cerradas antes de abortar el proceso, a diferencia de `SIGTERM` que corta las conexiones y sale directamente.
 
 Si no especificamos una señal por defecto se enviará `TERM`.
 
