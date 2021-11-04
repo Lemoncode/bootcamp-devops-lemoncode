@@ -1,0 +1,15 @@
+---
+
+- hosts: controller
+  tasks:
+  - name: Read parameters
+    include_vars:
+      name: _params
+      file: .deploy.json
+
+  - name: Add node to Kubernetes cluster
+    shell: | 
+      /bin/bash -c "kubectl get nodes | \
+      grep -e '^{{ _params.project.name }}-node[0-9]*' | \
+      awk '{ print(\$1) }' | \
+      xargs -I ARG kubectl label node ARG node-role.kubernetes.io/worker=worker"
