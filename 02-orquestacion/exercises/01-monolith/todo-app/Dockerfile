@@ -1,4 +1,4 @@
-FROM node:alpine3.12 as builder
+FROM node:12-alpine3.12 as builder
 
 WORKDIR /build
 
@@ -22,7 +22,7 @@ RUN cd ./frontend && npm install
 RUN npm run build
 
 # Packaging app
-FROM node:alpine3.12 as app
+FROM node:12-alpine3.12 as app
 
 WORKDIR /app
 

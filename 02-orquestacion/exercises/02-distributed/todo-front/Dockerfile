@@ -1,4 +1,4 @@
-FROM node:alpine3.12 as builder
+FROM node:12-alpine3.12 as builder
 
 ARG API_HOST
 
