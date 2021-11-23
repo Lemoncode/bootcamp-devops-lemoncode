@@ -33,4 +33,17 @@ DB_VERSION=10.4
 
 ### Running Applications
 
-First we need to install dependencies change directory to `todo-app/frontend` and run `npm install`, then change directory to `/todo-app` and run `npm install`. Once that all dependencies are installed, we can run the solution locally by changing directory to `todo-app/frontend` and running `npm run run-p -l start:server start:dev`.
+First we need to install dependencies change directory to `todo-app/frontend` and run `npm install`, then change directory to `/todo-app` and run `npm install`. Once that all dependencies are installed, we can run the solution locally by changing directory to `todo-app/frontend` and running `npm run start:dev:server`.
+
+```bash
+# 1. Install frontend dependencies
+cd ./todo-app/frontend
+npm install
+
+# 2. Install backend dependencies
+cd ../
+mpm install
+
+# 3. To start solution run the following command
+npm run start:dev:server
+```
