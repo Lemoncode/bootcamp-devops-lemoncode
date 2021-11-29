@@ -1,6 +1,6 @@
 # Estructuras de Control
 
-Para hacer algo medianamente importante en nuestros scripts, necesitamos estructuras de control. La más esencial de ellas es `if else`, que tiene la misma apariencia que en `Java` on en `C` 
+Para hacer algo medianamente importante en nuestros scripts, necesitamos estructuras de control. La más esencial de ellas es `if else`, que tiene la misma apariencia que en `Java` on en `C`
 
 ```groovy
 if (isProgrammer) {
@@ -10,7 +10,7 @@ else {
     println "Not a programmer, tho"
 }
 ```
- 
+
 Lo mismo para un `loop`
 
 ```groovy
@@ -29,7 +29,6 @@ while (i < courseCount) {
     i++
 }
 ```
-
 
 Podemos definir un `for in loop` de la siguiente manera:
 
@@ -84,7 +83,7 @@ singers.each{println(it)}
 Y lo ejecutamos de la siguiente manera:
 
 ```bash
-$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 02_control_structures.groovy 
+$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 02_control_structures.groovy
 He's a programmer
 Chris made course 1!!!
 Chris made course 2!!!

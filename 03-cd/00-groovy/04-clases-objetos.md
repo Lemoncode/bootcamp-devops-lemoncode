@@ -4,10 +4,10 @@ Con las subrutinas ya tenemos una primera base para la encapsulación. Pero desd
 
 Para crear una clase simplemente usamos `class`.
 
-* Nivel base para la encapsulación
-* Envolvemos nuestro código en clases
-* Listas paralelas => objectos con dos propiedades 
-* Muy similar a `Java` o `C#`
+- Nivel base para la encapsulación
+- Envolvemos nuestro código en clases
+- Listas paralelas => objectos con dos propiedades
+- Muy similar a `Java` o `C#`
 
 ```groovy
 class User {
@@ -19,7 +19,7 @@ User user = new User();
 
 # Demo: Trabajando con Clases y Objetos
 
-Creamos el siguiente fichero [04_working_with_classe_and_objects.groovy](playground/04_working_with_classes_and_objects.groovy)
+Creamos el siguiente fichero [04_working_with_classes_and_objects.groovy](playground/04_working_with_classes_and_objects.groovy)
 
 > Nota: Comenzamos desde el código de la demo anterior.
 
@@ -72,10 +72,10 @@ for (int i = 0; i < firstNames.size(); i++) {
 }
 ```
 
-Podemos ejecutarlo paar verificar que el código es correcto.
+Podemos ejecutarlo para verificar que el código es correcto.
 
 ```bash
-$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 04_working_with_classes_and_objects.groovy 
+$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 04_working_with_classes_and_objects.groovy
 UserName is fadria
 UserName is dgarcia
 UserName is jcruz

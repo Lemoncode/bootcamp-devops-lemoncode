@@ -23,7 +23,6 @@ pipeline {
 }
 ```
 
-
 Si hacemos click en los `logs` podemos encontrar la salida de cada `stage`, el número viene de **$BUILD_NUMBER**, la cual es una variable de entorno que nos provee `Jenkins`.
 
 Como es la primera vez que ejecutamos algo dentro del servidor de Jenkins obtenemos la siguiente salida:
@@ -41,13 +40,13 @@ Finished: SUCCESS
 
 ## 1.2 Crear una pipeline simple desde Bitbucket
 
-* Crear un nuevo repositorio en Bitbucket `demo1-2`
+- Crear un nuevo repositorio en Bitbucket `demo1-2`
 
 Navegamos a http://localhost:8080/blue
 
 - New pipeline `demo1-2`
 - Bitbucket repo - git clone https://jaimesalas@bitbucket.org/jaimesalas/demo1-2.git
-- Log in with Bitbucket creds
+- Log in with Bitbucket credentials
 
 > Needs write access to repo
 
@@ -58,7 +57,6 @@ Navegamos a http://localhost:8080/blue
 - Run and check: doesn't interpolate strings
 - View Jenkinsfile in repo:editor only uses single quotes
 - Replace with shell script `echo "This is build $BUILD_NUMBER of demo $DEMO"`
-
 
 Jenkins creates the Jenkinsfile into our new repo, we're not going to get the expected result due to use single quotes.
 
@@ -99,7 +97,7 @@ pipeline {
 }
 ```
 
-## 1.3 Crear una Pipeline desde Git
+## 1.3 Crear una Pipeline desde GitHub
 
 1. Create a new repository on GitHub
 2. Add to source control the following code
@@ -128,7 +126,7 @@ pipeline {
                 sh '''
                    echo "Using a multi-line shell step"
                    chmod +x test.sh
-                   ./test.sh 
+                   ./test.sh
                 '''
             }
         }
@@ -145,6 +143,6 @@ Back in the classic UI http://localhost:8080
 
 > Walk through the [Jenkinsfile](./1.3/Jenkinsfile)
 
-- Run and check 
+- Run and check
 - Open in blue ocean
 - Repeat stage

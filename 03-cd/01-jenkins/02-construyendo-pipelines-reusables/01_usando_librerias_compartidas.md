@@ -2,7 +2,7 @@
 
 Usando librerías compartidas `https://github.com/Lemoncode/bootcamp-jenkins-library.git`.
 
-Crear un nuevo repo en GiThub, clonar en local, y crear el siguiente _directorio/fichero_ en el raíz `./vars/auditTools.groovy`
+Crear un nuevo repo en GitHub, clonar en local, y crear el siguiente _directorio/fichero_ en el raíz `./vars/auditTools.groovy`
 
 ```groovy
 def call() { // 2
@@ -162,7 +162,7 @@ pipeline {
         booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
     }
     environment {
-        VERSION = sh([ script: 'cd ./01/src && npm run env | grep "npm_package_version"', returnStdout: true ]).trim()
+        VERSION = sh([ script: 'cd ./01/src && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -173,7 +173,7 @@ pipeline {
         }
         stage('Build') {
             environment {
-                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isRealeaseCandidate: params.RC
+                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
             }
             steps {
                 dir('./01/src') {

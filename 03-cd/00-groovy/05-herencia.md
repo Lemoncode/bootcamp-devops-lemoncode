@@ -1,14 +1,13 @@
 # Herencia
 
-* Es posible qeu no la necesiatemos
-* `Groovy` soporta lass interfaces
-    - Las interfaces para el scripting no suele tener mucho sentido
-    - Tienen más cabida las clases abstractaas
-* Las clases abstractas no tienen implementación 
-* Nadie tiene _exactamente_ un coche
-* Tienen _instancias_ de un coche 
-* Copiar y pegar es maligno
-
+- Es posible qeu no la necesitaremos
+- `Groovy` soporta lass interfaces
+  - Las interfaces para el scripting no suele tener mucho sentido
+  - Tienen más cabida las clases abstractas
+- Las clases abstractas no tienen implementación
+- Nadie tiene _exactamente_ un coche
+- Tienen _instancias_ de un coche
+- Copiar y pegar es maligno
 
 # Demo: Herencia
 
@@ -45,7 +44,7 @@ users.each(user -> println("UserName is ${user.UserName()}"))
 Y lo podemos ejecutar de la siguiente manera
 
 ```bash
-$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 05_inheritance.groovy 
+$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 05_inheritance.groovy
 UserName is bdylan
 UserName is jlynne
 UserName is rorbison

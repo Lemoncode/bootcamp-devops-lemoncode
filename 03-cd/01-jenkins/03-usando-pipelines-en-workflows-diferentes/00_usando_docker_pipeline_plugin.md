@@ -45,7 +45,7 @@ pipeline {
                 dir("$WORKSPACE/02/src") {
                     sh '''
                       npm install
-                      npm build
+                      npm run build
                     '''
                 }
             }
@@ -121,7 +121,7 @@ ENTRYPOINT ["node", "app.js"]
 pipeline {
     agent {
         dockerfile {
-            dir '02'
+            dir '02/src'
         }
     }
     stages {
@@ -131,6 +131,11 @@ pipeline {
                     node --version
                     npm version
                 '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t jaimesalas/jenkins-pipeline-demos:0.0.1 .'
             }
         }
         stage('Smoke Test') {
@@ -154,7 +159,7 @@ Push changes
 pipeline {
     agent {
         dockerfile {
-            dir '02'
+            dir '02/src'
         }
     }
     stages {
@@ -233,7 +238,7 @@ ENV LEMONCODE_VAR=lemon
 pipeline {
     agent {
         dockerfile {
-            dir '02'
+            dir '02/src'
             filename 'Dockerfile.node'
         }
     }
@@ -272,7 +277,7 @@ pipeline {
 ```groovy
 agent {
     dockerfile {
-        dir '02'
+        dir '02/src'
         filename 'Dockerfile.node' // [1]
     }
 }
@@ -296,7 +301,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/Dockerfile 02")
+                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/src/Dockerfile 02/src")
                 }
             }
         }

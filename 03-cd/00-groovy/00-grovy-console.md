@@ -1,15 +1,14 @@
 # The Groovy Console
 
-Lo primero que necesitamos para trabajar con cualquier tipo de lenhuajes es algo que valide y verificque que nuestro código se comporta de la manera que nsostros esperamos.
+Lo primero que necesitamos para trabajar con cualquier tipo de lenguajes es algo que valide y verifique que nuestro código se comporta de la manera que nsostros esperamos.
 
+Nuestro objetivo final será `Jenkins`. Como nota al respecto, `Jenkins` tiene internamente, una consola de `Groovy` para validar de los `scripts`. Pero para desarrollar nos puede convenir una solución más ligera.
 
-Nuestro objectivo final será `Jenkins`. Como nota al respecto, `Jenkins` tiene internamente, una consola de `Groovy` para validar de los `scripts`. Pero para desarrollar nos puede convenir una solución más ligera.
+`Apache`, tiene una herramienta como la que necesitamos [link](http://groovy-lang.org/download.html). Esta aplicación es una aplicación de `swing`.
 
-`Apache`, tiene una herramienta como la que necesiatamos [link](http://groovy-lang.org/download.html). Esta aplicación es una aplicación de `swing`.
-
-* Algo para verificar y validar nuestro código.
-* Nuestro objetivo es `Jenkins`.
-* Un sitio para experimentar.
+- Algo para verificar y validar nuestro código.
+- Nuestro objetivo es `Jenkins`.
+- Un sitio para experimentar.
 
 Una alternativa a instalar de manera local, es utilizar un [contenedor de Docker](https://hub.docker.com/_/groovy?tab=description)
 
@@ -33,18 +32,19 @@ System.getenv().each{
 println "------------------------------------------------------------------"
 ```
 
-Ahora desde el directorio raíz en el cual hemos creado el ficero anterior, podemos ejecutar:
+Ahora desde el directorio raíz en el cual hemos creado el fichero anterior, podemos ejecutar:
 
 ```bash
-docker run --rm -v "$PWD":/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy BasicDocker.groovy -a 
+docker run --rm -v "$PWD":/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy BasicDocker.groovy
 ```
 
-* `-a` es para volcar las variables de sistema.
-* `-w` establecemos el directorio de trabajo dentro del contenedor.
+- `--rm` elimina el contenedor cuando esté parado.
+- `-v` enlazamos el directorio en el que nos encontramos a `/home/groovy/scripts` dentro del contenedor.
+- `-w` establecemos el directorio de trabajo dentro del contenedor a `/home/groovy/scripts`.
 
 # Demo: La Consola de Groovy
 
-* Create `playground/00_groovy_console.groovy`
+- Create `playground/00_groovy_console.groovy`
 
 ```groovy
 def x = 5

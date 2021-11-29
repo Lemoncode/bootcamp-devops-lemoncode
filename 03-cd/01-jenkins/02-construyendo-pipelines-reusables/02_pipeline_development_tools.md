@@ -24,7 +24,7 @@ pipeline {
         booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
     }
     environment {
-        VERSION = sh([ script: 'cd ./01/src && npm run env | grep "npm_package_version"', returnStdout: true ]).trim()
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Build') {
             environment {
-                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isRealeaseCandidate: params.RC
+                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
             }
             steps {
                 dir('./01/src') {
