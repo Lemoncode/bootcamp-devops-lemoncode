@@ -1,0 +1,18 @@
+stages:
+    - stage1
+    - stage2
+    
+testjob:
+    stage: stage1
+    script:
+      - env
+    only:
+      - develop
+      
+testjob2:
+    stage: stage2
+    script:
+      - exit 1 
+    only:
+      - develop
+    allow_failure: true

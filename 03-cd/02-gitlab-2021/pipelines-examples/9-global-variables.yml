@@ -1,0 +1,30 @@
+variables:
+  artifact: "fichero.txt"
+  artifact_content: "Esto es el contenido de mi artifact"
+
+
+stages:
+    - stage1
+    - stage2
+
+testjob:
+    image: docker:19.03.13
+    stage: stage1
+    script:
+      - echo $artifact_content >> $artifact
+    artifacts:
+        when: on_success
+        paths:
+            - $artifact
+    only:
+      - develop
+      
+testjob2:
+    stage: stage2
+    script:
+      - cat $artifact
+    only:
+      - develop
+    allow_failure: true
+    environment:
+      name: test
