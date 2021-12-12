@@ -23,7 +23,7 @@
 2a. Preparando el entorno con docker(Linux y windows).  
 >> Es necesario permisos sudo (Linux) o Administrador(Windows)  
 ```bash  
-user@localhost:~$ cd 02-gitlab/gitlab/docker/  
+user@localhost:~$ cd 02-gitlab  
 user@localhost:~02-gitlab/$ sudo chmod +x build_gitlab_docker.sh &&  sudo ./build_gitlab_docker.sh  
 ```  
 2b. Preparando el entorno con Vagrant y Virtualbox  
