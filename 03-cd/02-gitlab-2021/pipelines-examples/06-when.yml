@@ -5,14 +5,14 @@ stages:
 testjob:
     stage: stage1
     script:
-      - env
+      - echo stage en develop
     only:
       - develop
-      
+    
 testjob2:
     stage: stage2
     script:
-      - exit 1 
+      - echo stage en master
     only:
-      - develop
-    allow_failure: true
+      - master
+    when: manual

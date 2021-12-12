@@ -4,5 +4,7 @@ image: python:3.8-slim
 
 testjob:
     stage: stage1
+    before_script:
+      - echo "Hola mundo"
     script:
-        - echo "Hola mundo"
+      - echo "Adios mundo"

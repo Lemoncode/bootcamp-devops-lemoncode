@@ -19,5 +19,4 @@ testjob2:
       - cat artifact.txt
     only:
       - develop
-    allow_failure: true
 

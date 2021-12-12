@@ -1,0 +1,24 @@
+stages:
+    - stage1
+    - stage2
+    
+testjob:
+    stage: stage1
+    script:
+      - echo $MYVARIABLE
+      - exit 1
+    rules:
+      - if: '$CI_COMMIT_REF_NAME  ==  "develop"  &&  $CI_PIPELINE_SOURCE  ==  "push"'
+        variables:
+          MYVARIABLE: "variable en rule"
+        allow_failure: true
+
+testjob2:
+    stage: stage2
+    script:
+      - echo stage en master
+      - env
+    rules:
+      - if: '$CI_COMMIT_REF_NAME  ==  "master"  &&  $CI_PIPELINE_SOURCE  ==  "web" && $DEPLOY == "TRUE"'
+      - if: '$CI_COMMIT_REF_NAME  ==  "master" && $CI_PIPELINE_SOURCE  ==  "push"'
+        when: manual
