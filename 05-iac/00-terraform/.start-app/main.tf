@@ -1,7 +1,7 @@
 # PROVIDERS
 provider "aws" {
-  access_key = "AKIARK7SEOFUG6SSUCGI"
-  secret_key = "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"
+  access_key = "AWS_ACCESS_KEY"
+  secret_key = "AWS_SECRET_KEY"
   region     = "eu-west-3"
 }
 
