@@ -10,3 +10,7 @@ Vamos a ir haciendo mejoras de manera progresiava sobre nuestro despliegue, apro
 ## Añadiendo variables a la configuración
 
 [Añadiendo variables a la configuracion - Demo 02](02-demo.md)
+
+## Locals
+
+> Valores evaluados dentro de la configuración
