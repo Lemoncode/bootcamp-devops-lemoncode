@@ -6,7 +6,7 @@
 
 ```bash
 cd lab/lc_web_app/
-terraform plan -out d1.tfplan
+terraform plan -out d2.tfplan
 terraform apply "d2.tfplan"
 ```
 
