@@ -200,7 +200,7 @@ variable "sg_ingress_port" {
 }
 
 variable "sg_egress_cidr_blocks" {
-  type        = list(string)
+  type       map = list(string)
   description = "cidr blocks allow for egress"
   default     = ["0.0.0.0/0"]
 }
@@ -245,10 +245,7 @@ resource "aws_security_group" "nginx-sg" {
 }
 # ....
 ```
-
-### Paso 6. Actualizamos las instancias
-
-Creamos nuevas entradas en `variables.tf` para las instancias
+mapas entradas en `variables.tf` para las instancias
 
 ```diff
 

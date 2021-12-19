@@ -13,4 +13,8 @@ Vamos a ir haciendo mejoras de manera progresiava sobre nuestro despliegue, apro
 
 ## Locals
 
-> Valores evaluados dentro de la configuración
+> Valores evaluados dentro de la configuración, no puedes modificar su valor, como las variables.
+
+Puedes tener múltiples entradas `locals`, pero sus pares `key/value` han de ser únicos.
+
+[Añadiendo Locals a la configuración - Demo 03](03-demo.md)
