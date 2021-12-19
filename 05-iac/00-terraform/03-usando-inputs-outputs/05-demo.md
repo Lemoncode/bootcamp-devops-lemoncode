@@ -13,3 +13,9 @@ terraform apply "d1.tfplan"
 ```bash
 terraform validate
 ```
+
+## Clean Up
+
+```bash
+terraform destroy
+```
