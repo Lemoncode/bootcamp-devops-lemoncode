@@ -33,3 +33,4 @@ Antes de aplicar nuestros cambios, sería estupendo poder validar que la configu
 
 ## Desplegando la Configuración Actualizada
 
+[Desplegando la Configuración Actualizada - Demo 06](06-demo.md)
