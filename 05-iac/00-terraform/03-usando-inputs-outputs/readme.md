@@ -9,12 +9,24 @@ Vamos a ir haciendo mejoras de manera progresiava sobre nuestro despliegue, apro
 
 ## Añadiendo variables a la configuración
 
-[Añadiendo variables a la configuracion - Demo 02](02-demo.md)
+[Añadiendo variables a la configuración - Demo 02](02-demo.md)
 
 ## Locals
 
-> Valores evaluados dentro de la configuración, no puedes modificar su valor, como las variables.
+> Valores evaluados dentro de la configuración, no puedes asignar su valor de forma directa, como las variables.
 
 Puedes tener múltiples entradas `locals`, pero sus pares `key/value` han de ser únicos.
 
 [Añadiendo Locals a la configuración - Demo 03](03-demo.md)
+
+## Outputs
+
+Los `output values` es como sacar información de Terraform.
+
+[Añadiendo Outputs a la configuración](04-demo.md)
+
+## Validar la configuración
+
+Antes de aplicar nuestros cambios, sería estupendo poder validar que la configuración es sintacticamente correcta.
+
+[Usando Validate](05-demo.md)
