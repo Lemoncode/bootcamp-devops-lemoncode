@@ -71,7 +71,6 @@ locals {
 
 ```
 
-
 ## Clean Up
 
 ```bash

@@ -83,4 +83,23 @@ Necesitamos dar acceso al balanceador de carga al bucket S3, y lo podemos hacer 
 
 ## Analizando la configuración actualizada
 
-[]
+[Cerrando recursos S3 - Demo 15](15-demo.md)
+
+## Dependencias y Planning
+
+Cuando Terraform intenta hacer un despliegue, tiene que atravesar un proceso de planning. Este proceso se ejecuta cuando realizamos las siguientes acciones: `plan`, `apply` y `destroy`. Como parte del proceso de planning, **necesita descubrir en que orden crear, actualizar o borrar los objetos**
+
+### Terraform Planning 
+
+* Refrescar e inspeccionar el estado
+* Grafo de dependencias
+* Incorporaciones, actualizaciones y borrados
+* Ejecución en paralelo
+
+### Determinando las Dependencia
+
+> Visitar diagrama
+
+## Actualizando el Balancedor de carga y las instancias
+
+[Actualizando el Balancedor de carga y las instancias - Demo 16](16-demo.md)
