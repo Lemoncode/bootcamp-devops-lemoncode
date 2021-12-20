@@ -127,3 +127,7 @@ Después de que un recurso ha sido creado, a veces necesitamos realizar configur
 ## Actualizando el Startup Script
 
 [Actualizando el Startup Script - Demo 17](17-demo.md)
+
+## Desplegando la nueva configuración
+
+[Desplegando la nueva configuración - Demo 18](18-demo.md)
