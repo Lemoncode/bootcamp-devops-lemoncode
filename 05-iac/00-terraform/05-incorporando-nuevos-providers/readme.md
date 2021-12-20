@@ -103,3 +103,27 @@ Cuando Terraform intenta hacer un despliegue, tiene que atravesar un proceso de 
 ## Actualizando el Balancedor de carga y las instancias
 
 [Actualizando el Balancedor de carga y las instancias - Demo 16](16-demo.md)
+
+## Configuración Post Deployment
+
+Después de que un recurso ha sido creado, a veces necesitamos realizar configuraciones `pos-deployment`
+
+### Opciones de Configuración
+
+* Resource 
+* Pass data
+* Config Manager
+* Provisioner
+
+### Provisioners
+
+* Definidos en el recurso
+* Creación o destrucción
+* Múltiples provisioners
+* null_resource
+* Failure options
+* Último recurso 
+
+## Actualizando el Startup Script
+
+[Actualizando el Startup Script - Demo 17](17-demo.md)
