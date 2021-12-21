@@ -1,5 +1,42 @@
 # Desplegando la Configuración Base
 
+## ¿Qué es Terraform?
+
+* Infrastructure automation tool
+* Open-source y vendor agnostic
+* Un binario compilado - Go
+* Sintaxis declarativa
+* Hashicorp Configuration Language o JSON
+* Push based Deployment
+
+## Core Components
+
+* Executable
+* Configuration Files
+* Provider plugins
+* State data
+
+## Tipos de Objetos en Terraform
+
+* Providers
+* Resources
+* Data sources
+
+## Sintaxis Común de Bloque
+
+```tf
+resource "aws_instance" "web_server" {
+  name = "web-server"
+  ebs_volume {
+    size = 40c:\path;c:\path2
+```
+
+### Referenciando Objetos
+
+```
+aws_instance.web_server.name
+```
+
 ## Revisando la configuración base
 
 Abrimos `./.start-app/main.tf`
