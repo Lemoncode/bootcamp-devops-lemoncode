@@ -169,3 +169,7 @@ EOF
 Ahora estamos listos para aplicar el contenido de `main.tf` 
 
 [Desplegando la configuración base - Demo 01](01-demo)
+
+## Terraform Workflow
+
+> Mostrar diagrama
