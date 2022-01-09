@@ -1,4 +1,3 @@
-
 # Variables
 RESOURCE_GROUP="Cluster-Autoscaler"
 AKS_NAME="lemoncode-autoscaler"
@@ -8,8 +7,10 @@ LOCATION="northeurope"
 az group create -n ${RESOURCE_GROUP} -l ${LOCATION}
 
 #Crear cluster de AKS
-az aks create -g ${RESOURCE_GROUP} -n ${AKS_NAME} \
---node-count 1 --generate-ssh-keys
+az aks create -g ${RESOURCE_GROUP} \
+-n ${AKS_NAME} \
+--node-count 1 \
+--generate-ssh-keys
 
 # Recuperar el contexto para este clúster
 az aks get-credentials -n $AKS_NAME -g $RESOURCE_GROUP
@@ -30,7 +31,7 @@ az aks update \
   --name $AKS_NAME \
   --enable-cluster-autoscaler \
   --min-count 1 \
-  --max-count 3
+  --max-count 5
 
 #Mientras esto se materializa puedes ver en el portal de Azure que el virtual machine scaleset está aumentando
 #el número de instancias. Este proceso puede llevar varios minutos ya que tiene que dar de alta las VMs
