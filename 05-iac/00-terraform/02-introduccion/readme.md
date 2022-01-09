@@ -7,7 +7,7 @@
 ## Conceptos fundamentales
 
 * Definido en Código
-* Almaceno en control de versiones
+* Almacenamiento en control de versiones
 * Declarativo o imperativo
 * Idempotente y consistente
 * Push o Pull
@@ -26,7 +26,10 @@ get mayonnaise
 put ham in mollete
 put cheese on ham
 put lettuce on cheese
-put tomato on lettuce```ini
+put tomato on lettuce
+```
+
+```ini
 # Make me a campero
 get mollete
 get ham
