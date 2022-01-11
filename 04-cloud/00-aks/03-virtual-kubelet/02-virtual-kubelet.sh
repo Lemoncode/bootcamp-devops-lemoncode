@@ -36,13 +36,13 @@ az network vnet subnet create \
     --address-prefixes 192.168.2.0/24
 
 #Crear un service principal
-az ad sp create-for-rbac --skip-assignment
-SP_ID="a53cffe7-cb13-40d5-aefd-e36c5569869c"
-SP_PASSWORD="qqbZ0z3l2Zac104_wvh0HBj_-KyTzFeVO~"
+az ad sp create-for-rbac --name kubelet-demo > auth.json
+CLIENT_ID=$(jq -r '.appId' auth.json)
+PASSWORD=$(jq -r '.password' auth.json)
 
 #Asignamos permisos a la red virtual para que el cluster pueda gestionarla
 VNET_ID=$(az network vnet show --resource-group $RESOURCE_GROUP --name $AKS_VNET --query id -o tsv)
-az role assignment create --assignee $SP_ID --scope $VNET_ID --role Contributor
+az role assignment create --assignee $CLIENT_ID --scope $VNET_ID --role Contributor
 
 #Obtenemos el ID de la subnet donde va a ir el cluster de AKS
 SUBNET_ID=$(az network vnet subnet show --resource-group $RESOURCE_GROUP --vnet-name $AKS_VNET --name $AKS_SUBNET --query id -o tsv)
@@ -53,12 +53,9 @@ az aks create \
     --name $AKS_NAME \
     --node-count 1 \
     --network-plugin azure \
-    --service-cidr 10.0.0.0/16 \
-    --dns-service-ip 10.0.0.10 \
-    --docker-bridge-address 172.17.0.1/16 \
     --vnet-subnet-id $SUBNET_ID \
-    --service-principal $SP_ID \
-    --client-secret $SP_PASSWORD
+    --service-principal $CLIENT_ID \
+    --client-secret $PASSWORD
 
 # Recuperar el contexto para este clúster
 az aks get-credentials -n $AKS_NAME -g $RESOURCE_GROUP

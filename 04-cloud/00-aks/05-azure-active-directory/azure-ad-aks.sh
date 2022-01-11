@@ -57,7 +57,7 @@ az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overw
 
 #Vamos a probar the north remembers creando un pod dentro de este namespace
 #Lanzar este comando te pedirá autenticación
-kubectl run --generator=run-pod/v1 nginx-north --image=nginx --namespace the-north-remembers
+kubectl run nginx-north --image=nginx --namespace the-north-remembers
 kubectl get po -n the-north-remembers
 
 #Si intentamos acceder al namespace de los Lanister o el default nos dará error
@@ -69,7 +69,7 @@ kubectl get po
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
 
 #Intentamos la misma operación pero en el namespace de los Lanister
-kubectl run --generator=run-pod/v1 nginx-kings-landing --image=nginx --namespace kings-landing
+kubectl run nginx-kings-landing --image=nginx --namespace kings-landing
 #Si intentamos entrar en The North Remembers da un error
 kubectl get po -n the-north-remembers
 
