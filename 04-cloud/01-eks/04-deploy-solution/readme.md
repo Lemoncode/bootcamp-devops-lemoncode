@@ -117,9 +117,9 @@ spec:
 Let's start by bringing up `lc-age-service` Backend API
 
 ```bash
-$ cd lc-age-service
-$ kubectl apply -f kubernetes/deployment.yaml
-$ kubectl apply -f kubernetes/service.yaml
+cd lc-age-service
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
 ``` 
 
 We can check the progress by looking at the deployment status:
@@ -133,9 +133,9 @@ kubectl get deployemnt lc-age-service
 Let's continue by bringing up `lc-name-service`  Backend API
 
 ```bash
-$ cd lc-name-service
-$ kubectl apply -f kubernetes/deployment.yaml
-$ kubectl apply -f kubernetes/service.yaml
+cd lc-name-service
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
 ``` 
 
 We can check the progress by looking at the deployment status:
@@ -152,15 +152,15 @@ Create `lc-front/kubernetes/deployment.yaml`
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jaimesalas/lc-front
+  name: lc-front
   labels:
-    app: jaimesalas/lc-front
+    app: lc-front
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jaimesalas/lc-front
+      app: lc-front
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -169,12 +169,12 @@ spec:
   template:
     metadata:
       labels:
-        app: jaimesalas/lc-front
+        app: lc-front
     spec:
       containers:
         - image: jaimesalas/lc-front:latest
           imagePullPolicy: Always
-          name: jaimesalas/lc-front
+          name: lc-front
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -233,7 +233,7 @@ In AWS accounts that have never created a load balancer before, it’s possible 
 We can check for the role, and create it if it’s missing.
 
 ```bash
-$ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
+aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
 ```
 
 ## Ingress different options

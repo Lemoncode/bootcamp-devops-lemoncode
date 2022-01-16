@@ -31,16 +31,20 @@ Now we increase the maximum capacity to 5 instances
 
 ```bash
 # we need the ASG name
-$ export ASG_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].AutoScalingGroupName" --output text)
+export ASG_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].AutoScalingGroupName" --output text)
+```
 
+```bash
 # increase max capacity up to 5
-$ aws autoscaling \
+aws autoscaling \
     update-auto-scaling-group \
     --auto-scaling-group-name ${ASG_NAME} \
     --min-size 1 \
     --desired-capacity 3 \
     --max-size 5
+```
 
+```bash
 # Check new values
 $ aws autoscaling \
     describe-auto-scaling-groups \
@@ -60,7 +64,7 @@ With IAM roles for service accounts on Amazon EKS clusters, you can associate an
 Enabling IAM roles for service accounts on your cluster
 
 ```bash
-$ eksctl utils associate-iam-oidc-provider \
+eksctl utils associate-iam-oidc-provider \
     --cluster lc-cluster \
     --approve
 
@@ -68,11 +72,16 @@ $ eksctl utils associate-iam-oidc-provider \
 
 Creating an IAM policy for your service account that will allow your CA pod to interact with the autoscaling groups.
 
-```bash
-$ aws iam create-policy   \
-  --policy-name k8s-asg-policy \
-  --policy-document file://~/Documents/paths/kubernetes/01_eks_workshop/05_autoscalling_our_applications_and_clusters/cluster-autoscaler/k8s-asg-policy.json
+file://~/Documents/lemoncode/bootcamp-devops-lemoncode/04-cloud/01-eks/06-autoscalling-our-applications/02-cluster-auto-scaler/cluster-autoscaler/k8s-asg-policy.json
 
+```bash
+aws iam create-policy   \
+  --policy-name k8s-asg-policy \
+  --policy-document file://~/Documents/lemoncode/bootcamp-devops-lemoncode/04-cloud/01-eks/06-autoscalling-our-applications/02-cluster-auto-scaler/cluster-autoscaler/k8s-asg-policy.json
+```
+
+```bash
+# output
 {
     "Policy": {
         "PolicyName": "k8s-asg-policy",
@@ -94,14 +103,17 @@ Finally, create an IAM role for the cluster-autoscaler Service Account in the ku
 > Note: Grab the account id from the previous output
 
 ```bash
-$ eksctl create iamserviceaccount \
+eksctl create iamserviceaccount \
     --name cluster-autoscaler \
     --namespace kube-system \
     --cluster lc-cluster \
     --attach-policy-arn "arn:aws:iam::${ACCOUNT_ID}:policy/k8s-asg-policy" \
     --approve \
     --override-existing-serviceaccounts
+```
 
+```bash
+# output
 [ℹ]  eksctl version 0.32.0
 [ℹ]  using region eu-west-3
 [ℹ]  1 existing iamserviceaccount(s) (kube-system/aws-node) will be excluded
@@ -119,14 +131,14 @@ $ eksctl create iamserviceaccount \
 Deploy the Cluster Autoscaler to your cluster with the following command.
 
 ```bash
-$ kubectl apply -f ./05_autoscalling_our_applications_and_clusters/cluster-autoscaler/autodiscover.yaml
+kubectl apply -f ./06-autoscalling-our-applications/02-cluster-auto-scaler/cluster-autoscaler/autodiscover.yaml
 
 ```
 
 To prevent CA from removing nodes where its own pod is running, we will add the `cluster-autoscaler.kubernetes.io/safe-to-evict` annotation to its deployment with the following command
 
 ```bash
-$ kubectl -n kube-system \
+kubectl -n kube-system \
     annotate deployment.apps/cluster-autoscaler \
     cluster-autoscaler.kubernetes.io/safe-to-evict="false"
 
@@ -136,10 +148,10 @@ Finally let's update the autoscaler image
 
 ```bash
 # we need to retrieve the latest docker image available for our EKS version
-$ export K8S_VERSION=$(kubectl version --short | grep 'Server Version:' | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' | cut -d. -f1,2)
-$ export AUTOSCALER_VERSION=$(curl -s "https://api.github.com/repos/kubernetes/autoscaler/releases" | grep '"tag_name":' | sed -s 's/.*-\([0-9][0-9\.]*\).*/\1/' | grep -m1 ${K8S_VERSION})
+export K8S_VERSION=$(kubectl version --short | grep 'Server Version:' | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' | cut -d. -f1,2)
+export AUTOSCALER_VERSION=$(curl -s "https://api.github.com/repos/kubernetes/autoscaler/releases" | grep '"tag_name":' | sed -s 's/.*-\([0-9][0-9\.]*\).*/\1/' | grep -m1 ${K8S_VERSION})
 
-$ kubectl -n kube-system \
+kubectl -n kube-system \
     set image deployment.apps/cluster-autoscaler \
     cluster-autoscaler=us.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler:v${AUTOSCALER_VERSION}
 
@@ -148,7 +160,7 @@ $ kubectl -n kube-system \
 Watch the logs
 
 ```bash
-$ kubectl -n kube-system logs -f deployment/cluster-autoscaler
+kubectl -n kube-system logs -f deployment/cluster-autoscaler
 
 ```
 

@@ -38,8 +38,8 @@ spec:
 Execute
 
 ```bash
-$ kubectl apply -f  ./05_autoscalling_our_applications_and_clusters/sample-app/nginx.yaml
-$ kubectl get deployment/nginx-to-scaleout
+kubectl apply -f  ./06-autoscalling-our-applications/02-cluster-auto-scaler/sample-app/nginx.yaml
+kubectl get deployment/nginx-to-scaleout
 
 NAME                READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-to-scaleout   1/1     1            1           45s
@@ -50,15 +50,14 @@ nginx-to-scaleout   1/1     1            1           45s
 Let's scale out the replpicaset to 10
 
 ```bash
-$ kubectl scale --replicas=10 deployment/nginx-to-scaleout
+kubectl scale --replicas=10 deployment/nginx-to-scaleout
 
 ```
 
 Some pods will be in the `Pending` state, which triggers the cluster-autoscaler to scale out the EC2 fleet.
 
 ```bash
-$ kubectl get pods -l app=nginx -o wide --watch
-
+kubectl get pods -l app=nginx -o wide --watch
 ```
 
 View the cluster-autoscaler logs
@@ -83,41 +82,41 @@ ip-192-168-72-123.eu-west-3.compute.internal   Ready    <none>   100s   v1.18.9-
 ## Cleanup Scaling
 
 ```bash
-$ kubectl delete -f ./05_autoscalling_our_applications_and_clusters/sample-app/nginx.yaml
+kubectl delete -f ./06-autoscalling-our-applications/02-cluster-auto-scaler/sample-app/nginx.yaml
 
-$ kubectl delete -f ./05_autoscalling_our_applications_and_clusters/cluster-autoscaler/autodiscover.yaml
+kubectl delete -f ./06-autoscalling-our-applications/02-cluster-auto-scaler/cluster-autoscaler/autodiscover.yaml
 
-$ eksctl delete iamserviceaccount \
+eksctl delete iamserviceaccount \
   --name cluster-autoscaler \
   --namespace kube-system \
   --cluster lc-cluster \
   --wait
 
-$ aws iam delete-policy \
+aws iam delete-policy \
   --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/k8s-asg-policy
 
-$ export ASG_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].AutoScalingGroupName" --output text)
+export ASG_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].AutoScalingGroupName" --output text)
 
-$ aws autoscaling \
+aws autoscaling \
   update-auto-scaling-group \
   --auto-scaling-group-name ${ASG_NAME} \
   --min-size 1 \
   --desired-capacity 3 \
   --max-size 4
 
-$ kubectl delete hpa,svc php-apache
+kubectl delete hpa,svc php-apache
 
-$ kubectl delete deployment php-apache
+kubectl delete deployment php-apache
 
-$ kubectl delete pod load-generator
+kubectl delete pod load-generator
 
-$ helm -n metrics uninstall metrics-server
+helm -n metrics uninstall metrics-server
 
-$ kubectl delete ns metrics
+kubectl delete ns metrics
 
-$ helm uninstall kube-ops-view
+helm uninstall kube-ops-view
 
-$ unset ASG_NAME
-$ unset AUTOSCALER_VERSION
-$ unset K8S_VERSION
+unset ASG_NAME
+unset AUTOSCALER_VERSION
+unset K8S_VERSION
 ```
