@@ -135,10 +135,71 @@ Se incluye el total de eventos en el bucket con label `+Inf`
 
 ## Demo: Counters & Gauges
 
-[Demo: Counters & Gauges](../02-counters-gauges/readme.md)
+[Demo: Counters & Gauges](../.demos/01-counters-gauges/readme.md)
 
 ## Demo: Summaries & Histograms
 
-[Demo: Summaries & Histograms](../03-summaries-histograms/readme.md)
+[Demo: Summaries & Histograms](../.demos/02-summaries-histograms/readme.md)
 
 ## Etiquetas y Granularidad
+
+Antes de añadir `custom` metrics, deberíamos comprobar que las métricas que buscamos no esten ya incluidas en las de por defecto.
+
+Los `histograms` añaden un gran valor... Pero a un precio.
+
+### Etiquetas
+
+* Son parte fundamental en el funcionamiento de Prometheus
+
+Por ejemplo si queremos contar el número de peticiones para cada `URL path` y el código de respuesta asociado.
+
+Eso lo modelamos de la siguiente forma:
+
+```ini
+http_requests_total {code, path}
+```
+
+> Las métricas son resgistradas al nivel de etiquetas.
+
+Así que todas las combinaciones de etiquetas tiene su propio valor:
+
+```
+http_requests_total{code="200",path="/"} 800
+http_requests_total{code="500",path="/p1"} 12980
+http_requests_total{code="500",path="/p2"} 1064
+http_requests_total{code="404",path="/p3"} 36
+```
+
+`Prometheus` además añade etiquetas extra cunado recupera las métricas. Esto es algo que nosotros mismos podemos configurar.
+
+Cómo vemos el número de etiquetas puede aumentar de manera significativa.
+
+> Cada etiqueta (label) en una métrica es almacenada como una serie de tiempos dentro de la base de datos.
+
+Por ejemplo un `counter` en una aplicación:
+
+```
+http_requests_total <-- 1x time series
+```
+
+Pero si lo ejecutamos en 20 servidores y añadimos el `host` como label... Ahora tenemos 20 series de teimpo que almacenar:
+
+```
+http_requests_total |
+                    > <- 20x time series
+  host: w01..w19    |
+```
+
+> Cada vez que añadimos una etiqueta, potencialmente mutiplicamos el número de series de tiempo por el número de distintos valores para esa etiqueta.
+
+```
+http_requests_total |
+                    > <- 80x time series
+  host: w01..w19    |
+  host: dc1..dc4    |
+```
+
+> Prometheus es muy eficiente. 
+
+Podemos esperar que un servidor corriente gestione un millon de series de tiempo, y que escalando su memoria y CPU llegue hasta los 10 millones en una única máquina.
+
