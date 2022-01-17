@@ -1,0 +1,14 @@
+$script = <<-SCRIPT
+echo Downloading prometheus node exporter linux
+
+apt-get update
+apt-get -y install prometheus-node-exporter
+
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-20.04"
+  config.vm.network "private_network", ip: "10.0.0.10"
+  config.vm.provision "docker"
+  config.vm.provision "shell", inline: $script
+end
