@@ -121,7 +121,7 @@ Cambiamos al directorio de descarga y ejecutamos el binario:
 
 ```bash
 cd prometheus-2.32.1.linux-amd64
-./prometheus.yml
+./prometheus
 ```
 
 Si nos fijamos en el `output` deberáimos ver algo como esto:
