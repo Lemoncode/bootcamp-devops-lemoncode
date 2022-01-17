@@ -1,0 +1,13 @@
+[
+  {
+    "targets": [
+      "web:8082",
+      "web2:8083"
+    ],
+    "labels": {
+      "os": "linux",
+      "feature": "web",
+      "runtime": "docker"
+    }
+  }
+]

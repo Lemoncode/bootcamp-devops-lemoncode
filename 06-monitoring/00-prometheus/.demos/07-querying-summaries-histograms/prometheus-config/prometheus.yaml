@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 60s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "web"
+    file_sd_configs:
+      - files:
+          - "web.json"
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: "go_.*"
+        action: drop
+
+  - job_name: "batch"
+    file_sd_configs:
+      - files:
+          - "batch.json"
+    relabel_configs:
+      - source_labels: [runtime]
+        regex: container
+        target_label: runtime
+        replacement: docker
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: "go_.*"
+        action: drop
