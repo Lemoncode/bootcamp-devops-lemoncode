@@ -140,3 +140,5 @@ Se incluye el total de eventos en el bucket con label `+Inf`
 ## Demo: Summaries & Histograms
 
 [Demo: Summaries & Histograms](../03-summaries-histograms/readme.md)
+
+## Etiquetas y Granularidad
