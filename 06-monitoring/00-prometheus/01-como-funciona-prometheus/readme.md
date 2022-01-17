@@ -133,3 +133,10 @@ calculation_seconds_bucket{le="60"}  10
 
 Se incluye el total de eventos en el bucket con label `+Inf`
 
+## Demo: Counters & Gauges
+
+[Demo: Counters & Gauges](../02-counters-gauges/readme.md)
+
+## Demo: Summaries & Histograms
+
+[Demo: Summaries & Histograms](../03-summaries-histograms/readme.md)

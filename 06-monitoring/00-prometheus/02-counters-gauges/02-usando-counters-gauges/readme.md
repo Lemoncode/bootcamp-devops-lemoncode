@@ -79,3 +79,8 @@ Ejecutar (normalmente será un daemon):
 ### Y métricas de mera información
 
 - `node_uname_info` - devuelve texto que da información de la version
+
+## Referencias
+
+[What is memory heap?](https://stackoverflow.com/questions/2308751/what-is-a-memory-heap)
+[Memory management](https://en.wikipedia.org/wiki/Memory_management#HEAP)
