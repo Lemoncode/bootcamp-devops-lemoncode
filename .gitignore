@@ -31,3 +31,6 @@ app/
 lab/
 private.readme.md
 04-cloud/00-aks/03-virtual-kubelet/auth.json
+
+# Vagrant 
+.vagrant
