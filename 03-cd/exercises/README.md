@@ -4,7 +4,7 @@
  
 ### 1. CI/CD de una Java + Gradle
  
-En el directorio raíz de este [código fuente](./jenkins-resources/calcultor), crea un `Jenkinsfile` que contenga un pipeline declarativa con los siguientes stages:
+En el directorio raíz de este [código fuente](./jenkins-resources), crea un `Jenkinsfile` que contenga un pipeline declarativa con los siguientes stages:
  
 * **Checkout** descarga de código desde un repositorio remoto, preferentemente utiliza GitHub.
 * **Compile** compilar el código fuente, para ello utilizar `gradlew compileJava`

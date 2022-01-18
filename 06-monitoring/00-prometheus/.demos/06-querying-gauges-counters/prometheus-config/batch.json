@@ -1,0 +1,21 @@
+[
+  {
+    "targets": [
+      "linux-batch:9100"
+    ],
+    "labels": {
+      "os": "linux",
+      "runtime": "vm"
+    }
+  },
+  {
+    "targets": [
+      "linux-batch:8080",
+      "linux-batch:8081"
+    ],
+    "labels": {
+      "os": "linux",
+      "runtime": "container"
+    }
+  }
+]

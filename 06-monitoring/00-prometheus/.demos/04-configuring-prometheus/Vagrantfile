@@ -1,0 +1,62 @@
+$prometheus_script = <<-SCRIPT
+echo Downloading Prometheus
+wget https://github.com/prometheus/prometheus/releases/download/v2.32.1/prometheus-2.32.1.linux-amd64.tar.gz
+echo Getting files
+tar xvfz prometheus-2.32.1.linux-amd64.tar.gz
+SCRIPT
+
+$exporter_script = <<-SCRIPT
+echo Installing prometheus node exporter linux
+apt-get -y install prometheus-node-exporter
+
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update -y
+    echo "10.0.0.10 prometheus" >> /etc/hosts
+    echo "10.0.0.11 linux-batch" >> /etc/hosts
+    echo "10.0.0.12 linux-web" >> /etc/hosts
+  SHELL
+
+  config.vm.define "prometheus" do |prometheus|
+    prometheus.vm.box = "bento/ubuntu-20.04"
+    prometheus.vm.hostname = "prometheus"
+    prometheus.vm.network "private_network", ip: "10.0.0.10"  
+    prometheus.vm.provision "shell", inline: $prometheus_script
+    prometheus.vm.provider "virtualbox" do |vb|
+      vb.memory = 4048
+      vb.cpus = 2
+    end
+  end
+
+  config.vm.define "linux-batch" do |linuxbatch|
+    linuxbatch.vm.box = "bento/ubuntu-20.04"
+    linuxbatch.vm.hostname = "linux-batch"
+    linuxbatch.vm.network "private_network", ip: "10.0.0.11"  
+    linuxbatch.vm.provision "docker" do |d|
+      d.run "jaimesalas/prom-batch",
+        args: "-e PORT=8080 -p 8080:8080"
+    end
+    linuxbatch.vm.provision "shell", inline: $exporter_script
+    linuxbatch.vm.provider "virtualbox" do |vb|
+      vb.memory = 1012
+      vb.cpus = 1
+    end
+  end
+
+  config.vm.define "linux-web" do |linuxweb|
+    linuxweb.vm.box = "bento/ubuntu-20.04"
+    linuxweb.vm.hostname = "linux-web"
+    linuxweb.vm.network "private_network", ip: "10.0.0.12"  
+    linuxweb.vm.provision "docker" do |d|
+      d.run "jaimesalas/prom-web",
+        args: "-e PORT=8080 -p 8080:8080"
+    end
+    linuxweb.vm.provision "shell", inline: $exporter_script
+    linuxweb.vm.provider "virtualbox" do |vb|
+      vb.memory = 1012
+      vb.cpus = 1
+    end
+  end
+end

@@ -1,0 +1,13 @@
+[
+  {
+    "targets": [
+      "batch:8080",
+      "batch2:8081"
+    ],
+    "labels": {
+      "os": "linux",
+      "feature": "batch",
+      "runtime": "container"
+    }
+  }
+]
