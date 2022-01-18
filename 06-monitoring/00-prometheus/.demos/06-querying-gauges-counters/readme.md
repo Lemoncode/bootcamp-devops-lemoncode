@@ -35,8 +35,8 @@ Verify targets at http://10.0.010:9090/targets.
   - The current active jobs gauge in batch processes.
 - `worker_jobs_active{instance="linux-batch:8080"}` - selector
   - If we want to see just the data of one instance we can use a selector
-- `sum (worker_jobs_active)` - aggregation operator
-  - If we want to see dat of all instances
+- `sum (worker_jobs_active)`  - aggregation operator
+  - If we want to see data of all instances
 - `sum without(instance) (worker_jobs_active)` 
   - If we want to exclude one label but include all the others
 - `sum without(instance, job, os, runtime) (worker_jobs_active)`
@@ -57,7 +57,7 @@ Evalaute expressions over the processor's total jobs metric.
 - `worker_jobs_total` - one much bigger, started earlier
   - Between two conatiners, we're producing for time series here (including OS)
 - `worker_jobs_total[5m]` - range vector
-  - We can add a range `[5m]` to see the values over time. For each time series, we get all the samples in the last 5 minutes. This is the total value sine the metric began.
+  - We can add a range `[5m]` to see the values over time. For each time series, we get all the samples in the last 5 minutes. This is the total value since the metric began.
 - `rate(worker_jobs_total[5m])` - rates very similar
   - With counter we are more interested on change over time. This gives te rate of change of the counter over a 5 minute window, and is telling the increase per second. using the the rate function with a counter gives us gauge in the output, and we can aggregate that over time.
 - `sum without(instance, job, os, runtime) (rate(worker_jobs_total[5m]))`
