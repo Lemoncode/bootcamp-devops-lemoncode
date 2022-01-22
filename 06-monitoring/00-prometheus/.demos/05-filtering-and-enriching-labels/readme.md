@@ -269,3 +269,5 @@ Run `Prometheus`
 prometheus-2.32.1.linux-amd64/prometheus \
  --config.file="prometheus-config-3.yml"
 ```
+
+Check results on http://10.0.0.10:9090
