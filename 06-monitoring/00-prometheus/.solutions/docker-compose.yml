@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  batch:
+    image: jaimesalas/prom-batch
+    build:
+      context: ./batch
+      dockerfile: ./Dockerfile
+
+  web:
+    image: jaimesalas/prom-web
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile

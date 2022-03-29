@@ -4,7 +4,7 @@
  
 ### 1. CI/CD de una Java + Gradle
  
-En el directorio raíz de este [código fuente](./jenkins-resources/calcultor), crea un `Jenkinsfile` que contenga un pipeline declarativa con los siguientes stages:
+En el directorio raíz de este [código fuente](./jenkins-resources), crea un `Jenkinsfile` que contenga un pipeline declarativa con los siguientes stages:
  
 * **Checkout** descarga de código desde un repositorio remoto, preferentemente utiliza GitHub.
 * **Compile** compilar el código fuente, para ello utilizar `gradlew compileJava`
@@ -13,6 +13,10 @@ En el directorio raíz de este [código fuente](./jenkins-resources/calcultor), 
 Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles podemos contruir una imagen a partir de [este Dockerfile](./jenkins-resources/gradle.Dockerfile)
  
 ### 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runner
+
+* Utilizar Docker in Docker a la hora de levantar Jenkins para realizar este ejercicio.
+* Como plugins deben estar instalados `Docker` y `Docker Pipeline`
+* Usar la imagen de Docker `gradle:6.6.1-jre14-openj9`
  
 ## Ejercicios GitLab
  
@@ -35,7 +39,7 @@ Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles p
 En resumen, la `pipeline` de `CI/CD`, debe hacer la build de la aplicación generando los ficheros jar, hacer los tests de maven y finalmente dockerizar la app (el dockerfile ya se proporciona en el repo) y hacer un deploy en local.
  
 ### 2. Crear un usuario nuevo y probar que no puede acceder al proyecto anteriormente creado
- * Añadirlo con el role `guest`, comprobar que acciones puede hacer.
+* Añadirlo con el role `guest`, comprobar que acciones puede hacer.
 * Cambiar a role `reporter`, comprobar que acciones puede hacer.
 * Cambiar a role `developer`, comprobar que acciones puede hacer.
 * Cambiar a role `maintainer`, comprobar que acciones puede hacer.

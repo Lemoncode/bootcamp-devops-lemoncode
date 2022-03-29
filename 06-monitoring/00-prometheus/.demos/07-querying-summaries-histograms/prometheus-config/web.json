@@ -1,0 +1,21 @@
+[
+  {
+    "targets": [
+      "linux-web:9100"
+    ],
+    "labels": {
+      "os": "linux",
+      "runtime": "vm"
+    }
+  },
+  {
+    "targets": [
+      "linux-web:8080",
+      "linux-web:8081"
+    ],
+    "labels": {
+      "os": "linux",
+      "runtime": "docker"
+    }
+  }
+]

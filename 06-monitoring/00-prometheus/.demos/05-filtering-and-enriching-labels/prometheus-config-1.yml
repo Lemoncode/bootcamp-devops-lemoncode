@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "linuxbatch"
+    static_configs:
+      - targets: ["linux-batch:9100"]
+        labels:
+          os: linux
+          runtime: vm
+
+  - job_name: "batch"
+    static_configs:
+      - targets: ["linux-batch:8080"]
+        labels:
+          os: linux
+          runtime: container
+
+  - job_name: "linuxweb"
+    scrape_timeout: 15s # default 10 s
+    static_configs:
+      - targets: ["linux-web:9100"]
+        labels:
+          os: linux
+          runtime: vm
+
+  - job_name: "web"
+    metrics_path: /metrics
+    scheme: http # can include TLS and auth for HTTPS
+    static_configs:
+      - targets: ["linux-web:8080"]
+        labels:
+          os: linux
+          runtime: docker

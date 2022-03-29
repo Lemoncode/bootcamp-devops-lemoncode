@@ -39,3 +39,4 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
 
 This will display a line similar to Kube-ops-view URL = http://<URL_PREFIX_ELB>.amazonaws.com Opening the URL in your browser will provide the current state of our cluster.
 
+> Reference: https://kubernetes-operational-view.readthedocs.io/en/latest/

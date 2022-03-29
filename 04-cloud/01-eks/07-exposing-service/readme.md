@@ -2,11 +2,11 @@
 
 ## Kubernetes Ingress
 
-Is an API object that provides a colection of routing rules that govern how external/internal users access Kubernetes services running in a cluster. An ingress controller is responsible for reading the ingress resource information and processing it appropriately.
+Is an API object that provides a collection of routing rules that govern how external/internal users access Kubernetes services running in a cluster. An ingress controller is responsible for reading the ingress resource information and processing it appropriately.
 
 ## What is a Network Load Balancer?
 
-An AWS Network Load Balancer functions ath the fourth layer of the Open Systems Interconnection (OSI) model. It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. It attempts to open a TCP connection to the selected targte on the port specified in the listener configuration.
+An AWS Network Load Balancer functions ath the fourth layer of the Open Systems Interconnection (OSI) model. It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. It attempts to open a TCP connection to the selected target on the port specified in the listener configuration.
 
 ## Exposing your application on Kubernetes
 
@@ -16,7 +16,7 @@ Kubernetes supports a high-level abstraction called Ingress, which allows simple
 
 An Ingress controller is a DaemonSet or Deployment, deployed as Kubernetes Pod, that watches the endpoint of the API server for updates to the Ingress resource. Its job is to satisfy requests for Ingresses.
 
-## Why do I need a load blancer in front of an ingress?
+## Why do I need a load balancer in front of an ingress?
 
 Ingress is tightly integrated into Kubernetes, meaning that your existing workflows around `kubectl` will likely extend nicely to managing ingress. An Ingress controller does not tipically eliminate the need for an external load blancer, it simply adds an additional layer of routing and control behind the load balancer.
 
@@ -27,7 +27,7 @@ Pods and nodes are not guaranteed to live for the whole lifetime that the user i
 * Rescheduling for more efficient reource use
 * Downtime due to outside factors
 
-The load balancer (Kubernetes service) is a construct that stands as a single, fixed-service endpoint for a given set of pods or worker nodes. To take advantage of the previously-discussed benefits of a Network Load Balancer (NLB), we create a Kubernetes service of  type:loadbalancer with the NLB annotations, and this load balancer sits in front of the ingress controller – which is itself a pod or a set of pods. In AWS, for a set of EC2 compute instances managed by an Autoscaling Group, there should be a load balancer that acts as both a fixed referable address and a load balancing mechanism.
+The load balancer (Kubernetes service) is a construct that stands as a single, fixed-service endpoint for a given set of pods or worker nodes. To take advantage of the previously-discussed benefits of a Network Load Balancer (NLB), we create a Kubernetes service of `type:loadbalancer` with the NLB annotations, and this load balancer sits in front of the ingress controller – which is itself a pod or a set of pods. In AWS, for a set of EC2 compute instances managed by an Autoscaling Group, there should be a load balancer that acts as both a fixed referable address and a load balancing mechanism.
 
 ## How to use a Network Load Balancer with the NGINX Ingress resource in Kubernetes
 
@@ -36,7 +36,7 @@ The load balancer (Kubernetes service) is a construct that stands as a single, f
 This will create the `nginx-ingress` and the `network load balancer`
 
 ```bash
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/aws/deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.49.3/deploy/static/provider/aws/deploy.yaml
 ``` 
 
 Create `apple.deploy.yaml`
@@ -201,5 +201,11 @@ $ kubectl delete -f ./banana.deploy.yaml
 Delete NGINX Ingress Controller and NLB
 
 ```bash
-$ kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/aws/deploy.yaml
+kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.49.3/deploy/static/provider/aws/deploy.yaml
+```
+
+Delete the cluster
+
+```bash
+eksctl delete cluster --name=lc-cluster
 ```

@@ -75,9 +75,9 @@ $ kubectl get hpa
 **Open a new terminal**
 
 ```bash
-$ kubectl --generator=run-pod/v1 run -i --tty load-generator --image=busybox /bin/sh
-
+kubectl run -it --rm --restart=Never busybox --image=gcr.io/google-containers/busybox sh
 ```
+
 
 > Reference: https://medium.com/better-programming/kubernetes-tips-create-pods-with-imperative-commands-in-1-18-62ea6e1ceb32
 

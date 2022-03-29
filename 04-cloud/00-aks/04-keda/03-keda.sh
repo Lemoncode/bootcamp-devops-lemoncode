@@ -1,3 +1,22 @@
+#KEDA
+# https://www.returngis.net/2020/06/autoescalar-tus-aplicaciones-en-kubernetes-con-keda/
+
+#Variables
+RESOURCE_GROUP="KEDA"
+AKS_NAME="lemoncode-keda"
+
+#Creamos el grupo de recursos
+az group create -n ${RESOURCE_GROUP} -l ${LOCATION}
+
+#Creamos un cluster
+az aks create -g ${RESOURCE_GROUP} \
+-n ${AKS_NAME} \
+--node-count 1 \
+--generate-ssh-keys
+
+#Configuramos kubectl para comunicarnos con nuestro nuevo clúster
+az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME}
+
 #Para entender KEDA primero necesitas saber cómo autoescalan los pods dentro de un clúster
 
 ### Ejemplo de autoescalado sin KEDA
@@ -6,16 +25,9 @@ kubectl apply -f 04-cloud/00-aks/04-keda/manifests/autoscale-with-hpa.yml
 kubectl autoscale deployment web --cpu-percent=30 --min=1 --max=5
 kubectl get hpa --watch
 
-ab -n 50000 -c 200 http://51.104.177.27/
+ab -n 50000 -c 200 http://20.82.253.97/
 
 kubectl describe hpa web
-
-#KEDA
-# https://www.returngis.net/2020/06/autoescalar-tus-aplicaciones-en-kubernetes-con-keda/
-
-#Variables
-RESOURCE_GROUP="KEDA"
-AKS_NAME="lemoncode-keda"
 
 #Instalar Helm
 brew install helm
@@ -23,16 +35,6 @@ brew install helm
 #Añadir el repo de KEDA
 helm repo add kedacore https://kedacore.github.io/charts
 helm repo update
-
-#Creamos el grupo de recursos
-az group create -n ${RESOURCE_GROUP} -l ${LOCATION}
-
-#Creamos un cluster
-az aks create -g ${RESOURCE_GROUP} -n ${AKS_NAME} \
---node-count 1 --generate-ssh-keys
-
-#Configuramos kubectl para comunicarnos con nuestro nuevo clúster
-az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME}
 
 #Creamos un namespace llamado keda
 kubectl create namespace keda
@@ -47,7 +49,7 @@ kubectl get pods -n keda --watch
 #Para ello nos apoyamos en un servicio llamado Azure Storage
 
 #Creamos una cuenta de almacenamiento
-STORAGE_NAME="boxoftasks"
+STORAGE_NAME="lemonboxoftasks"
 az storage account create --name $STORAGE_NAME --resource-group $RESOURCE_GROUP
 ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP --account-name $STORAGE_NAME --query "[0].value" --output tsv)
 

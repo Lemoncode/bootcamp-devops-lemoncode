@@ -195,11 +195,8 @@ Comienza desde `node:alpine3.12` e instala los paquetes y realiza una build. Des
 
 En esta pipeline estamos pensando que pedimos a Jenkins que compile la aplicación, usando el `Dockerfile` en el repositorio, y después usar `verify` para imprimir node y npm y por último ejecutar un smoke test ejecutando el contenedor previamente generado.
 
-But these are separate things, the image that was built as part of the `Dockerfile` that's an SDK may just not meant to be used by Jenkins taken part of your application.
 
-Pero esto son cosas separadas, la imagen construida a como parte del `Dockerfile`, para construir la aplicación, no esta pensada para ser parte de la aplicación.
-
-So it's going to see how that looks. So if we check this build its failed as expected, we go and look at the output. I could see all the lines for my `Dockerfile` being executed, and then I get these really weird Jenkins error messages telling me it is trying to do something with the container on.
+Pero esto son cosas separadas, la imagen construida como parte del `Dockerfile`, sirve para ejecutar la aplicación, no como entorno para construir la misma.
 
 La build falla como esperábamos, echemos un ojo. Podemos ver todas las líneas ejecutadas del `Dockerfile`, y después vemos este mensaje que nos dice que tenemos un fallo al intentar ejecutar el contenedor.
 
