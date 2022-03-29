@@ -42,7 +42,7 @@ Actualizamos `variables.tf`
 -}
 +
 +variable "subnets_cidr_block" {
-+  type        = string
++  type        = list(string)
 +  description = "Subnet cidr block"
 +  default     = ["10.0.0.0/24", "10.0.1.0/24"]
 +}
@@ -113,7 +113,7 @@ resource "aws_route_table_association" "rta-subnet1" {
 
 Actualizamo `instances.tf`
 
-```tf
+```ini
 # INSTANCES #
 resource "aws_instance" "nginx1" {
   ami                    = nonsensitive(data.aws_ssm_parameter.ami.value)
@@ -160,7 +160,7 @@ Necesitamos crear un `security group` adicional para el balanceador de carga, de
 
 Actualizamos `network.tf`
 
-```tf
+```ini
 # SECURITY GROUPS #
 resource "aws_security_group" "nginx-sg" {
   name   = "nginx_sg"

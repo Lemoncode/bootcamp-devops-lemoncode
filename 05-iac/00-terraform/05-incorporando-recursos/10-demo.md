@@ -20,7 +20,7 @@ Si buscamos en la documentación `elastic load balancing v2`, encontraremos `aws
 
 > EXERCISE: A partir de la documentación actualizar  `loadbalancer.tf`
 
-```tf
+```ini
 ## aws_lb
 resource "aws_lb" "nginx" {
   name               = "lc_web_alb"

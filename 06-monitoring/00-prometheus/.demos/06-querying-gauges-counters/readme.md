@@ -26,7 +26,7 @@ prometheus-2.32.1.linux-amd64/prometheus \
  --config.file="/opt/prometheus/prometheus.yaml"
 ```
 
-Verify targets at http://10.0.010:9090/targets.
+Verify targets at http://10.0.0.10:9090/targets.
 
 
 ## 1. Gauge

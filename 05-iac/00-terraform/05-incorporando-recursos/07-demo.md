@@ -45,7 +45,7 @@ Cortamos el contenido en `network.tf`
 
 Y lo añadimos a `instances.tf`
 
-```tf
+```ini
 # INSTANCES #
 resource "aws_instance" "nginx1" {
   ami                    = nonsensitive(data.aws_ssm_parameter.ami.value)

@@ -225,7 +225,7 @@ The final `json` looks like:
 
 Actualizamos `s3.tf`
 
-```tf
+```ini
 # aws_s3_bucket
 resource "aws_s3_bucket" "web_bucket" {
   bucket        = local.s3_bucket_name
@@ -314,7 +314,7 @@ resource "aws_s3_bucket" "web_bucket" {
 
 Actualizamos `s3.tf`
 
-```tf
+```ini
 # ....
 # aws_s3_bucket_object
 resource "aws_s3_bucket_object" "website" {
@@ -341,7 +341,7 @@ resource "aws_s3_bucket_object" "graphic" {
 
 Actualizamos `s3.tf`
 
-```tf
+```ini
 # aws_iam_role
 resource "aws_iam_role" "allow_nginx_s3" {
   name = "allow_nginx_s3"
@@ -386,7 +386,7 @@ Ahora podemos asignar la `policy` al `role`
 
 > EJERCICIO. Crear una `policy` que permita todas las acciones sobre S3.
 
-```tf
+```ini
 # aws_iam_role_policy
 resource "aws_iam_role_policy" "allow_s3_all" {
   name = "allow_s3_all"
@@ -428,7 +428,7 @@ resource "aws_iam_role_policy" "allow_s3_all" {
 
 Por útimo creamos el [perfil de instamcia](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 
-```tf
+```ini
 # aws_iam_instance_profile
 resource "aws_iam_instance_profile" "nginx_profile" {
   name = "nginx_profile"
