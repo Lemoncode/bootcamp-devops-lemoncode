@@ -1,0 +1,17 @@
+stages:
+    - stage1
+    - stage2
+    
+testjob:
+    stage: stage1
+    script:
+      - echo stage en develop
+    only:
+      - develop
+    
+testjob2:
+    stage: stage2
+    script:
+      - echo stage en master
+    only:
+      - master

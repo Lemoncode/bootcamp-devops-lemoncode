@@ -1,0 +1,7 @@
+stages:
+    - stage1
+    
+testjob:
+    stage: stage1
+    script:
+        - env
