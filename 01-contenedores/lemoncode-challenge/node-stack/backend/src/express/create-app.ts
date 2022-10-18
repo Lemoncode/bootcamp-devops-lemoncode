@@ -10,6 +10,7 @@ export const createApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // TODO: Inject DAL
   routesInitialization(app);
 
   return app;
