@@ -4,8 +4,8 @@ import { createApp } from './create-app';
 
 const { app: { host, port } } = config;
 
-export const initExpressApp = () => {
-  const app: Application = createApp();
+export const initExpressApp = async () => {
+  const app: Application = await createApp();
 
   app.listen(
     port, 
