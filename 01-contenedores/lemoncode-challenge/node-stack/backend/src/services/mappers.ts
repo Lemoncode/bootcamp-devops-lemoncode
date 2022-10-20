@@ -18,17 +18,22 @@ function isTopicEntity(topic: TopicEntity | TopicDatabase): topic is TopicEntity
 
 export function mapTopic(topic: TopicEntity | TopicDatabase): TopicEntity | TopicDatabase {
     if (isTopicDatabase(topic)) {
-        return {
+        const t = {
             ...topic,
             id: topic._id.toString(),
-        }
+        };
+
+        delete t['_id'];
+        return t;
     }
 
     if(isTopicEntity(topic)) {
-        return {
+        const t = {
             ...topic,
             _id: new ObjectId(topic.id),  
-        }
+        };
+        delete t['id'];
+        return t;
     }
 }
 
