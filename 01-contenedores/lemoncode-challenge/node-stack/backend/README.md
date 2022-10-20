@@ -12,6 +12,7 @@ The following are environment variables that we can set up:
 
 ```ini
 DATABASE_URL=
+DATABASE_NAME=
 HOST=
 PORT=
 ```

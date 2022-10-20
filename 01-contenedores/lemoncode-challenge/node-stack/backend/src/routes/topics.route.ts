@@ -1,32 +1,39 @@
 import express from 'express';
+import { Topic } from '../entities';
+import { TopicsService } from '../services';
 
-export const topicsRoutes = (topicsServiceDAL: any) => {
+export const topicsRoutes = (topicsService: TopicsService) => {
     const router = express.Router();
 
-    router.get('/', (_, res) => {
-        // TODO: Use topicsServiceDAL
-        res.json(['topic A', 'topic B']);
+    router.get('/', async (_, res) => {
+        const result = await topicsService.getTopics();
+        res.json(result);
     });
 
-    router.get('/:id', (_, res) => {
-        // TODO: Use topicsServiceDAL
-        res.json('topic A');
+    router.get('/:id', async (req, res) => {
+        const { id } = req.params;
+        const result = await topicsService.getTopicById(id);
+        res.json(result);
     });
 
-    router.post('/', (req, res) => {
-        // TODO: Use topicsServiceDAL
-        const echo = req.body;
-        res.json(echo);
+    router.post('/', async (req, res) => {
+        const topic = req.body as Topic;;
+        await topicsService.createTopic(topic);
+        res.json(topic);
     });
 
-    router.put('/:id', (req, res) => {
-        const echo = req.body;
-        res.json(echo);
+    router.put('/:id', async (req, res) => {
+        const { id } = req.params;
+        const topic = req.body as Topic;
+        await topicsService.updateTopic(id, topic);
+        res.json(topic);
     });
 
-    router.delete('/:id', (req, res) => {
+    router.delete('/:id', async (req, res) => {
+        const { id } = req.params;
+        await topicsService.deleteTopic(id);
         res.json();
     });
 
     return router;
-} 
+}; 

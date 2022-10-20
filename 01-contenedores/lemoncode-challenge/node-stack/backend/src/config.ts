@@ -5,6 +5,7 @@ if (process.env.NODE_ENV === 'development') {
 export default {
     database: {
         url: process.env.DATABASE_URL || 'mongodb://localhost:27017',
+        name: process.env.DATABASE_NAME || 'TopicstoreDb'
     },
     app: {
         host: process.env.HOST || 'localhost',
