@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+    created-by: backend-team
+  namespace: ejercicio
+spec:
+  selector:
+    matchLabels:
+      app: backend
+      created-by: backend-team
+  template:
+    metadata:
+      labels:
+        app: backend
+        created-by: backend-team
+    spec:
+      containers:
+      - name: main
+        image: lemoncodersbc/go-hello-world
+        ports:
+          - containerPort: 80

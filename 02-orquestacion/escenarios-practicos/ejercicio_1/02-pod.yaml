@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: ejercicio
+  labels:
+    app: backend
+    created-by: backend-team
+spec:
+  containers:
+  - name: main
+    image: lemoncodersbc/go-hello-world:v1
+    ports:
+      - containerPort: 80
