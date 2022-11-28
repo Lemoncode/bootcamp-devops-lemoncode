@@ -22,7 +22,7 @@ Creamos `01/demo1/1.1/Jenkinsfile`
 pipeline {
     agent any
     environment {
-        VERSION = sh([ script: 'cd ./01/src && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
                     sh '''
                         npm install
@@ -49,7 +49,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     sh 'npm test'
                 }
             }
@@ -82,7 +82,7 @@ pipeline {
     }
     /*diff*/
     environment {
-        VERSION = sh([ script: 'cd ./01/src && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -99,11 +99,11 @@ pipeline {
         stage('Build') {
             /*diff*/
             environment {
-                VERSION_SUFFIX = sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)
+                VERSION_SUFFIX = sh(script:'if [ "${RC}" == "true" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)
             }
             /*diff*/
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     // echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
@@ -115,7 +115,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     sh 'npm test'
                 }
             }
@@ -126,7 +126,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/src/app/')
+                archiveArtifacts('01/solution/app/')
             }
         }
         /*diff*/
@@ -151,7 +151,7 @@ stage('Publish') {
         expression { return params.RC }
     }
     steps {
-        archiveArtifacts('01/src/app/')
+        archiveArtifacts('01/solution/app/')
     }
 }
 ```
@@ -193,7 +193,7 @@ pipeline {
 +               VERSION_SUFFIX = getVersionSuffix()
             }
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
                         npm install
@@ -204,7 +204,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
+                dir('./01/solution') {
                     sh 'npm test'
                 }
             }
@@ -214,7 +214,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/src/app/')
+                archiveArtifacts('01/solution/app/')
             }
         }
     }

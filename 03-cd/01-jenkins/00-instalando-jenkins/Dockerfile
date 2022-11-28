@@ -1,41 +1,32 @@
-FROM jenkinsci/blueocean:latest
+# Warning: Outdated image
+# FROM jenkinsci/blueocean:latest
+
+FROM jenkins/jenkins:lts-jdk11
 
 USER root
 
+# install docker-cli
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+  https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+  https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+
+# install docker-compose
+RUN curl --fail -sL https://api.github.com/repos/docker/compose/releases/latest| grep tag_name | cut -d '"' -f 4 | tee /tmp/compose-version \
+  && mkdir -p /usr/lib/docker/cli-plugins \
+  && curl --fail -sL -o /usr/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/$(cat /tmp/compose-version)/docker-compose-$(uname -s)-$(uname -m) \
+  && chmod +x /usr/lib/docker/cli-plugins/docker-compose \
+  && ln -s /usr/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose \
+  && rm /tmp/compose-version
+
 # install node
-RUN apk add --update nodejs npm
-
-# install docker-compose via python
-RUN apk update  \
-  && apk add --no-cache python3  \
-  && apk add --no-cache --virtual .docker-compose-deps python3 python3-dev py3-pip libffi-dev openssl-dev gcc libc-dev make cargo rust  \
-  && pip3 install docker-compose # buildkit
-
-# .NET Core deps
-RUN apk add --no-cache \
-  ca-certificates \
-  icu-libs \
-  krb5-libs \
-  libgcc \
-  libintl \
-  libssl1.1 \
-  libstdc++ \
-  zlib
-
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT="true" \
-  PATH="${PATH}:/root/.dotnet"
-
-# .NET Core SDK
-# see https://github.com/dotnet/dotnet-docker/blob/main/src/sdk/3.1/alpine3.14/amd64/Dockerfile
-RUN dotnet_sdk_version=3.1.201 \
-  && wget -O dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$dotnet_sdk_version/dotnet-sdk-$dotnet_sdk_version-linux-musl-x64.tar.gz \
-  && dotnet_sha512='9a8f14be881cacb29452300f39ee66f24e253e2df947f388ad2157114cd3f44eeeb88fae4e3dd1f9687ce47f27d43f2805f9f54694b8523dc9f998b59ae79996' \
-  && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-  && mkdir -p /usr/share/dotnet \
-  && tar -C /usr/share/dotnet -oxzf dotnet.tar.gz \
-  && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
-  && rm dotnet.tar.gz \
-  # Trigger first run experience by running arbitrary cmd
-  && dotnet help
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+  && apt-get install -y nodejs
 
 USER jenkins
+
+RUN jenkins-plugin-cli --plugins "blueocean:1.25.8 docker-workflow:521.v1a_a_dd2073b_2e"
