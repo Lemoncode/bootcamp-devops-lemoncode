@@ -1,0 +1,44 @@
+stages:
+    - stage1
+    - stage2
+    - stage3
+
+testjob:
+    stage: stage1
+    script:
+      - echo "este es mi artifact1" >> artifact1.txt
+    artifacts:
+        when: on_success
+        paths:
+            - "artifact1.txt"
+      
+testjob2:
+    stage: stage2
+    script:
+      - echo "este es mi artifact2" >> artifact2.txt
+    artifacts:
+        when: on_success
+        paths:
+            - "artifact2.txt"
+
+testjob3:
+    stage: stage3
+    script:
+      - ls
+      - cat artifact1.txt
+    dependencies:
+      - testjob
+
+testjob4:
+    stage: stage3
+    script:
+      - ls
+      - cat artifact2.txt
+    dependencies:
+      - testjob2
+
+testjob5:
+    stage: stage3
+    script:
+     - ls
+    dependencies: []

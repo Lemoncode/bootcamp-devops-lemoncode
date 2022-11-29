@@ -1,0 +1,20 @@
+stages:
+    - stage1
+    
+image: python:3.8-slim 
+
+testjob:
+    stage: stage1
+    image: python:3.9-slim 
+    before_script:
+	      - echo "Hola mundo"
+    script:
+        - echo "Adios mundo"
+
+testjob2:
+    stage: stage1
+    before_script:
+        - echo "Hola mundo"
+    script:
+        - echo "Adios mundo"
+

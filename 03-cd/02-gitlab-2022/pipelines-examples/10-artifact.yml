@@ -1,0 +1,22 @@
+stages:
+    - stage1
+    - stage2
+
+testjob:
+    stage: stage1
+    script:
+      - echo "este es mi artifact" >> artifact.txt
+    artifacts:
+        when: on_success
+        paths:
+            - "artifact.txt"
+    only:
+      - develop
+      
+testjob2:
+    stage: stage2
+    script:
+      - cat artifact.txt
+    only:
+      - develop
+

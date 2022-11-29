@@ -1,0 +1,20 @@
+variables:
+  mi_var: "Es variable global"
+
+
+stages:
+    - stage1
+    - stage2
+
+testjob:
+    variables:
+       mi_var: "Esto es una variable de job"
+    stage: stage1
+    script:
+      - echo $mi_var
+
+
+testjob2:
+    stage: stage2
+    script:
+      - echo $mi_var

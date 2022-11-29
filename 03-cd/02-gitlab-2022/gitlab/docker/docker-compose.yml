@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ee:15.4.4-ee.0'
+    restart: always
+    hostname: 'gitlab'
+    container_name: gitlab 
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+              external_url 'http://gitlab.local:8888'
+              registry_external_url 'http://gitlab.local:5001'
+              gitlab_rails['registry_enabled'] = true
+              registry['enable'] = true
+              pages_external_url "http://gitlab.local:8888"
+              gitlab_pages['enable'] = true
+              gitlab_pages['inplace_chroot'] = true
+              gitlab_rails['initial_root_password'] = 'Gitl@bPass'
+    ports:
+      - '8888:8888'
+      - '8443:8443'
+      - '2222:22'
+      - '5001:5001'
+    volumes:
+      - 'gitlab-config:/etc/gitlab'
+      - 'gitlab-logs:/var/log/gitlab'
+      - 'gitlab-data:/var/opt/gitlab'
+    networks:
+      bootcamp_network:
+        ipv4_address: 172.40.0.2
+    extra_hosts:
+            - "gitlab.local:172.40.0.2"
+  gitlabrunner:
+    image: 'gitlab/gitlab-runner:alpine-v15.4.2'
+    container_name: gitlab-runner
+    depends_on:
+      - gitlab
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'gitlab-runner-config:/etc/gitlab-runner'
+    networks:
+      bootcamp_network:
+        ipv4_address: 172.40.0.3
+    extra_hosts:
+            - "gitlab.local:172.40.0.2"
+  portainer:
+    image: portainer/portainer-ce
+    restart: always
+    container_name: portainer
+    ports:
+      - '9000:9000'
+    volumes: 
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'portainer_data:/data'
+volumes:
+  gitlab-config:
+  gitlab-data:
+  gitlab-logs:
+  gitlab-runner-config:
+  portainer_data:
+networks:
+  bootcamp_network:
+    name: bootcamp_network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.40.0.0/24

@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+$install_docker = <<-SCRIPT
+    apt-get update
+    apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	apt-key fingerprint 0EBFCD88
+	add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+	apt-get update
+	apt-get install docker-ce=5:20.10.11~3-0~ubuntu-focal docker-ce-cli=5:20.10.11~3-0~ubuntu-focal containerd.io -y
+	curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	chmod +x /usr/local/bin/docker-compose
+
+SCRIPT
+
+$configure_docker = <<-SCRIPT
+echo '{"insecure-registries" : ["gitlab.local:5001"]}' > /etc/docker/daemon.json
+sed -i "/ExecStart/ s/$/  -H tcp:\\/\\\/0.0.0.0:2375/" /lib/systemd/system/docker.service && systemctl daemon-reload && systemctl restart docker
+echo "172.40.0.2 gitlab.local" >> /etc/hosts
+SCRIPT
+
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  config.vm.box_version = "20221128.0.0"
+  config.vm.network "private_network", ip: "192.168.56.150"
+  config.vm.hostname = "bootcampVM"  
+  #config.vagrant.plugins = ["vagrant-vbguest"]
+  config.vm.provider "virtualbox" do |vb|
+  vb.name = "bootcampVM"
+  vb.memory = "6144"
+  vb.cpus = 4
+  end
+  # add swap
+  config.vm.provision :shell, inline: "fallocate -l 4G /swapfile && chmod 0600 /swapfile && mkswap /swapfile && swapon /swapfile && echo '/swapfile none swap sw 0 0' >> /etc/fstab"
+  config.vm.provision :shell, inline: "echo vm.swappiness = 10 >> /etc/sysctl.conf && echo vm.vfs_cache_pressure = 50 >> /etc/sysctl.conf && sysctl -p"
+  config.vm.provision "file", source: "gitlab", destination: "$HOME/"
+  config.vm.provision "shell", inline: $install_docker
+  config.vm.provision "shell", inline: $configure_docker
+  config.vm.provision "shell", inline: "cd gitlab/docker; docker-compose up -d"
+  config.vm.provision "shell", inline: "cd gitlab/docker; /bin/bash runner_register.sh" 
+end
