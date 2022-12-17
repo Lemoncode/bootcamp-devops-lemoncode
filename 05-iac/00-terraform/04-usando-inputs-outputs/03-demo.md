@@ -16,7 +16,7 @@ terraform apply "d1.tfplan"
 
 Crear `./lab/lc_web_app/locals.tf`.
 
-```tf
+```ini
 locals {
   common_tags = {
     
@@ -31,7 +31,7 @@ Queremos añadir 3 valores, `company`, `project` y `billing_code`. Vamos a sacar
 
 Actualizamos `variables.tf`
 
-```tf
+```ini
 # ....
 # COMMON
 variable "company" {

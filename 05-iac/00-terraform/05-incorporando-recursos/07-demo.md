@@ -70,7 +70,7 @@ EOF
 
 Actualizamos `loadbalancer.tf`
 
-```tf
+```ini
 ## aws_lb
 
 ## aws_lb_target_group
