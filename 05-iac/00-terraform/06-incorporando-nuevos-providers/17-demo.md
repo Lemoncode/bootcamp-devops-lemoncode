@@ -25,7 +25,10 @@ resource "aws_instance" "nginx1" {
   vpc_security_group_ids = [aws_security_group.nginx-sg.id]
   iam_instance_profile   = aws_iam_instance_profile.nginx_profile.name
   depends_on = [
-    aws_iam_role_policy.allow_s3_all
+-   aws_iam_role_policy.allow_s3_all
++   aws_iam_role_policy.allow_s3_all,
++   aws_s3_object.website,
++   aws_s3_object.graphic
   ]
 
   user_data = <<EOF
@@ -51,7 +54,10 @@ resource "aws_instance" "nginx2" {
   vpc_security_group_ids = [aws_security_group.nginx-sg.id]
   iam_instance_profile   = aws_iam_instance_profile.nginx_profile.name
   depends_on = [
-    aws_iam_role_policy.allow_s3_all
+-   aws_iam_role_policy.allow_s3_all
++   aws_iam_role_policy.allow_s3_all,
++   aws_s3_object.website,
++   aws_s3_object.graphic
   ]
 
   user_data = <<EOF

@@ -16,7 +16,7 @@ terraform apply "d1.tfplan"
 
 Crear `./lab/lc_web_app/variables.tf`.
 
-```tf
+```ini
 # variables.tf
 variable "aws_access_key" {
   type        = string
@@ -90,7 +90,7 @@ provider "aws" {
 
 Vamos a crear nuevas entradas en `variables.tf` para los recursos de Networking. 
 
-```tf
+```ini
 # ....
 # NETWORKING
 variable "vpc_cidr_block" {
@@ -183,7 +183,7 @@ resource "aws_route_table" "rtb" {
 
 Creamos nuevas entradas en `variables.tf` par los recusos de los SG
 
-```tf
+```ini
 # ....
 
 # SECURITY GROUPS
@@ -200,7 +200,7 @@ variable "sg_ingress_port" {
 }
 
 variable "sg_egress_cidr_blocks" {
-  type       map = list(string)
+  type        = list(string)
   description = "cidr blocks allow for egress"
   default     = ["0.0.0.0/0"]
 }

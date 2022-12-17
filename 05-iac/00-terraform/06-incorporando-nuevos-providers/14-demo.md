@@ -19,7 +19,9 @@ Crear `lab/lc_web_app/s3.tf`
 ```tf
 # aws_s3_bucket
 
-# aws_s3_bucket_object
+# aws_s3_bucket_acl
+
+# aws_s3_bucket_policy
 
 # aws_iam_role
 

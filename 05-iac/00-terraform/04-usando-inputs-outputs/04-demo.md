@@ -12,7 +12,7 @@ terraform apply "d1.tfplan"
 
 Creamos `./lab/lc_web_app/outputs.tf`
 
-```tf
+```ini
 output "aws_instance_public_dns" {
 
 }
@@ -20,7 +20,7 @@ output "aws_instance_public_dns" {
 
 Para la entrada tomamos el valor expuesto por la instacia en `main.tf`
 
-```tf
+```ini
 resource "aws_instance" "nginx1" {
 ```
 

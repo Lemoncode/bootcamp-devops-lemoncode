@@ -49,7 +49,7 @@ Debemos añadir el servicio en si mismo también `delivery.logs.amazonaws.com`
 
 Por último el servicio necesita acceso al ACL del Bucket
 
-1. Introducimos como `Principal` - `Service`
+1. Introducimos como `Principal` - `elb`
 2. Seleccionamos la acción de `PutObject`
 3. Introducimos como Amazon Resource Name `arn:aws:s3:::${BucketName}/${KeyName}`
 4. Click en `Add Statement`
@@ -58,11 +58,11 @@ Ya estamos listos para generar la `Policy`, hacemos click en `Generate Policy`, 
 
 ```json
 {
-  "Id": "Policy1639995384326",
+  "Id": "Policy1671300749955",
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1639993445416",
+      "Sid": "Stmt1671300748312",
       "Action": [
         "s3:PutObject"
       ],
@@ -70,38 +70,7 @@ Ya estamos listos para generar la `Policy`, hacemos click en `Generate Policy`, 
       "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
       "Principal": {
         "AWS": [
-          "AWS"
-        ]
-      }
-    },
-    {
-      "Sid": "Stmt1639994327284",
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      },
-      "Principal": {
-        "AWS": [
-          "Service"
-        ]
-      }
-    },
-    {
-      "Sid": "Stmt1639994660593",
-      "Action": [
-        "s3:GetBucketAcl"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
-      "Principal": {
-        "AWS": [
-          "Service"
+          "elb"
         ]
       }
     }
@@ -113,64 +82,24 @@ Ahora a partir de este esqueleto vamos a generar, el json que necesitamos
 
 ```diff
 {
-- "Id": "Policy1639995384326",
+- "Id": "Policy1671300749955",
++ "Id": "Policy",
   "Version": "2012-10-17",
   "Statement": [
     {
--     "Sid": "Stmt1639993445416",
+-     "Sid": "Stmt1671300748312",
       "Action": [
         "s3:PutObject"
       ],
       "Effect": "Allow",
 -     "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
 +     "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
--     "Principal": {
--       "AWS": [
--         "AWS"
--       ]
--     }
-+     "Principal": {
-+       "AWS": "${data.aws_elb_service_account.root.arn}"
-+     }
-    },
-    {
--     "Sid": "Stmt1639994327284",
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
--     "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
-+     "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      },
--     "Principal": {
--       "AWS": [
--         "Service"
--       ]
--     }
-+     "Principal": {
-+       "Service": "delivery.logs.amazonaws.com"
-+     }
-    },
-    {
--     "Sid": "Stmt1639994660593",
-      "Action": [
-        "s3:GetBucketAcl"
-      ],
-      "Effect": "Allow",
--     "Resource": "arn:aws:s3:::${BucketName}/${KeyName}",
-+     "Resource": "arn:aws:s3:::${local.s3_bucket_name}",
--     "Principal": {
--       "AWS": [
--         "Service"
--       ]
--     }
-+     "Principal": {
-+       "Service": "delivery.logs.amazonaws.com"
-+     }
+      "Principal": {
+        "AWS": [
+-         "elb"
++         "${data.aws_elb_service_account.root.arn}"
+        ]
+      }
     }
   ]
 }
@@ -180,6 +109,7 @@ The final `json` looks like:
 
 ```json
 {
+  "Id": "Policy",
   "Version": "2012-10-17",
   "Statement": [
     {
@@ -189,32 +119,9 @@ The final `json` looks like:
       "Effect": "Allow",
       "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
       "Principal": {
-        "AWS": "${data.aws_elb_service_account.root.arn}"
-      }
-    },
-    {
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      },
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
-      }
-    },
-    {
-      "Action": [
-        "s3:GetBucketAcl"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}",
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "AWS": [
+          "${data.aws_elb_service_account.root.arn}"
+        ]
       }
     }
   ]
@@ -229,11 +136,23 @@ Actualizamos `s3.tf`
 # aws_s3_bucket
 resource "aws_s3_bucket" "web_bucket" {
   bucket        = local.s3_bucket_name
-  acl           = "private"
   force_destroy = true
 
+  tags = local.common_tags
+}
+
+# aws_s3_bucket_acl
+resource "aws_s3_bucket_acl" "web_bucket_acl" {
+  bucket = aws_s3_bucket.web_bucket.id
+  acl    = "private"
+}
+
+# aws_s3_bucket_policy
+resource "aws_s3_bucket_policy" "allow_elb_logging" {
+  bucket = aws_s3_bucket.web_bucket.id
   policy = <<POLICY
 {
+  "Id": "Policy",
   "Version": "2012-10-17",
   "Statement": [
     {
@@ -243,42 +162,15 @@ resource "aws_s3_bucket" "web_bucket" {
       "Effect": "Allow",
       "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
       "Principal": {
-        "AWS": "${data.aws_elb_service_account.root.arn}"
-      }
-    },
-    {
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      },
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
-      }
-    },
-    {
-      "Action": [
-        "s3:GetBucketAcl"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}",
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "AWS": [
+          "${data.aws_elb_service_account.root.arn}"
+        ]
       }
     }
   ]
 }
   POLICY
-
-  tags = local.common_tags
 }
-
-# aws_s3_bucket_object
 
 # aws_iam_role
 
@@ -291,24 +183,21 @@ resource "aws_s3_bucket" "web_bucket" {
 * Tomamos el nombre del bucket de local
 * Establecemos `acl` como privado
 * Establecemos `force_destroy` para que Terraform lo elimine en el `destroy`
-* Policy
-  * En el statement para la `bucket policy`, queremos permitir al balenceador de carga y al `delivery service logs` acceso al bucket de S3. Esto lo hacemos utilizando `Allow`, y vamos a referenciar como principal, nuestra cuenta de servicio `Elastic Load Balancer` desde `data source`. Recordar que esto lo hemos declarado en `loadbalancer.tf`, como la entrada `data "aws_elb_service_account" "root" {}`, este es el `data source` que necesitará referenciar la `service account` usada por el `Elastic Load Balancer` en nuestra región.
+* En el `resource` para la `bucket policy`, queremos permitir al balenceador de carga y al `delivery service logs` acceso al bucket de S3. Esto lo hacemos utilizando `Allow`, y vamos a referenciar como principal, nuestra cuenta de servicio `Elastic Load Balancer` desde `data source`. Recordar que esto lo hemos declarado en `loadbalancer.tf`, como la entrada `data "aws_elb_service_account" "root" {}`, este es el `data source` que necesitará referenciar la `service account` usada por el `Elastic Load Balancer` en nuestra región.
+  
 
-  ```json
-  "Principal": {
-    "AWS": "${data.aws_elb_service_account.root.arn}"
-  },
-  ``` 
+```json
+"Principal": {
+  "AWS": "${data.aws_elb_service_account.root.arn}"
+},
+``` 
 
   * Para la `action`, usamos `s3:PutObject`, y para el recurso le pasamos el nombre del bucket y el path, **alb-logs**. Esto da permisos `Elastic Load Balancer` para escribir en el path.
 
-  ```json
-  "Action": "s3:PutObject",
-  "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*"
-  ```
-
-  * Vamos a darle los mismos permisos al servicio `delivery.logs.amazonaws.com`, y además `s3:GetBucketAcl`
-
+```json
+"Action": "s3:PutObject",
+"Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*"
+```
 
 ### Paso 4. Alimentamos los objectos del Bucket 
 
@@ -316,8 +205,8 @@ Actualizamos `s3.tf`
 
 ```ini
 # ....
-# aws_s3_bucket_object
-resource "aws_s3_bucket_object" "website" {
+# aws_s3_object
+resource "aws_s3_object" "website" {
   bucket = aws_s3_bucket.web_bucket.bucket
   key    = "/website/index.html"
   source = "./website/index.html"
@@ -325,7 +214,7 @@ resource "aws_s3_bucket_object" "website" {
   tags = local.common_tags
 }
 
-resource "aws_s3_bucket_object" "graphic" {
+resource "aws_s3_object" "graphic" {
   bucket = aws_s3_bucket.web_bucket.bucket
   key    = "/website/fruits.png"
   source = "./website/fruits.png"
@@ -426,7 +315,7 @@ resource "aws_iam_role_policy" "allow_s3_all" {
 }
 ```
 
-Por útimo creamos el [perfil de instamcia](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
+Por útimo creamos el [perfil de instancia](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html)
 
 ```ini
 # aws_iam_instance_profile
