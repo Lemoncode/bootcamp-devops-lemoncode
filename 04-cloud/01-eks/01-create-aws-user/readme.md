@@ -17,7 +17,7 @@ Para poder crear un usuario con permisos de administrador previamente debemos cr
 ## Creando un grupo
 
 ```bash
-$ aws iam create-group --group-name <group-name>
+aws iam create-group --group-name <group-name>
 ```
 
 > Contsraits: The name can consist of letters, digits, and the following characters: plus (+), equal (=), comma (,), period (.), at (@), underscore (_), and hyphen (-). The name is not case sensitive and can be a maximum of 128 characters in length.
@@ -25,7 +25,7 @@ $ aws iam create-group --group-name <group-name>
 Para verificar que hemos tenido exito en nuestra operación
 
 ```bash
-$ aws iam list-groups
+aws iam list-groups
 ```
 
 La respuesta incluye el `Amazon Resource Name` (ARN) para el nuevo grupo. El `ARN` es un standard  que Amazon utiliza para identificar recursos.
@@ -35,13 +35,13 @@ La respuesta incluye el `Amazon Resource Name` (ARN) para el nuevo grupo. El `AR
 Utilizando el siguiente comando enlazamos la política de administardor con el grupo recientemenet creado 
 
 ```bash
-$ aws iam attach-group-policy --group-name <group-name> --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+aws iam attach-group-policy --group-name <group-name> --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 ``` 
 
 Para verificar que la política se ha atado correctamente al grupo 
 
 ```bash
-$ aws iam list-attached-group-policies --group-name <group-name>
+aws iam list-attached-group-policies --group-name <group-name>
 ``` 
 
 La respuesta nos da la lista de políticas atadas al grupo. Si queremos comprobar los contenidos de una política en particular podemos usar `aws iam get-policy`
@@ -51,13 +51,13 @@ La respuesta nos da la lista de políticas atadas al grupo. Si queremos comproba
 ### 1. Creamos un usuario
 
 ```bash
-$ aws iam create-user --user-name eksAdmin
+aws iam create-user --user-name eksAdmin
 ```
 
 ### 2. Añadiendo el Usuaro a un grupo
 
 ```bash
-$ aws iam add-user-to-group --group-name <group-name>  --user-name <user-name>
+aws iam add-user-to-group --group-name <group-name>  --user-name <user-name>
 ``` 
 
 
@@ -70,13 +70,13 @@ https://My_AWS_Account_ID.signin.aws.amazon.com/console/
 ```
 
 ```bash
-$ aws iam create-login-profile --generate-cli-skeleton > create-login-profile.json
+aws iam create-login-profile --generate-cli-skeleton > create-login-profile.json
 ```
 
 Genera un `template`, que ahora podemos utilizar para inicializar el usuario
 
 ```bash
-$ aws iam create-login-profile --cli-input-json file://create-login-profile.json
+aws iam create-login-profile --cli-input-json file://create-login-profile.json
 ``` 
 
 Esto nos da como salida
@@ -102,7 +102,7 @@ google https://xxxxxxxxxxxx.signin.aws.amazon.com/console/
 Con esta `key` nuestro nuevo usuario tendrá acceso programático desde `AWS CLI`
 
 ```bash
-$ aws iam create-access-key --user-name <user-name>
+aws iam create-access-key --user-name <user-name>
 ``` 
 
 Con la salida anterior podemos configurar nuestro usurio por defecto usando `aws configute`

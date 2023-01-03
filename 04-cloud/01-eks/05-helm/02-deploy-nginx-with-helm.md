@@ -26,13 +26,13 @@ Now that our repository Chart list has been updated, we can [search for Charts](
 To list all Charts:
 
 ```bash
-$ helm search repo
+helm search repo
 ```
 
 You can see from the output that it dumped the list of all Charts we have added. In some cases that may be useful, but an even more useful search would involve a keyword argument. So next, we’ll search just for nginx:
 
 ```bash
-$ helm search repo nginx
+helm search repo nginx
 ```
 
 The results in:
@@ -57,7 +57,7 @@ After a quick web search, we discover that there is a Chart for the nginx standa
 
 
 ```bash
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
 Once that completes, we can search all Bitnami Charts:
@@ -70,7 +70,7 @@ helm search repo bitnami
 Search once again for nginx
 
 ```bash
-$ helm search repo nginx
+helm search repo nginx
 ```
 
 Now we are seeing more nginx options, across both repositories:
@@ -84,7 +84,7 @@ stable/nginx-ingress                    1.41.3          v0.34.1         DEPRECAT
 Or even search the Bitnami repo, just for nginx:
 
 ```bash
-$ helm search repo bitnami/nginx
+helm search repo bitnami/nginx
 
 ```
 
@@ -97,13 +97,13 @@ A Helm Chart can be installed multiple times inside a Kubernetes cluster. This i
 For this reason, you must supply a unique name for the installation, or ask Helm to generate a name for you.
 
 ```bash
-$ helm install mywebserver bitnami/nginx --dry-run
+helm install mywebserver bitnami/nginx --dry-run
 ```
 
 Now to really install nginx on our cluster, we can run:
 
 ```bash
-$ helm install mywebserver bitnami/nginx
+helm install mywebserver bitnami/nginx
 ```
 
 The output is simillar to this
@@ -137,8 +137,12 @@ To access NGINX from outside the cluster, follow the steps below:
 In order to review the underlying Kubernetes services, pods and deployments, run:
 
 ```bash
-$ kubectl get svc,po,deploy
+kubectl get svc,po,deploy
+```
 
+We get something similar to this:
+
+```
 NAME                        TYPE           CLUSTER-IP     EXTERNAL-IP                                                              PORT(S)        AGE
 service/kubernetes          ClusterIP      10.100.0.1     <none>                                                                   443/TCP        136m
 service/mywebserver-nginx   LoadBalancer   10.100.9.232   a7130a0207757453594c4cb5bdf072e5-381544302.eu-west-3.elb.amazonaws.com   80:31519/TCP   2m38s
@@ -155,8 +159,7 @@ The first object shown in this output is a Deployment. A Deployment object manag
 You can inspect this Deployment object in more detail by running the following command:
 
 ```bash
-$ kubectl describe deployment mywebserver
-
+kubectl describe deployment mywebserver
 ```
 
 The next object shown created by the Chart is a Pod. A Pod is a group of one or more containers.
@@ -164,19 +167,25 @@ The next object shown created by the Chart is a Pod. A Pod is a group of one or 
 To verify the Pod object was successfully deployed, we can run the following command:
 
 ```bash
-$ kubectl get pods -l app.kubernetes.io/name=nginx
+kubectl get pods -l app.kubernetes.io/name=nginx
+```
 
-NAME                                 READY   STATUS    RESTARTS   AGE
-mywebserver-nginx-857766d4fd-9tdwf   1/1     Running   0          4m48s
+We can check that the container inside the pod is running:
 
 ```
+NAME                                 READY   STATUS    RESTARTS   AGE
+mywebserver-nginx-857766d4fd-9tdwf   1/1     Running   0          4m48s
+```
+
 The third object that this Chart creates for us is a Service. A Service enables us to contact this nginx web server from the Internet, via an Elastic Load Balancer (ELB).
 
 To get the complete URL of this Service, run:
 
 ```bash
-$ kubectl get service mywebserver-nginx -o wide
+kubectl get service mywebserver-nginx -o wide
+```
 
+```
 NAME                TYPE           CLUSTER-IP     EXTERNAL-IP                                                              PORT(S)        AGE     SELECTOR
 mywebserver-nginx   LoadBalancer   10.100.9.232   a7130a0207757453594c4cb5bdf072e5-381544302.eu-west-3.elb.amazonaws.com   80:31519/TCP   6m22s   app.kubernetes.io/instance=mywebserver,app.kubernetes.io/name=nginx
 ```
@@ -190,7 +199,10 @@ To remove all the objects that the Helm Chart create we can use [helm uninstall]
 Before we uninstall our application, we can verify what we have running via the [helm list](https://helm.sh/docs/helm/helm_list/) command:
 
 ```bash
-$ helm list
+helm list
+```
+
+```
 WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: /home/lemoncode/.kube/config
 WARNING: Kubernetes configuration file is world-readable. This is insecure. Location: /home/lemoncode/.kube/config
 NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
@@ -200,7 +212,7 @@ mywebserver     default         1               2020-12-21 15:45:05.835403883 +0
 To uninstall:
 
 ```bash
-$ helm uninstall mywebserver
+helm uninstall mywebserver
 
 ```
 
