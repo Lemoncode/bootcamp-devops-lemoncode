@@ -27,7 +27,7 @@ chmod 400 EksKeyPair.pem
 With this new private key we can go ahead and generate a public one, that's the key that will be upload into the node (EC2 instance). If we provide this key, and we have the private one, we can connect to the remote instance.
 
 ```bash
-$ ssh-keygen -y -f EksKeyPair.pem > eks_key.pub
+ssh-keygen -y -f EksKeyPair.pem > eks_key.pub
 ```
 
 ## Create definition YAML
@@ -132,7 +132,7 @@ eksctl create cluster -f demos.yml
 Now we can test that our cluster is up and running.
 
 ```bash
-$ kubectl get nodes
+kubectl get nodes
 ```
 
 > `eksctl` has edit `./kube/config` to make `kubectl` point to the new created cluster.

@@ -16,10 +16,15 @@ Cluster Autoscaler will attempt to determine the CPU, memory, and GPU resources 
 You configure the size of your Auto Scaling group by setting the minimum, maximum, and desired capacity. When we created the cluster we set these settings to 3.
 
 ```bash
-$ aws autoscaling \
+aws autoscaling \
     describe-auto-scaling-groups \
     --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].[AutoScalingGroupName, MinSize, MaxSize,DesiredCapacity]" \
     --output table
+```
+
+We get  the following output:
+
+```
 -------------------------------------------------------------
 |                 DescribeAutoScalingGroups                 |
 +-------------------------------------------+----+----+-----+
@@ -46,10 +51,15 @@ aws autoscaling \
 
 ```bash
 # Check new values
-$ aws autoscaling \
+aws autoscaling \
     describe-auto-scaling-groups \
     --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='lc-cluster']].[AutoScalingGroupName, MinSize, MaxSize,DesiredCapacity]" \
     --output table
+```
+
+We must see the updated values similar to this:
+
+```
 -------------------------------------------------------------
 |                 DescribeAutoScalingGroups                 |
 +-------------------------------------------+----+----+-----+

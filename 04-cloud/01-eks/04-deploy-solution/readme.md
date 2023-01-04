@@ -245,9 +245,9 @@ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam 
 Let's bring up the Frontend
 
 ```bash
-$ cd lc-front
-$ kubectl apply -f kubernetes/deployment.yaml
-$ kubectl apply -f kubernetes/service.yaml
+cd lc-front
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
 ``` 
 
 We can check the progress by looking at the deployment status:
@@ -267,21 +267,21 @@ Be aware AL is L7 on OSI model, and only spports http and https, some kind of co
 Now that we have a running service that is `type: LoadBalancer` we need to find the ELB's address.
 
 ```bash
-$ kubectl get service lc-front
+kubectl get service lc-front
 ```
 
 or
 
 ```bash
-$ kubectl get service lc-front -o wide
+kubectl get service lc-front -o wide
 ```
 
 If we want to use the data programmatically, we can also output via json
 
 ```bash
-$ ELB=$(kubectl get service lc-front -o json | jq -r '.status.loadBalancer.ingress[].hostname')
+ELB=$(kubectl get service lc-front -o json | jq -r '.status.loadBalancer.ingress[].hostname')
 
-$ curl -m3 -v $ELB
+curl -m3 -v $ELB
 ```
 
 > NOTE: It will take several minutes for ELB to become healthy and start passing traffic to the frontend pods.
@@ -291,14 +291,14 @@ $ curl -m3 -v $ELB
 When we launched our services, we only launched one container of each. We can confirm this by viewing the running pods:
 
 ```bash
-$ kubectl get deployments
+kubectl get deployments
 ```
 
 Now let's scale up the backend services:
 
 ```bash
-$ kubectl scale deployment lc-age-service --replicas=3
-$ kubectl scale deployment lc-name-service --replicas=3
+kubectl scale deployment lc-age-service --replicas=3
+kubectl scale deployment lc-name-service --replicas=3
 ```
 
 Confirm by looking at deployments again
