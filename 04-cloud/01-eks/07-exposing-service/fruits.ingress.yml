@@ -2,48 +2,24 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: jaimesalas.com
-      http:
-        paths:
-          - backend:
-              service:
-                name: apple-service
-                port:
-                  number: 5678
-            path: /apple
-            pathType: Prefix
-          - backend:
-              service:
-                name: banana-service
-                port:
-                  number: 5678
-            path: /banana
-            pathType: Prefix
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: example-ingress
-#   # annotations:
-# #    ingress.kubernetes.io/rewrite-target: /
-# # nginx.ingress.kubernetes.io/ssl-redirect: "false"
-# # nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-# # nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   # tls:
-#   # - hosts:
-#   #   - anthonycornell.com
-#   #   secretName: tls-secret
-#   rules:
-#     - host: jaimesalas.com
-#       http:
-#         paths:
-#           - path: /apple
-#             backend:
-#               serviceName: apple-service
-#               servicePort: 5678
-#           - path: /banana
-#             backend:
-#               serviceName: banana-service
-#               servicePort: 5678
+  - host: "jaimesalas.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/apple"
+        backend:
+          service:
+            name: apple-service
+            port:
+              number: 5678
+      - pathType: Prefix
+        path: "/banana"
+        backend:
+          service:
+            name: banana-service
+            port:
+              number: 5678

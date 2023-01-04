@@ -101,8 +101,11 @@ spec:
 Create some services
 
 ```bash
-$ kubectl apply -f ./apple.deploy.yaml 
-$ kubectl apply -f ./banana.deploy.yaml
+kubectl apply -f ./apple.deploy.yaml 
+```
+
+```bash
+kubectl apply -f ./banana.deploy.yaml
 ``` 
 
 ## Step 2. Defining the Ingress resource to route traffic to the services created above
@@ -110,36 +113,50 @@ $ kubectl apply -f ./banana.deploy.yaml
 Now declare an Ingress to route requests to `/apple` to the first service, and requests to `/banana` to second service. Create `fruits.ingress.yml`
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: jaimesalas.com
-      http:
-        paths:
-          - path: /apple
-            backend:
-              serviceName: apple-service
-              servicePort: 5678
-          - path: /banana
-            backend:
-              serviceName: banana-service
-              servicePort: 5678
-
+  - host: "jaimesalas.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/apple"
+        backend:
+          service:
+            name: apple-service
+            port:
+              number: 5678
+      - pathType: Prefix
+        path: "/banana"
+        backend:
+          service:
+            name: banana-service
+            port:
+              number: 5678
 ```
+
+Note that we're using an annotation for `ingress.class`, since it's not set as the default one, we have to use the `annotation`. You can check this [link](https://stackoverflow.com/questions/65289827/nginx-ingress-controller-not-working-on-amazon-eks) on stackoverflow.
 
 And apply to our cluster
 
 ```bash
-$ kubectl apply -f fruits.ingress.yml
+kubectl apply -f fruits.ingress.yml
 ```
 
 Now to check that our ingress is working we need the `dns` of NLB that we have created, the easiest way to do this is run:
 
 ```bash
-$ kubectl get ingress
+kubectl get ingress
+```
+
+We get something simiar to this:
+
+```
 NAME              CLASS    HOSTS            ADDRESS                                                                         PORTS   AGE
 example-ingress   <none>   jaimesalas.com   a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.amazonaws.com   80      39m
 ```
@@ -148,7 +165,7 @@ The above adress is the `NLB` resource that's forwarding traffic to the ingress 
 **-I** the response only contains the headers
 
 ```bash
-$ curl -I  http://a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.amazonaws.com
+curl -I  http://a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.amazonaws.com
 ```
 
 We get the following response
@@ -167,7 +184,7 @@ Connection: keep-alive
 Beacuse the **host** field is configured for the Ingress object, you must supply the **Host** header of the request with the same `hostname`
 
 ```bash
-$ curl -I -H "Host: jaimesalas.com" http://a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.amazonaws.com/apple/
+curl -I -H "Host: jaimesalas.com" http://a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.amazonaws.com/apple/
 ``` 
 
 And now we get the following result
@@ -188,14 +205,14 @@ X-App-Version: 0.2.3
 Deelete Ingress resource
 
 ```bash
-$ kubectl delete -f fruits.ingress.yml
+kubectl delete -f fruits.ingress.yml
 ``` 
 
 Delete services
 
 ```bash
-$ kubectl delete -f ./apple.deploy.yaml 
-$ kubectl delete -f ./banana.deploy.yaml
+kubectl delete -f ./apple.deploy.yaml 
+kubectl delete -f ./banana.deploy.yaml
 ```
 
 Delete NGINX Ingress Controller and NLB

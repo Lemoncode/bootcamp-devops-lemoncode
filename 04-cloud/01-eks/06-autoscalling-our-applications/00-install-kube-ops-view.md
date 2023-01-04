@@ -13,7 +13,6 @@ helm install kube-ops-view \
 stable/kube-ops-view \
 --set service.type=LoadBalancer \
 --set rbac.create=True
-
 ```
 
 The execution above installs kube-ops-view exposing it through a Service using the LoadBalancer type. A successful execution of the command will display the set of resources created and will prompt some advice asking you to use `kubectl proxy` and a local URL for the service. Given we are using the type LoadBalancer for our service, we can disregard this; Instead we will point our browser to the external load balancer.
@@ -24,6 +23,9 @@ To check the chart was installed successfully:
 
 ```bash
 helm list
+``` 
+
+```
 WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: /home/lemoncode/.kube/config
 WARNING: Kubernetes configuration file is world-readable. This is insecure. Location: /home/lemoncode/.kube/config
 NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
@@ -34,9 +36,22 @@ With this we can explore kube-ops-view output by checking the details about the 
 
 ```bash
 kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = http://"$4 }'
-
 ```
 
 This will display a line similar to Kube-ops-view URL = http://<URL_PREFIX_ELB>.amazonaws.com Opening the URL in your browser will provide the current state of our cluster.
 
 > Reference: https://kubernetes-operational-view.readthedocs.io/en/latest/
+
+## Alternative installation
+
+```bash
+helm repo add christianknell https://christianknell.github.io/helm-charts
+helm repo update
+```
+
+```bash
+helm install kube-ops-view \
+ christianknell/kube-ops-view \
+ --set service.type=LoadBalancer
+```
+

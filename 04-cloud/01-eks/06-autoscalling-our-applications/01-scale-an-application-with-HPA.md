@@ -11,15 +11,18 @@ These metrics will drive the scaling behavior of the *deployments*.
 We will deploy the metrics server using [Kubernetes Metrics Server](https://github.com/kubernetes-sigs/metrics-server).
 
 ```bash
-$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
 ```
 
 Lets' verify the status of the metrics-server APIService (it could take a few minutes).
 
 ```bash
-$ kubectl get apiservice v1beta1.metrics.k8s.io -o json | jq '.status'
+kubectl get apiservice v1beta1.metrics.k8s.io -o json | jq '.status'
+```
 
+We expect an output similar to this:
 
+```json
 {
   "conditions": [
     {
@@ -35,7 +38,12 @@ $ kubectl get apiservice v1beta1.metrics.k8s.io -o json | jq '.status'
 
 **We are now ready to scale a deployed application**
 
-A new `addon` is set in our system we can check 
+A new `addon` is set in our system we can check by running:
+
+```bash
+kubectl get pods -n kube-system
+```
+
 
 ## Deploy a Sample App
 
@@ -67,7 +75,7 @@ kubectl autoscale deployment php-apache `#The target average CPU utilization` \
 View the HPA using kubectl. You probably will see <unknown>/50% for 1-2 minutes and then you should be able to see 0%/50%
 
 ```bash
-$ kubectl get hpa
+kubectl get hpa
 ``` 
 
 ## Generate load to trigger scaling
@@ -93,7 +101,7 @@ while true; do wget -q -O - http://php-apache; done
 In the previous tab, watch the HPA with the following command
 
 ```bash
-$ kubectl get hpa -w
+kubectl get hpa -w
 
 ```
 
