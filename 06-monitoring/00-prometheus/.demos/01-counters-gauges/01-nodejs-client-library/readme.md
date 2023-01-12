@@ -11,12 +11,16 @@ El ejemplo que vamos a crear se trata de un `batch process` ficticio que irá va
 En el caso de Nodejs el cliente de Prometheus es [prom-client](https://github.com/siimon/prom-client)
 
 ```bash
- npm i prom-client
+npm i prom-client
 ```
 
 ## 2. Creamos nuestras custom metrics
 
+* Creamos el fichero `custom-metrics.js`
+
 ```js
+const promClient = require('prom-client');
+
 // Reference: https://github.com/siimon/prom-client/blob/master/example/counter.js
 const counter = new promClient.Counter({
   name: 'worker_jobs_total',

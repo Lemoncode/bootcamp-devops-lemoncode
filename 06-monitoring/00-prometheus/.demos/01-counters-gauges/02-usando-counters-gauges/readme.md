@@ -34,7 +34,9 @@ docker run -d --name batch \
  -e PORT="8080" \
  -p 8080:8080 \
  jaimesalas/prom-batch
+```
 
+```bash
 docker logs batch
 ```
 

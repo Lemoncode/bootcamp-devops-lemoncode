@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-> Node exporter ya está instalado pero necesiatamos invocarlo manualmente.
+> Node exporter ya está instalado pero necesitamos invocarlo manualmente.
 
 > Está máquina es accesible desde el `host` en la IP `10.0.0.10`
 
@@ -42,7 +42,9 @@ docker run -d --name web \
  -e PORT="8080" \
  -p 8080:8080 \
  jaimesalas/prom-web
+```
 
+```nash
 docker logs web
 ```
 
