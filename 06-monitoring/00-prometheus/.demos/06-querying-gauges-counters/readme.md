@@ -59,7 +59,7 @@ Evalaute expressions over the processor's total jobs metric.
 - `worker_jobs_total[5m]` - range vector
   - We can add a range `[5m]` to see the values over time. For each time series, we get all the samples in the last 5 minutes. This is the total value since the metric began.
 - `rate(worker_jobs_total[5m])` - rates very similar
-  - With counter we are more interested on change over time. This gives te rate of change of the counter over a 5 minute window, and is telling the increase per second. using the the rate function with a counter gives us gauge in the output, and we can aggregate that over time.
+  - With counter we are more interested on change over time. This gives te rate of change of the counter over a 5 minute window, and is telling the increase per second. Using the the rate function with a counter gives us gauge in the output, and we can aggregate that over time.
 - `sum without(instance, job, os, runtime) (rate(worker_jobs_total[5m]))`
   - This gives us the rate of change for each status.
 - `sum without(status, instance, job, os, runtime) (rate(worker_jobs_total[5m]))`

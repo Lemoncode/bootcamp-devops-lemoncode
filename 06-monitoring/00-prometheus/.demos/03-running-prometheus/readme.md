@@ -147,7 +147,7 @@ chunks_head  lock  queries.active  wal
 
 ## 1.3 Explorando la UI de Prometheus
 
-Podemos ver las propias métrcas de `Prometheus` en http://localhost:9090/metrics
+Podemos ver las propias métricas de `Prometheus` en http://localhost:9090/metrics
 
 Desde la terminal ejecutamos:
 
