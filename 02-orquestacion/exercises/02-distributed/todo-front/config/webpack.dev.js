@@ -9,6 +9,5 @@ module.exports = merge(common, {
             '/api/': 'http://localhost:3000',
         },
         port: 8081,
-        stats: 'errors-only',
     },
 });
