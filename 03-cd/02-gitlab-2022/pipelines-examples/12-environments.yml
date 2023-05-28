@@ -1,0 +1,45 @@
+stages:
+    - stage1
+    - stage2
+
+testjob:
+    stage: stage1
+    script:
+       - echo $CI_COMMIT_REF_NAME >> artifact.txt
+    artifacts:
+        when: on_success
+        paths:
+            - "artifact.txt"
+      
+deploy:test:
+    stage: stage2
+    script:
+      - echo "My env is $CI_ENVIRONMENT_NAME"
+      - cat artifact.txt
+      - echo $CI_COMMIT_SHA
+    only:
+      - develop
+    environment:
+      name: test
+
+deploy:pre:
+    stage: stage2
+    script:
+      - echo "My env is $CI_ENVIRONMENT_NAME"
+      - cat artifact.txt
+      - echo $CI_COMMIT_SHA
+    only:
+      - /^release\/.*$/
+    environment:
+      name: pre
+      
+deploy:prod:
+    stage: stage2
+    script:
+      - echo "My env is $CI_ENVIRONMENT_NAME"
+      - cat artifact.txt
+      - echo $CI_COMMIT_SHA
+    only:
+      - master
+    environment:
+      name: prod

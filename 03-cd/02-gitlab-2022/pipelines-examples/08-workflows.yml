@@ -1,0 +1,35 @@
+workflow:
+  rules:
+    # Merge request from feature branch to develop
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME =~ /^release\//'
+      variables:
+        MYVARIABLE: "mi variable para develop y release"    
+    - if: $CI_COMMIT_REF_NAME == "master"
+      variables:
+        MYVARIABLE: "mi variable para master"    
+    - when: never
+
+stages:
+  - stage1
+  - stage2
+
+testjob:
+    stage: stage1
+    script:
+      - echo $MYVARIABLE
+      - exit 1
+    rules:
+      - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+        allow_failure: true
+
+testjob2:
+    stage: stage2
+    script:
+      - echo $MYVARIABLE
+    rules:
+      - if: '$CI_COMMIT_REF_NAME  ==  "master"'
+        when: manual

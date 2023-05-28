@@ -1,0 +1,17 @@
+stages:
+    - stage1
+    - stage2
+    
+testjob:
+    stage: stage1
+    script:
+      - exit 1
+    allow_failure: true
+      
+testjob2:
+    stage: stage2
+    script:
+      - echo "testjob2"
+    only:
+      - develop
+ 

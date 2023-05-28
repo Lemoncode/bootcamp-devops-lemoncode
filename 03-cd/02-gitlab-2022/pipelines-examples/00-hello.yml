@@ -1,0 +1,9 @@
+stages:
+    - stage1
+
+testjob:
+    stage: stage1
+    before_script:
+      - echo "Hola mundo"
+    script:
+      - echo "Adios mundo"
