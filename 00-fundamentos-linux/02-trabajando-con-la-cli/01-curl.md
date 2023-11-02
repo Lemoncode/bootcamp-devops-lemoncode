@@ -29,14 +29,14 @@ $ curl -O https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg
 Si descargamos un fichero grande podemos cortar la descarga y continuarla más adelante utilizando el flag `-C` (`--continue-at <offset>`) con el valor `-` para utilizar el fichero existente:
 
 ```shell
-## Limitamos la velocidad de descarga a 1Mbps (el fichero pesa 18MB)
-$ curl -O --limit-rate 1M https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4
+## Limitamos la velocidad de descarga a 1Mbps (el fichero pesa 15MB)
+$ curl -O --limit-rate 1M https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_15MB_MP4.mp4
 
 ## Cortamos la descarga con Ctrl + C
 ^C
 
 ## Continuamos la descarga añadiendo "-C -"
-$ curl -O --limit-rate 1M -C - https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4
+$ curl -O --limit-rate 1M -C - https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_15MB_MP4.mp4
 ```
 
 > Si no queremos mostrar barra de progreso al descargar un fichero añadiremos el flag `-s` (`--silent`).
