@@ -2,7 +2,7 @@
 
 ## 1.1 Una pipeline multi-stage
 
-- Crear un nuevo Jenkinsfile en `demo1/1.1/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `01-intro/02/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -29,18 +29,16 @@ pipeline {
 }
 ```
 
-Log in Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
+Accedemos a Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
 
-- New item, pipeline, `demo1-1.1`
-- Select pipeline from source control
-- Git - https://github.com/JaimeSalas/jenkins-pipeline-demos.git
-- Branch `main`
-- Path to Jenkinsfile `demo1/1.1/Jenkinsfile`
-
-> Walk through the [Jenkinsfile](./1.1/Jenkinsfile)
-
-- Run and check
-- Fails because step in second stage uses unknown variable `LOG_LEVEL`
+- New item, pipeline, `01-intro-02-1.1`
+- Seleccionamos Pipeline script from SCM
+- Seleccionamos Git y añadimos el repo de GitHub con HTTPS.
+- Usamos las credenciales de GitHub.
+- Reemplazamos `master` por `main` en el nombre de la rama.
+- Modificamos la ruta del Jenkinsfile por `01-intro/02/1.1/Jenkinsfile`
+- Ejecutamos y vemos los logs.
+- Falla debido a que el step del segundo stage utiliza una variable de entorno desconocida `LOG_LEVEL`.
 
 ```
 [Checks API] No suitable checks publisher found.
@@ -50,7 +48,7 @@ groovy.lang.MissingPropertyException: No such property: LOG_LEVEL for class: gro
 
 ## 1.2 Solicitando el input del Usuario
 
-- Crear un nuevo Jenkinsfile en `demo1/1.2/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `01-intro/02/1.2/Jenkinsfile`:
 
 ```groovy
 pipeline {
@@ -94,12 +92,11 @@ pipeline {
 }
 ```
 
-Back to http://localhost:8080
+Volvemos a Jenkins http://localhost:8080
 
-- Copy item, `demo1-1.2` from `demo1-1.1`
-- Path to Jenkinsfile `demo1/1.2/Jenkinsfile`
-
-> Walk through the [Jenkinsfile](./1.2/Jenkinsfile)
+- New item, pipeline, de nombre `01-intro-02-1.2`.
+- Copy item, seleccionamos `01-intro-02-1.1`.
+- Cambiamos la ruta del Jenkinsfile por `01-intro/02/1.2`.
 
 ```groovy
 input {
@@ -126,14 +123,14 @@ post {
 
 En el comando _post_ podemos tener diferentes condiciones aquí estamos usando _always_
 
-- Run and check
-- Open console from running build
-- Pauses on input stage - OK or abort
-- Post runs every time
+- Ejecutamos la build.
+- Abre la Console de la build actual, la pipeline queda pausada esperando la entrada del usuario.
+- Click en el enlace Input requested
+- Post se ejecuta todo el rato
 
 ## 1.3 Parallel stages
 
-- Crear un nuevo Jenkinsfile en `demo1/1.3/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `01-intro/01/1.3/Jenkinsfile` en el repo.
 
 ```groovy
 pipeline {
@@ -190,14 +187,13 @@ pipeline {
 }
 ```
 
-Volver a http://localhost:8080
+Volver a Jenkins via http://localhost:8080
 
-- Copy item, `demo1-1.3` from `demo1-1.2`
-- Path to Jenkinsfile `demo1/1.3/Jenkinsfile`
+- New item, pipeline, de nombre `01-intro-02-1.3`.
+- Copy item, seleccionamos `01-intro-02-1.2`.
+- Cambiamos la ruta del Jenkinsfile por `01-intro/02/1.3`.
 
-> Walk through the [Jenkinsfile](./1.3/Jenkinsfile)
-
-```
+```groovy
 parallel {
     stage('linux-arm64') {
         steps {
@@ -219,6 +215,6 @@ parallel {
 
 Con _parallel_ podemos ejecutar múltiples `stages` en paralelo.
 
-- Run and check
-- Parallel stages complete in any order
-- Then pause on input and then post
+- Ejecutamos y vemos los logs.
+- Los stages en paralelo se completan en cualquier orden.
+- Luego se pausa en el input y finalmente hace el post.
