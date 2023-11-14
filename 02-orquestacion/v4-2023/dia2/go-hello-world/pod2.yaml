@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: helloworld2
+  labels:
+    app: helloworld
+spec:
+  containers:
+  - name: helloworld
+    image: eiximenis/go-hello-world
+    ports:
+      - containerPort: 80

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v2
+    spec:
+      containers:
+      - name: demo
+        image: eiximenis/probestest
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 10m
+          limits:
+            memory: 256Mi
+            cpu: 30m
+        ports:
+        - containerPort: 80
+          name: http
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  labels:
+    app: helloworld-replicated
+spec:
+  selector:
+    matchLabels:
+      app: helloworld
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app: helloworld
+        component: backend
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+      containers:
+      - name: helloworld
+        image: eiximenis/go-hello-world
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      - name: mysql
+        image: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "patata"
+        - name: MYSQL_USER
+          value: "wp"
+        - name: MYSQL_PASSWORD
+          value: "patata"
+        - name: MYSQL_DATABASE
+          value: "wp"
+        volumeMounts:
+          - name: data
+            mountPath: /customdata

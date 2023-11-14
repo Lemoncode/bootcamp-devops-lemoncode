@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+data:
+  MYSQL_ROOT_PASSWORD: patata
+  MYSQL_USER: wp
+  MYSQL_PASSWORD: wp
+  MYSQL_DATABASE: wp

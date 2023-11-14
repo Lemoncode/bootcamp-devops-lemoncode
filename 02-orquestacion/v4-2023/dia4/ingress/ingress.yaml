@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld
+  labels:
+    name: helloworld
+  annotations:
+    nginx.requires.https: "true"
+spec:
+  tls:
+  - hosts:
+    - demo.lemoncoder.com
+    secretName: tls-cert
+  rules:
+  - host: demo.lemoncoder.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/app/"
+        backend:
+          service:
+            name: helloworld
+            port: 
+              number: 80

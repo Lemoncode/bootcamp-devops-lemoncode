@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  config.json: |-
+    {
+        "data": "v1",
+        "status": "ok"
+    }
+  otraclave: otrovalor
+
+# kubectl create cm config --from-file=config.json=config.json
