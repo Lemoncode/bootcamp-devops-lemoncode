@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  labels:
+    app: helloworld-replicated
+spec:
+  selector:
+    matchLabels:
+      app: helloworld
+  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app: helloworld
+        component: backend
+    spec:
+      containers:
+      - name: helloworld
+        image: eiximenis/go-hello-world
+        ports:
+          - containerPort: 80
+            name: http

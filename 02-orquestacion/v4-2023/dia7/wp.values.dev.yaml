@@ -1,0 +1,3 @@
+database:
+  host: wpdb-dev
+  password: patata

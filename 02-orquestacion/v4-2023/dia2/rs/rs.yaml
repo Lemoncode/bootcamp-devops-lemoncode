@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: helloworld
+  labels:
+    app: helloworld-replicated
+spec:
+  selector:
+    matchLabels:
+      app: helloworld
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: helloworld
+        component: backend
+    spec:
+      containers:
+      - name: helloworld
+        image: eiximenis/go-hello-world
+        ports:
+          - containerPort: 80
