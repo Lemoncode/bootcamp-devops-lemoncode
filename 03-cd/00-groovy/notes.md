@@ -16,5 +16,3 @@
   - Sintaxis maleable y flexible, integración avanzada y mecanismos de personalización, para integrar de manera legible las reglas de negocio en nuestras aplicaciones
 - Scripting and testing glue
   - Genial para escribir tests de manera concisa y mantenible, y para todas las tareas de `build` y automatización.
-
-> Aunque se integra de manera fantástica con Java, tiene su propio compilador y su propia VM.

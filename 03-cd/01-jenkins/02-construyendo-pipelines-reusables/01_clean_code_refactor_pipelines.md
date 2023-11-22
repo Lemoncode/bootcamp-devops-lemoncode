@@ -17,7 +17,7 @@ $ unzip code.zip
 
 Hacemos `push` de los cambios al repositorio remoto
 
-Creamos `02-pipelines/01/1.1/Jenkinsfile`
+Creamos `02-pipelines/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -61,9 +61,9 @@ pipeline {
 
 Accedemos a Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
 
-- New item, pipeline, de nombre `02-pipelines-01-1.1`.
-- Copy item, seleccionamos `01-intro-02-1.3`.
-- Cambiamos la ruta del Jenkinsfile por `02-pipelines/01/1.1`.
+- New item, pipeline, de nombre `02-pipelines-1.1`.
+- Copy item, seleccionamos `01-intro-1.3`.
+- Cambiamos la ruta del Jenkinsfile por `02-pipelines/1.1`.
 - Ejecutamos la build y vemos logs.
 - Ejecutamos desde Blue Ocean.
 
@@ -78,7 +78,7 @@ Creamos un Jenkinsfile similar al anterior pero con los siguientes cambios:
 +         booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
 +     }
       environment {
-          VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
+          VERSION = sh([ script: 'cd ./02-pipelines/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
           VERSION_RC = "rc.2"
       }
       stages {
@@ -120,7 +120,7 @@ Creamos un Jenkinsfile similar al anterior pero con los siguientes cambios:
                   expression { return params.RC }
               }
               steps {
-                  archiveArtifacts('01/solution/app/')
+                  archiveArtifacts('02-pipelines/solution/app/')
               }
           }
           /*diff*/
@@ -178,11 +178,11 @@ pipeline {
         }
         stage('Build') {
             environment {
--               VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
+-               VERSION_SUFFIX = "${sh(script:'if [ "${RC}" = "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
 +               VERSION_SUFFIX = getVersionSuffix()
             }
             steps {
-                dir('./01/solution') {
+                dir('./02-pipelines/solution') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
                         npm install
@@ -193,7 +193,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir('./01/solution') {
+                dir('./02-pipelines/solution') {
                     sh 'npm test'
                 }
             }
@@ -203,7 +203,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/solution/app/')
+                archiveArtifacts('02-pipelines/solution/app/')
             }
         }
     }
@@ -229,9 +229,9 @@ pipeline {
 
 Hacemos push de los cambios. Ahora desde Jenkins:
 
-- New item, pipeline, de nombre `02-pipelines-01-1.3`.
-- Copy item, seleccionamos `02-pipelines-01-1.2`.
-- Cambiamos la ruta del Jenkinsfile por `02-pipelines/01/1.3`.
+- New item, pipeline, de nombre `02-pipelines-1.3`.
+- Copy item, seleccionamos `02-pipelines-1.2`.
+- Cambiamos la ruta del Jenkinsfile por `02-pipelines/1.3`.
 - Ejecutamos la build y vemos que no hay opción seleccionada. Vemos logs.
 - Refrescamos la web de Jenkins. Ahora aparece Build with parameters. Ejecutar sin activar el check, luego activando el check.
 - Ejecutamos desde Blue Ocean.

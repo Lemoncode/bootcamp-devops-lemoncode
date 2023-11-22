@@ -43,13 +43,13 @@ for(String singer: singers) {
 Podemos definir el bucle anterior de una manera más compacta:
 
 ```groovy
-singers.each(x -> println(x))
+singers.each({ x -> println(x) })
 ```
 
 Podemos incluso darle una vuelta de tuerca más alimentando directamente el `iterador`.
 
 ```groovy
-singers.each(println(it))
+singers.each({ println(it) })
 ```
 
 # Demo: Estructuras de Control

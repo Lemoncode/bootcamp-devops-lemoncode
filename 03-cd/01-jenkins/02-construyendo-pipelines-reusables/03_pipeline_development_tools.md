@@ -12,7 +12,7 @@ $ ./start_jenkins.sh <jenkins-image> <jenkins-network> <jenkins-volume-certs> <j
 
 ## 3.1 Jenkinsfile Linter
 
-- Crear `01/demo3/Jenkinsfile`
+- Crear `02-pipelines/3.1/Jenkinsfile`
 
 ```groovy
 library identifier: 'jenkins-pipeline-demo-library@main',
@@ -68,7 +68,7 @@ pipeline {
 
 Jenkins API para validar la sintaxis de la pipeline
 
-Nos movemos en el terminal al directorio que contiene el Jenkinsfile al que queremos hacer `lint`, en este caso [Jenkinsfile](jenkins-pipeline-demos/01/demo3/). Esto no comprueba que la pipeline 'compila', tan sólo comprueba la sintaxis. Existe una extensión paar VSCode, `Jenkins Pipeline Linter Conector`.
+Nos movemos en el terminal al directorio que contiene el Jenkinsfile al que queremos hacer `lint`. Esto no comprueba que la pipeline 'compila', tan sólo comprueba la sintaxis. Existe una extensión para VSCode, [Jenkins Pipeline Linter Conector](https://marketplace.visualstudio.com/items?itemName=janjoerke.jenkins-pipeline-linter-connector).
 
 > Referencia: https://sandrocirulli.net/how-to-validate-a-jenkinsfile/
 
@@ -79,7 +79,7 @@ curl --user lemoncode:lemoncode -X POST -F "jenkinsfile=<./Jenkinsfile" http://l
 Si ahora metemos un error:
 
 ```bash
-Jaimes-MacBook-Pro:demo3 jaimesalaszancada$ curl --user lemoncode:lemoncode -X POST -F "jenkinsfile=<./Jenkinsfile" http://localhost:8080/pipeline-model-converter/validate
+$ curl --user lemoncode:lemoncode -X POST -F "jenkinsfile=<./Jenkinsfile" http://localhost:8080/pipeline-model-converter/validate
 Errors encountered validating Jenkinsfile:
 WorkflowScript: 10: expecting ''', found '\n' @ line 10, column 34.
            VERSION = '0.1.0"
@@ -97,6 +97,16 @@ WorkflowScript: 10: expecting ''', found '\n' @ line 10, column 34.
 - _Extensions_ - search `Jenkinsfile`
 - Select _Jenkins Pipeline Linter Connector_
 - _F1_ in Jenkinsfile
+
+Related settings:
+
+```json
+{
+  "jenkins.pipeline.linter.connector.user": "<username>",
+  "jenkins.pipeline.linter.connector.url": "http://localhost:8080/pipeline-model-converter/validate",
+  "jenkins.pipeline.linter.connector.pass": "<password>"
+}
+```
 
 ## 3.2 Pipeline Replay & Restart
 

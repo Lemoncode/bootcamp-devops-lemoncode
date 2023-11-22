@@ -20,7 +20,7 @@ Create a new directory _05_declarative_pipelines/src_tmp/jenkins-demos-review/02
 $ unzip code.zip -d ./src_temp/jenkins-demos-review/02
 ```
 
-Create `02/demo1/1.1/Jenkinsfile`
+Create `03-docker/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -42,7 +42,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir("$WORKSPACE/02/src") {
+                dir("$WORKSPACE/02/solution") {
                     sh '''
                       npm install
                       npm run build
@@ -52,7 +52,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-              dir("$WORKSPACE/02/src") {
+              dir("$WORKSPACE/02/solution") {
                 sh 'npm test'
               }
             }
@@ -121,7 +121,7 @@ ENTRYPOINT ["node", "app.js"]
 pipeline {
     agent {
         dockerfile {
-            dir '02/src'
+            dir '02/solution'
         }
     }
     stages {
@@ -159,7 +159,7 @@ Push changes
 pipeline {
     agent {
         dockerfile {
-            dir '02/src'
+            dir '02/solution'
         }
     }
     stages {
@@ -194,7 +194,6 @@ Esto crea confusión acerca de que hace este `Dockerfile`. Este `Dockerfile` es 
 Comienza desde `node:alpine3.12` e instala los paquetes y realiza una build. Después empaquete la aplicación instalando sólo las dependencias de producción, creando una imagen de Docker que representa nuestra aplicación. Y esto no es lo que espera Jenkins. Cuando Jenkins nos ofrece la opción de fichero Docker, dentro del agente arranca una imagen para ser usada como `build agent` no correr la aplicación.
 
 En esta pipeline estamos pensando que pedimos a Jenkins que compile la aplicación, usando el `Dockerfile` en el repositorio, y después usar `verify` para imprimir node y npm y por último ejecutar un smoke test ejecutando el contenedor previamente generado.
-
 
 Pero esto son cosas separadas, la imagen construida como parte del `Dockerfile`, sirve para ejecutar la aplicación, no como entorno para construir la misma.
 
@@ -235,7 +234,7 @@ ENV LEMONCODE_VAR=lemon
 pipeline {
     agent {
         dockerfile {
-            dir '02/src'
+            dir '02/solution'
             filename 'Dockerfile.node'
         }
     }
@@ -252,7 +251,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir("$WORKSPACE/02/src") {
+                dir("$WORKSPACE/02/solution") {
                     sh '''
                         npm install
                         npm build
@@ -262,7 +261,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir("$WORKSPACE/02/src") {
+                dir("$WORKSPACE/02/solution") {
                 sh 'npm test'
               }
             }
@@ -274,7 +273,7 @@ pipeline {
 ```groovy
 agent {
     dockerfile {
-        dir '02/src'
+        dir '02/solution'
         filename 'Dockerfile.node' // [1]
     }
 }
@@ -298,7 +297,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/src/Dockerfile 02/src")
+                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/solution/Dockerfile 02/solution")
                 }
             }
         }

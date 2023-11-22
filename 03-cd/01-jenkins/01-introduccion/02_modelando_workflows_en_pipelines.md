@@ -1,8 +1,8 @@
 # Modelando workflows en las pipelines
 
-## 1.1 Una pipeline multi-stage
+## 2.1 Una pipeline multi-stage
 
-- Crear un nuevo Jenkinsfile en `01-intro/02/1.1/Jenkinsfile`
+- Crear un nuevo Jenkinsfile en `01-intro/2.1/Jenkinsfile`
 
 ```groovy
 pipeline {
@@ -31,12 +31,12 @@ pipeline {
 
 Accedemos a Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
 
-- New item, pipeline, `01-intro-02-1.1`
+- New item, pipeline, `01-intro-2.1`
 - Seleccionamos Pipeline script from SCM
 - Seleccionamos Git y añadimos el repo de GitHub con HTTPS.
 - Usamos las credenciales de GitHub.
 - Reemplazamos `master` por `main` en el nombre de la rama.
-- Modificamos la ruta del Jenkinsfile por `01-intro/02/1.1/Jenkinsfile`
+- Modificamos la ruta del Jenkinsfile por `01-intro/2.1/Jenkinsfile`
 - Ejecutamos y vemos los logs.
 - Falla debido a que el step del segundo stage utiliza una variable de entorno desconocida `LOG_LEVEL`.
 
@@ -46,9 +46,9 @@ groovy.lang.MissingPropertyException: No such property: LOG_LEVEL for class: gro
 	at groovy.lang.Binding.getVariable(Binding.java:63)
 ```
 
-## 1.2 Solicitando el input del Usuario
+## 2.2 Solicitando el input del Usuario
 
-- Crear un nuevo Jenkinsfile en `01-intro/02/1.2/Jenkinsfile`:
+- Crear un nuevo Jenkinsfile en `01-intro/2.2/Jenkinsfile`:
 
 ```groovy
 pipeline {
@@ -94,9 +94,9 @@ pipeline {
 
 Volvemos a Jenkins http://localhost:8080
 
-- New item, pipeline, de nombre `01-intro-02-1.2`.
-- Copy item, seleccionamos `01-intro-02-1.1`.
-- Cambiamos la ruta del Jenkinsfile por `01-intro/02/1.2`.
+- New item, pipeline, de nombre `01-intro-2.2`.
+- Copy item, seleccionamos `01-intro-2.1`.
+- Cambiamos la ruta del Jenkinsfile por `01-intro/2.2`.
 
 ```groovy
 input {
@@ -128,9 +128,9 @@ En el comando _post_ podemos tener diferentes condiciones aquí estamos usando _
 - Click en el enlace Input requested
 - Post se ejecuta todo el rato
 
-## 1.3 Parallel stages
+## 2.3 Parallel stages
 
-- Crear un nuevo Jenkinsfile en `01-intro/01/1.3/Jenkinsfile` en el repo.
+- Crear un nuevo Jenkinsfile en `01-intro/2.3/Jenkinsfile` en el repo.
 
 ```groovy
 pipeline {
@@ -189,9 +189,9 @@ pipeline {
 
 Volver a Jenkins via http://localhost:8080
 
-- New item, pipeline, de nombre `01-intro-02-1.3`.
-- Copy item, seleccionamos `01-intro-02-1.2`.
-- Cambiamos la ruta del Jenkinsfile por `01-intro/02/1.3`.
+- New item, pipeline, de nombre `01-intro-2.3`.
+- Copy item, seleccionamos `01-intro-2.2`.
+- Cambiamos la ruta del Jenkinsfile por `01-intro/2.3`.
 
 ```groovy
 parallel {

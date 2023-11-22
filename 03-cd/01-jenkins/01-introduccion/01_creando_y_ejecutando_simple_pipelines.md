@@ -4,7 +4,7 @@
 
 Accedemos a Jenkins en http://localhost:8080 con `lemoncode`/`lemoncode`.
 
-- New item, de tipo pipeline, con nombre `01-intro-01-1.1`
+- New item, de tipo pipeline, con nombre `01-intro-1.1`
 - Escribimos el siguiente contenido en la sección Pipeline script:
 
 ```groovy
@@ -117,16 +117,16 @@ Mostrar el resultado desde la interfaz clásica. Este proyecto es un proyecto mu
 
 Es importante entender que utilizar el Credentials Provider de BlueOcean está desaconsejado. Aparecerá un warning en la barra superior.
 
-- Eliminaremos nuestro item `01-intro-01-1.2` y lo recrearemos desde la interfaz clásica.
+- Eliminaremos nuestro item `01-intro-1.2` y lo recrearemos desde la interfaz clásica.
 
-  - New item, pipeline, 01-intro-01-1.2`.
+  - New item, pipeline, 01-intro-1.2`.
   - En la sección Pipeline seleccionamos pipeline script from SCM.
   - Pondremos la URL por HTTPS de nuestro repositorio. Guardamos.
   - Hacemos una build y vemos los logs.
 
-- Crearemos de nuevo el item `01-intro-01-1.2-multi` como multi branch:
+- Crearemos de nuevo el item `01-intro-1.2-multi` como multi branch:
 
-  - New item, Multibranch Pipeline, `01-intro-01-1.2-multi`.
+  - New item, Multibranch Pipeline, `01-intro-1.2-multi`.
   - Branch Sources seleccionamos Bitbucket.
   - Añadimos credenciales en el Store de Jenkins.
     - Tipo Username with password.
@@ -134,7 +134,7 @@ Es importante entender que utilizar el Credentials Provider de BlueOcean está d
     - Añadimos el id `bitbucket-credentials`.
   - Seleccionamos la credencial que acabamos de crear
   - Usamos nuestro nombre de usuario de Bitbucket como Owner.
-  - Seleccionamos nuestro repositorio `01-intro-01-1.2`. Guardamos.
+  - Seleccionamos nuestro repositorio `01-intro-1.2`. Guardamos.
   - Verificamos que la build sobre master se ha hecho.
 
 - Eliminaremos las credenciales de nuestro usuario.
@@ -147,14 +147,14 @@ Realizar el mismo paso cambiando la visibilidad del proyecto de Bitbucket a `pri
 - Crear un nuevo repositorio en GitHub `jenkins-demos`. Este repositorio lo utilizaremos para el resto de las demos. Lo haremos privado para añadirle credenciales a Jenkins.
 - Añadimos los siguientes ficheros a nuestro repositorio:
 
-**./01-intro/01/1.1/test.sh**
+**./01-intro/1.1/test.sh**
 
 ```bash
 #!/bin/sh
 echo "Inside the script, demo $DEMO"
 ```
 
-**./01-intro/01/1.1/Jenkinsfile**
+**./01-intro/1.1/Jenkinsfile**
 
 ```groovy
 pipeline {
@@ -202,7 +202,7 @@ Vemos que tenemos un error de que no encuentra los ficheros por no tenerlos en l
 ```diff
   stage('stage-1') {
       steps {
-+         dir('01-intro/01/1.1') {
++         dir('01-intro/1.1') {
               echo "This is the build number $BUILD_NUMBER of demo $DEMO"
               sh '''
                   echo "Using a multi-line shell step"

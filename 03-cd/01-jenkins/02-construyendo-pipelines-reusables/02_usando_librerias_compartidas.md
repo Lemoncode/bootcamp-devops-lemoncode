@@ -34,19 +34,13 @@ $ ./start_jenkins.sh <jenkins-network> <jenkins-image> <jenkins-volume-certs> <j
 
 ## 2.1 Usando una librería compartida
 
-Crear un nuevo repositorio de git `jenkins-pipeline-demo-library`
+Crear un nuevo repositorio de git `jenkins-demos-library`
 
-- Reminder - `auditTools` function from [1.3 Jenkinsfile](../demo1/1.3/Jenkinsfile)
-- Moved shared library in [auditTools.groovy](../shared-library/vars/auditTools.groovy)
-- Published to https://github.com/Lemoncode/bootcamp-jenkins-library.git
-
-Hemos movido el código de `audit tools` a su propio _script file_.
+Hemos movido el código de `auditTools` a su propio _script file_.
 
 > Notar que todos los scripts se encuentran dentro del mismo directorio _vars_, y ese es otro requisito. Así que para encontrar estos pasos _custom_ que son parte de la librería tienen que estar en este directorio,
 
-> Usado en [2.1 Jenkinsfile](./01/demo2/2.1/Jenkinsfile)
-
-- Crear `01/demo2/2.1/Jenkinsfile`.
+- Crear `02-pipelines/2.1/Jenkinsfile`.
 
 > Debemos apuntar al repositorio correcto
 
@@ -70,15 +64,15 @@ pipeline {
 
 2. Para ejecutarlo necesitamos el nombre del script.
 
-- Copy item, `demo2-1` from `demo1-1`
-- Path to Jenkinsfile `01/demo2/2.1/Jenkinsfile`
-- Open in Blue Ocean
-- Run
-- Check pipeline log - fetches library
+- New item, pipeline, de nombre `02-pipelines-2.1`.
+- Copy item, seleccionamos `02-pipelines-1.3`.
+- Cambiamos la ruta del Jenkinsfile por `02-pipelines/2.1`.
+- Ejecutamos la build. Vemos logs de retrieval de la librería.
+- Ejecutamos la build en Blue Ocean. Vemos logs de retrieval de la librería.
 
 ## 2.2 Errores en las librerías
 
-> Crear auditTools2.groovy en el library repo
+> Crear auditTools2.groovy en el repo de librerías
 
 ```groovy
 def call(Map config) {
@@ -96,13 +90,7 @@ def call(Map config) {
 
 Una de las cosas a tener en cuenta es el versionado, que puede ser peligroso.
 
-- Copy item, `demo2-2` from `demo2-1`
-- Path to Jenkinsfile `01/demo2/2.2/Jenkinsfile`
-- Open in Blue Ocean
-- Run - fails
-- Check pipeline log
-
-> Walk through the [2.2 Jenkinsfile](./01/demo2/2.2/Jenkinsfile)
+Creamos el siguiente Jenkinsfile `02-pipelines/2.2/Jenkinsfile` en el repo de demos:
 
 ```groovy
 library identifier: 'jenkins-pipeline-demo-library@main',
@@ -113,12 +101,38 @@ pipeline {
     stages {
         stage('Audit tools') {
             steps {
-                auditTools2 message: 'This is demo 2' // The reason because is not working it's because echoing a message need double quotes
+                auditTools2()
             }
         }
     }
 }
 ```
+
+Desde Jenkins:
+
+- New item, pipeline, de nombre `02-pipelines-2.2`.
+- Copy item, seleccionamos `02-pipelines-2.1`.
+- Cambiamos la ruta del Jenkinsfile por `02-pipelines/2.2`.
+- Ejecutamos la build. Vemos los logs y vemos que falla porque se ha ejecutado sin parámetros.
+
+```
+Also:   org.jenkinsci.plugins.workflow.actions.ErrorAction$ErrorId: d2ff85b7-d226-4f63-8b2e-f03e2b887be5
+java.lang.NullPointerException: Cannot get property 'message' on null object
+```
+
+- Modificamos Jenkinsfile pasándole objeto con propiedades:
+
+```diff
+  stage('Audit tools') {
+      steps {
+-         auditTools2()
++         auditTools2(message: 'This is demo 2.1')
+      }
+  }
+```
+
+- Ejecutamos y vemos el comportamiento.
+- Ejecutamos desde BlueOcean.
 
 - Check library method [auditTools2.groovy](../shared-library/vars/auditTools2.groovy)
 - Fix quotes & push GitHub repo > `echo "${config.message}"`
@@ -162,7 +176,7 @@ pipeline {
         booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
     }
     environment {
-        VERSION = sh([ script: 'cd ./01/src && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
+        VERSION = sh([ script: 'cd ./02-pipelines/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -173,10 +187,10 @@ pipeline {
         }
         stage('Build') {
             environment {
-                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
+                VERSION_SUFFIX = getVersionSuffix(rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC)
             }
             steps {
-                dir('./01/src') {
+                dir('./02-pipelines/solution') {
                     echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
                     sh '''
                         npm install
@@ -187,7 +201,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
+                dir('./02-pipelines/solution') {
                     sh 'npm test'
                 }
             }
@@ -197,18 +211,19 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                archiveArtifacts('01/src/app/')
+                archiveArtifacts('02-pipelines/solution/app/')
             }
         }
     }
 }
 ```
 
-- Compare 1.3 Jenkinsfile and [2.3 Jenkinsfile](./01/demo2/2.3/Jenkinsfile)
-- Copy item, `demo2-3` from `demo2-1`
-- Path to Jenkinsfile `01/demo2/2.3/Jenkinsfile`
-- Build now
-- Run
+Desde Jenkins:
+
+- New item, pipeline, de nombre `02-pipelines-2.3`.
+- Copy item, seleccionamos `02-pipelines-2.2`.
+- Cambiamos la ruta del Jenkinsfile por `02-pipelines/2.3`.
+- Ejecutamos la build. Vemos los logs.
 
 > Alternative - folder and global libraries
 
