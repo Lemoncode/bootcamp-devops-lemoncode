@@ -1,0 +1,30 @@
+.default_job_develop:
+  variables:  
+    myvar: "mi variable 1"
+  image: alpine:latest
+  before_script:
+    - echo "prepare step" 
+  rules:
+    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+
+stages:
+  - build
+  - test
+
+build1:
+  stage: build
+  script:
+    - echo "script"
+    - echo $myvar
+  extends: .default_job_develop
+
+
+
+test1:
+  variables:
+    myvar2: "variable 2"
+  stage: test
+  script:
+    - echo 'test'
+    - echo $myvar
+  extends: .default_job_develop	

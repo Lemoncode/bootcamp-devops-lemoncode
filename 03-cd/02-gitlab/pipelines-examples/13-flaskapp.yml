@@ -1,0 +1,37 @@
+stages:
+  - build
+  - deploy
+
+
+build:
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+  script:
+    - echo $CI_REGISTRY $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA . 
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA
+
+deploy:test:
+   stage: deploy
+   before_script:
+     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+     - if [[ "$(docker ps --filter "name=flaskapptest" --format '{{.Names}}')" == "flaskapptest" ]]; then  docker rm -f flaskapptest; else echo "No existe";  fi
+   script:
+     - docker run --name "flaskapptest" -d -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA
+   only:
+     - develop
+   environment: test
+   
+deploy:prod:
+   stage: deploy
+   before_script:
+     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+     - if [[ "$(docker ps --filter "name=flaskapp$" --format '{{.Names}}')" == "flaskapp" ]]; then  docker rm -f flaskapp; else echo "No existe";  fi
+   script:
+     - docker run --name "flaskapp" -d -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA 
+   only:
+     - master
+   environment: prod
+
+

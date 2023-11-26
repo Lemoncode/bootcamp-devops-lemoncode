@@ -1,0 +1,24 @@
+stages:
+  - stage1
+  - stage2
+  - stage3
+
+task1:
+  stage: stage1
+  script:
+    - echo "execute $CI_JOB_NAME."
+
+
+trigger1:
+  stage: stage2
+  variables:
+      var_trigger: "variable desde myproject"
+  trigger:
+    project: bootcamp/tests
+    branch: develop
+    strategy: depend
+
+task2:
+  stage: stage3 
+  script:
+    - echo "execute $CI_JOB_NAME."

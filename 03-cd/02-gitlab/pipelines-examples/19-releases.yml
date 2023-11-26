@@ -1,0 +1,77 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_COMMIT_TAG'
+
+stages:
+  - test
+  - build
+  - deploy
+  - release
+
+test:
+  stage: test
+  script:
+    - env
+    
+build:
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+  script:
+    - echo $CI_REGISTRY $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA . 
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME  ==  "develop"'
+
+deploy:test:
+   stage: deploy
+   before_script:
+     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+     - if [[ "$(docker ps --filter "name=flaskapptest" --format '{{.Names}}')" == "flaskapptest" ]]; then  docker rm -f flaskapptest; else echo "No existe";  fi
+   script:
+     - docker run --name flaskapptest -d -p 8081:8080 --rm $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA
+   environment: test
+   rules:
+     - if: $CI_COMMIT_TAG
+       when: never
+     - if: '$CI_COMMIT_REF_NAME  ==  "develop"'  
+
+deploy:prod:
+   stage: deploy
+   before_script:
+     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+     - if [[ "$(docker ps --filter "name=flaskapp$" --format '{{.Names}}')" == "flaskapp" ]]; then  docker rm -f flaskapp; else echo "No existe";  fi
+   script:
+     - docker run --name flaskapp -d -p 8080:8080 --rm $CI_REGISTRY/$CI_PROJECT_PATH/flaskapp:$CI_COMMIT_SHA 
+   environment: prod
+   rules:
+     - if: $CI_COMMIT_TAG
+       when: never
+     - if: '$CI_COMMIT_REF_NAME  ==  "master"'  
+
+release_job:
+  variables:
+    EXTRA_DESCRIPTION: "ESTA ES LA RELEASE $CI_COMMIT_TAG"
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "running release_job"
+  release:
+    name: 'Release $CI_COMMIT_TAG'
+    description: 'Created using the release-cli $EXTRA_DESCRIPTION'
+    tag_name: '$CI_COMMIT_TAG'                                      
+    ref: '$CI_COMMIT_TAG'
+    assets: 
+      links:
+        - name: 'Documentation'
+          url: 'http://gitlab.com:8888/'
+          link_type: 'other'

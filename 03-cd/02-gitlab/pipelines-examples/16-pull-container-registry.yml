@@ -1,0 +1,8 @@
+stages:  
+  - test  
+   
+aws_test: 
+  image: gitlab.local:5001/base_images/aws_cli:1.0
+  stage: test 
+  script:  
+    - aws --version
