@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:8u392-b08-jre
 VOLUME /tmp
 
 ARG JAR_FILE

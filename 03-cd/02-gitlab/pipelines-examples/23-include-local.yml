@@ -1,0 +1,14 @@
+include:
+    - 'variables.yml'
+    - 'jobs/before_script.yml'
+    - 'jobs/build.yml'
+    - 'extend_image.yml'
+
+stages:
+  - build
+
+build-job:
+    stage: build
+    extends: .image
+    rules:
+        - if: $CI_COMMIT_TAG

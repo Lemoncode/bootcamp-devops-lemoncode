@@ -1,0 +1,41 @@
+stages:
+    - stage1
+    - stage2
+    - stage3
+
+
+job1:
+    stage: stage1
+    script:
+        - echo "${CI_JOB_STAGE} - ${CI_JOB_NAME}" > artifact.txt
+    artifacts:
+        paths:
+            - artifact.txt
+
+job2:
+    stage: stage1
+    script:
+        - echo "${CI_JOB_STAGE} - ${CI_JOB_NAME}"
+        - sleep 10
+        - ls -la
+    needs:
+        - job: job1
+          artifacts: false
+
+job3:
+    stage: stage2
+    script:
+        - echo "${CI_JOB_STAGE} - ${CI_JOB_NAME}"
+        - sleep 5
+        - cat artifact.txt
+    needs:
+        - job: job1
+          artifacts: true
+
+job4:
+    stage: stage3
+    script:
+        echo "${CI_JOB_STAGE} - ${CI_JOB_NAME}"
+    needs:
+        - job: job3
+          artifacts: false

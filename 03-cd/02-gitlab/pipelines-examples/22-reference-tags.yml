@@ -1,0 +1,40 @@
+stages:
+  - build
+  - test
+
+.setup:
+  variables:
+    myvar1: "variable 1"
+    myvar2: "variable 2"
+  images:
+    alpine: "alpine:latest"
+    docker: "docker:latest"
+  before_script:
+    - echo "hola"
+    - echo "adios"
+  
+build1:
+  variables: !reference [.setup, variables]
+  image:  !reference [.setup, images, alpine]
+  stage: build
+  before_script:
+    - !reference [.setup, before_script]
+    - echo "prueba"
+  script:
+    - echo "script"
+    - echo $myvar1
+  rules:
+    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+
+test1:
+  variables:
+    myvar1: !reference [.setup, variables, myvar1]
+  image:  !reference [.setup, images, docker]
+  stage: test
+  before_script:
+    - echo "prepare step"
+  script:
+    - echo 'test'
+    - echo $myvar1
+  rules:
+    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'

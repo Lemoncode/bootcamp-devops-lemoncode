@@ -1,0 +1,18 @@
+variables:  
+    PYTHON_VERSION: "3.8"  
+    BASE_VERSION: "20.04"  
+    BASE_IMAGE_NAME: "ubuntu"  
+  
+stages:  
+    - docker:build  
+   
+docker:build:  
+    stage: docker:build  
+    before_script:  
+        - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY_IMAGE  
+    script:  
+        - docker build --build-arg base_image_name=$BASE_IMAGE_NAME --build-arg python_version=$PYTHON_VERSION --build-arg base_version=$BASE_VERSION -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .  
+        - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG  
+        - echo "Pushed $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"  
+    rules:  
+        - if: $CI_COMMIT_TAG

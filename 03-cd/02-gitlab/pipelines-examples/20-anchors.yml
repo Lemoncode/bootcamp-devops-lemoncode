@@ -1,0 +1,28 @@
+.prep_commands: &prep_commands
+  - echo "command 1"
+  - echo "command 2"
+
+.develop_rule: &dev_rule
+  - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+
+stages:
+    - stage1
+    - stage2
+
+job1:
+  stage: stage1
+  before_script:
+    - *prep_commands
+  script:
+    - echo "Execute script"
+  rules:
+    - *dev_rule
+
+job2:
+  stage: stage2
+  before_script:
+    - *prep_commands
+  script:
+    - echo "Execute script"
+  rules:
+    - *dev_rule
