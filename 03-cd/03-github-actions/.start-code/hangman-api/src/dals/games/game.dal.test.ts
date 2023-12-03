@@ -23,7 +23,7 @@ beforeEach(async () => {
 
 describe('game.dal', () => {
   describe('getGames', () => {
-    test('resturns the games related to a player', async () => {
+    test('returns the games related to a player', async () => {
       // Arrange
       const playersDAL = playerDALFactory(db);
       const wordsDAL = wordDALFactory(db);
