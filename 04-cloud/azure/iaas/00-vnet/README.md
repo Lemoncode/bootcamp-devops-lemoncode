@@ -95,3 +95,5 @@ az network vnet subnet create `
 Con esto ya tenemos nuestra red virtual creada. Y tendríamos la foto de la siguiente manera:
 
 ![Red virtual con tres subredes](./images/vnet.png)
+
+Ahora vamos a crear una máquina virtual en cada una de las subredes. [Puedes empezar por aquí con la base de datos](/04-cloud/azure/iaas/01-db-vm/README.md).
