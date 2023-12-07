@@ -28,13 +28,7 @@ Una vez que tengas todo esto, debes sabes antes que todo lo que crees en Azure t
 Para crear un grupo de recursos, ejecuta el siguiente comando:
 
 ```bash
-az group create --name <nombre-del-grupo> --location <localización>
+az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-Por ejemplo:
-
-```bash
-az group create --name tour-of-heroes --location westeurope
-```
-
-Ahora que ya tienes lo mínimo indispensable, lo siguiente es tener una red virtual. Una red virtual es un grupo de direcciones IP aisladas que solo pueden acceder los recursos de Azure que hayas asignado a la red virtual.
+Ahora que ya tienes lo mínimo indispensable, lo siguiente es tener una red virtual. Una red virtual es un grupo de direcciones IP aisladas que solo pueden acceder los recursos de Azure que hayas asignado a la red virtual. [Puedes seguir aquí](/04-cloud/azure/iaas/00-vnet/README.md).
