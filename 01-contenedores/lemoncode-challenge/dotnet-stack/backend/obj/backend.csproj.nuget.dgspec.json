@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/backend.csproj": {}
+    "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj": {}
   },
   "projects": {
-    "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/backend.csproj": {
+    "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/backend.csproj",
+        "projectUniqueName": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/backend.csproj",
+        "projectPath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
         "packagesPath": "/Users/gis/.nuget/packages/",
-        "outputPath": "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/obj/",
+        "outputPath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/gis/.nuget/NuGet/NuGet.Config"
@@ -49,10 +49,25 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "version": "[3.1.32, 3.1.32]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -61,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.201/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/RuntimeIdentifierGraph.json"
         }
       }
     }

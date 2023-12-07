@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dIqiWfjj9rxPsjkEm6hNgB3yqlpocVOmiOFIOZ04Wk+OF97F8gV9XgdtwIvjAGB6ziGlo0hR/Bxa6zcc3QApww==",
+  "dgSpecHash": "ncsR3zy7lWV8Kmuhqyj/rXMwlGZXg2bqZZW9OAfbDH/lzshqnHNb1QuR8ViMFNKrJ8h3VsgwLpDKj8emHtEavw==",
   "success": true,
-  "projectFilePath": "/Users/gis/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/backend/backend.csproj",
+  "projectFilePath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
   "expectedPackageFiles": [
     "/Users/gis/.nuget/packages/dnsclient/1.3.1/dnsclient.1.3.1.nupkg.sha512",
     "/Users/gis/.nuget/packages/microsoft.netcore.platforms/2.1.2/microsoft.netcore.platforms.2.1.2.nupkg.sha512",
@@ -84,7 +84,21 @@
     "/Users/gis/.nuget/packages/system.threading.tasks.extensions/4.3.0/system.threading.tasks.extensions.4.3.0.nupkg.sha512",
     "/Users/gis/.nuget/packages/system.threading.timer/4.3.0/system.threading.timer.4.3.0.nupkg.sha512",
     "/Users/gis/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "/Users/gis/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512"
+    "/Users/gis/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512",
+    "/Users/gis/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
+    "/Users/gis/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "/Users/gis/.nuget/packages/microsoft.netcore.app.host.osx-x64/3.1.32/microsoft.netcore.app.host.osx-x64.3.1.32.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MongoDB.Driver' 2.11.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-7j9m-j397-g4wx",
+      "libraryId": "MongoDB.Driver",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = backend
+build_property.ProjectDir = /Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
