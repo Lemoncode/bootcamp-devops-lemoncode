@@ -105,7 +105,7 @@ docker inspect simple-nginx:v1
 #Dive: herramienta para explorar imágenes
 https://github.com/wagoodman/dive
 
-#Para instalar en Mac
+#Para instalar en Macq
 brew install dive
 
 #Para instalar en Windows (necesitas Go 1.10+)

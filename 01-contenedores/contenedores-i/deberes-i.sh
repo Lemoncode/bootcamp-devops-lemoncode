@@ -14,6 +14,7 @@ docker run -d --name some-mongo \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
     mongo
 
+# docker exec -it some-mongo mongosh --username mongoadmin --password secret
 # Desde Compass conectate a tu nuevo MongoDB. Haz clic en la opción Fill in connection fields individually y añade los valores:
 # hostname: localhost
 # port: 27017

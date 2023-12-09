@@ -14,7 +14,8 @@ docker container run -dit --name my-container \
     --mount source=my-data,target=/vol \
     alpine
 
-#Se puede utilizar tanto --mount como -v (o --volume)). Originalmente --mount solo se usaba para el modo clúster. Sin embargo, desde la versión 17.06 (Vamos por la 10.03.13) se puede utilizar para contenedores independientes.
+#Se puede utilizar tanto --mount como -v (o --volume)). Originalmente --mount solo se usaba para el modo clúster. Sin embargo, desde la versión 17.06 (Vamos por la 10.03.13) 
+# se puede utilizar para contenedores independientes.
 
 
 #Puedes comprobar que el volumen se ha creado correctamente
