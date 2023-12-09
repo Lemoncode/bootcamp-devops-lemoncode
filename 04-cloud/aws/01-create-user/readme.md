@@ -2,6 +2,10 @@
 
 When we sign up to AWS for the first time a new root user is created. This root user, is a kind of God inside our account. The recommendation, it's avoid its use unless under extraordinary circunstacnces. So the first thing that we're going to do is create a new user, with fully administartor rights to deal with AWS.
 
+## Create a User Group
+
+> TODO: Create a user group with administrato access
+
 ## Accessing to IAM and Creating a User
 
 From AWS console, search for `IAM` services
