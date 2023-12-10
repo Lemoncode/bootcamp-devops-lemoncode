@@ -4,7 +4,27 @@ When we sign up to AWS for the first time a new root user is created. This root 
 
 ## Create a User Group
 
-> TODO: Create a user group with administrato access
+As user with elavated privilages (such as root), log into AWS Console, navigate to _IAM dashboard_ and select _Access management_ option, an inside click on _User groups_
+
+[Access user groups](./.resources/user-group/01.png)
+
+Click on `Create group`
+
+[Create user group](./.resources/user-group/02.png)
+
+Set up group name `admins`
+
+[Config user group](./.resources/user-group/03.png)
+
+Select `AdministratorAccess`
+
+[Add permissions to group](./.resources/user-group/04.png)
+
+Scroll down and click on `Create group`
+
+[Confirm group creation](./.resources/user-group/05.png)
+
+We have created a new group, notice that there are no users associated, lets change that next.
 
 ## Accessing to IAM and Creating a User
 
