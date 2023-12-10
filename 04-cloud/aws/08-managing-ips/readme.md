@@ -12,4 +12,18 @@
 
 ## Create and Use a Bastion Server
 
-[Demo: Create and Use a Bastion Server]()
+[Demo: Create and Use a Bastion Server](./demos/01-bastion-server.md)
+
+## Disable Auto-assign Public IP
+
+- We can change this behaviour from subnet settings.
+- We can disable it on instance launch
+
+## Internal vs. External IP
+
+|                                                  Internal | External                                                                   |
+|----------------------------------------------------------:|----------------------------------------------------------------------------|
+|                          Addressable from inside VPC only | Addressable from outside of VPC                                            |
+|                   Stays the same for lifetime of instance | Allow and deny rules                                                       |
+|                                      Based on subnet CIDR | Pulled from AWS pool of external IPs                                       |
+|                                 Assigned to all instances | Only assigned on launch if enabled                                         |
