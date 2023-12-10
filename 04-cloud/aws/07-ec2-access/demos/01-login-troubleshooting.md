@@ -4,11 +4,11 @@
 2. Create a new instance using `default security group` and `default VPC` and `Key pair`, name it frankfurt-key
 3. Associate a Key to SSH in.
 
-![Networking settings](./.resources/01-networking-settings.png)
+![Networking settings](./.resources/login/01-networking-settings.png)
 
 Check the new created instance
 
-![New instance](./.resources/02-new-instance.png)
+![New instance](./.resources/login/02-new-instance.png)
 
 We see that it has a `public IP`, and it is in the default security group. We can also see the key name used to SSH to the instance, this is an Ubuntu Linux instance, and we have that key. So let's give it a try. I'll SSH using a key and the information. 
 
@@ -24,11 +24,11 @@ ssh -i "frankfurt-key.pem" ec2-user@ec2-3-123-34-72.eu-central-1.compute.amazona
 
 Let's go check out the security group rules. Sure enough, this is the **default security group**, so **no inbound traffic is allowed outside of the security group**.
 
-![Default SG](./.resources/03-default-sg.png)
+![Default SG](./.resources/login/03-default-sg.png)
 
 Let's edit this rule and change it to allow SSH from my IP address. We'll be sure to add a description and save the rule. Click on `Save`
 
-![Updated inbound rules](./.resources/04-updated-ir.png)
+![Updated inbound rules](./.resources/login/04-updated-ir.png)
 
 Now we'll try again, and here we go. 
 
