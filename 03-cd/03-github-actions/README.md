@@ -88,7 +88,7 @@ There are some limits whe using GitHub-hosted runners.
 | Team             | 60                        | 5                                 |
 | Enterprise Cloud | 1000                      | 50                                |
 
-## Refernces
+## References
 
 - [Understanding Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions)
 - [Workflow syntax](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
