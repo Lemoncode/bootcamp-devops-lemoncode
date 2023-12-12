@@ -69,6 +69,19 @@
     - Databases
     - S3 buckets
 
+### Multi-region: Do you need it?
+
+- [AWS History Outages](https://awsmaniac.com/aws-outages/)
+
+#### When Multi-region?
+
+- Failover
+  - Transition load to alternate region during regional system failures
+- Latency
+  - Process and serve non-static data closer to source
+- Compliance
+  - Data and services located in certain region to address restrictions
+
 ## AWS Networking Services Overview
 
 ### VPC
@@ -97,6 +110,15 @@
 - Use for simple applications
 - Modify default or build additional VPCs
 
+#### Network Infrastructure
+
+- Redundant high-bandwidth connections
+  - Private AWS network
+  - Pulic Internet
+- Amazon global network backbone
+  - Region-to-region connection
+- EC2 network speed varies by instance type
+
 ### IP Adresses
 
 #### Internal IP Addresses
@@ -108,7 +130,6 @@
   - Subnets cannot overlap
   - Ensure enough capacity
 - Instance Address
-
   - Determined by subnet CIDR
 
 - CIDR Blocks - Allowed block size between /16 and /28
@@ -138,6 +159,38 @@
 - Use NAT gateway to provide external internet access for _private_ subnets
 
 ### VPC Design Patterns
+
+#### Internet-accessible VPC
+
+- VPC with public subnet
+- All instances accessed via internet
+  - Internet gateway
+  - Router
+  - Public IP addresses
+- Instance protection
+  - Security Group
+  - Network ACL
+
+#### VPC with Public and Private Subnets
+
+- Private subnet ingress only from public subnet
+  - Bastion / jump box
+  - Internal IP address
+- Private instance protection
+  - Routes
+    - No public IP address
+- Private subnet internet access via NAT gateway
+  - Maintenance, patches
+
+#### VPC with Public and Private Subnets with VPN connection
+
+- Additional access to private subnet via VPN
+  - Customer gateway
+  - VPN connection
+  - Use internal IP address
+- Convenient
+  - No Bastion needed
+  - Extension of data center
 
 ### Elastic Load Balancing
 
