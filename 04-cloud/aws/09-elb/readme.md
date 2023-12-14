@@ -87,6 +87,11 @@ Right now, we need to SSH into each machine to install Docker. We can avoid this
 
 [Demo: Testing the Load Balancer](./demos/06-testing-lb/readme.md)
 
-## Registering Addictional Targets
+## Registering Additional Targets
 
 We're going to deploy the web front end on `web2` and `web3` and add those instances as targets to our target group.
+
+[Demo: Registering Additional Targets](./demos/07-additional-targets/readme.md)
+
+## Creating an Internal Load Balancer
+
