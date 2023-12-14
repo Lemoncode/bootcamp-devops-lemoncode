@@ -81,3 +81,12 @@ Right now, we need to SSH into each machine to install Docker. We can avoid this
 
 ## Create the Application Load Balancer
 
+[Demo: Creating Application Load Balancer](./demos/05-create-app-lb/readme.md)
+
+## Testing the Load Balancer
+
+[Demo: Testing the Load Balancer](./demos/06-testing-lb/readme.md)
+
+## Registering Addictional Targets
+
+We're going to deploy the web front end on `web2` and `web3` and add those instances as targets to our target group.

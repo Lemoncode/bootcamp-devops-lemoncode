@@ -11,13 +11,6 @@ We're going to SSH into web1 and deploy the web front end using `Docker`. We're 
 Now, just so you're not taken by surprise, let's look at the Docker command we're going to run. You don't need to understand this in any detail, but there are a couple of things I want to point out. 
 
 ```bash
-sudo docker run -d \
- -p 80:80 -p 443:443 \
- -h web1 \
- benpiper/mtwa:web
-```
-
-```bash
 docker run -d -p 80:3000 -h web1 jaimesalas/todo-app-front:4
 ```
 
