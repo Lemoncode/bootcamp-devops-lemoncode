@@ -43,3 +43,41 @@ Right now, we need to SSH into each machine to install Docker. We can avoid this
 - You cannot change the user data of a running instance, but you can retrieve the existing user data using the describe-instance-attribute command.
 
 [Demo: Avoid intall Docker manually](./demos/02-user-data/readme.md)
+
+## Provision the Web Tier
+
+[Demo: Web Tier Deploy](./demos/03-web-tier-deploy/readme.md)
+
+## Creating and HTTP Target Group
+
+### Supported Protocols
+
+- HTTP
+- HTTPS
+- TCP
+
+### Port Range
+
+- TCP/1-65535
+- AWS will change the port number to match the protocol
+- HTTP or TCP: 80
+- HTTPS: 443
+
+### Target Types
+
+| Instance                                                         | IP                                                     |
+| ---------------------------------------------------------------- | ------------------------------------------------------ |
+| Routes traffic to the primary private IP address of the instance | Routes traffic to a specified IP address               |
+|                                                                  | RFC 1918: 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16 |
+|                                                                  | RFC 6598: 100.64.0.0/10                                |
+
+### Health Checks
+
+- Determines wether to send traffic to a given instance
+- Each instance must pass its health check before receiving traffic
+- Sends HTTP GET request and looks for a success code
+
+[Demo: Creating HTTP Target Groups](./demos/04-create-target-groups/readme.md)
+
+## Create the Application Load Balancer
+
