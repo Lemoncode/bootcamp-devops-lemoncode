@@ -29,17 +29,17 @@ Now, let's go ahead and jump over to the EC2 service console and create a new ta
 
 In the EC2 service console, click on `Target Groups` and let's click `Create target group`.
 
-[Create target group](./.resources/01-create-target-group.png)
+![Create target group](./.resources/01-create-target-group.png)
 
 This is going to be an `instances` target group, and we are going to name this one `app‑servers`. Under the Protocol, let's click the drop‑down and here we've got several options, HTTP, HTTPS, TCP, TLS, UDP, and so on. We're going to work on HTTPS later. So for now, let's just go and select `HTTP`. The **port** here is going to be `8080`, which again is the port that the application servers listen on, and the `VPC` is of course going to be `webapp‑vpc`. And we are still using `HTTP1` here as well.
 
-[Set up target group 1](./.resources/02-set-up-tg-1.png)
+![Set up target group 1](./.resources/02-set-up-tg-1.png)
 
-[Set up target group 2](./.resources/03-set-up-tg-2.png)
+![Set up target group 2](./.resources/03-set-up-tg-2.png)
 
 Now for the health check, we're going to go ahead and stick with `HTTP`, but in the path we're going to enter `/api/todos`, which is just a very simple page that displays information about the app server.
 
-[Set up target group 3](./.resources/04-set-up-tg-3.png)
+![Set up target group 3](./.resources/04-set-up-tg-3.png)
 
 ```
 /api/todos
@@ -47,41 +47,41 @@ Now for the health check, we're going to go ahead and stick with `HTTP`, but in 
 
 Now, let's expand the Advanced health check settings. Now this time we'll stick with Traffic port and set the healthy threshold to 2.
 
-[Set up target group 4](./.resources/05-set-up-tg-4.png)
+![Set up target group 4](./.resources/05-set-up-tg-4.png)
 
 The rest of the defaults are fine, so scroll down to the bottom and click `Next`.
 
 Now let's go ahead and select `app3`, `app2`, and `app1`, scroll down, click `Include is pending below`, scroll down a little more, make sure they're all there, app1, app2, and app3, and then click `Create target group`.
 
-[Include pending](./.resources/06-include-pending.png)
+![Include pending](./.resources/06-include-pending.png)
 
-[Include pending 2](./.resources/07-include-pending-2.png)
+![Include pending 2](./.resources/07-include-pending-2.png)
 
-[Created target group](./.resources/08-tg-created.png)
+![Created target group](./.resources/08-tg-created.png)
 
 Now, let's go over to Load Balancers and click `Create Load Balancer`, select `Application Load Balancer`,
 
-[Load balancers menu](./.resources/09-load-balancers-menu.png)
+![Load balancers menu](./.resources/09-load-balancers-menu.png)
 
-[ALB Selection](./.resources/10-alb-selection.png)
+![ALB Selection](./.resources/10-alb-selection.png)
 
 and let's name this one `app‑lb`. For the scheme it's going to be an **internal load balancer** because we don't want it to be open to the internet.
 
-[ALB config 1](./.resources/11-alb-config-1.png)
+![ALB config 1](./.resources/11-alb-config-1.png)
 
 It should receive traffic only from the web servers. For the IP address type, notice we have only one option, `IPv4`. Now for the listener, we want to stick with HTTP and we're going to use port `8080` just to keep it consistent with the destination port we configured on the target group.
 
-[ALB config 2](./.resources/12-alb-config-2.png)
+![ALB config 2](./.resources/12-alb-config-2.png)
 
 Scrolling down two Availability Zones, we're going to select the `webapp‑vpc`. For eu-west-3a we're going to select the `app‑1a` subnet, and for eu-west-3b, of course, the `app‑1b` subnet.
 
-[ALB config 3](./.resources/13-alb-config-3.png)
+![ALB config 3](./.resources/13-alb-config-3.png)
 
 Notice it tells us there's an internet gateway attached to these subnets. In our VPC, we've got an internet gateway attached to a route table which is associated with those subnets. The only reason we did this is so that we could SSH directly to each of the app server instances to set them up.
 
 Add security group
 
-[ALB config 4](./.resources/14-alb-config-4.png)
+![ALB config 4](./.resources/14-alb-config-4.png)
 
 Let's go ahead and click `Next`. Once again we get the warning we got earlier about not using HTTPS. Let's click `Next`. 
 
@@ -89,23 +89,23 @@ And for the security group we're going to select `app‑sg` and deselect the def
 
 Add load balancer tags
 
-[ALB config 5](./.resources/15-alb-config-5.png)
+![ALB config 5](./.resources/15-alb-config-5.png)
 
 Well, it looks good.
 
-[ALB config 6](./.resources/16-alb-config-6.png)
+![ALB config 6](./.resources/16-alb-config-6.png)
 
 Click `Create`, and then click Close.
 
 Now, let's go locate the DNS name of the new load balancer and copy it to our clipboard. So click on `app‑lb`. And then here's the DNS name. Go ahead and copy that to your clipboard by clicking the little icon there.
 
-[LB Summary](./.resources/17-lb-summary.png)
+![LB Summary](./.resources/17-lb-summary.png)
 
 We're going to need this in just a moment. By the way, because this is an internal load balancer, this fully qualified domain name is only resolvable from within the `VPC`. There is no way to access this address from the internet. 
 
 Now let's jump over to our Target Groups, select `app‑servers`, highlight the Targets tab, and after a moment there are our three healthy targets.
 
-[TG Summary](./.resources/18-tg-summary.png)
+![TG Summary](./.resources/18-tg-summary.png)
 
 Now, we've got our web servers working and sitting behind an internet‑facing load balancer and we've got our application servers working and sitting behind an internal load balancer. When we configure the application target group, I directed the health check to use the path `/api/todos`.
 

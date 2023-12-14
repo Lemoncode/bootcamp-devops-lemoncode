@@ -95,3 +95,33 @@ We're going to deploy the web front end on `web2` and `web3` and add those insta
 
 ## Creating an Internal Load Balancer
 
+[Demo: Creating an Internal Load Balancer](./demos/08-internal-lb/readme.md)
+
+## Using Internal Load Balancer
+
+[Demo: Using Internal Load Balancer](./demos/09-using-internal-lb/readme.md)
+
+## Provisioning Database Tier
+
+[Demo: Provisioning Database Tier](./demos/10-provisioning-db/readme.md)
+
+## Sticky Sessions and Idle Timeouts
+
+> Sticky Sessions: Ensure a unique client's request always gets forwarded to the same target
+
+### Idle Timeouts
+
+- Client and load balancer establish a TCP connection
+- HTTP(S) requests and response traverse this connection
+- Control how long the TCP connection with a client can remain idle before closing it
+
+### Stickiness Duration
+
+- How long load balancer will maintain sticky session between clinet and target
+- Load balancer sets a browser cookie with a unique, encrypted value
+- Client sends back the cookie with each subsequent request
+- Between 1 second and 7 days
+
+[Demo: Sticky Sessions](./demos/11-sticky-session/readme.md)
+
+[Demo: Idle Timeout]()
