@@ -1,0 +1,6 @@
+{
+  "IpProtocol": "tcp", 
+  "FromPort": 81,
+  "ToPort": 81,
+  "IpRanges": [{"CidrIp": "172.31.0.0/16"}]
+}
