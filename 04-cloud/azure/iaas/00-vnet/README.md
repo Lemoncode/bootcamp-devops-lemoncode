@@ -6,7 +6,7 @@ En nuestro ejemplo de Tour of Heroes vamos a incluir todas las máquinas virtual
 
 ```bash
 # Virtual network variables
-VNET_NAME="tour-of-heroes-vnet"
+VNET_NAME="heroes-vnet"
 VNET_ADDRESS_PREFIX=192.168.0.0/16
 DB_SUBNET_NAME="db-subnet"
 DB_SUBNET_ADDRESS_PREFIX=192.168.1.0/24
@@ -18,9 +18,9 @@ FRONTEND_SUBNET_ADDRESS_PREFIX=192.168.3.0/24
 
 o si estás en Windows:
 
-```bash
+```pwsh
 # Virtual network variables
-$VNET_NAME="tour-of-heroes-vnet"
+$VNET_NAME="heroes-vnet"
 $VNET_ADDRESS_PREFIX=192.168.0.0/16
 $DB_SUBNET_NAME="db-subnet"
 $DB_SUBNET_ADDRESS_PREFIX=192.168.1.0/24
@@ -76,7 +76,7 @@ az network vnet subnet create \
 
 o si estás en Windows:
 
-```bash
+```pwsh
 echo -e "Creating subnets $API_SUBNET_NAME with address prefix $API_SUBNET_ADDRESS_PREFIX and $FRONTEND_SUBNET_NAME with address prefix $FRONTEND_SUBNET_ADDRESS_PREFIX"
 
 az network vnet subnet create `
@@ -94,6 +94,6 @@ az network vnet subnet create `
 
 Con esto ya tenemos nuestra red virtual creada. Y tendríamos la foto de la siguiente manera:
 
-![Red virtual con tres subredes](./images/vnet.png)
+![Red virtual con tres subredes](/04-cloud/azure/iaas/images/vnet.png)
 
 Ahora vamos a crear una máquina virtual en cada una de las subredes. [Puedes empezar por aquí con la base de datos](/04-cloud/azure/iaas/01-db-vm/README.md).

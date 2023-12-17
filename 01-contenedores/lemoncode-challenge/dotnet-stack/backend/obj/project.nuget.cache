@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ncsR3zy7lWV8Kmuhqyj/rXMwlGZXg2bqZZW9OAfbDH/lzshqnHNb1QuR8ViMFNKrJ8h3VsgwLpDKj8emHtEavw==",
+  "dgSpecHash": "811y/NfuuVtQWsjIAlfpWFbnkxD+gZ/WlUmN6LXLI7c8HvzLo6x+shZcFXFeR2va/evxAdU7AT5LQi/Dvqtbiw==",
   "success": true,
   "projectFilePath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
   "expectedPackageFiles": [
@@ -84,10 +84,7 @@
     "/Users/gis/.nuget/packages/system.threading.tasks.extensions/4.3.0/system.threading.tasks.extensions.4.3.0.nupkg.sha512",
     "/Users/gis/.nuget/packages/system.threading.timer/4.3.0/system.threading.timer.4.3.0.nupkg.sha512",
     "/Users/gis/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "/Users/gis/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512",
-    "/Users/gis/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
-    "/Users/gis/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
-    "/Users/gis/.nuget/packages/microsoft.netcore.app.host.osx-x64/3.1.32/microsoft.netcore.app.host.osx-x64.3.1.32.nupkg.sha512"
+    "/Users/gis/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512"
   ],
   "logs": [
     {
