@@ -1,5 +1,19 @@
 # Introduction
 
+## Public Cloud Services
+
+|   On-Premises  | Infrastructure as a Service | Platform as a Service | Software as a Service |
+|:--------------:|:---------------------------:|-----------------------|-----------------------|
+|  Applications  |         Applications        |      Applications     |     Applications ☁️    |
+|      Data      |             Data            |          Data         |         Data ☁️        |
+|     Runtime    |           Runtime           |       Runtime ☁️       |       Runtime ☁️       |
+|   Middleware   |          Middleware         |      Middleware ☁️     |      Middleware ☁️     |
+|       O/S      |             O/S             |         O/S ☁️         |         O/S ☁️         |
+| Virtualization |       Virtualization ☁️      |    Virtualization ☁️   |    Virtualization ☁️   |
+|     Servers    |          Servers ☁️          |       Servers ☁️       |       Servers ☁️       |
+|    Storage     |          Storage ☁️          |       Storage ☁️       |       Storage ☁️       |
+|   Networking   |         Networking ☁️        |      Networking ☁️     |      Networking ☁️     |
+
 ## Regions and Availability Zones
 
 ### Regions and Availability Zones
