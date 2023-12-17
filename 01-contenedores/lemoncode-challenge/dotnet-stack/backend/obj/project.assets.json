@@ -4903,24 +4903,32 @@
     ]
   },
   "packageFolders": {
-    "/Users/gis/.nuget/packages/": {}
+    "C:\\Users\\giselat\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
+      "projectUniqueName": "D:\\repos\\bootcamp-devops-lemoncode\\01-contenedores\\lemoncode-challenge\\dotnet-stack\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/backend.csproj",
-      "packagesPath": "/Users/gis/.nuget/packages/",
-      "outputPath": "/Users/gis/Desktop/Dev/bootcamp-devops-lemoncode/01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/",
+      "projectPath": "D:\\repos\\bootcamp-devops-lemoncode\\01-contenedores\\lemoncode-challenge\\dotnet-stack\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\giselat\\.nuget\\packages\\",
+      "outputPath": "D:\\repos\\bootcamp-devops-lemoncode\\01-contenedores\\lemoncode-challenge\\dotnet-stack\\backend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/gis/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\giselat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4955,6 +4963,27 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+<<<<<<< HEAD
+=======
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.1.10, 3.1.10]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.1.32, 3.1.32]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[3.1.0, 3.1.0]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[3.1.0, 3.1.0]"
+          }
+        ],
+>>>>>>> ff77d4144f4e412a8c236cf695da2af6b53cac04
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4963,7 +4992,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   },
