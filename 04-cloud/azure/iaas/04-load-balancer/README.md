@@ -8,20 +8,51 @@ En Azure, existen dos tipos de balanceadores de carga:
 
 - **Balanceador de carga interno**: distribuye el tráfico de red entrante a las máquinas virtuales dentro de una red virtual. Este balanceador de carga se puede utilizar para equilibrar el tráfico de red a máquinas virtuales que se encuentran en la misma red virtual.
 
-En este caso, vamos a utilizar un balanceador de carga público para poder acceder a nuestra aplicación desde Internet. Para ello, vamos a crear un balanceador de carga público. Para ello, lo primero que vamos a hacer es crear el balanceador a través del siguiente comando:
+En este caso, vamos a utilizar un balanceador de carga público para poder acceder a nuestra aplicación desde Internet. Para ello, vamos a crear un balanceador de carga público. Lo primero que vamos a hacer es setear las variables de entorno que vamos a utilizar para crear el balanceador de carga.
 
 ```bash	
-LOAD_BALANCER_NAME="front-end-lb"
-PUBLIC_IP_NAME="lb-ip"
-PROBE_NAME="fontend-probe"
+LOAD_BALANCER_NAME="frontend-lb"
+LB_IP_NAME="lb-ip"
+PROBE_NAME="frontend-probe"
+BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
+````
 
+o si estás en Windows:
+
+```pwsh
+$LOAD_BALANCER_NAME="frontend-lb"
+$LB_IP_NAME="lb-ip"
+$PROBE_NAME="frontend-probe"
+$BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
+```
+
+Antes de crear un balanceador de carga público necesitas generar una dirección IP pública. Esta dirección IP pública se utiliza para acceder a las máquinas virtuales que se encuentran detrás del balanceador de carga. Para ello, vamos a crear una dirección IP pública.
+
+```bash
 echo -e "Create a public IP"
 
 az network public-ip create \
 --resource-group $RESOURCE_GROUP \
---name $PUBLIC_IP_NAME \
---sku Standard
+--name $LB_IP_NAME \
+--sku Standard \
+--dns-name $LB_IP_NAME
+```
 
+o si estás en Windows:
+
+```pwsh
+Write-Host "Create a public IP"
+
+az network public-ip create `
+--resource-group $RESOURCE_GROUP `
+--name $LB_IP_NAME `
+--sku Standard `
+--dns-name $LB_IP_NAME
+```
+
+Y ahora ya si creamos el balanceador:
+
+```bash
 echo -e "Create a load balancer"
 
 az network lb create \
@@ -29,25 +60,14 @@ az network lb create \
 --name $LOAD_BALANCER_NAME \
 --vnet-name $VNET_NAME \
 --sku Standard \
---public-ip-address $PUBLIC_IP_NAME \
---frontend-ip-name frontend-ip \
---backend-pool-name frontend-backend-pool
+--backend-pool-name $BACKEND_POOL_NAME \
+--frontend-ip-name $LB_IP_NAME \
+--public-ip-address $LB_IP_NAME
 ```	
 
 o si estás en Windows:
 
 ```pwsh
-$LOAD_BALANCER_NAME="front-end-lb"
-$PUBLIC_IP_NAME="lb-ip"
-$PROBE_NAME="fontend-probe"
-
-Write-Host "Create a public IP"
-
-az network public-ip create `
---resource-group $RESOURCE_GROUP `
---name $PUBLIC_IP_NAME `
---sku Standard
-
 Write-Host "Create a load balancer"
 
 az network lb create `
@@ -55,9 +75,9 @@ az network lb create `
 --name $LOAD_BALANCER_NAME `
 --vnet-name $VNET_NAME `
 --sku Standard `
---public-ip-address $PUBLIC_IP_NAME `
---frontend-ip-name frontend-ip `
---backend-pool-name frontend-backend-pool
+--backend-pool-name $BACKEND_POOL_NAME `
+--frontend-ip-name $LB_IP_NAME `
+--public-ip-address $LB_IP_NAME
 ```
 
 Una vez que tenemos el balanceador de carga creado, vamos a crear una sonda de salud para comprobar que nuestra aplicación está funcionando correctamente. Para ello, vamos a crear una sonda de salud que compruebe que la aplicación está funcionando correctamente.
@@ -70,7 +90,7 @@ az network lb probe create \
 --lb-name $LOAD_BALANCER_NAME \
 --name $PROBE_NAME \
 --protocol tcp \
---port 8080
+--port 80
 ```
 
 o si estás en Windows:
@@ -83,7 +103,7 @@ az network lb probe create `
 --lb-name $LOAD_BALANCER_NAME `
 --name $PROBE_NAME `
 --protocol tcp `
---port 8080
+--port 80
 ```
 
 Una vez que tenemos la sonda de salud creada, vamos a crear una regla de balanceo de carga para que el balanceador de carga pueda distribuir el tráfico de red entre las máquinas virtuales.
@@ -97,9 +117,9 @@ az network lb rule create \
 --name myHTTPRule \
 --protocol tcp \
 --frontend-port 80 \
---backend-port 8080 \
---frontend-ip-name frontend-ip \
---backend-pool-name frontend-backend-pool \
+--backend-port 80 \
+--frontend-ip-name $LB_IP_NAME \
+--backend-pool-name $BACKEND_POOL_NAME \
 --probe-name $PROBE_NAME \
 --disable-outbound-snat true \
 --idle-timeout 15
@@ -116,9 +136,9 @@ az network lb rule create `
 --name myHTTPRule `
 --protocol tcp `
 --frontend-port 80 `
---backend-port 8080 `
---frontend-ip-name frontend-ip `
---backend-pool-name frontend-backend-pool `
+--backend-port 80 `
+--frontend-ip-name $LB_IP_NAME `
+--backend-pool-name $BACKEND_POOL_NAME `
 --probe-name $PROBE_NAME `
 --disable-outbound-snat true `
 --idle-timeout 15
@@ -141,10 +161,10 @@ echo -e "Add the frontend vm to the backend pool"
 az network lb address-pool address add  \
 --resource-group $RESOURCE_GROUP \
 --lb-name $LOAD_BALANCER_NAME \
---pool-name frontend-backend-pool \
---name tour-of-heroes-front-end-vm \
+--pool-name $BACKEND_POOL_NAME \
+--name $FRONTEND_VM_NAME \
 --ip-address $FRONTEND_VM_PRIVATE_IP \
---vnet $VNET_NAME 
+--vnet $VNET_NAME
 ```
 
 o si estás en Windows:
@@ -335,9 +355,153 @@ echo -e "Try to access the front end VM using the public IP address of the load 
 
 FRONTEND_LB_PUBLIC_IP=$(az network public-ip show \
 --resource-group $RESOURCE_GROUP \
---name $PUBLIC_IP_NAME \
+--name $LB_IP_NAME \
 --query ipAddress \
 --output tsv)
 
 echo -e "Front end VM public IP address: http://$FRONTEND_LB_PUBLIC_IP"
 ```
+
+o si estás en Windows:
+
+```pwsh
+Write-Host "Try to access the front end VM using the public IP address of the load balancer"
+
+$FRONTEND_LB_PUBLIC_IP=$(az network public-ip show `
+--resource-group $RESOURCE_GROUP `
+--name $LB_IP_NAME `
+--query ipAddress `
+--output tsv)
+
+Write-Host "Front end VM public IP address: http://$FRONTEND_LB_PUBLIC_IP"
+```
+
+Y ya por último vamos a darle un poco de emoción creando una segunda máquina que haga de frontend y que se añada al balanceador de carga. Para ello, vamos a crear una nueva máquina virtual.
+
+```bash
+echo -e "Create a frontend vm #2 named ${FRONTEND_VM_NAME}-2 with image $FRONTEND_VM_IMAGE"
+
+FQDN_FRONTEND_VM_2=$(az vm create \
+--resource-group $RESOURCE_GROUP \
+--name "${FRONTEND_VM_NAME}-2" \
+--image $FRONTEND_VM_IMAGE \
+--admin-username $FRONTEND_VM_ADMIN_USERNAME \
+--admin-password $FRONTEND_VM_ADMIN_PASSWORD \
+--vnet-name $VNET_NAME \
+--subnet $FRONTEND_SUBNET_NAME \
+--public-ip-address-dns-name tour-of-heroes-frontend-vm-2 \
+--nsg "${FRONTEND_VM_NSG_NAME}-2" \
+--size $VM_SIZE --query "fqdns" -o tsv)
+
+az network nsg rule create \
+--resource-group $RESOURCE_GROUP \
+--nsg-name "${FRONTEND_VM_NSG_NAME}-2" \
+--name AllowHttp \
+--priority 1002 \
+--destination-port-ranges 80 \
+--direction Inbound
+
+az network nsg rule create \
+--resource-group $RESOURCE_GROUP \
+--nsg-name "${FRONTEND_VM_NSG_NAME}-2" \
+--name Allow8080 \
+--priority 1003 \
+--destination-port-ranges 8080 \
+--direction Inbound
+
+echo -e "Execute script to install IIS and deploy tour-of-heroes-angular SPA"
+az vm run-command invoke \
+--resource-group $RESOURCE_GROUP \
+--name "${FRONTEND_VM_NAME}-2" \
+--command-id RunPowerShellScript \
+--scripts @04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1 \
+--parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-web/releases/download/v2.0.0/dist.zip"
+
+
+echo -e "Get front end VM 2 private IP address"
+
+FRONTEND_VM_PRIVATE_IP_2=$(az vm show \
+--resource-group $RESOURCE_GROUP \
+--name "${FRONTEND_VM_NAME}-2" \
+--show-details \
+--query privateIps \
+--output tsv)
+
+
+echo -e "Add the frontend vm to the backend pool"
+
+az network lb address-pool address add  \
+--resource-group $RESOURCE_GROUP \
+--lb-name $LOAD_BALANCER_NAME \
+--pool-name $BACKEND_POOL_NAME \
+--name "${FRONTEND_VM_NAME}-2" \
+--ip-address $FRONTEND_VM_PRIVATE_IP_2 \
+--vnet $VNET_NAME 
+```
+
+o si estás en Windows:
+
+```pwsh
+Write-Host "Create a frontend vm #2 named ${FRONTEND_VM_NAME}-2 with image $FRONTEND_VM_IMAGE"
+
+$FQDN_FRONTEND_VM_2=$(az vm create `
+--resource-group $RESOURCE_GROUP `
+--name "${FRONTEND_VM_NAME}-2" `
+--image $FRONTEND_VM_IMAGE `
+--admin-username $FRONTEND_VM_ADMIN_USERNAME `
+--admin-password $FRONTEND_VM_ADMIN_PASSWORD `
+--vnet-name $VNET_NAME `
+--subnet $FRONTEND_SUBNET_NAME `
+--public-ip-address-dns-name tour-of-heroes-frontend-vm-2 `
+--nsg "${FRONTEND_VM_NSG_NAME}-2" `
+--size $VM_SIZE --query "fqdns" -o tsv)
+
+az network nsg rule create `
+--resource-group $RESOURCE_GROUP `
+--nsg-name "${FRONTEND_VM_NSG_NAME}-2" `
+--name AllowHttp `
+--priority 1002 `
+--destination-port-ranges 80 `
+--direction Inbound
+
+az network nsg rule create `
+--resource-group $RESOURCE_GROUP `
+--nsg-name "${FRONTEND_VM_NSG_NAME}-2" `
+--name Allow8080 `
+--priority 1003 `
+--destination-port-ranges 8080 `
+--direction Inbound
+
+Write-Host "Execute script to install IIS and deploy tour-of-heroes-angular SPA"
+az vm run-command invoke `
+--resource-group $RESOURCE_GROUP `
+--name "${FRONTEND_VM_NAME}-2" `
+--command-id RunPowerShellScript `
+--scripts @04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1 `
+--parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-web/releases/download/v2.0.0/dist.zip
+
+Write-Host "Get front end VM 2 private IP address"
+
+$FRONTEND_VM_PRIVATE_IP_2=$(az vm show `
+--resource-group $RESOURCE_GROUP `
+--name "${FRONTEND_VM_NAME}-2" `
+--show-details `
+--query privateIps `
+--output tsv)
+
+Write-Host "Add the frontend vm to the backend pool"
+
+az network lb address-pool address add  `
+--resource-group $RESOURCE_GROUP `
+--lb-name $LOAD_BALANCER_NAME `
+--pool-name $BACKEND_POOL_NAME `
+--name "${FRONTEND_VM_NAME}-2" `
+--ip-address $FRONTEND_VM_PRIVATE_IP_2 `
+--vnet $VNET_NAME 
+```
+
+Ahora, si accedemos a la IP pública del balanceador de carga, veremos que la aplicación se muestra de forma aleatoria en una de las dos máquinas virtuales.
+
+La arquitectura en este caso quedaría de la siguiente forma:
+
+![Arquitectura con balanceador de carga](/04-cloud/azure/iaas/images/con-lb.png)

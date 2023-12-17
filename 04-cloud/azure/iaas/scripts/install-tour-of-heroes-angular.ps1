@@ -18,7 +18,7 @@ $new_content =
 <!DOCTYPE html>
 <html>
 <body>
-<h1>Hello developer 👋🏻</h1>
+<h1>Hello developer!</h1>
 <p>Running on <b>$env:computername</b></p>
 </body>
 </html>
