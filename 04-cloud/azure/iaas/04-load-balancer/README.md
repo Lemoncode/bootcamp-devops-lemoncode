@@ -505,3 +505,23 @@ Ahora, si accedemos a la IP pública del balanceador de carga, veremos que la ap
 La arquitectura en este caso quedaría de la siguiente forma:
 
 ![Arquitectura con balanceador de carga](/04-cloud/azure/iaas/images/con-lb.png)
+
+Para eliminar todo lo que hemos creado, solo necesitas eliminar el grupo de recursos que contiene todo.
+
+```bash
+echo -e "Delete resource group $RESOURCE_GROUP"
+
+az group delete \
+--name $RESOURCE_GROUP \
+--yes
+```
+
+o si estás en Windows:
+
+```pwsh
+Write-Host "Delete resource group $RESOURCE_GROUP"
+
+az group delete `
+--name $RESOURCE_GROUP `
+--yes
+```
