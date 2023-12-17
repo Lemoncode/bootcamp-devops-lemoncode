@@ -159,3 +159,5 @@ az network nsg rule create `
 ```
 
 Y desde el portal de Azure, en la máquina virtual del frontend, en la pestaña **Overview** puedes hacer clic en **Connect** y luego en **Download RDP File** para descargar el fichero de conexión RDP.
+
+Lo último que nos queda es crear un balanceador de carga para poder acceder a la aplicación desde el puerto 80 y no tener que poner el puerto 8080 en la URL. Puedes seguir los pasos [aquí](../04-load-balancer/README.md).

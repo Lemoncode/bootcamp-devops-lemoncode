@@ -1,6 +1,6 @@
 # Balanceadores de carga
 
-Ahora que ya tienes una aplicación totalmente funcional, vamos a ver cómo podemos escalarla para que pueda soportar más carga. Para ello, vamos a utilizar un balanceador de carga. Un balanceador de carga es un dispositivo que distribuye el tráfico de red o las solicitudes de trabajo entre varios servidores. Los balanceadores de carga se utilizan para aumentar la capacidad de procesamiento de una aplicación web y optimizar su rendimiento, ya que distribuyen el tráfico de red de forma eficiente entre varios servidores.
+Ahora que ya tienes una aplicación totalmente funcional, vamos a ver cómo podemos escalarla para que pueda soportar más carga. Para ello, vamos a utilizar un balanceador de carga. **Un balanceador de carga es un dispositivo que distribuye el tráfico de red o las solicitudes de trabajo entre varios servidores**. Los balanceadores de carga se utilizan para aumentar la capacidad de procesamiento de una aplicación web y optimizar su rendimiento, ya que distribuyen el tráfico de red de forma eficiente entre varios servidores.
 
 En Azure, existen dos tipos de balanceadores de carga:
 
