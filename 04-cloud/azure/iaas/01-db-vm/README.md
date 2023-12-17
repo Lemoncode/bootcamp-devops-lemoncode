@@ -7,7 +7,7 @@ Ahora vamos a crear la máquina virtual para la base de datos. Para ello, vamos 
 DB_VM_NAME="db-vm"
 DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 DB_VM_ADMIN_USERNAME="dbadmin"
-DB_VM_ADMIN_PASSWORD="Db@dmin123!$"
+DB_VM_ADMIN_PASSWORD="Db@dmin123#("
 DB_VM_NSG_NAME="db-vm-nsg"
 ```
 
@@ -35,7 +35,7 @@ az vm create \
 --subnet $DB_SUBNET_NAME \
 --public-ip-address "" \
 --size $VM_SIZE \
---nsg $DB_VM_NSG_NAME 
+--nsg $DB_VM_NSG_NAME
 ```
 
 o si estás en Windows:
@@ -55,6 +55,8 @@ az vm create `
 --size $VM_SIZE `
 --nsg $DB_VM_NSG_NAME 
 ```
+
+Esta no necesita tener acceso desde fuera de la red virtual en la que se encuentra, por lo que no le asignamos una IP pública. Por otro lado, le hemos añadido un network security group (a través del parámetro --nsg), el cual es un conjunto de reglas que permiten o deniegan el tráfico de red entrante o saliente de los recursos de Azure.
 
 ## Crear una cuenta de almacenamiento para los backups
 
@@ -78,7 +80,7 @@ STORAGE_KEY=$(az storage account keys list \
 
 o si estás en Windows:
 
-```bash
+```pwsh
 echo -e "Create a storage acount for the backups"
 az storage account create `
 --name $STORAGE_ACCOUNT_NAME `
@@ -94,9 +96,9 @@ $STORAGE_KEY=$(az storage account keys list `
 --output tsv)
 ```
 
-## Crear una extensión de SQL Server para la máquina virtual de la base de datos
+## Crear la extensión de SQL Server para la máquina virtual de la base de datos
 
-Si estás trabajando con SQL Server en máquinas virtuales en Azure puedes usar la extensión de SQL Server para automatizar las tareas de administración de SQL Server. Para ello, ejecuta el siguiente comando:
+Si estás trabajando con SQL Server en máquinas virtuales en Azure puedes usar la extensión de SQL Server para automatizar las tareas de administración de este tipo de base de datos. Para ello, ejecuta el siguiente comando:
 
 ```bash
 echo -e "Add SQL Server extension to the database vm"
