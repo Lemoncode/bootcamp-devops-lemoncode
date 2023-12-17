@@ -7,7 +7,7 @@ Ahora vamos a crear la máquina virtual para la base de datos. Para ello, vamos 
 DB_VM_NAME="db-vm"
 DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 DB_VM_ADMIN_USERNAME="dbadmin"
-DB_VM_ADMIN_PASSWORD="Db@dmin123#("
+DB_VM_ADMIN_PASSWORD="Db@dmin123#-"
 DB_VM_NSG_NAME="db-vm-nsg"
 ```
 
@@ -96,6 +96,8 @@ $STORAGE_KEY=$(az storage account keys list `
 --output tsv)
 ```
 
+>Importante: Debes tener en cuenta que el nombre de la cuenta de almacenamiento debe ser único en Azure. Si te da un error, prueba a cambiar el nombre.
+
 ## Crear la extensión de SQL Server para la máquina virtual de la base de datos
 
 Si estás trabajando con SQL Server en máquinas virtuales en Azure puedes usar la extensión de SQL Server para automatizar las tareas de administración de este tipo de base de datos. Para ello, ejecuta el siguiente comando:
@@ -120,8 +122,8 @@ az sql vm create \
 --retention-period 30 \
 --log-backup-frequency 60
 
-echo -e "Database vm created"
-````
+echo -e "Database extension created"
+```
 
 o si estás en Windows:
 
@@ -146,8 +148,8 @@ az sql vm create `
 --retention-period 30 `
 --log-backup-frequency 60
 
-echo -e "Database vm created"
-````
+echo -e "Database extension created"
+```
 
 ## Crear una regla de seguridad de red para SQL Server
 
