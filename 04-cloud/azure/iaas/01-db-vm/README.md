@@ -185,84 +185,8 @@ az network nsg rule create `
 
 Esto lo que significa es que vamos a permitir el tráfico desde la subred de la API a la máquina virtual de la base de datos en el puerto 1433. Si se intenta acceder desde otra subred, no te va a dejar.
 
-Por otro lado, si quieres acceder a SQL Server desde tu máquina local, tendrás que crear una regla de seguridad de red para SQL Server para tu dirección IP. Para ello recupera tu dirección IP ejecutando el siguiente comando:
+Quedando la foto de la siguiente manera:
 
-```bash
-MY_IP_ADDRESS=$(curl -s ifconfig.me)
-echo -e "Your IP address is $MY_IP_ADDRESS"
-```
-
-o si estás en Windows:
-
-```bash
-$MY_IP_ADDRESS=$(curl -s ifconfig.me)
-echo -e "Your IP address is $MY_IP_ADDRESS"
-```
-
-Ahora crea la regla de seguridad de red para SQL Server para tu dirección IP ejecutando el siguiente comando:
-
-```bash
-echo -e "Create a network security group rule for SQL Server port 1433"
-
-az network nsg rule create \
---resource-group $RESOURCE_GROUP \
---nsg-name $DB_VM_NSG_NAME \
---name AllowSQLServer \
---priority 1002 \
---destination-port-ranges 1433 \
---protocol Tcp \
---source-address-prefixes $MY_IP_ADDRESS \
---direction Inbound
-```
-
-Si estás en Windows, ejecuta el siguiente comando:
-
-```bash
-echo -e "Create a network security group rule for SQL Server port 1433"
-
-az network nsg rule create `
---resource-group $RESOURCE_GROUP `
---nsg-name $DB_VM_NSG_NAME `
---name AllowSQLServer `
---priority 1002 `
---destination-port-ranges 1433 `
---protocol Tcp `
---source-address-prefixes $MY_IP_ADDRESS `
---direction Inbound
-```
-
-Para probar el acceso te recomiendo usar [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15), el cual es multiplataforma. Para ello, descárgalo e instálalo en tu máquina local. Una vez instalado, ejecútalo y en la pantalla de bienvenida, haz clic en **New Connection** y añade la IP pública de la máquina virtual de la base de datos, el usuario y la contraseña. Si no sabes la IP pública de la máquina virtual de la base de datos.
-
-Si por otro lado lo que quieres es acceder a la máquina virtual tendrías que crear una regla de seguridad de red para el puerto 3389. Para ello, ejecuta el siguiente comando:
-
-```bash
-echo -e "Create a network security group rule for RDP port 3389"
-
-az network nsg rule create \
---resource-group $RESOURCE_GROUP \
---nsg-name $DB_VM_NSG_NAME \
---name AllowRDP \
---priority 1003 \
---destination-port-ranges 3389 \
---protocol Tcp \
---source-address-prefixes $MY_IP_ADDRESS \
---direction Inbound
-```
-
-Si estás en Windows, ejecuta el siguiente comando:
-
-```bash
-echo -e "Create a network security group rule for RDP port 3389"
-
-az network nsg rule create `
---resource-group $RESOURCE_GROUP `
---nsg-name $DB_VM_NSG_NAME `
---name AllowRDP `
---priority 1003 `
---destination-port-ranges 3389 `
---protocol Tcp `
---source-address-prefixes $MY_IP_ADDRESS `
---direction Inbound
-```
+![VM para la base de datos](/04-cloud/azure/iaas/images/db-vm.png)
 
 Ahora que ya tenemos la base de datos creada, necesitamos una API que interactúe con ella. Puedes continuar en el siguiente [paso](../02-api-vm/README.md).
