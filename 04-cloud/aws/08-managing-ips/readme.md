@@ -27,3 +27,5 @@
 |                   Stays the same for lifetime of instance | Allow and deny rules                                                       |
 |                                      Based on subnet CIDR | Pulled from AWS pool of external IPs                                       |
 |                                 Assigned to all instances | Only assigned on launch if enabled                                         |
+
+[Demo: Using EIP](./demos/02-eip.md)
