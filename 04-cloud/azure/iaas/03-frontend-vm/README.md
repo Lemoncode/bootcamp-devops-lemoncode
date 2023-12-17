@@ -65,7 +65,7 @@ az vm run-command invoke \
 --resource-group $RESOURCE_GROUP \
 --name $FRONTEND_VM_NAME \
 --command-id RunPowerShellScript \
---scripts @scripts/install-tour-of-heroes-angular.ps1 \
+--scripts @04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1 \
 --parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-angular/releases/download/1.1.4/dist.zip"
 ```
 
@@ -82,7 +82,7 @@ az vm run-command invoke `
 --parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-angular/releases/download/1.1.4/dist.zip"
 ```
 
-En este ejemplo he desplegado la aplicación en otro puerto, en el 8080, para que no haya conflicto con el IIS que se instala por defecto en el puerto 80. Para ello, para todo esto utilizamos el script `install-tour-of-heroes-angular.ps1` que se encuentra en la carpeta `scripts` de este repositorio.:
+En este ejemplo he desplegado la aplicación en otro puerto, en el 8080, para que no haya conflicto con el IIS que se instala por defecto en el puerto 80. Para elloutilizamos el script [install-tour-of-heroes-angular.ps1](04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1) que se encuentra en la carpeta **scripts** de este repositorio.
 
 Lo último que nos queda es habilitar los puertos 80 y 8080 en el NSG de la máquina virtual del frontend:
 
@@ -128,6 +128,34 @@ az network nsg rule create `
 --direction Inbound
 ```
 
-Para probar que todo funciona, abre un navegador y accede a la dirección `http://<FQDN_FRONTEND_VM>:8080` y deberías ver la aplicación Angular funcionando:
+Para probar que todo funciona, abre un navegador y accede a la dirección [http://tour-of-heroes-frontend-vm.uksouth.cloudapp.azure.com:8080](http://tour-of-heroes-frontend-vm.uksouth.cloudapp.azure.com:8080) y deberías ver la aplicación Angular funcionando.
 
-![Angular app](images/angular-app.png)
+Ahora la arquitectura de nuestra aplicación en Azure debería ser la siguiente:
+
+![Arquitectura de la aplicación en Azure](/04-cloud/azure/iaas/images/todas-las-vm-desplegadas.png)
+
+Si quisieras acceder a la máquina virtual del frontend, deberías habilitar en el NSG el puerto 3389 para poder acceder por RDP.
+
+```bash
+az network nsg rule create \
+--resource-group $RESOURCE_GROUP \
+--nsg-name $FRONTEND_VM_NSG_NAME \
+--name AllowRDP \
+--priority 1004 \
+--destination-port-ranges 3389 \
+--direction Inbound
+```
+
+o si estás en Windows:
+
+```pwsh
+az network nsg rule create `
+--resource-group $RESOURCE_GROUP `
+--nsg-name $FRONTEND_VM_NSG_NAME `
+--name AllowRDP `
+--priority 1004 `
+--destination-port-ranges 3389 `
+--direction Inbound
+```
+
+Y desde el portal de Azure, en la máquina virtual del frontend, en la pestaña **Overview** puedes hacer clic en **Connect** y luego en **Download RDP File** para descargar el fichero de conexión RDP.
