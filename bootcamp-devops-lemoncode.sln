@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-cloud", "04-cloud", "{7B0B427C-95E1-4608-8C44-15B159787D62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00-aks", "00-aks", "{009EB304-88D4-4EA7-8DEF-31949C2FDAB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-brigde-to-kubernetes", "01-brigde-to-kubernetes", "{D0232A7C-C9C0-4FF5-A506-E7336B910EB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "04-cloud\00-aks\01-brigde-to-kubernetes\webapi\webapi.csproj", "{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-contenedores", "01-contenedores", "{05256FE8-B154-4413-B7DE-87F6A3C97C44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lemoncode-challenge", "lemoncode-challenge", "{AC58B6F6-13AC-43E6-A5C3-233D935BB668}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet-stack", "dotnet-stack", "{EAB6E4C7-FEB9-462A-A8BD-625FED1EAE11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend", "01-contenedores\lemoncode-challenge\dotnet-stack\backend\backend.csproj", "{124813E3-8DC5-4396-8FC4-945DD3B2DE62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{124813E3-8DC5-4396-8FC4-945DD3B2DE62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{124813E3-8DC5-4396-8FC4-945DD3B2DE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{124813E3-8DC5-4396-8FC4-945DD3B2DE62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{124813E3-8DC5-4396-8FC4-945DD3B2DE62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{009EB304-88D4-4EA7-8DEF-31949C2FDAB2} = {7B0B427C-95E1-4608-8C44-15B159787D62}
+		{D0232A7C-C9C0-4FF5-A506-E7336B910EB4} = {009EB304-88D4-4EA7-8DEF-31949C2FDAB2}
+		{4FD2BF7A-1E6D-4EC7-B9BE-B8226B0EB25F} = {D0232A7C-C9C0-4FF5-A506-E7336B910EB4}
+		{AC58B6F6-13AC-43E6-A5C3-233D935BB668} = {05256FE8-B154-4413-B7DE-87F6A3C97C44}
+		{EAB6E4C7-FEB9-462A-A8BD-625FED1EAE11} = {AC58B6F6-13AC-43E6-A5C3-233D935BB668}
+		{124813E3-8DC5-4396-8FC4-945DD3B2DE62} = {EAB6E4C7-FEB9-462A-A8BD-625FED1EAE11}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D4B79D5-191E-463F-BB43-37FB44437668}
+	EndGlobalSection
+EndGlobal
