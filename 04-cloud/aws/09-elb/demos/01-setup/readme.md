@@ -97,7 +97,7 @@ WEB_3B=$(aws ec2 create-subnet --vpc-id $VPC_ID \
 APP_3A=$(aws ec2 create-subnet --vpc-id $VPC_ID \
     --availability-zone eu-west-3a \
     --cidr-block 172.31.101.0/24 \
-    --tag-specifications ResourceType=subnet,Tags='[{Key=Name,Value=app-3a}]'
+    --tag-specifications ResourceType=subnet,Tags='[{Key=Name,Value=app-3a}]' \
     | jq -r '.Subnet."SubnetId"')
 ```
 
@@ -105,7 +105,7 @@ APP_3A=$(aws ec2 create-subnet --vpc-id $VPC_ID \
 APP_3B=$(aws ec2 create-subnet --vpc-id $VPC_ID \
     --availability-zone eu-west-3b \
     --cidr-block 172.31.102.0/24 \
-    --tag-specifications ResourceType=subnet,Tags='[{Key=Name,Value=app-3b}]'
+    --tag-specifications ResourceType=subnet,Tags='[{Key=Name,Value=app-3b}]' \
     | jq -r '.Subnet."SubnetId"')
 ```
 
