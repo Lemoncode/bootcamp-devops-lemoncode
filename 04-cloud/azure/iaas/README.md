@@ -1,6 +1,6 @@
 ## Desplegando Tour of heroes en máquinas virtuales de Azure
 
-Antes de empezar a montar máquinas virtuales como loc@s lo primero que necesitas es tener una cuenta de Azure. Si no tienes una, puedes crear una de froma gratuita [aquí](https://azure.microsoft.com/es-es/free/).
+Antes de empezar a montar máquinas virtuales como loc@s lo primero que necesitas es tener una cuenta de Azure. Si no tienes una, puedes crear una gratuita [aquí](https://azure.microsoft.com/es-es/free/).
 
 Por otro lado, necesitas tener instalado el [CLI de Azure](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest) en tu máquina local.
 
