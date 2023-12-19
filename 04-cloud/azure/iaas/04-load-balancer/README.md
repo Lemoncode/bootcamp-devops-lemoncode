@@ -12,7 +12,7 @@ En este caso, vamos a utilizar un balanceador de carga público para poder acced
 
 ```bash	
 LOAD_BALANCER_NAME="frontend-lb"
-LB_IP_NAME="lb-ip"
+LB_IP_NAME="tour-of-heroes-lb-ip"
 PROBE_NAME="frontend-probe"
 BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
 ````
@@ -21,7 +21,7 @@ o si estás en Windows:
 
 ```pwsh
 $LOAD_BALANCER_NAME="frontend-lb"
-$LB_IP_NAME="lb-ip"
+$LB_IP_NAME="tour-of-heroes-lb-ip"
 $PROBE_NAME="frontend-probe"
 $BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
 ```
@@ -232,7 +232,7 @@ FQDN_FRONTEND_VM_2=$(az vm create \
 --vnet-name $VNET_NAME \
 --subnet $FRONTEND_SUBNET_NAME \
 --public-ip-address-dns-name tour-of-heroes-frontend-vm \
---nsg $FRONTEND_VM_NSG_NAME \
+--nsg "${FRONTEND_VM_NSG_NAME}-2" \
 --size $VM_SIZE --query "fqdns" -o tsv)
 
 az network nsg rule create \
