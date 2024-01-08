@@ -107,6 +107,8 @@ Aunque verás que la aplicación se está ejecutando la misma no está apuntando
 
 Lo único que he hecho ha sido añadir la propiedad llamada **app_build_command** y le he pasado el valor `API_URL=${{ secrets.API_URL}} npm run build-with-api-url`. Esto lo que hace es que cuando se ejecute el comando `npm run build-with-api-url` se le pasará la variable de entorno `API_URL` con el valor que le hemos pasado en el secreto `API_URL`.
 
+>Cuidado: No copies y pegues el código anterior, ya que el secreto `AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_BAY_0AF2E3F03` es un secreto que se ha generado especificamente para tu Azure Static Web App. Solamente añade la propiedad **app_build_command**. También tienes que tener un secreto llamado **API_URL** con el valor de la URL de tu API.
+
 ¡Y ya está! Con esto ya tienes desplegada la aplicación Tour Of Heroes en servicios PaaS de Azure. Si quisieras eliminar todo lo creado hasta ahora es tan sencillo como ejecutar el siguiente comando:
 
 ```bash
