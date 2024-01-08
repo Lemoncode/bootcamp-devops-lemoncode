@@ -10,7 +10,7 @@ Lo primero que necesitas es cargar algunas variables de entorno:
 # Database variables
 SQL_SERVER_NAME="heroes-sql-server"
 SQL_USER="sqladmin"
-SQL_PASSWORD="P@ssw0rd!"
+SQL_PASSWORD="P@ssw0rrd"
 startIp="0.0.0.0"
 endIp="0.0.0.0"
 ```
