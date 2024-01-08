@@ -78,6 +78,8 @@ az sql server firewall-rule create `
 --end-ip-address $endIp
 ```
 
+Con [Azure Data Studio](https://azure.microsoft.com/es-es/products/data-studio), puedes conectarte a la base de datos (tienes que permitir entonces el acceso desde tu IP, que puedes hacerlo desde esta misma app) y comprobar que se ha creado correctamente e incluso podrías crear la base de datos desde aquí.
+
 Ahora lo siguiente que necesitamos es desplegar la API que haga uso de esta base de datos. Para ello, puedes seguir los pasos que te comparto en este otro [README](/04-cloud/azure/paas/02-app-service/README.md).
 
 

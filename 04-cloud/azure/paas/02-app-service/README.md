@@ -20,6 +20,8 @@ $APP_SVC_PLAN_NAME="tour-of-heroes-plan"
 $WEB_API_NAME="tour-of-heroes-api"
 ```
 
+>Importante: asegúrate de que el nombre de la web app es único en Azure.
+
 ## Creando el plan de App Service
 
 Las aplicaciones web alojadas en este servicio necesitan estar dentro de un plan de App Service. Para crear uno, ejecuta el siguiente comando:
@@ -145,6 +147,10 @@ az webapp deployment source config-zip `
 --resource-group $RESOURCE_GROUP `
 --name $WEB_API_NAME
 ```
+
+Todo esto que hemos hecho a través de Azure CLI también es posible gestionarlos con la extensión de Azure App Service para Visual Studio Code. 
+
+<img src="../images/Extension%20de%20Azure%20App%20Service.png"/>
 
 Para comprobar que todo ha ido bien, puedes ejecutar el siguiente comando:
 

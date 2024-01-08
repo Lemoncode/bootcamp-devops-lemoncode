@@ -1,0 +1,73 @@
+@base_url = https://tour-of-heroes-api.azurewebsites.net/api/hero
+
+GET {{base_url}} HTTP/1.1
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Arrow",
+    "alterEgo": "Oliver Queen",
+    "description": "Multimillonario playboy Oliver Queen (Stephen Amell), quien, cinco años después de estar varado en una isla hostil, regresa a casa para luchar contra el crimen y la corrupción como un vigilante secreto cuya arma de elección es un arco y flechas."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Batman",
+    "alterEgo": "Bruce Wayne",
+    "description": "Un multimillonario magnate empresarial y filántropo dueño de Empresas Wayne en Gotham City. Después de presenciar el asesinato de sus padres, el Dr. Thomas Wayne y Martha Wayne en un violento y fallido asalto cuando era niño, juró venganza contra los criminales, un juramento moderado por el sentido de la justicia."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Captain America",
+    "alterEgo": "Steve Rogers",
+    "description": "Un joven frágil mejorado a la cima de la perfección humana por un suero experimental S.S.S. (Suero supersoldado) para ayudar a los esfuerzos inminentes del gobierno de Estados Unidos en la Segunda Guerra Mundial. Cerca del final de la guerra, queda atrapado en el hielo y sobrevive en animación suspendida hasta que es descongelado en el presente."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Daredevil",
+    "alterEgo": "Matt Murdock",
+    "description": "Mientras crecía en el vecindario irlandés-estadounidense de Hell's Kitchen de la clase obrera, históricamente áspero y asolado por el crimen, en la ciudad de Nueva York, Matt Murdock es cegado por una sustancia radioactiva que cae de un camión después salvar a un hombre que estaba por ser atropellado por un auto. Si bien ya no puede ver, la exposición radioactiva aumenta sus sentidos restantes más allá de la capacidad humana normal y le da un <<sentido de radar>>."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Hulk",
+    "alterEgo": "Bruce Barner",
+    "description": "Después de una exposición accidental a los rayos gamma durante la detonación de una bomba experimental, Banner se transforma físicamente en Hulk cuando está sometido a estrés emocional, a su voluntad o en contra de ella, lo que a menudo lleva a destrozos y conflictos que complican la vida civil de Banner. El nivel de fuerza de Hulk se transmite normalmente de forma proporcional a su nivel de ira."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Iron Man",
+    "alterEgo": "Tony Stark",
+    "description": "Es un multimillonario magnate empresarial estadounidense, playboy e ingenioso científico, quien sufrió una grave lesión en el pecho durante un secuestro en el Medio Oriente. Cuando sus captores intentan forzarlo a construir un arma de destrucción masiva crea, en cambio, una armadura para salvar su vida y escapar del cautiverio. Más tarde, Stark desarrolla su traje, agregando armas y otros dispositivos tecnológicos que diseñó a través de su compañía, Industrias Stark."
+}
+
+###
+POST {{base_url}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Spider Man",
+    "alterEgo": "Peter Parker",
+    "description": "un joven huérfano neoyorquino que adquiere superpoderes después de ser mordido por una araña radiactiva,15​ y cuya ideología como héroe se ve reflejada primordialmente en la expresión «un gran poder conlleva una gran responsabilidad».20​21​ Suele ser asociado con una personalidad bromista, amable, inventiva y optimista, lo que le ha llevado a ser catalogado como el «vecino amigable» de cualquiera lo cual, aunado a sus vivencias caracterizadas por los problemas cotidianos."
+}
