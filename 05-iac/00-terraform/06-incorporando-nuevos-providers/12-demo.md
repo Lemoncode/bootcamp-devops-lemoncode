@@ -24,12 +24,12 @@ Aquí podemos encontrar un [ejemplo de uso del provider](https://registry.terraf
 
 Creamos el fichero `./lab/lc_web_app/providers.tf`
 
-```tf
+```ini
 terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.0"
     }
   }
 }
@@ -82,7 +82,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.0"
     }
   }
 }

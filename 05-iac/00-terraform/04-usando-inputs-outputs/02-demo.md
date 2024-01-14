@@ -245,7 +245,8 @@ resource "aws_security_group" "nginx-sg" {
 }
 # ....
 ```
-mapas entradas en `variables.tf` para las instancias
+
+Creamos entradas en `variables.tf` para las instancias
 
 ```diff
 
