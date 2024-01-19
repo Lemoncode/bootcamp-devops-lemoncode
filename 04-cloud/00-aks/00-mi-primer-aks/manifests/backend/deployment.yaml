@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tour-of-heroes-api
+  name: tour-of-heroes-api
+spec:
+  replicas: 3
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: tour-of-heroes-api
+  template:
+    metadata:
+      labels:
+        app: tour-of-heroes-api
+    spec:
+      containers:
+        - env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: sqlserver-connection-string
+            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  key: connection_string
+                  name: app-insights-secret 
+          image: ghcr.io/0gis0/tour-of-heroes-dotnet-api/tour-of-heroes-api-insights:0705dfd
+          name: tour-of-heroes-api
+          ports:
+            - containerPort: 5000
+              name: web
