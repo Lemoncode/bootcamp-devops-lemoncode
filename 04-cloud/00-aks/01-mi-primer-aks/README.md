@@ -43,7 +43,7 @@ az aks install-cli
 Una vez finalice podrás recuperar el contexto para poder interactuar con este clúster:
 
 ```bash
-az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME}
+az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME} --overwrite-existing
 ```
 
 Para comprobar que puedes conectarte al mismo puedes hacerlo a partir de este momento con `kubectl` de la forma habitual:
