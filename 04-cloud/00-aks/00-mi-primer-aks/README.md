@@ -57,5 +57,40 @@ kubectl get nodes
 Todos los manifiestos que necesitas para el mismo puedes encontrarlos en la carpeta [manifests](manifests/) dentro de esta misma unidad. Para poder aplicar todos los archivos del tirón basta con ejecutar este comando:
 
 ```bash
-kubectl apply -f manifests/ --recursive
-``````
+kubectl create namespace tour-of-heroes
+kubectl apply -f 04-cloud/00-aks/00-mi-primer-aks/manifests --recursive --namespace tour-of-heroes
+```
+
+Una vez que se hayan desplegado todos los recursos, puedes comprobar que todo está funcionando correctamente con estos comandos:
+
+```bash
+kubectl get all --namespace tour-of-heroes
+```
+
+Si no han terminado de desplegarse puedes esperarlos con el comando `watch`:
+
+```bash
+watch kubectl get all --namespace tour-of-heroes
+```
+
+Como estás en un entorno cloud, puedes exponer el servicio de forma pública para poder acceder a él desde cualquier sitio. Si te fijas de los servicios para la API y el frontal estos son del tipo `LoadBalancer`. Si quieres recuperar las IPs públicas de los mismos puedes hacerlo con estos comandos:
+
+```bash
+API_IP=$(kubectl get service tour-of-heroes-api --namespace tour-of-heroes -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+WEB_IP=$(kubectl get service tour-of-heroes-web --namespace tour-of-heroes -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+```
+Para probar el acceso a la API puedes hacerlo con este comando:
+
+```bash
+echo http://${API_IP}/api/hero
+```
+
+Para probar el acceso a la web puedes hacerlo con este otro:
+
+```bash
+echo http://${WEB_IP}
+```
+
+Como ves, no hay ningún héroe en la base de datos, pero puedes usar el archivo heroes.http que te he dejado como parte de esta unidad. Recuerda reemplazar la IP por la que te ha dado el servicio de la API.
+
+Si después de lanzarlo vuelves a ejecutar el comando para recuperar los héroes, verás que ya tienes algunos en la base de datos. ¡Hurra 🎉!
