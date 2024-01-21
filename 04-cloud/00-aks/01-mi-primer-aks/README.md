@@ -58,7 +58,7 @@ Todos los manifiestos que necesitas para el mismo puedes encontrarlos en la carp
 
 ```bash
 kubectl create namespace tour-of-heroes
-kubectl apply -f 04-cloud/00-aks/00-mi-primer-aks/manifests --recursive --namespace tour-of-heroes
+kubectl apply -f 04-cloud/00-aks/01-mi-primer-aks/manifests --recursive --namespace tour-of-heroes
 ```
 
 Una vez que se hayan desplegado todos los recursos, puedes comprobar que todo está funcionando correctamente con estos comandos:
