@@ -91,6 +91,12 @@ Para probar el acceso a la web puedes hacerlo con este otro:
 echo http://${WEB_IP}
 ```
 
+Esta no está apuntando a la API correcta pero puedes modificar la variable de entorno `API_URL` para que apunte a la correcta:
+
+```bash
+kubectl set env deployment/tour-of-heroes-web --namespace tour-of-heroes API_URL=http://${API_IP}/api/hero
+```
+
 Como ves, no hay ningún héroe en la base de datos, pero puedes usar el archivo heroes.http que te he dejado como parte de esta unidad. Recuerda reemplazar la IP por la que te ha dado el servicio de la API.
 
 Si después de lanzarlo vuelves a ejecutar el comando para recuperar los héroes, verás que ya tienes algunos en la base de datos. ¡Hurra 🎉!
