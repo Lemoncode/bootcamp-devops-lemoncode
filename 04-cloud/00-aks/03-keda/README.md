@@ -125,7 +125,8 @@ Ahora elimina los mensajes de la cola de mensajes:
 ```bash
 az storage message clear \
 --queue-name $QUEUE_NAME \
---account-name $STORAGE_ACCOUNT_NAME
+--account-name $STORAGE_ACCOUNT_NAME \
+--connection-string $STORAGE_CONNECTION_STRING
 ```
 
 Y comprueba como los pods de la API se van eliminando.
