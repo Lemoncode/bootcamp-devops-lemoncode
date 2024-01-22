@@ -40,7 +40,7 @@ STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
 --name $STORAGE_ACCOUNT_NAME \
 --resource-group $RESOURCE_GROUP \
 --output tsv)
-``````
+```
 
 Una vez creada la cuenta de almacenamiento, vamos a crear una cola de mensajes:
 
