@@ -76,6 +76,8 @@ spec:
       #
       # Optional
       queueLength: "5" # default 5
+  minReplicaCount: 0 # default 0
+  maxReplicaCount: 33 # default 100
 EOF
 ```
 
