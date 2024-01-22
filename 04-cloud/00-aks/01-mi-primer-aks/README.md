@@ -13,7 +13,7 @@ LOCATION="uksouth"
 o si estás en Windows:
 
 ```pwsh
-$RESOURCE_GROUP="aks-demo"
+$RESOURCE_GROUP="bootcamp-lemoncode"
 $AKS_NAME="lemoncode-cluster"
 $LOCATION="uksouth"
 ```

@@ -1,4 +1,4 @@
-@base_url = http://172.165.69.163/api/hero
+@base_url = http://172.165.145.185/api/hero
 
 GET {{base_url}} HTTP/1.1
 
