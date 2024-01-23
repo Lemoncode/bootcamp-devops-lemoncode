@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tour-of-heroes-sql
+  name: tour-of-heroes-sql
+spec:
+  selector:
+    matchLabels:
+      app: tour-of-heroes-sql
+  template:
+    metadata:
+      labels:
+        app: tour-of-heroes-sql
+    spec:
+      terminationGracePeriodSeconds: 30
+      hostname: mssqlinst
+      securityContext:
+         fsGroup: 10001
+      containers:
+        - image: mcr.microsoft.com/mssql/server:latest
+        # - image: mcr.microsoft.com/azure-sql-edge
+          name: sqlserver
+          ports:
+            - containerPort: 1433
+          volumeMounts:
+            - mountPath: /var/opt/mssql
+              name: sqlserver-data
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql
+                  key: SA_PASSWORD
+            - name: MSSQL_PID
+              value: "Developer"
+      volumes:
+        - name: sqlserver-data
+          persistentVolumeClaim:
+            claimName: sql-pvc
