@@ -7,7 +7,7 @@ The official Kubernetes dashboard is not deployed by default, but there are inst
 We can deploy the dashboard with the following command:
 
 ```bash
-export DASHBOARD_VERSION="v2.0.0"
+export DASHBOARD_VERSION="v2.7.0"
 ```
 
 ```bash

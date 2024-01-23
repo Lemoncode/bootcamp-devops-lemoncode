@@ -39,6 +39,10 @@ This will create the `nginx-ingress` and the `network load balancer`
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.49.3/deploy/static/provider/aws/deploy.yaml
 ``` 
 
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/aws/deploy.yaml
+```
+
 Create `apple.deploy.yaml`
 
 ```yaml
@@ -170,6 +174,9 @@ curl -I  http://a2e47070555144b06a0cd99a242d6753-ef17945a5e983c95.elb.eu-west-3.
 
 We get the following response
 
+192.168.5.127
+31848
+
 ```
 HTTP/1.1 404 Not Found
 Server: nginx/1.17.10
@@ -226,3 +233,9 @@ Delete the cluster
 ```bash
 eksctl delete cluster --name=lc-cluster
 ```
+
+## Updates
+
+- [AWS LB Controller](https://aws.amazon.com/blogs/containers/exposing-kubernetes-applications-part-2-aws-load-balancer-controller/)
+- https://aws.amazon.com/blogs/containers/exposing-kubernetes-applications-part-3-nginx-ingress-controller/
+- https://aws.amazon.com/blogs/containers/exposing-kubernetes-applications-part-1-service-and-ingress-resources/

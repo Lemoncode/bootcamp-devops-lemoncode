@@ -82,10 +82,10 @@ Para ello vamos a usar la función `merge`
 ❯ terraform console
 > merge(local.common_tags, { Name = "${local.name_prefix}-vpc" })
 {
-  "Name" = "globoweb-dev-vpc"
+  "Name" = "lemoneweb-dev-vpc"
   "billing_code" = "FOO9999"
-  "company" = "Globomantics"
-  "project" = "Globomantics-web-app"
+  "company" = "Lemoncode"
+  "project" = "Lemoncode-web-app"
 }
 >  
 ```

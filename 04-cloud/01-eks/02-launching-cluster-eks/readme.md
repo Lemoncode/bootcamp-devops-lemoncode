@@ -58,7 +58,7 @@ managedNodeGroups:
 ```bash
 eksctl create cluster \
 --name lc-cluster \
---version 1.21 \
+--version 1.28 \
 --region eu-west-3 \
 --nodegroup-name lc-nodes \
 --node-type t2.small \
