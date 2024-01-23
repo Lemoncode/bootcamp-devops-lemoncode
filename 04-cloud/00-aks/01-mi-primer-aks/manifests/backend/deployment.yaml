@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tour-of-heroes-api
+  name: tour-of-heroes-api
+spec:
+  replicas: 3
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: tour-of-heroes-api
+  template:
+    metadata:
+      labels:
+        app: tour-of-heroes-api
+    spec:
+      containers:
+        - env:
+            - name: OTEL_SERVICE_NAME
+              value: tour-of-heroes-api
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: sqlserver-connection-string
+          image: ghcr.io/0gis0/tour-of-heroes-dotnet-api/tour-of-heroes-api:abfb2f4
+          name: tour-of-heroes-api
+          ports:
+            - containerPort: 5000
+              name: web
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

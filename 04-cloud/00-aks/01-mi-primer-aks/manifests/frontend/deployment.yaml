@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tour-of-heroes-web
+  name: tour-of-heroes-web
+spec:
+  replicas: 2
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: tour-of-heroes-web
+  template:
+    metadata:
+      labels:
+        app: tour-of-heroes-web
+    spec:
+      containers:
+      - image: ghcr.io/0gis0/tour-of-heroes-angular:main
+        name: tour-of-heroes-web
+        env:
+          - name: API_URL
+            value: http://20.23.122.26/api/hero
+        ports:
+        - containerPort: 5000
+          name: web
