@@ -39,7 +39,7 @@ kind: ClusterConfig
 metadata:
   name: lc-cluster
   region: eu-west-3
-  version: "1.21"
+  version: "1.28"
 
 iam:
   withOIDC: true
