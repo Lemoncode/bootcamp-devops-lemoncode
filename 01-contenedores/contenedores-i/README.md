@@ -1,6 +1,6 @@
 # Día I: Introducción a Docker
 
-![Docker](imagenes/Contenedores%20I%20-%20Hello%20World.jpeg)
+![Docker](imagenes/Contenedores%20I%20-%20Hello%20World%20-%20Lemoncode.jpeg)
 
 ## Cómo instalar Docker en tu máquina local
 
