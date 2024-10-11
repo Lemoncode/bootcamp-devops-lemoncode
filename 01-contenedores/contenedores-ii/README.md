@@ -5,6 +5,7 @@
 
 En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
+## Comprobar las imagenes que ya tenemos en local
 
 Pero antes de empezar vamos a recordar cómo podíamos ver las imágenes que tenemos en local:
 
@@ -26,12 +27,17 @@ Y recientemente ha salido una nueva opción, con la versión 4.34.2 en la que po
 docker image list --tree
 ```
 
+También podemos Filtrar por nombre del repositorio
 
-#Filtrar por nombre del repositorio
+```bash
 docker images nginx
+```
 
-#Filtrar por nombre del repositorio y tag
+O filtrar por nombre del repositorio y tag
+
+```bash
 docker images mcr.microsoft.com/mssql/server:2019-latest
+```
 
 #Usando --filter
 docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
