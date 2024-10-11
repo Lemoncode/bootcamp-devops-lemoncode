@@ -1,11 +1,31 @@
-# Parte 2: Trabajando con imágenes #
-cd 01-contenedores/contenedores-ii
+# Día 2: Trabajando con imágenes
 
-# Ver todas las imágenes en local hasta ahora
+![Docker](imagenes/Trabajando%20con%20imagenes%20de%20Docker.jpeg)
+
+
+En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
+
+
+Pero antes de empezar vamos a recordar cómo podíamos ver las imágenes que tenemos en local:
+
+```bash
 docker images
+```
 
-# o bien
+o bien
+
+```bash
 docker image ls
+```
+
+Y recientemente ha salido una nueva opción, con la versión 4.34.2 en la que podemos ver incluso la arquitectura de la imagen:
+
+![Software updates](imagenes/Software%20updates%20de%20Docker%204.34.2.png)
+
+```bash
+docker image list --tree
+```
+
 
 #Filtrar por nombre del repositorio
 docker images nginx
@@ -17,14 +37,18 @@ docker images mcr.microsoft.com/mssql/server:2019-latest
 docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
 
 # Pulling o descargar una imagen
+
 # pull desde Docker Hub (Registro configurado por defecto)
+
 docker pull mysql
 
 # Ahora la imagen de mysql está descargada en tu local
+
 docker images
 #Al no especificar ninguna etiqueta se baja la por defecto, que es latest
 
 # Descargar una versión/tag específica de una imagen
+
 docker pull redis:6.0.5
 
 #Digest: es el hash específico para el contenido específico de una imagen
@@ -34,21 +58,28 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 
 # Descargar todas las versiones/tags de una imagen
+
 docker pull -a jenkins
 
 # Pull desde un registro diferente a Docker Hub
+
 # Google
+
 docker run --rm gcr.io/google-containers/busybox echo "hello world"
+
 # Azure
+
 docker run mcr.microsoft.com/mcr/hello-world
 
 # 3. Buscar imágenes en Docker Hub
+
 docker search microsoft
 
 docker search google
 docker search aws
 
 # Al menos 50 estrellas
+
 docker search --filter=stars=50 --no-trunc nginx
 
 #Devuelve solo la oficial
@@ -59,8 +90,8 @@ docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
 
 # El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
-curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 
+curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 
 #Crear un contenedor a partir de una imagen de docker
 docker run -d --rm -p 9090:80 nginx
@@ -69,9 +100,10 @@ docker run -d --rm -p 9090:80 nginx
 docker run -d --rm -p 7070:80 nginx
 docker run -d --rm -p 6060:80 nginx
 
-#### Crear tu propia imagen ####
+#### Crear tu propia imagen
 
 # Dockerfile en contenedores-ii/Dockerfile
+
 cat Dockerfile
 
 #Construccion de la imagen utilizando el Dockerfile
@@ -89,18 +121,16 @@ docker build . -f contenedores-ii/Dockerfile -t simple-nginx:v1
 #Cambio el contexto
 docker build contenedores-ii/ -t simple-nginx:v1
 
-
 docker images
 #Ahora verás que tienes la imagen alpine descargada, al utilizarla como base, y una nueva llamada simple-nginx que tiene el tag v1
 
-#Se ven todos los cambios que se han hecho para construir en esta imagen, tanto los que vienen 
+#Se ven todos los cambios que se han hecho para construir en esta imagen, tanto los que vienen
 #de la base como los hechos en el propio Docker file
 docker history simple-nginx:v1
 
 #Inspeccionando la imagen puedes saber cuántas capas tiene la misma
 docker inspect simple-nginx:v1
 #Cada instrucción en el Dockerfile genera una capa
-
 
 #Dive: herramienta para explorar imágenes
 https://github.com/wagoodman/dive
@@ -150,7 +180,7 @@ docker rmi 0eb3967e4af2
 docker image rm nginx 0gis0/simple-nginx:v1
 
 #Eliminar SOLO las imágenes que no se están utilizando
-docker image prune -a 
+docker image prune -a
 
 #Listar los ids de las imágenes en local
 docker images -q
@@ -159,5 +189,5 @@ docker images -q
 docker rmi $(docker images -q) -f
 
 #Automatizar una build a partir del código fuente de tu aplicación
-#Accede a https://hub.docker.com con tu usuario y selecciona el repositorio simple-nginx. 
+#Accede a https://hub.docker.com con tu usuario y selecciona el repositorio simple-nginx.
 #En el apartado BUILDS puedes configurar como fuente tanto GitHub como Bitbucket para la generación de la imagen.
