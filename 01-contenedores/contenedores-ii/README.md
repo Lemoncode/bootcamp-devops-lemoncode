@@ -39,29 +39,36 @@ O filtrar por nombre del repositorio y tag
 docker images mcr.microsoft.com/mssql/server:2019-latest
 ```
 
-#Usando --filter
+También podemos filtrar el resultado usando --filter
+
+```bash
 docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
+```
 
-# Pulling o descargar una imagen
+## Pulling o descargar una imagen
 
-# pull desde Docker Hub (Registro configurado por defecto)
+Para descargar una imagen no es necesario tener que ejecutar un contenedor, simplemente con el comando `pull` es suficiente.
 
+```bash
 docker pull mysql
+```
 
-# Ahora la imagen de mysql está descargada en tu local
+Si no especificamos nada más se descargará la imagen con la etiqueta `latest`, pero si queremos una versión específica podemos hacerlo de la siguiente manera:
 
-docker images
-#Al no especificar ninguna etiqueta se baja la por defecto, que es latest
+```bash
+docker pull mysql:5.7
+```
+Si ahora haces un `docker images` verás que tienes la imagen de mysql con la versión 5.7.
 
-# Descargar una versión/tag específica de una imagen
+Para asegurarte de que estás descargando la imagen correcta puedes hacerlo por su hash específico, que se llama digest:
 
-docker pull redis:6.0.5
-
-#Digest: es el hash específico para el contenido específico de una imagen
+```bash
 docker images --digests
+```
 
-#Descargar una imagen por su digest en lugar de por el tag
+```bash
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
+```
 
 # Descargar todas las versiones/tags de una imagen
 
