@@ -235,6 +235,19 @@ docker run -d \
   lscr.io/linuxserver/firefox:latest
 ```
 
+¿Y cómo sé qué puertos tengo que abrir? Pues en la documentación de cada imagen te lo indican. Por ejemplo, en la de [Radarr](https://hub.docker.com/r/linuxserver/radarr) te indican que tienes que abrir el puerto 7878.
+Por otro lado, puedes saber qué puerto puedes exponer para una imagen que ya tienes descargada con el siguiente comando:
+
+```bash
+docker inspect nginx
+```
+
+O bien:
+
+```bash
+docker inspect --format='{{.Config.ExposedPorts}}' nginx
+```
+
 Elimina todos los contenedores:
 
 ```bash
