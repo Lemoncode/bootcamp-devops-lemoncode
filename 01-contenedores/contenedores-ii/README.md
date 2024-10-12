@@ -70,33 +70,59 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 ```
 
-# Descargar todas las versiones/tags de una imagen
+## Descargar todas las versiones/tags de una imagen
 
-docker pull -a jenkins
+Si por algún motivo necesitas descargar todas las versiones de una imagen puedes hacerlo de la siguiente manera:
 
-# Pull desde un registro diferente a Docker Hub
+```bash
+docker pull -a wordpress
+```
 
-# Google
+Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo debido a este mensaje: `[DEPRECATION NOTICE] Docker Image Format v1 and Docker Image manifest version 2, schema 1 support is disabled by default and will be removed in an upcoming release. Suggest the author of docker.io/library/wordpress:3 to upgrade the image to the OCI Format or Docker Image manifest v2, schema 2. More information at https://docs.docker.com/go/deprecated-image-specs/` no se puede hacer. Este mensaje significa que la imagen que estás intentando descargar no es compatible con la versión actual de Docker.
 
-docker run --rm gcr.io/google-containers/busybox echo "hello world"
+## Otros registros diferentes a Docker Hub
 
-# Azure
+Hasta ahora hemos estado trabajando con Docker Hub, pero hay otros registros de imágenes como Artifact Registry de Google, el cual ha sustituido a Google Container Registry, Azure Container Registry, Amazon Elastic Container Registry, etc. con los que también puedes trabajar. En general estos son los que se suelen usar en los entornos corporativos.
 
+
+### Google Container Registry > Artifact Registry
+
+Para que veas cómo funciona, vamos a descargar una imagen de Artifact Registry de Google.
+
+```bash
+docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
+```
+
+### Microsoft Artifact Registry
+
+```bash
 docker run mcr.microsoft.com/mcr/hello-world
+```
 
-# 3. Buscar imágenes en Docker Hub
+## Buscar imágenes en Docker Hub
 
+Ya vimos en el primer día cómo buscar imágenes en Docker Hub, pero vamos a recordarlo.
+
+Podemos hacerlo a através del CLI de Docker:
+
+```bash
 docker search microsoft
-
 docker search google
 docker search aws
+```
 
-# Al menos 50 estrellas
 
+Que nos devuelva aquella con al menos 50 estrellas:
+
+```bash
 docker search --filter=stars=50 --no-trunc nginx
+```
 
-#Devuelve solo la oficial
+También puedes pedirle que devuelva solo la oficial:
+
+```bash
 docker search --filter is-official=true nginx
+```
 
 #Formateo de la salida usando Go
 docker search --format "{{.Name}}: {{.StarCount}}" nginx
