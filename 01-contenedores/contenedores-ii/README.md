@@ -5,6 +5,23 @@
 
 En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
+## Crear un contenedor a partir de una imagen de docker
+
+Como ya vimos en el primer día, para crear un contenedor a partir de una imagen de Docker, simplemente tenemos que ejecutar el siguiente comando:
+
+```bash
+docker run -d --rm -p 9090:80 nginx
+```
+
+Puedes crear tantos contenedores como quieras a partir de la misma imagen:
+
+```bash
+docker run -d --rm -p 7070:80 nginx
+docker run -d --rm -p 6060:80 nginx
+```
+
+Lo bueno de ello es que una vez que tienes esta imagen en local la ejecución de un contenedor es muy rápida, ya que no tienes que descargar la imagen de nuevo.
+
 ## Comprobar las imagenes que ya tenemos en local
 
 Pero antes de empezar vamos a recordar cómo podíamos ver las imágenes que tenemos en local:
@@ -123,110 +140,101 @@ También puedes pedirle que devuelva solo la oficial:
 ```bash
 docker search --filter is-official=true nginx
 ```
+O incluso puedes formatear la salida de lo que te devuelve `docker search`:
 
-#Formateo de la salida usando Go
+```bash
 docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
+```
 
-# El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
+## El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
 
+Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera:
+
+```bash
 curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
+```
 
-#Crear un contenedor a partir de una imagen de docker
-docker run -d --rm -p 9090:80 nginx
+## Crear tu propia imagen a partir de una imagen existente
 
-#Crear múltiples contenedores de una imagen
-docker run -d --rm -p 7070:80 nginx
-docker run -d --rm -p 6060:80 nginx
+Vamos a tomar por ejemplo la imagen llamada nginx y vamos a crear una imagen propia a partir de ella utilizando un contenedor el cual vamos a utilizar para modificar el contenido.
 
-#### Crear tu propia imagen
+```bash
+docker run -d --name nginx-container -p 8080:80 nginx
+```
 
-# Dockerfile en contenedores-ii/Dockerfile
+Ahora lo que vamos a hacer es utilizar el contenido del directorio llamado `web` para modificar lo que hay en el directorio `/usr/share/nginx/html` del contenedor.
 
-cat Dockerfile
+```bash
+docker cp 01-contenedores/contenedores-ii/web/. nginx-container:/usr/share/nginx/html
+```
 
-#Construccion de la imagen utilizando el Dockerfile
-docker build . --tag simple-nginx:v1
+Ahora que ya hemos modificado la imagen vamos a crear una nueva imagen a partir de ella. Para ello vamos a hacer un `commit` de la imagen.
 
-#o bien
-docker build . -t simple-nginx:v1
+```bash
+docker commit nginx-container whale-nginx:v1
+```
 
-cd ..
-docker build . -t simple-nginx:v1
+Si ahora haces un `docker images` verás que tienes una nueva imagen llamada `whale-nginx` con la etiqueta `v1`.
 
-#Le decimos dónde está el Dockerfile, pero sigue fallando
-docker build . -f contenedores-ii/Dockerfile -t simple-nginx:v1
-
-#Cambio el contexto
-docker build contenedores-ii/ -t simple-nginx:v1
-
+```bash
 docker images
-#Ahora verás que tienes la imagen alpine descargada, al utilizarla como base, y una nueva llamada simple-nginx que tiene el tag v1
+```
 
-#Se ven todos los cambios que se han hecho para construir en esta imagen, tanto los que vienen
-#de la base como los hechos en el propio Docker file
-docker history simple-nginx:v1
+Y ahora vamos a crear un nuevo contenedor a partir de esta imagen:
 
-#Inspeccionando la imagen puedes saber cuántas capas tiene la misma
-docker inspect simple-nginx:v1
-#Cada instrucción en el Dockerfile genera una capa
+```bash
+docker run -d --name whale-nginx -p 8081:80 whale-nginx:v1
+```
 
-#Dive: herramienta para explorar imágenes
+## Inspeccionando una imagen
+
+Para inspeccionar una imagen puedes hacerlo de la siguiente manera:
+
+```bash
+docker inspect whale-nginx:v1
+```
+
+El apartado llamado `Layers` te indica cuántas capas tiene la imagen. Esto es importante porque cada instrucción en el Dockerfile genera una capa, excepto las que contienen metadata.
+
+## Dive: herramienta para explorar imágenes
+
+Existe una herramienta llamada Dive que te permite explorar las capas de una imagen. Para instalarla simplemente tienes que hacer lo siguiente:
+
+```bash
 https://github.com/wagoodman/dive
+```
 
-#Para instalar en Macq
+En MacOs:
+
+```bash
 brew install dive
+```
 
-#Para instalar en Windows (necesitas Go 1.10+)
+O en Windows:
+
+```bash
 go get github.com/wagoodman/dive
+```
 
-#¿Cómo se usa?
-dive simple-nginx:v1
+Ok ¿y cómo se usa? Pues simplemente tienes que ejecutar el siguiente comando:
 
-#Ahora crea un contenedor con tu nueva imagen
-docker run -d --name my_nginx -p 8080:80 simple-nginx:v1
+```bash
+dive nginx
+```
 
-docker ps
+A día de hoy esto mismo puedes hacer en Docker Desktop, simplemente seleccionando la imagen y haciendo clic en `Inspect`.
 
-#Etiquetar una imagen para subirla a Docker Hub
-docker tag simple-nginx:v1 0gis0/simple-nginx:v1
+## Eliminar una imagen
 
-#Comprobamos que la nueva etiqueta se ha generado correctamente
-docker images
+Si intentamos eliminar una imagen y hay algún contenedor que la está utilizando no será posible, dará error, incluso si este ya terminó de ejecutarse.
 
-#Subirla a Docker Hub
-docker push 0gis0/simple-nginx:v1
+```bash
+docker rmi whale-nginx:v1
+```
 
-#Para comprobar que podemos utilizar nuestra imagen ya en Docker Hub, debemos eliminar la copia que tenemos en local:
+Si quisiéramos eliminar SOLO las imágenes que no se están utilizando:
 
-#Borramos la imagen de local, utilizando el ID
-docker rmi simple-nginx:v1
-#No nos va a dejar porque tenemos un contenedor ejecutandose con dicha imagen
-docker rm -f my_nginx
-#Ahora debería de dejarnos
-docker rmi simple-nginx #como tiene varias etiquetas tampoco le molará.
-docker rmi simple-nginx:v1 0gis0/simple-nginx:v1
-
-#Ahora intentamos crear un contenedor pero con la imagen que ahora está en Docker Hub
-docker run -d --name my_nginx -p 8080:80 0gis0/simple-nginx:v1
-
-#Si intentamos eliminar una imagen y hay algún contenedor que la está utilizando no será posible, dará error, incluso si este ya terminó de ejecutarse.
-docker rmi simple-nginx:v1
-
-#Eliminar una imagen
-docker image rm 0gis0/simple-nginx:v1
-docker rmi 0eb3967e4af2
-docker image rm nginx 0gis0/simple-nginx:v1
-
-#Eliminar SOLO las imágenes que no se están utilizando
+```bash
 docker image prune -a
-
-#Listar los ids de las imágenes en local
-docker images -q
-
-#Eliminar todas las imágenes
-docker rmi $(docker images -q) -f
-
-#Automatizar una build a partir del código fuente de tu aplicación
-#Accede a https://hub.docker.com con tu usuario y selecciona el repositorio simple-nginx.
-#En el apartado BUILDS puedes configurar como fuente tanto GitHub como Bitbucket para la generación de la imagen.
+```
