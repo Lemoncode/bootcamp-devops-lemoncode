@@ -188,6 +188,59 @@ docker run -d \
   lscr.io/linuxserver/filezilla:latest
 ```
 
+BabbyBuddy (para llevar un seguimiento de la alimentación de tu bebé)
+
+```bash
+# admin/admin
+
+docker run -d \
+  --name=babybuddy \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
+  -e CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,https://babybuddy.domain.com \
+  -p 8000:8000 \
+  lscr.io/linuxserver/babybuddy:latest
+```
+
+**LibreOffice** (suite ofimática)
+
+```bash
+docker run -d \
+  --name=libreoffice \
+  --security-opt seccomp=unconfined `#optional` \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
+  -p 3000:3000 \
+  -p 3002:3001 \
+  lscr.io/linuxserver/libreoffice:latest
+
+  docker rm -f libreoffice
+```
+
+**Firefox** (navegador web)
+
+```bash
+docker run -d \
+  --name=firefox \
+  --security-opt seccomp=unconfined `#optional` \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
+  -e FIREFOX_CLI=https://www.lemoncode.net/ `#optional` \
+  -p 3000:3000 \
+  -p 3001:3001 \
+  --shm-size="1gb" \
+  lscr.io/linuxserver/firefox:latest
+```
+
+Elimina todos los contenedores:
+
+```bash
+docker rm -f $(docker ps -a -q)
+```
+
 [Aquí](https://fleet.linuxserver.io/) puedes ver todas las que tienen.
 
 
