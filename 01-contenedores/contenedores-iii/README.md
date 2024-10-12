@@ -1,53 +1,63 @@
-# Parte 3: contenerización de aplicaciones #
+# Día 3: contenerización de aplicaciones
 
-#Mi primera applicación a contenerizar > Node.js
-#Para esta demo usaremos VS Code.
-https://code.visualstudio.com/docs/containers/overview
+![Docker](./imagenes/Creando%20imagenes%20de%20Docker.jpeg)
+
+## Aplicación de ejemplo
+
+Para contenerizar una aplicación lo primero que necesitamos es un aplicativo que queramos contenerizar. En este caso, vamos a contenerizar una aplicación en Node.js, que está dentro del directorio `hello-world`. Y antes de contenerizarla es aconsejable ejecutarla en local para comprobar que funciona correctamente.
+
+
+```bash
 cd 01-contenedores/contenedores-iii/hello-world
-
-#Ejecutar la app sin contenerizar
-#1. Instalar las dependencias de la aplicación 
 npm install
-#2. Ejecutar ESLint
 npm run test
-#3. Ejecutar la app
 node server.js
-#4. Ejecutar la app usando Nodemon
 npm run start-dev
+``` 
 
-#Para crear el archivo Dockerfile y .dockerignore que vimos en la parte teórica, puedes hacerlo con la extensión de Docker de manera sencilla.
-#Basta con  ejecutar Cmd + P > Add Docker Files to Workspace y seleccionar Node.js. Te pedirá que le selecciones el package.json y el puerto que utiliza tu app.
-#Le diremos que no queremos el archivo de Docker compose, lo dejaremos para más adelante :-)
+## El archivo Dockerfile
 
-#Revisar el archivo Dockerfile
-cat Dockerfile
+Para poder contenerizar cualquier aplicación necesitamos un archivo llamado `Dockerfile`. Este archivo contiene las instrucciones necesarias para construir una imagen de Docker. Para conseguir este archivo tenemos varias maneras:
 
-#Diferencia entre CMD y ENTRYPOINT
-#Un Dockerfile nos permite definir un comando a ejecutar por defecto, para cuando se inicien los contenedores a partir de nuestra imagen. Para ello tenemos dos comandos a nuestra disposición:
-# CMD (comando): Docker ejecutará el comando que indiques usando el ENTRYPOINT por defecto, que es /bin/sh -c
-# ENTRYPOINT (punto de entrada): Docker usará el ejecutable que le indiques, y la instrucción CMD te permitirá definir un parámetro por defecto.
+1. De forma manual: En este caso necesitamos conocer los comandos necesarios para construir una imagen de Docker. Puedes encontrar todos los que existen en la [documentación oficial](https://docs.docker.com/engine/reference/builder/). Para este caso, vamos a utilizar un archivo `Dockerfile` que ya está creado en el directorio `hello-world` llamado `Dockerfile`.
 
-#Diferencia entre ADD y COPY
-#Ambas te permiten copiar archivos de local dentro de una imagen de Docker.
-#COPY coge una fuente y un destino dentro de tu máquina local.
-#ADD te permite hacer lo mismo que COPY, pero además puedes especificar una URL como origen o incluso extraer un archivo .tar y descomprimirlo directamente en destino.
+2. Usando el comando `docker init`
+3. Usando la extensión de Docker de Visual Studio Code: Basta con  ejecutar Cmd + P > Add Docker Files to Workspace y seleccionar Node.js. Te pedirá que le selecciones el package.json y el puerto que utiliza tu app.
+#Le diremos que no queremos el archivo de Docker compose, lo dejaremos para más adelante 😃.
+4. Usando IA, como por ejemplo con Microsoft Edge.
+5. Usando GitHub Copilot
 
-#Revisar el archivo .dockerignore
-cat .dockerignore
 
-#Generar la imagen en base al Dockerfile
+## Diferencia entre CMD y ENTRYPOINT
+Un Dockerfile nos permite definir un comando a ejecutar por defecto, para cuando se inicien los contenedores a partir de nuestra imagen. Para ello tenemos dos comandos a nuestra disposición:
+- `CMD` (comando): Docker ejecutará el comando que indiques usando el ENTRYPOINT por defecto, que es /bin/sh -c
+- `ENTRYPOINT` (punto de entrada): Docker usará el ejecutable que le indiques, y la instrucción CMD te permitirá definir un parámetro por defecto.
+
+## Diferencia entre ADD y COPY
+Ambas te permiten copiar archivos de local dentro de una imagen de Docker. Sin embargo:
+
+- `COPY` coge una fuente y un destino dentro de tu máquina local.
+- `ADD` te permite hacer lo mismo que COPY, pero además puedes especificar una URL como origen o incluso extraer un archivo .tar y descomprimirlo directamente en destino.
+
+## El archivo .dockerignore
+
+El archivo `.dockerignore` es un archivo que se utiliza para indicar a Docker qué archivos y carpetas no debe incluir en la imagen. Es muy útil para evitar incluir archivos innecesarios en la imagen, como por ejemplo archivos de logs, archivos temporales, etc.
+
+## Generar la imagen en base al Dockerfile
+
+Una vez que tenemos el archivo `Dockerfile` y el archivo `.dockerignore` podemos generar la imagen de Docker. Para ello, necesitamos ejecutar el siguiente comando:
+
+```bash
 docker build -t hello-world:prod .
+```
 
-#Ejecutar un nuevo contenedor usando tu nueva imagen:
+## Ejecutar un nuevo contenedor usando tu nueva imagen:
+
+```bash
 docker run -p 4000:3000 hello-world:prod
+```
 
-# Hacer lo mismo con la extensión de Visual Studio Code
-# 1. Generar la imagen
-# 2. Ejecutar un contenedor en base a la imagen
-# 3. Abrir el navegador usando la extensión
-# 4. Engancharse al terminal del contenedor
-
-# El por qué del multi-stage
+## Imágenes multi-stage
 
 #Comprobamos las imágenes que ahora tenemos disponibles, así como el peso de helloworld
 docker images
