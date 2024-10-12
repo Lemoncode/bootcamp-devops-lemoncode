@@ -1,4 +1,6 @@
-# Parte 4: Volúmenes #
+# Día 4: Almacenamiento en Docker
+
+![Docker](imagenes/Cómo%20gestionar%20el%20almacenamiento%20en%20Docker.jpeg)
 
 cd 01-contenedores/contenedores-iv
 
