@@ -36,14 +36,6 @@ o bien
 docker image ls
 ```
 
-Y recientemente ha salido una nueva opción, con la versión 4.34.2 en la que podemos ver incluso la arquitectura de la imagen:
-
-![Software updates](imagenes/Software%20updates%20de%20Docker%204.34.2.png)
-
-```bash
-docker image list --tree
-```
-
 También podemos Filtrar por nombre del repositorio
 
 ```bash
@@ -96,6 +88,94 @@ docker pull -a wordpress
 ```
 
 Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo debido a este mensaje: `[DEPRECATION NOTICE] Docker Image Format v1 and Docker Image manifest version 2, schema 1 support is disabled by default and will be removed in an upcoming release. Suggest the author of docker.io/library/wordpress:3 to upgrade the image to the OCI Format or Docker Image manifest v2, schema 2. More information at https://docs.docker.com/go/deprecated-image-specs/` no se puede hacer. Este mensaje significa que la imagen que estás intentando descargar no es compatible con la versión actual de Docker.
+
+
+## Algunas imágenes interesantes
+
+Las de [LinuxServer](https://www.linuxserver.io/) son muy interesantes, ya que tienen imágenes de aplicaciones muy conocidas como Plex, Nextcloud, etc.
+
+Un servidor de **Radarr** (gestor de películas):
+
+```bash
+docker run \
+--name=radarr \
+-e UMASK_SET=022 `# control permissions of files and directories created by Radarr` \
+-e TZ=Europe/Madrid `# Specify a timezone to use EG Europe/London, this is required for Radarr` \
+-p 7878:7878 `# The port for the Radarr webinterface` \
+linuxserver/radarr:5.11.0
+```
+
+**Plex** (servidor de medios):
+
+```bash
+docker run \
+--name plex \
+-p 32400:32400 \
+-d \
+linuxserver/plex
+```
+
+**DuckDNS** (para tener un dominio gratuito) ⚠️ pendiente de probar
+
+```bash
+docker run -d \
+--name=duckdns \
+--net=host `#optional` \
+-e PUID=1000 `#optional` \
+-e PGID=1000 `#optional` \
+-e TZ=Etc/UTC `#optional` \
+-e SUBDOMAINS=subdomain1,subdomain2 \
+-e TOKEN=token \
+-e UPDATE_IP=ipv4 `#optional` \
+-e LOG_FILE=false `#optional` \
+-v /path/to/duckdns/config:/config `#optional` \
+--restart unless-stopped \
+lscr.io/linuxserver/duckdns:latest
+```
+
+**VS Code Server** (Visual Studio Code en un contenedor)
+
+```bash
+docker run -d \
+--name=code-server \
+-e PUID=1000 \
+-e PGID=1000 \
+-e TZ=Etc/UTC \
+-e PASSWORD=lemoncode \
+-p 8443:8443 \
+lscr.io/linuxserver/code-server:latest
+```
+
+Blender (software de modelado 3D)
+
+```bash
+docker run -d \
+--name=blender \
+-e PUID=1000 \
+-e PGID=1000 \
+-e TZ=Etc/UTC \
+-p 3000:3000 \
+-p 3001:3001 \
+lscr.io/linuxserver/blender:latest
+```
+
+Speedtest Tracker (para hacer tests de velocidad) > Pendiente de probar
+https://docs.speedtest-tracker.dev/getting-started/installation/installation
+
+```bash
+docker run -d --name speedtest-tracker \
+ -p 9090:80 \
+-p 8443:443 \
+-e PUID=1000 \
+-e PGID=1000 \
+-e APP_KEY=base64:nyXzCn22VeDmKSdUqul5IOFUFCFv3UoZ02FQm0y+8uk= \
+-e DB_CONNECTION=sqlite \
+lscr.io/linuxserver/speedtest-tracker:latest
+```
+
+
+[Aquí](https://fleet.linuxserver.io/) puedes ver todas las que tienen.
+
 
 ## Otros registros diferentes a Docker Hub
 
@@ -223,7 +303,9 @@ Ok ¿y cómo se usa? Pues simplemente tienes que ejecutar el siguiente comando:
 dive nginx
 ```
 
-A día de hoy esto mismo puedes hacer en Docker Desktop, simplemente seleccionando la imagen y haciendo clic en `Inspect`.
+A día de hoy esto mismo puedes hacer en Docker Desktop, simplemente seleccionando la imagen:
+
+![Capas de una imagen en Docker Desktop](imagenes/Capas%20de%20una%20imagen.png)
 
 ## Eliminar una imagen
 
