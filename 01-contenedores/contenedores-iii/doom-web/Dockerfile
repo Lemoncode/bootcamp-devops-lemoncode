@@ -7,11 +7,15 @@ WORKDIR /app
 #Copio los archivos package.json y package-lock,son(el asterisco si exsite) en el raíz de mi directorio de trabajo, /app.
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
+# ENV NODE_ENV=production
+
 #Instalo las dependencias de mi aplicación, ejecutando el comando npm install
 RUN npm install 
 
 #Copio el resto de los archivos en el directorio /app
 COPY . .
+
+# RUN npm test
 
 #Añado como metadato el puerto por el que escucha mi aplicación
 EXPOSE 3000

@@ -2,11 +2,12 @@
 FROM node:20-alpine AS base
 # set working directory
 WORKDIR /app
+# Copy project file
+COPY package.json package-lock.json ./
+
 
 # ---- Dependencies ----
 FROM base AS dependencies
-# Copy project file
-COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
@@ -20,9 +21,9 @@ RUN npm run test
 # ---- Release ----
 FROM base AS release
 # Add environment variables
-ENV NODE_ENV production
+# ENV NODE_ENV production
 # Copy only necessary files
-COPY --from=dependencies /app/node_modules ./node_modules
+RUN npm install --omit=dev
 COPY . .
 # Expose port and define CMD
 EXPOSE 3000
