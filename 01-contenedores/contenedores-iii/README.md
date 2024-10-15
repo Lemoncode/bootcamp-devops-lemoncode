@@ -8,7 +8,7 @@ Para contenerizar una aplicación lo primero que necesitamos es un aplicativo qu
 
 
 ```bash
-cd 01-contenedores/contenedores-iii/hello-world
+cd 01-contenedores/contenedores-iii/doom-web
 npm install
 npm run test
 node server.js
@@ -42,18 +42,30 @@ El archivo `.dockerignore` es un archivo que se utiliza para indicar a Docker qu
 Una vez que tenemos el archivo `Dockerfile` y el archivo `.dockerignore` podemos generar la imagen de Docker. Para ello, necesitamos ejecutar el siguiente comando:
 
 ```bash
-docker build -t hello-world:prod .
+docker build -t doom-web:prod .
+```
+
+Si ahora comprobamos las imágenes que tenemos en nuestro sistema, deberíamos ver la imagen que acabamos de crear:
+
+```bash
+docker images
+```
+
+Si queremos ver el historial de la imagen que acabamos de crear, podemos ejecutar el siguiente comando:
+
+```bash
+docker history doom-web:prod
 ```
 
 ## Ejecutar un nuevo contenedor usando tu nueva imagen:
 
 ```bash
-docker run -p 4000:3000 hello-world:prod
+docker run -p 8080:3000 doom-web:prod
 ```
 
 ## Imágenes multi-stage
 
-Cuando creamos im´genes de Docker, a veces necesitamos instalar herramientas adicionales para construir nuestra aplicación, como por ejemplo compiladores, linters, herramientas de testing, etc. Sin embargo, estas herramientas no son necesarias en la imagen final, ya que solo necesitamos el binario de nuestra aplicación. Si no lo tenemos en cuenta, nuestra imagen final será más grande de lo necesario.
+Cuando creamos imágenes de Docker, a veces necesitamos instalar herramientas adicionales para construir nuestra aplicación, como por ejemplo compiladores, linters, herramientas de testing, etc. Sin embargo, estas herramientas no son necesarias en la imagen final, ya que solo necesitamos el binario de nuestra aplicación. Si no lo tenemos en cuenta, nuestra imagen final será más grande de lo necesario.
 
 ```bash
 docker images

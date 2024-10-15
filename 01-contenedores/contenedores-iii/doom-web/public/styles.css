@@ -1,0 +1,564 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@font-face {
+  font-family: "Doom";
+  src: url("https://assets.codepen.io/383755/Upheaval.woff2") format("woff2");
+}
+body,
+html {
+  image-rendering: pixelated;
+  cursor: crosshair;
+  position: fixed;
+  overflow: hidden;
+}
+body *,
+html * {
+  cursor: crosshair;
+}
+body:has(.inner span:nth-of-type(6) input:checked):before,
+html:has(.inner span:nth-of-type(6) input:checked):before {
+  opacity: 1;
+}
+@supports (animation-timeline: scroll()) {
+  body:has(#logo input:checked),
+  html:has(#logo input:checked) {
+    position: relative;
+    overflow: auto;
+  }
+}
+body:has(#logo input:checked) #weapon,
+html:has(#logo input:checked) #weapon {
+  bottom: 50px;
+}
+body:has(#logo input:checked) #hud,
+html:has(#logo input:checked) #hud {
+  transform: translateY(0);
+}
+body:has(#logo input:checked):active #weapon,
+html:has(#logo input:checked):active #weapon {
+  animation: shoot 0.125s steps(3, end) 1;
+}
+@keyframes shoot {
+  to {
+    background-position: -255px 20px;
+  }
+}
+
+body {
+  background: #000;
+}
+
+body:before {
+  content: "victory";
+  color: #222;
+  background: rgba(255, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  font-family: "Doom";
+  font-size: 14vmin;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out 0.5s;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #e9544b, #f9ef51 75%);
+}
+
+@keyframes rotate {
+  0% {
+    transform: translateY(0px);
+  }
+  20% {
+    transform: translateY(150px) rotate(0deg);
+  }
+  30% {
+    transform: translateY(200px) rotate(90deg);
+    transform-origin: 50% calc(50% + 100px);
+  }
+  40% {
+    transform: translateY(300px) rotate(90deg);
+    transform-origin: 50% calc(50% - 0px);
+  }
+  50% {
+    transform: translateX(100px) translateY(300px) rotate(0deg);
+    transform-origin: 50% calc(50% - 0px);
+  }
+  60% {
+    transform: translateX(100px) translateY(400px) rotate(0deg);
+    transform-origin: 50% calc(50% - 150px);
+  }
+  65% {
+    transform: translateY(450px) rotate(-90deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+  75% {
+    transform: translateY(550px) rotate(-90deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+  80% {
+    transform: translateY(600px) rotate(-90deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+  85% {
+    transform: translateX(100px) translateY(650px) rotate(-180deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+  90% {
+    transform: translateX(100px) translateY(800px) rotate(-180deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+  100% {
+    transform: translateX(200px) translateY(800px) rotate(-180deg);
+    transform-origin: 50% calc(50% - 200px);
+  }
+}
+#level {
+  transform: translateY(0px) translateZ(300px) rotateX(85deg);
+}
+
+.inner {
+  animation: rotate linear;
+  animation-timeline: scroll();
+  animation-range: entry 0 cover 100%;
+  transform-origin: 50% calc(50% + 100px);
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: clamp(1200px, 2000vh, 2000vh);
+  width: 100vw;
+  pointer-events: none;
+}
+body * {
+  pointer-events: none;
+}
+body:has(#logo input:checked) #wrapper #level .inner span:first-of-type {
+  animation-play-state: running;
+}
+@supports (animation-timeline: scroll()) {
+  body input {
+    pointer-events: all;
+  }
+}
+body input:checked {
+  pointer-events: none;
+}
+
+#wrapper {
+  width: 600px;
+  height: 600px;
+  box-shadow: 0 0 0 1px;
+  position: fixed;
+  top: calc(50vh - 300px);
+  left: calc(50vw - 300px);
+  perspective: 600px;
+  z-index: -1;
+}
+
+#level {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-style: preserve-3d;
+}
+#level * {
+  transform-style: preserve-3d;
+}
+#level *:before,
+#level *:after {
+  transform-style: preserve-3d;
+}
+#level .inner {
+  background: url("https://assets.codepen.io/383755/C99.png");
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+#level .inner:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("https://assets.codepen.io/383755/C64.png");
+  top: 0;
+  left: 0;
+  transform: translateZ(calc(600px / 9));
+}
+#level .inner svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#level .inner svg path {
+  fill: none;
+  stroke: red;
+  stroke-width: 10px;
+}
+#level .inner > span {
+  image-rendering: pixelated;
+  grid-area: 7/5/8/6;
+  transform-origin: bottom;
+  --y: 0deg;
+  --x: -90deg;
+  position: relative;
+  transform: rotateX(var(--x)) rotateY(var(--y)) scale(0.75) translateZ(-50px);
+  animation: approach 2s steps(18, end) 1 forwards var(--delay, 0s);
+  animation-play-state: paused;
+}
+@keyframes approach {
+  to {
+    transform: rotateX(var(--x)) rotateY(var(--y)) scale(0.75)
+      translateZ(var(--z, 50px));
+  }
+}
+#level .inner > span:nth-of-type(2),
+#level .inner > span:nth-of-type(3) {
+  grid-area: 5/3/6/4;
+  --y: 90deg;
+  --delay: 2s;
+}
+#level .inner > span:nth-of-type(3) {
+  grid-area: 6/3/7/4;
+  --z: 0px;
+  --delay: 0s;
+}
+#level .inner > span:nth-of-type(3):before {
+  background: url(https://assets.codepen.io/383755/demon1.gif) 50% 50% / contain
+    no-repeat;
+}
+#level .inner > span:nth-of-type(4) {
+  grid-area: 2/8/3/9;
+  --y: -90deg;
+  --delay: 2s;
+}
+#level .inner > span:nth-of-type(4):before {
+  background: url(https://assets.codepen.io/383755/caco-cacodemon.gif) 50% 50% /
+    contain no-repeat;
+}
+#level .inner > span:nth-of-type(4):before,
+#level .inner > span:nth-of-type(4):after {
+  left: -25%;
+}
+#level .inner > span:nth-of-type(5) {
+  grid-area: 5/7/6/8;
+  --y: -180deg;
+  --delay: 2s;
+}
+#level .inner > span:nth-of-type(5):before {
+  background: url(https://assets.codepen.io/383755/demon1.gif) 50% 100% /
+    contain no-repeat;
+}
+#level .inner > span:nth-of-type(6) {
+  grid-area: 8/8/9/9;
+  --y: -180deg;
+  --delay: 0s;
+}
+#level .inner > span:nth-of-type(6):before {
+  background: url(https://assets.codepen.io/383755/demon4.gif) 50% 100% /
+    contain no-repeat;
+  width: 150%;
+  left: -25%;
+}
+#level .inner > span:has(input:checked):after {
+  opacity: 1;
+  animation-play-state: running;
+}
+#level .inner > span:has(input:checked):before {
+  opacity: 0;
+}
+#level .inner > span:has(input:checked) + span {
+  animation-play-state: running;
+}
+#level .inner > span:before,
+#level .inner > span:after {
+  content: "";
+  position: absolute;
+  width: calc(100% - 18px);
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  --offset: 3px;
+  pointer-events: none;
+  background: url(https://assets.codepen.io/383755/demon3.gif) 50% 25% / contain
+    no-repeat;
+}
+#level .inner > span:after {
+  --offset: 0px;
+  animation: move 0.5s steps(6, end) 1 forwards;
+  background: url("https://assets.codepen.io/383755/doom-explosion.png") 2px 50% /
+    auto 50px no-repeat;
+  animation-play-state: paused;
+  opacity: 0;
+}
+@keyframes move {
+  to {
+    background-position: calc(100% + var(--offset)) 50%;
+  }
+}
+#level .inner > span input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 999;
+}
+#level .inner > div:before,
+#level .inner > div:after {
+  content: "";
+  position: absolute;
+}
+#level .inner > div:nth-of-type(1) {
+  grid-area: 9/4/10/6;
+  background: url("https://assets.codepen.io/383755/C4.png");
+  transform-origin: bottom;
+  transform: rotateX(-90deg) rotateY(-90deg);
+}
+#level .inner > div:nth-of-type(1):before {
+  content: "";
+  position: absolute;
+  width: 300%;
+  height: 100%;
+  top: 0;
+  right: 50%;
+  transform: translateZ(calc(600px / -9));
+  background: inherit;
+}
+#level .inner > div:nth-of-type(2) {
+  background: url("https://assets.codepen.io/383755/C4.png");
+  grid-area: 8/2/9/5;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+}
+#level .inner > div:nth-of-type(2):before,
+#level .inner > div:nth-of-type(2):after {
+  height: 100%;
+  width: 200%;
+  right: 100%;
+  top: 0;
+  background: url("https://assets.codepen.io/383755/C4.png");
+  transform-origin: right;
+  transform: rotateY(-90deg);
+}
+#level .inner > div:nth-of-type(2):after {
+  background: url("https://assets.codepen.io/383755/C19.png");
+  width: 66%;
+  right: 0%;
+}
+#level .inner > div:nth-of-type(3),
+#level .inner > div:nth-of-type(5) {
+  grid-area: 2/2/3/3;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+  background: url("https://assets.codepen.io/383755/C19.png");
+}
+#level .inner > div:nth-of-type(3):before,
+#level .inner > div:nth-of-type(5):before {
+  width: 200%;
+  height: 100%;
+  left: -100%;
+  transform-origin: right;
+  top: 0;
+  transform: rotateY(-90deg);
+  background: url("https://assets.codepen.io/383755/C4.png");
+}
+#level .inner > div:nth-of-type(4) {
+  grid-area: 1/1/2/10;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+  background: url("https://assets.codepen.io/383755/C4.png");
+}
+#level .inner > div:nth-of-type(4):before,
+#level .inner > div:nth-of-type(4):after {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: url("https://assets.codepen.io/383755/C4.png");
+  transform: rotateY(90deg);
+  transform-origin: right;
+}
+#level .inner > div:nth-of-type(4):after {
+  left: auto;
+  right: 0;
+  width: 44%;
+  transform: translateZ(500px);
+  background: url("https://assets.codepen.io/383755/C4.png");
+}
+#level .inner > div:nth-of-type(5) {
+  grid-area: 4/5/5/6;
+}
+#level .inner > div:nth-of-type(5):before,
+#level .inner > div:nth-of-type(5):after {
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  top: 0;
+  left: 0;
+  transform-origin: left;
+  transform: rotateY(90deg);
+}
+#level .inner > div:nth-of-type(5):after {
+  width: 200%;
+  transform: translateZ(200px);
+  left: 101%;
+}
+
+#logo {
+  position: fixed;
+  background: url("https://assets.codepen.io/383755/580b57fcd9996e24bc43c34d.png")
+      50% 50% / auto 40vh no-repeat,
+    rgba(0, 0, 0, 0.75);
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  animation: load 0.5s ease-in-out 1 forwards paused;
+  pointer-events: none;
+  transition: 0.3s ease-in-out;
+}
+#logo:has(input:checked) {
+  animation-play-state: running;
+  background-position: 50% calc(50% - 100vh);
+}
+#logo:has(input:checked):before,
+#logo:has(input:checked):after {
+  transform: translate(-50%, 100vh);
+}
+#logo input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+#logo:before,
+#logo:after {
+  content: "scroll";
+  font-family: "Doom";
+  color: #f9ef51;
+  background-image: linear-gradient(to bottom, #e9544b 0%, #f9ef51 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 8vh;
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 10vh);
+  transform: translate(-50%, 0);
+  transition: 0.3s ease-in-out 0.05s;
+}
+#logo:before {
+  -webkit-text-stroke: 2px #666;
+  transition-delay: 0.1s;
+}
+#logo:after {
+  -webkit-text-fill-color: #fff;
+  content: "sorry, your browser does not support scroll timeline";
+  font-family: "Press Start 2p", sans-serif;
+  text-align: center;
+  font-size: 3vh;
+  top: calc(50% + 20vh);
+  animation: flashing 0.5s ease-in-out infinite alternate;
+}
+@keyframes flashing {
+  to {
+    opacity: 0.5;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  #logo:after {
+    content: "click anywhere to start";
+    font-size: 1vh;
+  }
+}
+@keyframes load {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#weapon {
+  background: url("https://i.imgur.com/dpySZUG.png") 0% 20px / auto 1072px
+    no-repeat;
+  --scale: 5;
+  position: fixed;
+  z-index: 9;
+  width: 90px;
+  height: 154px;
+  left: calc(50% + 7.5vh);
+  bottom: -500px;
+  transition: 0.5s ease-in-out 0.45s;
+  transform-origin: bottom;
+  transform: scale(var(--scale));
+  animation: bounce 1s steps(4, end) infinite alternate;
+}
+@keyframes bounce {
+  to {
+    transform: scale(var(--scale)) translateY(5px);
+  }
+}
+@media (max-height: 768px) {
+  #weapon {
+    --scale: 4;
+  }
+}
+
+#hud {
+  position: fixed;
+  z-index: 999;
+  background: #333;
+  box-shadow: 0 0 0 5px #444;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: clamp(25px, 7.5vh, 100px);
+  transform: translateY(200%);
+  transition: 0.5s ease-in-out 0.3s;
+}
+#hud:before {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1/1;
+  height: clamp(30px, 8vh, 125px);
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  box-shadow: inset 0 0 0 1px #000, 0 0 0 5px #444;
+  background: url("https://assets.codepen.io/383755/grin-doomguy.gif") 0% 50% /
+      contain no-repeat,
+    #666;
+}

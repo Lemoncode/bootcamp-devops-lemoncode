@@ -1,5 +1,5 @@
 #Esta es la imagen que utilizaré como base de mi imagen
-FROM node:14-alpine
+FROM node:20-alpine
 
 #Establezco la ruta /app como directorio de trabajo para alojar mi aplicación, instalar dependencias, etc.
 WORKDIR /app
