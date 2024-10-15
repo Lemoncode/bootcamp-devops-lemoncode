@@ -13,7 +13,10 @@ npm install
 npm run test
 node server.js
 npm run start-dev
-``` 
+```
+
+> [!NOTE]
+> Ejemplo sacado de https://codepen.io/cobra_winfrey/pen/oNOMRav
 
 ## El archivo Dockerfile
 
