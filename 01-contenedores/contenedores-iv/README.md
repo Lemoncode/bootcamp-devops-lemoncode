@@ -3,7 +3,7 @@
 ![Docker](imagenes/Cómo%20gestionar%20el%20almacenamiento%20en%20Docker.jpeg)
 
 
-En algún momento tus contenedores morirán y tendrás que volver a levantarlos. Si no has guardado los datos que tenían, perderás toda la información que tenían. Por eso es importante saber cómo gestionar el almacenamiento en Docker.
+En algún momento tus contenedores morirán 😥 y tendrás que volver a crearlos. Si no has guardado los datos que tenían, perderás toda la información que almacenaban o generaron. Por eso es importante saber cómo gestionar el almacenamiento en Docker.
 
 Existen diferentes formas de almacenar datos en Docker. En este módulo vamos a ver las siguientes:
 
@@ -13,20 +13,32 @@ Existen diferentes formas de almacenar datos en Docker. En este módulo vamos a 
 
 ## Bind mounts
 
-Un bind mount es un enlace directo entre una carpeta en tu host y una carpeta en tu contenedor. Esto significa que si cambias algo en la carpeta del host, también cambiará en la carpeta del contenedor y viceversa.
+Un bind mount es un enlace directo entre una carpeta en tu máquina y una carpeta en tu contenedor. Esto significa que si cambias algo en la carpeta local, también cambiará en la carpeta del contenedor y viceversa.
 
 Para crear un bind mount, utiliza la opción `--mount` o `-v` al crear un contenedor. Por ejemplo:
 
 ```bash
 cd 01-contenedores/contenedores-iv
+
 docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
 ```
 
-Si cambias el contenido de la carpeta `dev-folder` en tu host, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
+Si analizamos este comando tenemos:
+
+- `docker run`: Crea y arranca un contenedor.
+- `-d`: Lo hace en segundo plano.
+- `--name devtest`: Le pone nombre al contenedor.
+- `--mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/`: Crea un bind mount. El tipo de montaje es bind, la carpeta de origen es la carpeta actual (`$(pwd)`) más `dev-folder` y la carpeta de destino es `/usr/share/nginx/html/`.
+
+> [!NOTE]
+> Es comendable utilizar la opción `--mount` en lugar de `-v` o `--volume` porque es más explícito y fácil de leer.
+
+
+Si cambias el contenido de la carpeta `dev-folder` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
 
 #### Usar el bind mount como read-only
 
-Tambi´n puedes montar un bind mount como read-only. Esto significa que no podrás escribir en la carpeta del contenedor. Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
+También puedes montar un bind mount como read-only. Esto significa que desde tu máquina podrás cambiar el contenido sin problemas pero desde dentro del contenedor no se podrá. Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
 
 ```bash
 docker rm -f devtest
@@ -39,35 +51,64 @@ Como está en modo lectura, en teoría no podría crear ningún archivo dentro d
 ```bash
 docker container exec -it devtest sh
 ls /usr/share/nginx/html
-touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
+touch /usr/share/nginx/html/index2.html 
 exit
 ```
 
+El problema principal que tienen los montajes de tipo `bind` es que no son portables. Si tienes un contenedor en un host y quieres moverlo a otro, tendrás que mover también la carpeta que estás montando.
+
 ## Volúmenes
 
-#Listar los volumenes en el host
+Los volúmenes son una forma de almacenar datos de forma persistente en Docker. Estos volúmenes se almacenan en una carpeta en el host y se pueden compartir entre varios contenedores. El path donde se almacenan los volúmenes en el host es `/var/lib/docker/volumes`y lo gestiona Docker.
+
+### Crear un volumen
+
+Para crear un volumen, utiliza el comando `docker volume create` seguido del nombre del volumen. Por ejemplo:
+
+```bash
+docker volume create lemoncode-data
+```
+
+Para comprobar cuántos volúmenes tienes en tu host puedes utilizar este comando:
+
+```bash
 docker volume ls
+```
 
-#Crear un nuevo volumen con create
-docker volume create data
-docker volume ls
+Si quisieramos utilizar este volumen en un contenedor, podríamos hacerlo de la siguiente manera:
 
-#Crear un contenedor que a su vez crea un volumen
-docker container run -dit --name my-container \
-    --mount source=my-data,target=/vol \
-    alpine
+```bash
+docker run -d --name devtest2 --mount source=lemoncode-data,target=/usr/share/nginx/html/ -p 8081:80 nginx
+```
 
-#Se puede utilizar tanto --mount como -v (o --volume)). Originalmente --mount solo se usaba para el modo clúster. Sin embargo, desde la versión 17.06 (Vamos por la 10.03.13) 
-# se puede utilizar para contenedores independientes.
+En este caso el volumen `lemoncode-data` se ha montado en la carpeta `/usr/share/nginx/html/` del contenedor `devtest2`.
+
+### Crear un contenedor que a su vez crea un volumen
+
+También es posible crear un contenedor que a su vez cree un volumen.
+
+```bash
+docker run -d --name devtest3 -v web-data:/usr/share/nginx/html/ -p 8082:80 nginx
+```
+
+En este caso, al ejecutarse el contenedor `devtest3` se creará un volumen llamado `web-data` que se montará en la carpeta `/usr/share/nginx/html/` del contenedor.
+
+Estos volumenes de primeras no tienen datos. En el caso de los contenedores que utilizan la imagen `nginx` se creará un fichero `index.html` por defecto. Si queremos añadir datos a nuestro volumen, podemos hacerlo de la siguiente manera:
+
+```bash
+docker cp web-content/. devtest3:/usr/share/nginx/html/
+```
 
 
-#Puedes comprobar que el volumen se ha creado correctamente
-docker volume ls
+### Asociar el volúmens a varios contenedores
 
-#Puedo asociar varios contenedores al mismo volumen a la vez
+Puedes asociar varios contenedores al mismo volumen a la vez
+
+```bash
 docker container run -dit --name my-container2 \
     --mount source=my-data,target=/vol2 \
     alpine
+```
 
 #Para comprobar a qué contenedores está asociado un volumen
 docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
