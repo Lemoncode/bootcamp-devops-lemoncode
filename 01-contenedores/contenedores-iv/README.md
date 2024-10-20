@@ -110,89 +110,86 @@ docker container run -dit --name my-container2 \
     alpine
 ```
 
-#Para comprobar a qué contenedores está asociado un volumen
+Si quisieras comprobar a qué contenedores está asociado un volumen:
+
+```bash	
 docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
+```
 
-#Inspeccionar el volumen
+### Inspeccionar el volumen
+
+Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando:
+
+```bash
 docker volume inspect my-data
+```
 
-#En Mac y Windows no podemos ver el contenido de la ruta donde se guardan los volúmenes. 
-#En Linux podríamos:
-ssh gis@137.135.216.143
+Ahora vamos a añadir algunos datos a nuestro volumen:
 
-#Creamos en este tipo de host los volumenes anteriores, si no estás trabajando en Linux
-sudo docker container run -dit --name my-container \
-    --mount source=my-data,target=/vol \
-    alpine
-sudo docker volume create data
+```bash
+docker cp web-content/. my-container:/vol
+```
 
-#Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando
-sudo docker volume inspect my-data
-#Esta es la ruta donde Docker almacena los volúmenes
-sudo ls -l /var/lib/docker/volumes
-exit
+Ahora voy a eliminar el contenedor:
 
-#Ahora vamos a añadir algunos datos a nuestro volumen
-docker container exec -it my-container sh
-echo "Hola Lemoncoders!" > /vol/file1
-ls -l /vol
-cat /vol/file1
-exit
-
-#Ahora voy a eliminar el contenedor
+```bash
 docker rm my-container -f
+```
 
-#Pero el volumen todavía existe
+Pero el volumen todavía existe
+
+```bash
 docker volume ls
+```
 
-#Por lo que puedo crear un nuevo contenedor y volver a atachar el volumen que tenía con mis datos
+Por lo que puedo crear un nuevo contenedor y volver a atachar el volumen que tenía con mis datos:
+
+```bash
 docker container run -dit --name another-container \
     --mount source=my-data,target=/vol \
     alpine
+```
 
-#Comprueba que tu archivo file1 sigue ahí
-docker container exec -it another-container sh
-ls -l /vol
-cat /vol/file1
-exit
+### Eliminar un volumen específico
 
+Para eliminar un volumen específico, utiliza el comando `docker volume rm` seguido del nombre del volumen. Por ejemplo:
 
-
-####  Backups ####
-#Creo un contenedor con un volumen llamado dbdata. En este caso voy a utilizar la opción -v en lugar de --mount
-docker run -dit -v dbdata:/dbdata --name dbstore ubuntu /bin/bash
-
-#Compruebo que efectivamente el volumen dbdata se ha generado utilizando el parámetro -v
-docker volume ls
-
-#Ahora copio algunos ficheros dentro del volumen
-docker cp some-files/. dbstore:/dbdata
-
-#Compruebo que los archivos están ahí
-docker exec dbstore ls /dbdata
-
-#Creo un nuevo contenedor y monto el volumen del contenedor dbstore
-#Ejecuto el comando tar que comprime el contenido
-docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
-
-#Eliminar un volumen específico 
+```bash
 docker volume rm data
+```
 
-#No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
+No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
+
+```bash	
 docker volume rm my-data
+```
 
-#Eliminar todos los volumenes que no esté atachados a un contenedor
+### Eliminar todos los volumenes que no esté atachados a un contenedor
+
+Cuidado con este comando porque eliminará todos los volúmenes que no estén atachados a un contenedor. Para eliminar todos los volúmenes que no estén atachados a un contenedor, utiliza el comando `docker volume prune` seguido de la opción `-f`. Por ejemplo:
+
+```bash
 docker volume prune -f
+```
 
+## Tmpfs mount
 
-#Tmpfs mount
+La última forma de almacenar datos en Docker es utilizando un tmpfs mount. Un tmpfs mount es un sistema de archivos temporal que se almacena en la memoria RAM de tu host. Esto significa que si apagas tu máquina, perderás todos los datos que hayas almacenado en tu contenedor.
+
+```bash
 docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
 docker container inspect tmptest 
+```
 
-#También se puede usar el parámetro --tmpfs
+También se puede usar el parámetro --tmpfs
+
+```bash	
 docker run -dit --name tmptest2 --tmpfs /app nginx:latest
+```
 
+```bash	
 docker container inspect tmptest2 | grep "Tmpfs" -A 2
+```
 
 
 ### Monitorización ###
