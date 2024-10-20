@@ -192,61 +192,69 @@ docker container inspect tmptest2 | grep "Tmpfs" -A 2
 ```
 
 
-### Monitorización ###
+## Monitorización 
 
-# Eventos de docker
+En Docker podemos monitorizar los contenedores y los volúmenes. Para ello, Docker nos proporciona una serie de comandos que nos permiten ver en tiempo real lo que está ocurriendo en nuestro host.
+
+### Eventos
+
+Uno de ellos es el comando `docker events`. Este comando nos permite ver en tiempo real los eventos que están ocurriendo en nuestro host. Por ejemplo, si creamos un contenedor, veremos un evento de tipo `create` y si eliminamos un contenedor, veremos un evento de tipo `destroy`.
+
+Para hacer la prueba de esto, abre un terminal y ejecuta el siguiente comando:
+
+```bash
 docker events
+```
 
-#Como los eventos son en tiempo real, necesitamos crear/modificar/eliminar algo que nos permita generar dichos eventos.
-#Abre otro terminal y ejecuta estos comando:
-docker run --name prueba -d ubuntu sleep 100
+Ahora abre otro terminal y crea un contenedor:
+
+```bash
+docker run -d --name prueba -d ubuntu sleep 100
+```
+
+Ahora crea un volumen:
+
+```bash
 docker volume create prueba
+```
+
+Ahora descarga una imagen:
+
+```bash
 docker pull busybox
+```
 
-#Métricas de un contenedor
+### Métricas de un contenedor
 
-#Puedes ver las métricas de un contenedor con docker stats. Este comando muestra CPU, memoria en uso, límite de memoria y red
+Otro dato que podemos ver es el uso de CPU, memoria y red de un contenedor. Para ello, Docker nos proporciona el comando `docker stats`. Este comando nos permite ver en tiempo real el uso de CPU, memoria y red de un contenedor.
+
+Para verlo, vamos a crear un contenedor que haga ping a un servidor. Para ello, ejecuta el siguiente comando:
+
+```bash
 docker run --name ping-service -d alpine ping docker.com 
+```
 
+Y ahora ejecuta el siguiente comando:
+
+```bash
 docker stats ping-service
+```
 
-#Otro comando que puede ser útil es el que nos dice cuánto espacio estamos usando del disco por "culpa" de Docker
+Esta información también puedes verla en Docker Desktop, haciendo clic sobre el contenedor y seleccionando la pestaña de Stats.
+
+### Cuánto espacio estamos usando del disco por "culpa" de Docker
+
+Otro comando que puede ser útil es el que nos dice cuánto espacio estamos usando del disco por "culpa" de Docker:
+
+```bash
 docker system df
+```
 
-#Recolectar métricas de Docker con Prometheus
-#Docker Desktop for Mac / Docker Desktop for Windows: Click en el icono de Docker en la barra de Mac/Window, selecciona Preferencias > Docker Engine. Pega la siguiente configuración:  
-{
-  "metrics-addr" : "127.0.0.1:9323",
-  "experimental" : true
-}
 
-#Con esta configuración Docker expondrá las metricas por el puerto 9323.
-#Lo siguiente que necesitamos es ejecutar un servidor de Prometheus. El archivo prometheus-config.yml tiene la configuración de este.
-docker run --name prometheus-srv --mount type=bind,source="$(pwd)"/prometheus-config.yml,target=/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus
+### Cómo ver los logs de un contenedor
 
-#Ahora puedes acceder a tu servidor de Prometheus a través de http://localhost:9090. Verás que aparece en Targets pero no podrás acceder a los endpoints si utilizas Docker for Mac/Windows
-#Para comprobar que las gráficas funcionan correctamente, genera N contenedores que estén haciendo continuamente ping
-docker run -d alpine ping docker.com 
+Aunque ya lo vimos en alguna clase anterior, es importante recordar que para ver los logs de un contenedor, podemos utilizar el comando `docker logs`. Por ejemplo, si queremos ver los logs del contenedor `ping-service`, ejecuta el siguiente comando:
 
-#Verás que la gráfica con la métrica engine_daemon_network_actions_seconds_count genera picos. Después de haberlo probado elimina los contenedores
-
-#Ver esta información en un Dashboard de Grafana
-docker run -d -p 3000:3000 grafana/grafana
-
-#Cómo ver los logs de un contenedor
-docker logs devtest
-
-#docker logs en fluentd
-
-#Archivo de configuración de fluentd
-cat fluentd/in_docker.conf
-
-#Inicia fluentd en un contenedor. Utilizo bind mount para montar el contenido de in_docker.conf en el archivo fluentd/etc/fluent.conf
-#asegurate de que estás en 01-contenedores/contenedores-v
-docker run -it -p 24224:24224 -v "$(pwd)"/fluentd/in_docker.conf:/fluentd/etc/test.conf -e FLUENTD_CONF=test.conf fluent/fluentd:latest
-
-#Arranca un contenedor y lanza algunos mensajes a la salida estándar
-docker run --rm -p 3030:80 --log-driver=fluentd nginx
-
-#UI para ver los logs de Fluentd
-docker run -d -p 9292:9292 -p 24224:24224 dvladnik/fluentd-ui #copia el contenido del archivo de configuración en 
+```bash
+docker logs ping-service
+```
