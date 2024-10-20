@@ -20,7 +20,7 @@ Para crear un bind mount, utiliza la opción `--mount` o `-v` al crear un conten
 ```bash
 cd 01-contenedores/contenedores-iv
 
-docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+docker run -d --name halloween-web --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/ -p 8080:80 nginx
 ```
 
 Si analizamos este comando tenemos:
@@ -28,28 +28,27 @@ Si analizamos este comando tenemos:
 - `docker run`: Crea y arranca un contenedor.
 - `-d`: Lo hace en segundo plano.
 - `--name devtest`: Le pone nombre al contenedor.
-- `--mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/`: Crea un bind mount. El tipo de montaje es bind, la carpeta de origen es la carpeta actual (`$(pwd)`) más `dev-folder` y la carpeta de destino es `/usr/share/nginx/html/`.
+- `--mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/`: Crea un bind mount. El tipo de montaje es bind, la carpeta de origen es la carpeta actual (`$(pwd)`) más `web-content` y la carpeta de destino es `/usr/share/nginx/html/`.
 
 > [!NOTE]
 > Es comendable utilizar la opción `--mount` en lugar de `-v` o `--volume` porque es más explícito y fácil de leer.
 
 
-Si cambias el contenido de la carpeta `dev-folder` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
+Si cambias el contenido de la carpeta `web-content` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
 
 #### Usar el bind mount como read-only
 
 También puedes montar un bind mount como read-only. Esto significa que desde tu máquina podrás cambiar el contenido sin problemas pero desde dentro del contenedor no se podrá. Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
 
 ```bash
-docker rm -f devtest
-docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
-docker inspect devtest
+docker run -d --name halloween-readonly --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker inspect halloween-readonly
 ```
 
 Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local:
 
 ```bash
-docker container exec -it devtest sh
+docker container exec -it halloween-readonly sh
 ls /usr/share/nginx/html
 touch /usr/share/nginx/html/index2.html 
 exit
@@ -66,7 +65,7 @@ Los volúmenes son una forma de almacenar datos de forma persistente en Docker. 
 Para crear un volumen, utiliza el comando `docker volume create` seguido del nombre del volumen. Por ejemplo:
 
 ```bash
-docker volume create lemoncode-data
+docker volume create halloween-data
 ```
 
 Para comprobar cuántos volúmenes tienes en tu host puedes utilizar este comando:
@@ -78,25 +77,25 @@ docker volume ls
 Si quisieramos utilizar este volumen en un contenedor, podríamos hacerlo de la siguiente manera:
 
 ```bash
-docker run -d --name devtest2 --mount source=lemoncode-data,target=/usr/share/nginx/html/ -p 8081:80 nginx
+docker run -d --name halloween-volume --mount source=halloween-data,target=/usr/share/nginx/html/ -p 8081:80 nginx
 ```
 
-En este caso el volumen `lemoncode-data` se ha montado en la carpeta `/usr/share/nginx/html/` del contenedor `devtest2`.
+En este caso el volumen `halloween-data` se ha montado en la carpeta `/usr/share/nginx/html/` del contenedor `halloween-volume`.
 
 ### Crear un contenedor que a su vez crea un volumen
 
 También es posible crear un contenedor que a su vez cree un volumen.
 
 ```bash
-docker run -d --name devtest3 -v web-data:/usr/share/nginx/html/ -p 8082:80 nginx
+docker run -d --name halloween-demo -v web-data:/usr/share/nginx/html/ -p 8082:80 nginx
 ```
 
-En este caso, al ejecutarse el contenedor `devtest3` se creará un volumen llamado `web-data` que se montará en la carpeta `/usr/share/nginx/html/` del contenedor.
+En este caso, al ejecutarse el contenedor `halloween-demo` se creará un volumen llamado `web-data` que se montará en la carpeta `/usr/share/nginx/html/` del contenedor.
 
 Estos volumenes de primeras no tienen datos. En el caso de los contenedores que utilizan la imagen `nginx` se creará un fichero `index.html` por defecto. Si queremos añadir datos a nuestro volumen, podemos hacerlo de la siguiente manera:
 
 ```bash
-docker cp web-content/. devtest3:/usr/share/nginx/html/
+docker cp web-content/. halloween-demo:/usr/share/nginx/html/
 ```
 
 
@@ -105,15 +104,13 @@ docker cp web-content/. devtest3:/usr/share/nginx/html/
 Puedes asociar varios contenedores al mismo volumen a la vez
 
 ```bash
-docker container run -dit --name my-container2 \
-    --mount source=my-data,target=/vol2 \
-    alpine
+docker container run -dit --name second-halloween-web --mount source=halloween-data,target=/usr/share/nginx/html nginx
 ```
 
 Si quisieras comprobar a qué contenedores está asociado un volumen:
 
 ```bash	
-docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
+docker ps --filter volume=halloween-data --format "table {{.Names}}\t{{.Mounts}}"
 ```
 
 ### Inspeccionar el volumen
@@ -121,33 +118,7 @@ docker ps --filter volume=my-data --format "table {{.Names}}\t{{.Mounts}}"
 Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando:
 
 ```bash
-docker volume inspect my-data
-```
-
-Ahora vamos a añadir algunos datos a nuestro volumen:
-
-```bash
-docker cp web-content/. my-container:/vol
-```
-
-Ahora voy a eliminar el contenedor:
-
-```bash
-docker rm my-container -f
-```
-
-Pero el volumen todavía existe
-
-```bash
-docker volume ls
-```
-
-Por lo que puedo crear un nuevo contenedor y volver a atachar el volumen que tenía con mis datos:
-
-```bash
-docker container run -dit --name another-container \
-    --mount source=my-data,target=/vol \
-    alpine
+docker volume inspect halloween-data
 ```
 
 ### Eliminar un volumen específico
@@ -155,13 +126,13 @@ docker container run -dit --name another-container \
 Para eliminar un volumen específico, utiliza el comando `docker volume rm` seguido del nombre del volumen. Por ejemplo:
 
 ```bash
-docker volume rm data
+docker volume rm halloween-data
 ```
 
 No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
 
 ```bash	
-docker volume rm my-data
+docker volume rm halloween-data
 ```
 
 ### Eliminar todos los volumenes que no esté atachados a un contenedor
@@ -177,7 +148,7 @@ docker volume prune -f
 La última forma de almacenar datos en Docker es utilizando un tmpfs mount. Un tmpfs mount es un sistema de archivos temporal que se almacena en la memoria RAM de tu host. Esto significa que si apagas tu máquina, perderás todos los datos que hayas almacenado en tu contenedor.
 
 ```bash
-docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx:latest
+docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx
 docker container inspect tmptest 
 ```
 
