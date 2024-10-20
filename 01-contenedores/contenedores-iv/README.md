@@ -229,3 +229,7 @@ Aunque ya lo vimos en alguna clase anterior, es importante recordar que para ver
 ```bash
 docker logs ping-service
 ```
+
+## Docker extensions
+
+Existen varias extensiones de Docker que nos permiten monitorizar nuestros contenedores de una forma más visual. Puedes encontrarlas en el apartado de extensiones de Docker Desktop o a través del marketplace: https://hub.docker.com/search?q=&type=extension&sort=pull_count&order=desc
