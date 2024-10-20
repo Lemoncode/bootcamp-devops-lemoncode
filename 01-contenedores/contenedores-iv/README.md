@@ -2,7 +2,48 @@
 
 ![Docker](imagenes/Cómo%20gestionar%20el%20almacenamiento%20en%20Docker.jpeg)
 
+
+En algún momento tus contenedores morirán y tendrás que volver a levantarlos. Si no has guardado los datos que tenían, perderás toda la información que tenían. Por eso es importante saber cómo gestionar el almacenamiento en Docker.
+
+Existen diferentes formas de almacenar datos en Docker. En este módulo vamos a ver las siguientes:
+
+- Bind mounts
+- Volumenes
+- Tmpfs mount
+
+## Bind mounts
+
+Un bind mount es un enlace directo entre una carpeta en tu host y una carpeta en tu contenedor. Esto significa que si cambias algo en la carpeta del host, también cambiará en la carpeta del contenedor y viceversa.
+
+Para crear un bind mount, utiliza la opción `--mount` o `-v` al crear un contenedor. Por ejemplo:
+
+```bash
 cd 01-contenedores/contenedores-iv
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
+```
+
+Si cambias el contenido de la carpeta `dev-folder` en tu host, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
+
+#### Usar el bind mount como read-only
+
+Tambi´n puedes montar un bind mount como read-only. Esto significa que no podrás escribir en la carpeta del contenedor. Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
+
+```bash
+docker rm -f devtest
+docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
+docker inspect devtest
+```
+
+Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local:
+
+```bash
+docker container exec -it devtest sh
+ls /usr/share/nginx/html
+touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
+exit
+```
+
+## Volúmenes
 
 #Listar los volumenes en el host
 docker volume ls
@@ -74,29 +115,6 @@ ls -l /vol
 cat /vol/file1
 exit
 
-
-## Bind mounts ##
-
-#Se utiliza cuando quieres montar un archivo o directorio dentro de un contenedor
-cd 01-contenedores/contenedores-iv
-
-#dev-folder es el directorio que voy a montar dentro de mi contenedor
-#con pwd recupero la carpeta actual
-pwd
-docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/ -p 8080:80 nginx
-docker inspect devtest
-#Ahora cambia en el host el contenido de la carpeta dev-folder
-
-#Usar el bind mount como read-only
-docker rm -f devtest
-docker run -d --name devtest --mount type=bind,source="$(pwd)"/dev-folder,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
-docker inspect devtest
-
-#Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local
-docker container exec -it devtest sh
-ls /usr/share/nginx/html
-touch /usr/share/nginx/html/index2.html #Dará error porque el montaje está en modo read-only
-exit
 
 
 ####  Backups ####
