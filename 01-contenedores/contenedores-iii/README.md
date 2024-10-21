@@ -200,6 +200,6 @@ Si ahora vamos a Docker Hub, deberíamos ver la imagen que acabamos de subir.
 También puedes añadir a alias a las imágenes existentes para que no tengas que volver a hacer el proceso de build:
 
 ```bash
-docker tag doom-web:v1 0GiS0/doom-web:v2
-docker push 0GiS0/doom-web:v2
+docker tag doom-web:v1 0gis0/doom-web:v2
+docker push 0gis0/doom-web:v2
 ```
