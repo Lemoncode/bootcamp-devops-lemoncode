@@ -154,3 +154,52 @@ GitHub Copilot es una extensión para tu IDE que utiliza IA para ayudarte a prog
 Una vez la tengas, a diferencia de lo anterior, es capaz de generar el Dockerfile teniendo como contexto el código que tienes en tu editor.
 
 ![GitHub Copilot](imagenes/Dockerfile%20usando%20GH%20Copilot.png)
+
+## Publicar nuestras imágenes en Docker Hub
+
+Para poder publicar nuestras imágenes en Docker Hub, lo primero que necesitamos es tener una cuenta en Docker Hub. Si no tienes una, puedes crear una cuenta gratuita en [https://hub.docker.com/](https://hub.docker.com/). Hay un plan gratuito que te permite tener ilimitados repositorios públicos y un repositorio privado.
+
+Una vez que la tengas, necesitas hacer login bien a través del terminal:
+
+```bash
+docker login
+```
+
+O bien a través de Docker Desktop.
+
+### Bautizar las imagenes correctamente
+
+Para poder publicar nuestras imágenes en Docker Hub, necesitamos bautizarlas correctamente. El nombre de la imagen debe seguir el siguiente formato:
+
+```
+<nombre-de-usuario-o-organización-en-docker-hub>/<nombre-de-la-imagen>:<tag>
+```
+
+Por ejemplo, si mi usuario en Docker Hub es `0GiS0` y la imagen se llaman `doom-web` y le quiero poner el tag `v1`, el nombre de la imagen sería:
+
+```
+0GiS0/doom-web:v1
+```
+
+Si no especificamos un tag, Docker utilizará el tag `latest` por defecto.
+
+Vamos a probarlo:
+
+```bash
+docker build -t 0GiS0/doom-web:v1 .
+```
+
+Una vez que tenemos la imagen creada, necesitamos hacer push de la imagen a Docker Hub:
+
+```bash
+docker push 0GiS0/doom-web:v1
+```
+
+Si ahora vamos a Docker Hub, deberíamos ver la imagen que acabamos de subir.
+
+También puedes añadir a alias a las imágenes existentes para que no tengas que volver a hacer el proceso de build:
+
+```bash
+docker tag doom-web:v1 0GiS0/doom-web:v2
+docker push 0GiS0/doom-web:v2
+```
