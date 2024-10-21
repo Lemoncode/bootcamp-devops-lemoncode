@@ -33,6 +33,12 @@ Si analizamos este comando tenemos:
 > [!NOTE]
 > Es comendable utilizar la opción `--mount` en lugar de `-v` o `--volume` porque es más explícito y fácil de leer.
 
+Si quisieras hacerlo con -v
+
+```bash
+docker run -d --name halloween-web-v -v "$(pwd)"/web-content:/usr/share/nginx/html/ -p 8081:80 nginx
+```
+
 
 Si cambias el contenido de la carpeta `web-content` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
 
@@ -41,8 +47,7 @@ Si cambias el contenido de la carpeta `web-content` en tu máquina local, tambi�
 También puedes montar un bind mount como read-only. Esto significa que desde tu máquina podrás cambiar el contenido sin problemas pero desde dentro del contenedor no se podrá. Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
 
 ```bash
-docker run -d --name halloween-readonly --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/,readonly -p 8080:80 nginx
-docker inspect halloween-readonly
+docker run -d --name halloween-readonly --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/,readonly -p 8082:80 nginx
 ```
 
 Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local:
@@ -77,22 +82,28 @@ docker volume ls
 Si quisieramos utilizar este volumen en un contenedor, podríamos hacerlo de la siguiente manera:
 
 ```bash
-docker run -d --name halloween-volume --mount source=halloween-data,target=/usr/share/nginx/html/ -p 8081:80 nginx
+docker run -d --name halloween-with-volume --mount source=halloween-data,target=/usr/share/nginx/html/ -p 8083:80 nginx
 ```
 
 En este caso el volumen `halloween-data` se ha montado en la carpeta `/usr/share/nginx/html/` del contenedor `halloween-volume`.
+
+Sin embargo, en este caso deberíamos de copiar dentro de este volumen el contenido que queramos la primera vez:
+
+```bash
+docker cp web-content/. halloween-with-volume:/usr/share/nginx/html/
+```
 
 ### Crear un contenedor que a su vez crea un volumen
 
 También es posible crear un contenedor que a su vez cree un volumen.
 
 ```bash
-docker run -d --name halloween-demo -v web-data:/usr/share/nginx/html/ -p 8082:80 nginx
+docker run -d --name halloween-demo -v web-data:/usr/share/nginx/html/ -p 8084:80 nginx
 ```
 
 En este caso, al ejecutarse el contenedor `halloween-demo` se creará un volumen llamado `web-data` que se montará en la carpeta `/usr/share/nginx/html/` del contenedor.
 
-Estos volumenes de primeras no tienen datos. En el caso de los contenedores que utilizan la imagen `nginx` se creará un fichero `index.html` por defecto. Si queremos añadir datos a nuestro volumen, podemos hacerlo de la siguiente manera:
+Y de nuevo, añadir los datos a nuestro volumen:
 
 ```bash
 docker cp web-content/. halloween-demo:/usr/share/nginx/html/
@@ -104,7 +115,7 @@ docker cp web-content/. halloween-demo:/usr/share/nginx/html/
 Puedes asociar varios contenedores al mismo volumen a la vez
 
 ```bash
-docker container run -dit --name second-halloween-web --mount source=halloween-data,target=/usr/share/nginx/html nginx
+docker container run -dit --name second-halloween-web --mount source=halloween-data,target=/usr/share/nginx/html -p 8085:80 nginx
 ```
 
 Si quisieras comprobar a qué contenedores está asociado un volumen:
@@ -131,9 +142,6 @@ docker volume rm halloween-data
 
 No puedes eliminar un volumen si hay un contenedor que lo tiene atachado. Te dirá que está en uso.
 
-```bash	
-docker volume rm halloween-data
-```
 
 ### Eliminar todos los volumenes que no esté atachados a un contenedor
 
@@ -148,7 +156,7 @@ docker volume prune -f
 La última forma de almacenar datos en Docker es utilizando un tmpfs mount. Un tmpfs mount es un sistema de archivos temporal que se almacena en la memoria RAM de tu host. Esto significa que si apagas tu máquina, perderás todos los datos que hayas almacenado en tu contenedor.
 
 ```bash
-docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ nginx
+docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ -p 8086:80 nginx
 docker container inspect tmptest 
 ```
 
