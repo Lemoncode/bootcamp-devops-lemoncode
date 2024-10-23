@@ -210,7 +210,7 @@ Otro dato que podemos ver es el uso de CPU, memoria y red de un contenedor. Para
 Para verlo, vamos a crear un contenedor que haga ping a un servidor. Para ello, ejecuta el siguiente comando:
 
 ```bash
-docker run --name ping-service -d alpine ping docker.com 
+docker run --name ping-service alpine ping docker.com 
 ```
 
 Y ahora ejecuta el siguiente comando:
