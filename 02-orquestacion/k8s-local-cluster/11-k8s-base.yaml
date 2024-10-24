@@ -1,0 +1,60 @@
+---
+
+- hosts: all
+  become: true
+  tasks: 
+  - name: Read parameters
+    include_vars:
+      name: _params
+      file: .deploy.json
+      
+  - name: Disable swap
+    shell: | 
+      swapoff -a
+      set -i '/ swap /' 's/^/#/g' /etc/fstab
+
+  - name: Add the K8s repository
+    block: 
+    - name: Install GPG
+      apt:
+        name: gpg
+        state: present
+        update_cache: yes
+    - name: Add Google's apt repository gpg key
+      apt_key: 
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - name: 
+      apt_repository: 
+        repo: "deb https://apt.kubernetes.io/ kubernetes-{{ _params.k8s.flavour }} main"
+        filename: kubernetes.list
+        state: present
+
+  - name: Install and hold required packages
+    block:
+      - name: Install k8s packages
+        apt:
+          pkg: 
+          - "kubectl={{ _params.k8s.package_version }}"
+          - "kubelet={{ _params.k8s.package_version }}"
+          - "kubeadm={{ _params.k8s.package_version }}"
+          state: present
+      - name: Hold k8s package
+        vars:
+          packages: [kubectl, kubelet, kubeadm]
+        dpkg_selections:
+          name: "{{ item }}"
+          selection: hold
+        with_items: 
+        - "{{ packages }}"
+
+  - name: Services of containerd and kubelet ensure started
+    vars:
+      services: [containerd, kubelet]
+    systemd:
+      name: "{{ item }}"
+      state: restarted
+    with_items: 
+        - "{{ services }}"
+
+
