@@ -1,8 +1,9 @@
-const express = require('express'),
-    mongoose = require('mongoose'),
-    bodyParser = require('body-parser'),
-    cors = require('cors'),
-    app = express();
+const Topic = require("./models/topics");
+const express = require("express"),
+  mongoose = require("mongoose"),
+  bodyParser = require("body-parser"),
+  cors = require("cors"),
+  app = express();
 
 //configure CORS
 app.use(cors());
@@ -13,47 +14,64 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 8080;
 
-mongoose.connect('mongodb://mongodb:27017', err => {
-    if (err)
-        throw err;
-    console.log('Connected to mongodb');
-});
+const delay = () =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res();
+    }, 1000);
+  });
 
-//mongoDB service
-var Topic = require('./models/topics');
+const connect = async () => {
+  await delay();
+  try {
+    await mongoose.connect("mongodb://mongodb:27017/test");
+    console.log("connected to test");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 //Routes
-var router = express.Router();
+const router = express.Router();
 
-router.post('/topics', (req, res) => {
-    console.log('[POST] Topics');
+router.post("/topics", async (req, res) => {
+  console.log("[POST] Topics");
 
-    var topic = new Topic();
-    topic.name = req.body.name;
+  const topic = new Topic();
+  topic.name = req.body.name;
 
-    topic.save(err => {
-        if (err)
-            res.send(err);
-
-        res.json({ message: 'Topic created!' });
-    });
+  try {
+    const result = await topic.save();
+    console.log(result);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.send(JSON.parse(error));
+  }
 });
 
-router.get('/topics', (req, res) => {
-    console.log('[GET] Topics');
+router.get("/topics", async (_, res) => {
+  console.log("[GET] Topics");
+  console.log(Topic);
 
-    Topic.find((err, topics) => {
-        if (err)
-            res.send(err);
-
-        res.json(topics);
-    });
+  try {
+    const collection = await Topic.find({});
+    const topics = collection.map((t) => ({
+      id: t._id.toString(),
+      name: t.name,
+    }));
+    res.send(topics);
+  } catch (error) {
+    console.error(err);
+    res.send(JSON.parse(error));
+  }
 });
 
 //all routes will be prefixed with /api
-app.use('/api', router);
+app.use("/api", router);
 
 //start the server
-app.listen(port, () => {
-    console.log(`Server up and running on port ${port}`);
+app.listen(port, async () => {
+  console.log(`Server up and running on port ${port}`);
+  await connect();
 });

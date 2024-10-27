@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var TopicSchema = new Schema({
+const TopicSchema = new Schema({
     name: String
 });
 
