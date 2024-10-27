@@ -162,6 +162,10 @@ resource "aws_lb_target_group" "nginx" {
 
 ```
 
+```bash
+terraform validate
+```
+
 ### Paso 2. Crear el plan
 
 Ahora estamos listos, para generar el `plan`, pero antes registrar las credenciales, si no están registradas en la terminal:
