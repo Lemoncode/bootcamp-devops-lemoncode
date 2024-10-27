@@ -1,0 +1,31 @@
+# ---- Base Node ----
+FROM node:20-alpine AS base
+# set working directory
+WORKDIR /app
+# Copy project file
+COPY package.json package-lock.json ./
+
+
+# ---- Dependencies ----
+FROM base AS dependencies
+# Install dependencies
+RUN npm install
+
+# ---- Test ----
+FROM dependencies AS test
+# Copy all files for testing
+COPY . .
+# Run tests
+RUN npm run test
+
+# ---- Release ----
+FROM base AS release
+# Add environment variables
+# ENV NODE_ENV production
+# Copy only necessary files
+RUN npm install --omit=dev
+COPY . .
+# Expose port and define CMD
+EXPOSE 3000
+# Specify what command it'll execute when you create a container
+CMD ["npm", "start"]

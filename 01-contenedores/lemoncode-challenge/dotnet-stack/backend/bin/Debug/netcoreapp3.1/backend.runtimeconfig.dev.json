@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "/Users/gis/.dotnet/store/|arch|/|tfm|",
-      "/Users/gis/.nuget/packages"
-    ]
-  }
-}

@@ -34,3 +34,5 @@ private.readme.md
 
 # Vagrant 
 .vagrant
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.assets.cache
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.GeneratedMSBuildEditorConfig.editorconfig

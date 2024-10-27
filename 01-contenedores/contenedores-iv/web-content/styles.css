@@ -1,0 +1,991 @@
+:root {
+    --color-background: #837391;
+    /* Green lemon */
+    /* --color-background: #C3D4A8; */
+    --color-primary: #D8D1C0;
+    --color-secondary: #A99378;
+    --color-tertiary: #272728;
+    --color-shadow: #695C74;
+    font-size: 0.9vw;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::after,
+*::before {
+    content: "";
+}
+
+body {
+    background: var(--color-background);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.skeleton {
+    width: 12rem;
+    height: 20rem;
+    position: relative;
+}
+
+/* Head */
+
+.head {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 43%;
+    animation: skeletonJump 0.5s 4s ease-in-out forwards;
+}
+
+.head::before {
+    position: absolute;
+    top: 0.1rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 30%;
+    height: 50%;
+    background: var(--color-primary);
+    z-index: -2;
+}
+
+.head-hemispheres {
+    position: absolute;
+    width: 100%;
+    height: 85%;
+    overflow: hidden;
+    z-index: -2;
+}
+
+.head-hemispheres::before,
+.head-hemispheres::after {
+    width: 75%;
+    height: 110%;
+    position: absolute;
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.head-hemispheres::before {
+    left: 0;
+}
+
+.head-hemispheres::after {
+    right: 0;
+}
+
+.eye {
+    position: absolute;
+    width: 2.8rem;
+    height: 2.8rem;
+    background: var(--color-tertiary);
+    border-radius: 50%;
+    bottom: 30%;
+    z-index: 2;
+}
+
+.eye-shadow {
+    position: absolute;
+    bottom: calc(30% + 0.3rem);
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    z-index: 1;
+}
+
+.eye-left,
+.eye-shadow-left {
+    left: 20%;
+    animation:
+        faceX1 0.7s 1s forwards,
+        faceX2 0.7s 1.8s ease-out forwards,
+        faceX3 0.7s 2.7s forwards;
+}
+
+.eye-right,
+.eye-shadow-right {
+    right: 20%;
+    animation:
+        faceX1 0.7s 1s forwards,
+        faceX2 0.7s 1.8s forwards,
+        faceX3 0.7s 2.7s ease-out forwards;
+}
+
+.nose {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1.3rem;
+    height: 0.7rem;
+    background: var(--color-tertiary);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    z-index: 1;
+    animation:
+        faceX1 0.7s 1s forwards,
+        faceX2 0.7s 1.8s forwards,
+        faceX3 0.7s 2.7s forwards;
+}
+
+.nose-shadow {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1.3rem;
+    height: 1.1rem;
+    background: var(--color-secondary);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    animation:
+        faceX1 0.7s 1s forwards,
+        faceX2 0.7s 1.8s forwards,
+        faceX3 0.7s 2.7s forwards;
+}
+
+.mouth {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: var(--color-primary);
+    width: 50%;
+    height: 16%;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+}
+
+.teeth {
+    position: absolute;
+    bottom: 0;
+    width: 0.4rem;
+    height: 1rem;
+    background: var(--color-secondary);
+    border-radius: 3rem 3rem 0 0;
+    animation:
+        faceX1 0.7s 1s forwards,
+        faceX2 0.7s 1.8s forwards,
+        faceX3 0.7s 2.7s forwards;
+}
+
+.teeth-left {
+    left: 34%;
+}
+
+.teeth-right {
+    right: 34%;
+}
+
+/* backbone and body */
+
+.below-head-container {
+    width: 75%;
+    left: 12.5%;
+    position: absolute;
+    height: 57%;
+    bottom: 0;
+}
+
+.backbone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 0;
+    height: 45%;
+    width: 1rem;
+    background: var(--color-secondary);
+    animation: skeletonJump 0.5s 4s ease-in-out forwards;
+}
+
+.backbone::before {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% + 3rem);
+    border-radius: 1rem;
+    height: 90%;
+    background: var(--color-secondary);
+}
+
+.body {
+    position: absolute;
+    top: calc(0.2 * 45%);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Primary Body Skeleton */
+
+.body-inner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 62%;
+    animation: skeletonJump 0.5s 4s ease-in-out forwards;
+}
+
+.main-bone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1rem;
+    height: 95%;
+    background: var(--color-primary);
+}
+
+.shoulder {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 2.2rem;
+    border-radius: 2rem;
+    background: var(--color-primary);
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+}
+
+.rib-cage {
+    position: absolute;
+    width: 1rem;
+    height: 0.8rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.rib-cage-1 {
+    top: 1.5rem;
+}
+
+.rib-cage-2 {
+    top: 2.8rem;
+}
+
+.rib-cage::before {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    height: 100%;
+    width: 2.7rem;
+    background: var(--color-primary);
+    transform: skew(0, 10deg);
+}
+
+.rib-cage::after {
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    height: 100%;
+    width: 2.7rem;
+    background: var(--color-primary);
+    transform: skew(0, -10deg);
+}
+
+.kidney-cover {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5.7rem;
+    height: 5.7rem;
+    border-radius: 50%;
+    opacity: 1;
+    z-index: 1;
+    background: var(--color-primary);
+    clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%);
+}
+
+.kidney {
+    position: absolute;
+    bottom: -0.3rem;
+    width: 2.8rem;
+    height: 1.5rem;
+    background: red;
+    border-radius: 1rem;
+    background: var(--color-primary);
+    z-index: 1;
+}
+
+.kidney-left {
+    right: 50%;
+    transform-origin: right center;
+    transform: rotate(35deg);
+}
+
+.kidney-right {
+    left: 50%;
+    transform-origin: left center;
+    transform: rotate(-35deg);
+}
+
+/* Hands */
+
+.hand {
+    position: absolute;
+    top: 0;
+    width: 1.5rem;
+    height: calc(100% + 1.5rem);
+}
+
+.hand-left {
+    left: -1.4rem;
+}
+
+.hand-right {
+    right: -1.4rem;
+}
+
+.hand-top {
+    position: absolute;
+    top: 0;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary);
+}
+
+.arm,
+.forearm {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1rem;
+    height: 2.2rem;
+    background: var(--color-primary);
+}
+
+.arm {
+    top: 0.5rem;
+    transform-origin: top center;
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+}
+
+.arm-below-container {
+    position: absolute;
+    top: 2.9rem;
+    height: 100%;
+    width: 100%;
+    transform-origin: top center;
+}
+
+.hand-left .arm {
+    animation:
+        armRotate1 0.3s 1s forwards,
+        armRotate2 0.3s 1.4s forwards,
+        armRotate3 0.3s 1.8s forwards,
+        armRotate6 0.3s 3.4s forwards,
+        armRotate7 0.3s 3.8s forwards;
+}
+
+.hand-right .arm {
+    animation:
+        armRotate4 1.2s 1.8s forwards,
+        armRotate5 0.3s 3s forwards;
+}
+
+.hand-left .arm-below-container {
+    animation:
+        forearmRotate1 0.3s 1.0s forwards,
+        forearmRotate2 0.3s 1.4s forwards,
+        forearmRotate3 0.3s 1.8s forwards,
+        forearmRotate6 0.3s 3.4s forwards,
+        forearmRotate7 0.3s 3.8s forwards;
+}
+
+.hand-right .arm-below-container {
+    animation:
+        forearmRotate4 1.2s 1.8s forwards,
+        forearmRotate5 0.3s 3s forwards;
+}
+
+.forearm {
+    top: 0;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+}
+
+.wrist {
+    position: absolute;
+    top: 2.45rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1rem;
+    height: 0.7rem;
+    background: var(--color-primary);
+    border-radius: 1rem;
+}
+
+.finger-cover {
+    position: absolute;
+}
+
+.finger {
+    position: absolute;
+    top: 3.4rem;
+}
+
+.hand-right .finger {
+    transform: scaleX(-1);
+    left: auto;
+}
+
+.finger-pinky {
+    left: 0;
+}
+
+.finger-ring {
+    left: 0.4rem;
+}
+
+.finger-index {
+    left: 0.8rem;
+}
+
+.finger-thumb {
+    left: 1.3rem;
+    top: 3.3rem;
+}
+
+.hand-right .finger-pinky {
+    right: 0;
+}
+
+.hand-right .finger-ring {
+    right: 0.4rem;
+}
+
+.hand-right .finger-thumb {
+    right: 1.3rem;
+}
+
+.hand-right .finger-index {
+    right: 0.8rem;
+}
+
+.finger::before {
+    position: absolute;
+    top: 0;
+    width: 0.25rem;
+    border-radius: 2rem;
+    height: 0.5rem;
+    transform: rotate(5deg);
+    background: var(--color-primary);
+}
+
+.finger::after {
+    position: absolute;
+    top: 0.3rem;
+    width: 0.25rem;
+    border-radius: 2rem;
+    height: 0.5rem;
+    transform: rotate(-5deg);
+    background: var(--color-primary);
+}
+
+.finger-ring::before {
+    transform: rotate(8deg);
+}
+
+.finger-ring::after {
+    height: 0.6rem;
+    transform: rotate(-8deg);
+}
+
+.finger-index::before {
+    transform: rotate(5deg);
+}
+
+.finger-index::after {
+    height: 0.7rem;
+    transform: rotate(-4deg);
+}
+
+.finger-thumb::before {
+    transform: rotate(-20deg);
+}
+
+.finger-thumb::after {
+    transform: rotate(20deg);
+}
+
+/* Feet */
+
+.feet-container {
+    position: absolute;
+    bottom: 0;
+    height: 38%;
+    width: 100%;
+}
+
+.foot {
+    position: absolute;
+    top: -1rem;
+    height: calc(100% + 1rem);
+    width: 1rem;
+    transform-origin: top center;
+}
+
+.foot-left {
+    left: 30%;
+    animation: feetLeftJump 0.4s 4s ease-out forwards;
+}
+
+.foot-right {
+    right: 30%;
+    animation: feetRightJump 0.4s 4s ease-out forwards;
+}
+
+.thigh {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 45%;
+    background: var(--color-primary);
+    border-radius: 1px;
+}
+
+.leg {
+    position: absolute;
+    top: calc(45% + 0.3rem);
+    height: 55%;
+    width: 100%;
+    background: var(--color-primary);
+}
+
+.leg::before {
+    position: absolute;
+    top: 100%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+}
+
+.leg-right::before {
+    left: 0;
+}
+
+.leg-left::before {
+    right: 0;
+    animation: legTap 0.5s 2;
+    transform-origin: right center;
+}
+
+/* Shadow */
+
+.shadow {
+    position: absolute;
+    top: calc(100% + 0.7rem);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 100%;
+    height: 1.2rem;
+    z-index: -1;
+}
+
+.shadow::after,
+.shadow::before {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: var(--color-shadow);
+}
+
+.shadow::before {
+    right: 50%;
+    border-radius: 1rem 0 0 1rem;
+    animation:
+        shadowWidth1 0.3s 1s forwards,
+        shadowWidth2 0.3s 1.4s forwards,
+        shadowWidth3 0.3s 1.8s forwards,
+        shadowWidth6 0.3s 3.4s forwards,
+        shadowWidth7 0.3s 3.8s forwards,
+        shadowWidth8 0.4s 4s forwards;
+}
+
+.shadow::after {
+    left: 50%;
+    border-radius: 0 1rem 1rem 0;
+    animation:
+        shadowWidth4 1.2s 1.8s forwards,
+        shadowWidth5 0.3s 3s forwards,
+        shadowWidth9 0.4s 4s forwards;
+}
+
+/* Animations */
+
+@keyframes legTap {
+
+    0%,
+    100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-50%) rotate(10deg);
+    }
+}
+
+@keyframes armRotate1 {
+    to {
+        transform: rotate(90deg);
+    }
+}
+
+@keyframes armRotate2 {
+    from {
+        transform: rotate(90deg);
+    }
+
+    to {
+        transform: rotate(100deg);
+    }
+}
+
+@keyframes armRotate3 {
+    from {
+        transform: rotate(100deg);
+    }
+
+    to {
+        transform: rotate(80deg);
+    }
+}
+
+@keyframes armRotate4 {
+    0% {
+        transform: rotate(0)
+    }
+
+    33% {
+        transform: rotate(-100deg);
+    }
+
+    66% {
+        transform: rotate(-80deg);
+    }
+
+    100% {
+        transform: rotate(-100deg);
+    }
+}
+
+@keyframes armRotate5 {
+    from {
+        transform: rotate(-100deg);
+    }
+
+    to {
+        transform: rotate(0);
+    }
+}
+
+@keyframes armRotate6 {
+    from {
+        transform: rotate(80deg);
+    }
+
+    to {
+        transform: rotate(100deg);
+    }
+}
+
+@keyframes armRotate7 {
+    from {
+        transform: rotate(100deg);
+    }
+
+    to {
+        transform: rotate(140deg);
+    }
+}
+
+
+@keyframes forearmRotate1 {
+    to {
+        transform: rotate(90deg) translate(-2.4rem, 2.4rem);
+    }
+}
+
+@keyframes forearmRotate2 {
+    from {
+        transform: rotate(90deg) translate(-2.4rem, 2.4rem);
+    }
+
+    to {
+        transform: rotate(80deg) translate(-3.2rem, 2.2rem);
+    }
+}
+
+@keyframes forearmRotate3 {
+    from {
+        transform: rotate(80deg) translate(-3.2rem, 2.2rem);
+    }
+
+    to {
+        transform: rotate(100deg) translate(-1.5rem, 3rem);
+    }
+}
+
+@keyframes forearmRotate4 {
+    0% {
+        transform: rotate(0);
+    }
+
+    33% {
+        transform: rotate(-80deg) translate(3.2rem, 2.2rem);
+    }
+
+    66% {
+        transform: rotate(-110deg) translate(1.1rem, 2.8rem);
+    }
+
+    100% {
+        transform: rotate(-80deg) translate(3.2rem, 2.2rem);
+    }
+}
+
+@keyframes forearmRotate5 {
+    from {
+        transform: rotate(-80deg) translate(3.2rem, 2.2rem);
+    }
+
+    to {
+        transform: rotate(0) translate(0, 0);
+    }
+}
+
+@keyframes forearmRotate6 {
+    from {
+        transform: rotate(100deg) translate(-1.5rem, 3rem);
+        ;
+    }
+
+    to {
+        transform: rotate(80deg) translate(-3.2rem, 2.2rem);
+    }
+}
+
+@keyframes forearmRotate7 {
+    from {
+        transform-origin: top center;
+        transform: rotate(100deg);
+        top: 0.1rem;
+        right: 2.4rem;
+    }
+
+    to {
+        transform-origin: top center;
+        transform: rotate(500deg);
+        top: -1.4rem;
+        right: 1.5rem;
+    }
+}
+
+
+@keyframes shadowWidth1 {
+    to {
+        width: calc(60% + 4.5rem);
+    }
+}
+
+@keyframes shadowWidth2 {
+    from {
+        width: calc(60% + 4.5rem);
+    }
+
+    to {
+        width: calc(60% + 3rem);
+    }
+}
+
+@keyframes shadowWidth3 {
+    from {
+        width: calc(60% + 3rem);
+    }
+
+    to {
+        width: calc(60% + 2rem);
+    }
+}
+
+@keyframes shadowWidth4 {
+    0% {
+        width: 60%;
+    }
+
+    33% {
+        width: calc(60% + 5rem);
+    }
+
+    66% {
+        width: calc(60% + 3rem);
+    }
+
+    100% {
+        width: calc(60% + 5rem);
+    }
+}
+
+@keyframes shadowWidth5 {
+    from {
+        width: calc(60% + 5rem);
+    }
+
+    to {
+        width: 60%;
+    }
+}
+
+@keyframes shadowWidth6 {
+    from {
+        width: calc(60% + 2rem);
+    }
+
+    to {
+        width: calc(60% + 3rem);
+    }
+}
+
+@keyframes shadowWidth7 {
+    0% {
+        width: calc(60% + 3rem);
+    }
+
+    25% {
+        width: calc(60% + 1rem);
+    }
+
+    50% {
+        width: calc(60% + 2.5rem);
+    }
+
+    75% {
+        width: calc(60% + 1.5rem);
+    }
+
+    100% {
+        width: calc(60% + 2.9rem);
+    }
+}
+
+@keyframes shadowWidth8 {
+    0% {
+        width: calc(60% + 2.9rem);
+    }
+
+    50% {
+        width: calc(60% - 0.5rem);
+    }
+
+    100% {
+        width: calc(60% + 2.7rem);
+    }
+}
+
+@keyframes shadowWidth9 {
+    0% {
+        width: 60%;
+    }
+
+    50% {
+        width: calc(60% - 1rem);
+    }
+
+    100% {
+        width: calc(60% + 1.5rem);
+    }
+}
+
+@keyframes faceX1 {
+    to {
+        transform: translateX(-1rem);
+    }
+}
+
+@keyframes faceX2 {
+    from {
+        transform: translateX(-1rem);
+    }
+
+    to {
+        transform: translateX(1rem);
+    }
+}
+
+@keyframes faceX3 {
+    from {
+        transform: translateX(1rem);
+    }
+
+    to {
+        transform: translateX(-1rem);
+    }
+}
+
+@keyframes skeletonJump {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6rem);
+    }
+
+    100% {
+        transform: translateY(4.8rem)
+    }
+}
+
+@keyframes feetLeftJump {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3rem);
+    }
+
+    100% {
+        transform: translateY(5rem) rotate(90deg);
+    }
+}
+
+@keyframes feetRightJump {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3rem);
+    }
+
+    100% {
+        transform: translateY(5rem) rotate(-90deg);
+    }
+}
