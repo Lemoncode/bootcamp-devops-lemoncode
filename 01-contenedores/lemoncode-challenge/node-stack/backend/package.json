@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "22.x.x"
+  },
   "scripts": {
     "start": "ts-node src/app",
     "prebuild": "rimraf ./dist",
