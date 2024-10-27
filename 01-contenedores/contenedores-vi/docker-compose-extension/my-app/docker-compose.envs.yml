@@ -16,6 +16,13 @@ services:
     depends_on:
       - mongodb
     profiles: [debug]
+    # environment:
+    #   - DEBUG=${DEBUG}
+    env_file:
+      - path: ./default.env
+        required: true
+      - path: ./override.env
+        required: false
 
   mongodb:
     image: mongo:latest
