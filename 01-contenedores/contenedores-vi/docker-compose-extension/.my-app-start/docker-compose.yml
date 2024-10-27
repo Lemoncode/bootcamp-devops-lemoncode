@@ -1,0 +1,26 @@
+services:
+
+  frontend:
+    build: 
+      context: ./frontend
+      # dockerfile: Dockerfile    
+    deploy:
+      # replicas: 2
+      replicas: 1
+    ports:
+      # - 3000
+      - 3000:8080
+    depends_on:
+      - backend
+
+  backend:
+    build: 
+      context: ./backend      
+      # dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+  
+  mongodb:
+    image: mongo:latest
