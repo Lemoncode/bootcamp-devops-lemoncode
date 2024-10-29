@@ -97,6 +97,8 @@ ifconfig
 ping 172.17.0.2
 #Intento hacer ping a uno de los contenedores de la red bridge
 ping 172.18.0.2
+#Salimos del terminal asociado al contenedor
+exit
 
 #Lo que habíamos visto hasta ahora: Port Mapping
 

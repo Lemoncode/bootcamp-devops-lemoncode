@@ -17,7 +17,7 @@ docker run -dit --name mysqldb \
  -e MYSQL_DATABASE=wpdb \
  -e MYSQL_USER=wp_user \
  -e MYSQL_PASSWORD=wp_pwd \
-  mysql:5.7
+  mysql:8.0
 
 #2.1 Esto habrá hecho que se genere un volumen nuevo llamado mysql_data
 docker volume ls
@@ -29,45 +29,46 @@ docker run -dit --name wordpress \
 -v wordpress_data:/var/www/html \
 -e WORDPRESS_DB_HOST=mysqldb:3306 \
 -e WORDPRESS_DB_USER=wp_user -e WORDPRESS_DB_PASSWORD=wp_pwd -e WORDPRESS_DB_NAME=wpdb \
--p 8000:80 wordpress:latest
+-p 8000:80 wordpress:6.6.2-php8.1-apache
 
 #Este es el contenido en el volumen wordpress_data
 docker exec wordpress ls -l /var/www/html
 
 #Si quisiera eliminar todo el proceso debería de hacer
-docker rm -f wordpress mysqldb && \
-docker network rm wordpress-network && \
-docker volume rm mysql_data wordpress_data
+docker kill wordpress mysqldb && \ 
+  docker rm wordpress mysqldb && \
+  docker network rm wordpress-network && \
+  docker volume rm mysql_data wordpress_data
 
 #Y volver a relanzar todo si quisiera volver a crearlo
 
 #Lo mismo pero con Docker Compose
 cat docker-compose.yml
 
-#Levantar la aplicación con docker-compose
-docker-compose up 
+#Levantar la aplicación con docker compose
+docker compose up 
 
 #Truco: 
-docker-compose up & #con el & al final te deja utilizar el terminal, además de ver la salida
+docker compose up & #con el & al final te deja utilizar el terminal, además de ver la salida
 
 #Ejecutar en segundo plano tu aplicación con Docker Compose
-docker-compose up -d 
+docker compose up -d 
 
 #Parar la aplicación con docker-compose
-docker-compose stop
+docker compose stop
 
 #Parar y eliminar
-docker-compose down
+docker compose down
 
 #Otro de los escenarios que te puedes encontrar es que quieras que cada vez que haces un compose up
 #se genere la imagen de tu app
 cd my-app
 
 #Ejecutar y genera la imagen de tu aplicación
-docker-compose up --build &
+docker compose up --build
 
 #Con docker compose puedes ver todas las aplicaciones que se están ejecutando
-docker-compose ps #Pero sólo se ven los contenedores del proyecto que está en la carpeta actual con el nombre actual.
+docker compose ps #Pero sólo se ven los contenedores del proyecto que está en la carpeta actual con el nombre actual.
 
 #Como siempre, puedes ver todos los contenedores con docker ps
 docker ps -a
@@ -76,10 +77,13 @@ docker ps -a
 docker ps -a --filter "label=com.docker.compose.project" -q | xargs docker inspect --format='{{index .Config.Labels "com.docker.compose.project"}}'| sort | uniq
 
 #Añadir un nombre a la aplicación
-docker-compose --project-name my_wordpress up -d
+docker compose --project-name my_wordpress up -d
 
 #Si quisieramos reiniciar la aplicación
-docker-compose -p my_wordpress restart
+docker compose -p my_wordpress restart
+
+#Para limpiar ahora necesitamos referenciar el 'proyecto'
+docker compose -p my_wordpress down
 
 # Docker Swarm #
 
