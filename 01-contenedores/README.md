@@ -2,7 +2,7 @@
 
 ## Agenda
 
-### Día I: Introducción a Docker (27 de Septiembre de 2021)
+### Día I: Introducción a Docker
 
 #### Teoría
 - Introducción a Docker y por qué Docker
@@ -63,7 +63,7 @@
 #### Deberes
 
 
-### Día III: Contenerización de aplicaciones (4 de Octubre de 2021)
+### Día III: Contenerización de aplicaciones
 
 #### Teoría
 
@@ -87,7 +87,7 @@
 #### Chulera de comandos
 #### Deberes
 
-### Día IV: Almacenamiento y monitorización (5 de Octubre de 2021)
+### Día IV: Almacenamiento y monitorización
 
 #### Teoría del almacenamiento
 
@@ -140,7 +140,7 @@
 #### Resumen del apartado
 #### Chuleta de comandos
 
-### Día V: Networking (18 de Octubre de 2021)
+### Día V: Networking
 
 #### Teoría
 
@@ -172,7 +172,7 @@
 #### Chuleta de comandos
 #### Ejercicios
 
-### Día VI: Docker Compose y Docker Swarm (19 de Octubre de 2021)
+### Día VI: Docker Compose y Docker Swarm
 
 #### Teoría de Docker Compose
 
@@ -222,4 +222,4 @@
 #### Chuleta de comandos
 #### Ejercicios
 
-### Laboratorio de Docker (25 de Octubre de 2021)
+### Laboratorio de Docker
