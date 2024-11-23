@@ -1,7 +1,6 @@
-version: "3.8"
 services:
   gitlab:
-    image: 'gitlab/gitlab-ee:16.5.1-ee.0'
+    image: 'gitlab/gitlab-ee:17.6.1-ee.0'
     restart: always
     hostname: 'gitlab'
     container_name: gitlab 
@@ -18,7 +17,6 @@ services:
               alertmanager['flags'] = {'cluster.advertise-address' => "127.0.0.1:9093"}
     ports:
       - '8888:8888'
-      - '8443:8443'
       - '2222:22'
       - '5001:5001'
     volumes:
@@ -32,7 +30,7 @@ services:
             - "gitlab.local:172.40.0.2"
     shm_size: '256m'
   gitlabrunner:
-    image: 'gitlab/gitlab-runner:alpine-v16.5.0'
+    image: 'gitlab/gitlab-runner:alpine-v17.6.0'
     container_name: gitlab-runner
     depends_on:
       - gitlab

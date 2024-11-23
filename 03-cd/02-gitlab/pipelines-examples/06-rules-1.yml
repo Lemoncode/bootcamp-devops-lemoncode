@@ -1,0 +1,21 @@
+stages:
+    - stage1
+    - stage2
+    
+testjob:
+    stage: stage1
+    script:
+      - env
+      - echo "stage en $CI_COMMIT_BRANCH"
+    rules:
+      - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      - if: $CI_COMMIT_BRANCH ==  "develop"
+      - if: $CI_COMMIT_BRANCH =~ /^feature/
+
+
+testjob2:
+    stage: stage2
+    script:
+      - echo "stage en $CI_COMMIT_BRANCH"
+    rules:
+      - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop"

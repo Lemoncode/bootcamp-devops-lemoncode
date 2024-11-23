@@ -1,0 +1,20 @@
+stages:
+    - stage1
+    - stage2
+
+create-artifact:
+    stage: stage1
+    script:
+      - echo "este es mi artifact" >> artifact.txt
+    artifacts:
+      when: on_success
+      paths:
+      - "artifact.txt"
+
+     
+view-artifact:
+  stage: stage2
+  script:
+    - ls
+    - cat artifact.txt
+

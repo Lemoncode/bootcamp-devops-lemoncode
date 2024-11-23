@@ -1,0 +1,28 @@
+stages:
+  - stage1
+  
+# https://docs.gitlab.com/ee/ci/yaml/script.html#split-long-commands
+job:
+  image: ubuntu:latest
+  stage: stage1
+  before_script:
+    - apt-get update -y && apt-get install curl -y
+  script:
+    - >
+      RESULT=$(curl --silent
+      https:/www.google.es
+      )
+    - echo $RESULT
+
+job2:
+  image: ubuntu:latest
+  stage: stage1
+  before_script:
+    - apt-get update -y && apt-get install curl -y
+  script:
+    - |
+      RESULT=$(curl --silent \
+      https:/www.google.es \
+      )
+      echo $RESULT
+

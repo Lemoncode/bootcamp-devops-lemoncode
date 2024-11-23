@@ -1,9 +1,8 @@
-FROM python:3.8-slim
-MAINTAINER Sergio Ramírez  "sergio@localhost"
-COPY ./requirements.txt /app/requirements.txt
+FROM gitlab.local:5001/base_images/python:v1.0.0
+COPY requirements.txt /app/requirements.txt
+RUN python3 -m venv /app/venv
+RUN /app/venv/bin/python -m pip install -r /app/requirements.txt
+COPY bootcamp.py /app/bootcamp.py
 WORKDIR /app
-RUN pip install -r requirements.txt
-COPY bootcamp.py /app/
-ENTRYPOINT [ "python3" ]
-CMD [ "bootcamp.py" ]
+ENTRYPOINT [ "/app/venv/bin/python", "/app/bootcamp.py" ]
 EXPOSE 8080

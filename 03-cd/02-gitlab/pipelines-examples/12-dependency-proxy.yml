@@ -1,0 +1,20 @@
+stages:
+    - stage1
+default:
+    image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/python:3.8-slim
+
+testjob:
+    stage: stage1
+    image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/python:3.9-slim
+    before_script:
+      - echo "Hola mundo"
+      - env
+    script:
+        - echo "Adios mundo"
+
+testjob2:
+    stage: stage1
+    before_script:
+        - echo "Hola mundo"
+    script:
+        - echo "Adios mundo"

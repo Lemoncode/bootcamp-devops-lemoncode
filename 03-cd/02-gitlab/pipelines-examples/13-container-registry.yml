@@ -1,0 +1,37 @@
+variables:  
+    PYTHON_VERSION: "3.12"  
+    BASE_VERSION: "24.04"  
+    BASE_IMAGE_NAME: "ubuntu"  
+  
+stages:  
+    - docker
+    - kaniko
+
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+docker-build:  
+    stage: docker  
+    before_script:  
+        - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY_IMAGE  
+    script:  
+        - docker build --build-arg base_image_name=$BASE_IMAGE_NAME --build-arg python_version=$PYTHON_VERSION --build-arg base_version=$BASE_VERSION -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .  
+        - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG  
+        - echo "Pushed $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"  
+    rules:  
+        - if: $CI_COMMIT_TAG
+
+# https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
+kaniko-build:
+  stage: kaniko
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --build-arg "base_image_name=$BASE_IMAGE_NAME"
+      --build-arg "python_version=$PYTHON_VERSION"
+      --build-arg "base_version=$BASE_VERSION"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}-kaniko"
+  rules:
+    - if: $CI_COMMIT_TAG

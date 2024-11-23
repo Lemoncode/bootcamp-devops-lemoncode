@@ -1,6 +1,8 @@
 variables:
   mi_var: "Es variable global"
 
+# https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+# https://docs.gitlab.com/ee/ci/yaml/#variables
 
 stages:
     - stage1

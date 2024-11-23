@@ -1,0 +1,35 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "develop"|| $CI_COMMIT_BRANCH =~ /^feature/'
+      variables:
+        MYVARIABLE: "mi variable para feature y develop"    
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      variables:
+        MYVARIABLE: "mi variable para master"    
+
+stages:
+  - stage1
+  - stage2
+
+testjob:
+  stage: stage1
+  script:
+    - echo $MYVARIABLE
+    - exit 1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH =~ /^feature/'
+      allow_failure: true
+
+testjob2:
+  stage: stage2
+  script:
+    - echo $MYVARIABLE
+  rules:
+    - if: '$CI_COMMIT_BRANCH  ==  "master"'
+      when: manual

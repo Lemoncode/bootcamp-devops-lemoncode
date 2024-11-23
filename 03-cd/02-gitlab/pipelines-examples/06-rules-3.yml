@@ -1,0 +1,20 @@
+stages:
+  - stage1
+
+test-changes:
+    stage: stage1
+    script:
+      - echo "docker build"
+    rules:
+      - if: $CI_COMMIT_BRANCH ==  "develop"
+        changes:
+          - Dockerfile
+
+test-exists:
+    stage: stage1
+    script:
+      - echo "docker build"
+    rules:
+      - if: '$CI_COMMIT_BRANCH ==  "develop"'
+        exists:
+          - Dockerfile2

@@ -1,0 +1,23 @@
+stages:
+  - stage1
+  
+# https://docs.gitlab.com/ee/ci/yaml/script.html#split-long-commands
+stages:
+  - stage1
+
+testjob1:
+    image: python:3.9-slim 
+    stage: stage1
+    script:
+      - echo "First command line."
+      - echo "Second command line."
+      - echo "Third command line."
+
+testjob2:
+    image: python:3.9-slim 
+    stage: stage1
+    script:
+      - |
+        echo "First command line."
+        echo "Second command line."
+        echo "Third command line."

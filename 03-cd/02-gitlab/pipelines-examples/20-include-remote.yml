@@ -1,0 +1,18 @@
+include:
+  - project: 'bootcamp/test-includes'
+    ref: master
+    file: 'variables.yml'
+  - project: 'bootcamp/test-includes'
+    ref: master
+    file: 'extend_image.yml'
+  - project: 'bootcamp/test-includes'
+    ref: master
+    file: 'build.yml'
+
+
+stages:
+  - build
+
+build-job:
+    stage: build
+    extends: .image
