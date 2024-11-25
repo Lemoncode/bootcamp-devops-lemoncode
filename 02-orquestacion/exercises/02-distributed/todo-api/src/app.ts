@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
@@ -7,9 +6,12 @@ import { mapTodoEntity, mapTodoEntityCollection, mapTodoModel } from './models/t
 
 export const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors());
+
+// ------ Static files for frontend
+app.use(express.static('public'));
 
 let todoDAL;
 

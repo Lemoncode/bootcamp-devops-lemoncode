@@ -1,4 +1,4 @@
-FROM node:12-alpine3.12 as builder
+FROM node:22-alpine AS builder
 
 WORKDIR /build
 
@@ -12,12 +12,12 @@ COPY package*.json ./
 COPY tsconfig.json ./ 
 
 # Build app
-RUN npm install
+RUN npm ci
 
 RUN npm run build
 
 # Packaging app
-FROM node:12-alpine3.12 as app
+FROM node:22-alpine AS app
 
 WORKDIR /app
 
