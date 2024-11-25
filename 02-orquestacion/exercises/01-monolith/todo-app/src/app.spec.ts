@@ -10,11 +10,11 @@ const todos = [
   { id: 1, title: 'Learn node, please!!', completed: false },
   { id: 2, title: 'Learn JS', completed: false },
   { id: 3, title: 'Learn Docker', completed: false },
-]; 
+];
 
 (todoDALFactory as jest.Mock).mockImplementation(() => ({
   getTodos() {
-    return todos; 
+    return todos;
   },
   getTodoById(id: number) {
     return todos.find((t) => t.id === id);

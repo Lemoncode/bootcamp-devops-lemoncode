@@ -1,15 +1,24 @@
-import Knex, { PgConnectionConfig } from 'knex';
+import Knex from 'knex';
 
-type ConnectionParams = PgConnectionConfig & { dbVersion: string };
+export interface ConnectionParams {
+  port: number;
+  host: string;
+  user: string;
+  password: string;
+  database: string;
+  dbVersion: string;
+}
 
-export const startConnection = ({ dbVersion: version, ...connection }: ConnectionParams) => {
+export const startConnection = (connection: ConnectionParams) => {
   try {
     return Knex({
       client: 'pg',
-      version,
-      connection,
+      connection: {
+        ...connection,
+      },
     });
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };

@@ -7,7 +7,7 @@ module.exports = {
       database: process.env.DB_NAME || 'todos_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
-      dbVersion: process.env.DB_VERSION || '10.4',
+      dbVersion: process.env.DB_VERSION || '16',
       port: +process.env.DB_PORT || 5432,
     },
     pool: {

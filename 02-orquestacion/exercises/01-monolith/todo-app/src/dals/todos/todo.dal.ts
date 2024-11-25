@@ -1,10 +1,12 @@
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { TodoDALFactory } from './todo.contract.dal';
 import { TodoEntity } from './todo.entity';
 
 export const todoDALFactory: TodoDALFactory = (knex: Knex) => ({
   getTodos() {
-    return knex<TodoEntity>('todos').then((r) => r);
+    return knex<TodoEntity>('todos')
+      .select()
+      .then((r) => r);
   },
   getTodoById(id: number) {
     return knex<TodoEntity>('todos').where('id', id).first();

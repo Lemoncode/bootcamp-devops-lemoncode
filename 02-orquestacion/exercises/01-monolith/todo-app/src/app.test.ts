@@ -95,7 +95,7 @@ describe('/api/', () => {
         insertTodo({ id: 3, title: 'Learn Docker', completed: false }),
       ]);
 
-      // Act 
+      // Act
       const response = await request.put('/api/');
 
       // Assert
