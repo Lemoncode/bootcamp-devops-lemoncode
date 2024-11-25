@@ -1,15 +1,15 @@
-FROM node:12-alpine3.12 as builder
+FROM node:22-alpine AS builder
 
 ARG API_HOST
 
 WORKDIR /app
 
-COPY . .
+COPY . . 
 
-RUN npm i 
+RUN npm ci 
 
-RUN npm run build
+RUN npm run build 
 
-FROM nginx as frontend
+FROM nginx AS frontend 
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export interface TodoModel {
   id: number;
@@ -9,11 +9,11 @@ export interface TodoModel {
 
 console.log(process.env.API_HOST);
 
-const host = () => (process.env.API_HOST) ? process.env.API_HOST : ''; 
+const host = () => (process.env.API_HOST ? process.env.API_HOST : "");
 
 const handleError = (err) => {
   console.log(err);
-  throw 'error from server';
+  throw "error from server";
 };
 
 export const getTodos = () =>
@@ -34,7 +34,8 @@ export const deleteTodo = (id: number) =>
     .then(({ data }) => data)
     .catch(handleError);
 
-export const toggleTodo = (id: number, completed: boolean) => 
-    axios.patch(`${host()}/api/${+id}/`, { completed })
-      .then(({data}) => data)
-      .catch(handleError);
+export const toggleTodo = (id: number, completed: boolean) =>
+  axios
+    .patch(`${host()}/api/${+id}/`, { completed })
+    .then(({ data }) => data)
+    .catch(handleError);
