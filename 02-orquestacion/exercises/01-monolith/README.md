@@ -5,13 +5,13 @@
 Start up a database with database ready to work locally, we run the following command
 
 ```bash
-$ docker run --rm -d -p 5432:5432 --name postgres postgres:10.4
+docker run --rm -d -p 5432:5432 --name postgres postgres:16
 ```
 
 Once the container is running we can populate the data by
 
 ```bash
-$ docker exec -it postgres psql -U postgres
+docker exec -it postgres psql -U postgres
 ```
 
 Paste the code `todo-app/todos_db.sql` and the database must be started with some data.

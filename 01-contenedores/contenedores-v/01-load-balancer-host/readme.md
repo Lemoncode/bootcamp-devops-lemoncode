@@ -99,7 +99,7 @@ We can check that the apps are up and running
 ```
 curl http://localhost:8081
 curl http://localhost:8082
-curl http: //localhost:8083
+curl http://localhost:8083
 ```
 
 Now we can build our load balancer
