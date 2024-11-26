@@ -29,6 +29,8 @@ Una vez tengamos nuestro `StatefulSet` corriendo la manera más directa de gener
 
 Crear un `Deployment` para `todo-app`, usar el `Dockerfile` de este direetorio **todo-app**, para generar la imagen necesaria.
 
+> Nota: Podéis usar la imagen `lemoncodersbc/lc-todo-monolith-db:v5-2024`
+
 Al ejecutar un contenedor a partir de la imagen anaterior, el puerto por defecto es el 3000, pero se lo podemos alimentar a partir de  variables de entorono, las variables de entorno serían las siguientes
 
 * **NODE_ENV** : El entorno en que se está ejecutando el contenedor, nos vale cualquier valor que no sea `test`
