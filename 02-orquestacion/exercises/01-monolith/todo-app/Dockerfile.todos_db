@@ -1,3 +1,3 @@
-FROM postgres:10.4
+FROM postgres:16
 
-COPY ./todos_db.sql /docker-entrypoint-initdb.d
+COPY ./todos_db.sql ./docker-entrypoint-initdb.d

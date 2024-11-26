@@ -1,21 +1,13 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import Add from '@material-ui/icons/Add';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Add from '@mui/icons-material/Add';
 
 interface Props {
   onAddTodo: (todo: string) => void;
-};
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  margin: {
-    marginLeft: theme.spacing(2),
-  },
-}));
+}
 
 export const TodoInputComponent: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const { onAddTodo } = props;
   const [input, setInput] = React.useState('');
 
@@ -34,7 +26,7 @@ export const TodoInputComponent: React.FC<Props> = (props) => {
         variant="outlined"
         helperText="Add todo"
       />
-      <IconButton className={classes.margin} onClick={handleAddTodo}>
+      <IconButton sx={{ marginLeft: 2 }} onClick={handleAddTodo}>
         <Add fontSize="large" />
       </IconButton>
     </div>

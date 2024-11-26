@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 export const useExecuteFireForget = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
 
   const execute = async (callback, ...args) => {
     try {
