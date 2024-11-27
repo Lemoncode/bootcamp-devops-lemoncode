@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: counter
+  template:
+    metadata:
+      labels:
+        run: counter
+    spec:
+      containers:
+      - image: postgresql
+        name: counter
+        livenessProbe:
+          exec:
+            command:
+              - pgsql
+              - 
+        #   httpGet:
+        #     path: /healthz
+        #     port: 80
+        #   periodSeconds: 30
+        #   initialDelaySeconds: 60
+        #   failureThreshold: 2
+        # readinessProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: 80
+        #   periodSeconds: 10
+        #   initialDelaySeconds: 60

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: {{ .Values.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+{{- with .Values.livenessProbe }}
+        livenessProbe:
+        {{ toYaml . | nindent 10 }}
+{{- end -}}

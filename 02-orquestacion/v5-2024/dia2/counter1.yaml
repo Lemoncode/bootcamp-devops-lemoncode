@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter1
+  labels:
+    run: counter
+spec:
+  containers:
+  - image: dockercampusmvp/go-hello-world
+    name: counter
+
+

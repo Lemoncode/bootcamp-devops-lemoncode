@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: standard
+data:
+  clave1: valor1
+  clave2: valor2

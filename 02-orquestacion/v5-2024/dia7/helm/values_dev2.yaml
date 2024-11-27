@@ -1,0 +1,7 @@
+name: nginx-dev2
+
+ingress:
+  enabled: true
+  tls: true
+  host: 127-0-0-1.nip.io
+  secretName: dev2secret

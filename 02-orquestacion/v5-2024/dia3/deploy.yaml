@@ -1,0 +1,28 @@
+# kubectl create secret generic passw --from-literal password=admin123
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: counter
+  template:
+    metadata:
+      labels:
+        run: counter
+    spec:
+      containers:
+      - image: dockercampusmvp/go-hello-world
+        name: counter
+        env:
+        - name: DBPASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: passw
+        envFrom:
+        - secretRef:
+            name: passw

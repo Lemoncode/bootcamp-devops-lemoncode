@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx2
+  labels:
+    run: nginx  
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+
+

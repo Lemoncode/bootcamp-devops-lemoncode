@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: counter
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      run: counter
+  template:
+    metadata:
+      labels:
+        run: counter
+    spec:
+      containers:
+      - image: dockercampusmvp/go-hello-world
+        name: counter

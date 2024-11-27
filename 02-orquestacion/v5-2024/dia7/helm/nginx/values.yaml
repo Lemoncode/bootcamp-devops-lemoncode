@@ -1,0 +1,18 @@
+name: nginx
+image:
+  name: nginx
+  tag: latest
+
+ingress:
+  tls: false
+  enabled: false
+  host: ""       # Host of ingress (required)
+  secretName: ""
+
+password: lemoncoders
+
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80

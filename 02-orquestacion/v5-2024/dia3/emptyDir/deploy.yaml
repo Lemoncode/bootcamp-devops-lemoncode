@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx 
+  template:
+    metadata:
+      labels:
+        app: nginx 
+    spec:
+      volumes:
+      - name: test
+        emptyDir: {}
+      - name: nginx
+        configMap:
+          name: nginx
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: test
+          mountPath: /test
+        - name: nginx
+          mountPath: /etc/nginx
+      - image: dockercampusmvp/go-hello-world
+        name: counter
+        volumeMounts:
+        - name: test
+          mountPath: /app/test
+
+

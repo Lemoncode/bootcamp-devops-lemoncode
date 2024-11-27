@@ -1,0 +1,8 @@
+apiVersion: lemoncoders.com/v1
+kind: Email
+metadata:
+  name: email-sample
+spec:
+  from: edu@edu.edu
+  to: alumnos@lemoncoders.com
+  body: "Kubernetes mola!"

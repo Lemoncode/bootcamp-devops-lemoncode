@@ -1,0 +1,6 @@
+name: nginx-dev
+ingress:
+  enabled: true
+  tls: false
+  host: 127-0-0-1.nip.io
+  secretName: devsecret

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: probes
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: probes
+  template:
+    metadata:
+      labels:
+        app: probes
+    spec:
+      containers:
+      - name: probes
+        image: lemoncodersbc/demoprobes
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          periodSeconds: 5
+          initialDelaySeconds: 40

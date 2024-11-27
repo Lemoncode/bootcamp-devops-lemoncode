@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bbox
+  labels:
+    name: bbox
+spec:
+  serviceAccountName: test-reader
+  containers:
+  - name: bbox
+    image: busybox
+    command: ["tail", "-f", "/dev/null"]
+    

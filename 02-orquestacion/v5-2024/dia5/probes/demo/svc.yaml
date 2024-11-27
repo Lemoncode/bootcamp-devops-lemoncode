@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: probes
+spec:
+  selector:
+    app: probes
+  ports:
+  - port: 80
