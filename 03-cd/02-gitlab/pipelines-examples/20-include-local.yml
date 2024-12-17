@@ -1,0 +1,11 @@
+include:
+  - 'variables.yml'
+  - 'build.yml'
+  - 'extend_image.yml'
+
+stages:
+  - build
+
+build-job:
+  stage: build
+  extends: .image

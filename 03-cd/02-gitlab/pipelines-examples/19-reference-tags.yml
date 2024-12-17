@@ -24,7 +24,7 @@ build1:
     - echo "script"
     - echo $myvar1
   rules:
-    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+    - if: '$CI_COMMIT_BRANCH  ==  "develop"'
 
 test1:
   variables:
@@ -37,4 +37,4 @@ test1:
     - echo 'test'
     - echo $myvar1
   rules:
-    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+    - if: '$CI_COMMIT_BRANCH  ==  "develop"'

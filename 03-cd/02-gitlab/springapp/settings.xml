@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>gitlab-maven</id>
+                    <url>${CI_API_V4_URL}/packages/maven</url>
+                </repository>
+            </repositories>
+            <properties>
+                <repo-id>gitlab-maven</repo-id>
+                <repo-name>Bootcamp Package Registry</repo-name>
+                <repo-url>${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/maven</repo-url>
+                <repo-id-snapshots>gitlab-maven</repo-id-snapshots>
+                <repo-name-snapshots>Bootcamp Package Registry for SNAPSHOTS</repo-name-snapshots>
+                <repo-url-snapshots>${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/maven</repo-url-snapshots>
+            </properties>
+        </profile>
+    </profiles>
+    <servers>
+        <server>
+            <id>gitlab-maven</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>Job-Token</name>
+                        <value>${CI_JOB_TOKEN}</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
+    </servers>
+</settings>

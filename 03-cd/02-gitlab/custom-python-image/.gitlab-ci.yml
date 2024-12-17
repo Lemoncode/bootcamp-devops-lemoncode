@@ -1,13 +1,13 @@
 variables:  
-    PYTHON_VERSION: "3.8"  
-    BASE_VERSION: "20.04"  
+    PYTHON_VERSION: "3.12"  
+    BASE_VERSION: "24.04"  
     BASE_IMAGE_NAME: "ubuntu"  
   
 stages:  
-    - docker:build  
-   
-docker:build:  
-    stage: docker:build  
+    - docker
+    
+docker-build:  
+    stage: docker  
     before_script:  
         - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY_IMAGE  
     script:  

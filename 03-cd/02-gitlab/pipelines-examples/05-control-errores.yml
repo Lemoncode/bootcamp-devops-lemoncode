@@ -1,0 +1,21 @@
+stages:
+  - stage1
+  - stage2
+
+# https://docs.gitlab.com/ee/ci/yaml/#allow_failure
+
+testjob:
+  stage: stage1
+  script:
+    - exit 1
+  allow_failure: true
+      
+testjob2:
+  stage: stage2
+  script:
+    - echo "testjob2"
+    - exit 1
+  allow_failure:
+    exit_codes:
+      - 137
+      - 255

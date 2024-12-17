@@ -1,0 +1,18 @@
+# https://docs.gitlab.com/ee/ci/services/
+stages:
+  - mysql
+
+mysql-test:
+  image: ubuntu:latest
+  stage: mysql
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    MYSQL_ROOT_PASSWORD: "rootpassword"
+    MYSQL_DATABASE: "bootcamp_db"
+  script:
+    - apt update && apt install mysql-client -y
+    - mysql -h mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(100))"
+    - mysql -h mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "INSERT INTO users (id, name, email) VALUES (1, 'John Doe', 'john.doe@example.com');"
+    - mysql -h mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "SELECT * FROM users;"

@@ -1,0 +1,11 @@
+stages:
+    - stage1
+
+
+testjob:
+    stage: stage1
+    script:
+        - exit 0
+    artifacts:
+        reports:
+            junit: report.xml

@@ -5,7 +5,7 @@
   before_script:
     - echo "prepare step" 
   rules:
-    - if: '$CI_COMMIT_REF_NAME  ==  "develop"'
+    - if: '$CI_COMMIT_BRANCH  ==  "develop"'
 
 stages:
   - build

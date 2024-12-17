@@ -1,0 +1,30 @@
+stages:
+    - stage1
+    - stage2
+    
+variables:
+    MYVARIABLE: "global"
+
+testjob:
+    stage: stage1
+    script:
+      - echo $MYVARIABLE
+      - exit 1
+    rules:
+      - if: '$CI_COMMIT_BRANCH  ==  "develop"  &&  $CI_PIPELINE_SOURCE  ==  "push"'
+        variables:
+          MYVARIABLE: "variable develop"
+        allow_failure: true
+      - if: '$CI_COMMIT_BRANCH  ==  "master"  &&  $CI_PIPELINE_SOURCE  ==  "push"'
+        variables:
+          MYVARIABLE: "variable master"
+
+testjob2:
+    stage: stage2
+    script:
+      - echo stage en master
+      - env
+    rules:
+      - if: '$CI_COMMIT_BRANCH  ==  "master"  &&  $CI_PIPELINE_SOURCE  ==  "web" && $DEPLOY == "true"'
+      - if: '$CI_COMMIT_BRANCH  ==  "master" && $CI_PIPELINE_SOURCE  ==  "push"'
+        when: manual

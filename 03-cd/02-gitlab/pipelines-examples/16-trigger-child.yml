@@ -1,0 +1,32 @@
+stages:
+  - stage1
+  - stage2
+  - stage3
+
+task1:
+  stage: stage1
+  script:
+    - echo "execute $CI_JOB_NAME."
+
+# https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Parent-child+pipeline
+
+trigger-local:
+  stage: stage2
+  trigger:
+    include:
+      - local: child.yml
+    strategy: depend
+
+trigger-remote:
+  stage: stage2
+  trigger:
+    include:
+      - project: bootcamp/test
+        ref: develop
+        file: .gitlab-ci.yml
+    strategy: depend  
+
+task2:
+  stage: stage3 
+  script:
+    - echo "execute $CI_JOB_NAME."

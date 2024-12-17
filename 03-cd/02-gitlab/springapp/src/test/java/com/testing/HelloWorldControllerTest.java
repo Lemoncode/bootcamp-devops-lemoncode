@@ -1,29 +1,25 @@
-package com.testing;
+package com.example;
 
-import static com.testing.HelloWorldController.MESSAGE_KEY;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.hamcrest.Matchers.matchesPattern;
 
-import java.net.UnknownHostException;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
-
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class HelloWorldControllerTest {
 
-    private Map<String, String> result;
-    
-    @InjectMocks
-    private HelloWorldController controller;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
-    public void responseShouldContainHelloWorldKey() throws UnknownHostException {
-        result = controller.helloWorld();
-        
-        assertThat(result).containsKey(MESSAGE_KEY);
+    public void testHelloWorld() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/hello"))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().string(matchesPattern("Hello.*!")));
     }
-    
 }

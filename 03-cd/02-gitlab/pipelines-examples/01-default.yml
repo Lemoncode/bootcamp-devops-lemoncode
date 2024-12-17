@@ -1,0 +1,25 @@
+stages:
+  - stage1
+
+# https://docs.gitlab.com/ee/ci/yaml/#default
+default:
+  image: python:3.10-slim 
+  before_script:
+    - echo "Hola mundo default"
+  after_script:
+    - echo "after script default"
+
+    
+testjob:
+    image: python:3.9-slim 
+    stage: stage1
+    script:
+      - echo "Adios mundo"
+      - echo "Adios mundo2"
+
+testjob2:
+    stage: stage1
+    before_script:
+      - echo "Hola mundo desde job"
+    script:
+      - echo "Adios mundo"
