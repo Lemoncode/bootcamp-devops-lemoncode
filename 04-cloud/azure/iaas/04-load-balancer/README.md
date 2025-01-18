@@ -15,7 +15,7 @@ LOAD_BALANCER_NAME="frontend-lb"
 LB_IP_NAME="tour-of-heroes-lb-ip-$RANDOM"
 PROBE_NAME="frontend-probe"
 BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
-````
+```
 
 o si estás en Windows:
 
@@ -202,7 +202,7 @@ FRONTEND_LB_PUBLIC_IP=$(az network public-ip show \
 --output tsv)
 
 echo -e "Front end VM public IP address: http://$FRONTEND_LB_PUBLIC_IP"
-````
+```
 
 o si estás en Windows:
 

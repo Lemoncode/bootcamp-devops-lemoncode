@@ -45,7 +45,7 @@ az network vnet create \
 
 o si estás en Windows:
 
-```bash
+```pwsh
 echo -e "Creating virtual network $VNET_NAME with address prefix $VNET_ADDRESS_PREFIX and subnet $DB_SUBNET_NAME with address prefix $DB_SUBNET_ADDRESS_PREFIX"
 
 az network vnet create `

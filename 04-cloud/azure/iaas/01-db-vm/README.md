@@ -171,7 +171,7 @@ az network nsg rule create \
 
 o si estás en Windows:
 
-```bash
+```pwsh
 echo -e "Create a network security group rule for SQL Server port 1433"
 
 az network nsg rule create `
