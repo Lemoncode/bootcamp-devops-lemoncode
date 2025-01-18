@@ -256,7 +256,7 @@ az vm run-command invoke \
 --resource-group $RESOURCE_GROUP \
 --name "${FRONTEND_VM_NAME}-2" \
 --command-id RunPowerShellScript \
---scripts @scripts/install-tour-of-heroes-angular.ps1 \
+--scripts @04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1 \
 --parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-angular/releases/download/1.1.4/dist.zip"
 ```
 
@@ -298,7 +298,7 @@ az vm run-command invoke `
 --resource-group $RESOURCE_GROUP `
 --name "${FRONTEND_VM_NAME}-2" `
 --command-id RunPowerShellScript `
---scripts @scripts/install-tour-of-heroes-angular.ps1 `
+--scripts @04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1 `
 --parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-angular/releases/download/1.1.4/dist.zip"
 ```
 
@@ -434,9 +434,9 @@ az network lb address-pool address add  \
 --resource-group $RESOURCE_GROUP \
 --lb-name $LOAD_BALANCER_NAME \
 --pool-name $BACKEND_POOL_NAME \
---name "${FRONTEND_VM_NAME}-2" \
+--name ${FRONTEND_VM_NAME}-2 \
 --ip-address $FRONTEND_VM_PRIVATE_IP_2 \
---vnet $VNET_NAME 
+--vnet $VNET_NAME
 ```
 
 o si estás en Windows:
