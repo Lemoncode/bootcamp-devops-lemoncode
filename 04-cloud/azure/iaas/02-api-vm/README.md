@@ -5,6 +5,7 @@ Para esta pieza de la arquitectura de Tour of Heroes vamos a usar una máquina v
 ```bash
 # API VM on Azure
 API_VM_NAME="api-vm"
+API_VM_DNS_LABEL="tour-of-heroes-api-vm-$RANDOM"
 API_VM_IMAGE="Ubuntu2204"
 API_VM_ADMIN_USERNAME="apiadmin"
 API_VM_ADMIN_PASSWORD="Api@dmin-1232"
@@ -16,6 +17,7 @@ o si estás en Windows:
 ```pwsh
 # API VM on Azure
 $API_VM_NAME="api-vm"
+$API_VM_DNS_LABEL="tour-of-heroes-api-vm-$RANDOM"
 $API_VM_IMAGE="Ubuntu2204"
 $API_VM_ADMIN_USERNAME="apiadmin"
 $API_VM_ADMIN_PASSWORD="Api@dmin1232!"
@@ -35,11 +37,11 @@ FQDN_API_VM=$(az vm create \
 --admin-password $API_VM_ADMIN_PASSWORD \
 --vnet-name $VNET_NAME \
 --subnet $API_SUBNET_NAME \
---public-ip-address-dns-name tour-of-heroes-api-vm \
+--public-ip-address-dns-name $API_VM_DNS_LABEL \
 --nsg $API_VM_NSG_NAME \
 --size $VM_SIZE --query "fqdns" -o tsv)
 
-echo -e "Api VM created"
+echo -e "API VM created"
 ```
 
 o si estás en Windows:
@@ -55,7 +57,7 @@ $FQDN_API_VM=az vm create `
 --admin-password $API_VM_ADMIN_PASSWORD `
 --vnet-name $VNET_NAME `
 --subnet $API_SUBNET_NAME `
---public-ip-address-dns-name tour-of-heroes-api-vm `
+--public-ip-address-dns-name $API_VM_DNS_LABEL `
 --nsg $API_VM_NSG_NAME `
 --size $VM_SIZE --query "fqdns" -o tsv
 
@@ -119,8 +121,16 @@ az network nsg rule create `
 
 Si instalas la extensión REST Client en tu Visual Studio Code, puedes ejecutar la peticiones que aparecen el fichero [api.http](04-cloud/azure/iaas/02-api-vm/api.http).
 
-Para comprobar que la API funciona correctamente podemos acceder a la URL http://tour-of-heroes-api-vm.uksouth.cloudapp.azure.com/api/hero, en este ejemplo (en tu despliegue deberías modificarla por la que corresponda) y deberías ver un listado de héroes en formato JSON.
+Para comprobar que la API funciona correctamente podemos acceder a la URL:
+
+```bash
+echo "http://$API_VM_DNS_LABEL.$LOCATION.cloudapp.azure.com/api/hero"
+ ```
+
+En este ejemplo (en tu despliegue deberías modificarla por la que corresponda) y deberías ver un listado de héroes en formato JSON.
 
 El resultado hasta ahora debería ser el siguiente:
 
 ![VM para la API](/04-cloud/azure/iaas/images/api-vm-y-db-vm.png)
+
+Y con esto ya tendríamos la API desplegada en una máquina virtual de Azure. Ahora vamos a desplegar el frontend en otra máquina virtual de Azure. Puedes continuar en el siguiente [paso](../03-frontend-vm/README.md).

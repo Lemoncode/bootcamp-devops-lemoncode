@@ -1,9 +1,11 @@
 # Crear una máquina virtual para el frontend en Angular
+
 Ahora vamos a crear la máquina virtual para el frontend. Para ello, vamos a necesitar las siguientes variables de entorno:
 
 ```bash
 # Frontend VM on Azure
 FRONTEND_VM_NAME="frontend-vm"
+FRONTEND_DNS_LABEL="tour-of-heroes-frontend-vm-$RANDOM"
 FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2022-Datacenter:latest"
 FRONTEND_VM_ADMIN_USERNAME="frontendadmin"
 FRONTEND_VM_ADMIN_PASSWORD="fr0nt#nd@dmin123"
@@ -34,7 +36,7 @@ FQDN_FRONTEND_VM=$(az vm create \
 --admin-password $FRONTEND_VM_ADMIN_PASSWORD \
 --vnet-name $VNET_NAME \
 --subnet $FRONTEND_SUBNET_NAME \
---public-ip-address-dns-name tour-of-heroes-frontend-vm \
+--public-ip-address-dns-name $FRONTEND_DNS_LABEL \
 --nsg $FRONTEND_VM_NSG_NAME \
 --size $VM_SIZE --query "fqdns" -o tsv)
 ```
@@ -52,7 +54,7 @@ $FQDN_FRONTEND_VM=az vm create `
 --admin-password $FRONTEND_VM_ADMIN_PASSWORD `
 --vnet-name $VNET_NAME `
 --subnet $FRONTEND_SUBNET_NAME `
---public-ip-address-dns-name tour-of-heroes-frontend-vm `
+--public-ip-address-dns-name $FRONTEND_DNS_LABEL `
 --nsg $FRONTEND_VM_NSG_NAME `
 --size $VM_SIZE --query "fqdns" -o tsv
 ```
@@ -82,7 +84,7 @@ az vm run-command invoke `
 --parameters "api_url=http://$FQDN_API_VM/api/hero" "release_url=https://github.com/0GiS0/tour-of-heroes-angular/releases/download/1.1.4/dist.zip"
 ```
 
-En este ejemplo he desplegado la aplicación en otro puerto, en el 8080, para que no haya conflicto con el IIS que se instala por defecto en el puerto 80. Para elloutilizamos el script [install-tour-of-heroes-angular.ps1](04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1) que se encuentra en la carpeta **scripts** de este repositorio.
+En este ejemplo he desplegado la aplicación en otro puerto, en el 8080, para que no haya conflicto con el IIS que se instala por defecto en el puerto 80. Para ello utilizamos el script [install-tour-of-heroes-angular.ps1](04-cloud/azure/iaas/scripts/install-tour-of-heroes-angular.ps1) que se encuentra en la carpeta **scripts** de este repositorio.
 
 Lo último que nos queda es habilitar los puertos 80 y 8080 en el NSG de la máquina virtual del frontend:
 
@@ -128,7 +130,13 @@ az network nsg rule create `
 --direction Inbound
 ```
 
-Para probar que todo funciona, abre un navegador y accede a la dirección [http://tour-of-heroes-frontend-vm.uksouth.cloudapp.azure.com:8080](http://tour-of-heroes-frontend-vm.uksouth.cloudapp.azure.com:8080) y deberías ver la aplicación Angular funcionando.
+Para probar que todo funciona, abre un navegador y accede a la dirección:
+
+```bash
+echo http://$FRONTEND_DNS_LABEL.$LOCATION.cloudapp.azure.com:8080
+```
+
+y deberías ver la aplicación Angular funcionando.
 
 Ahora la arquitectura de nuestra aplicación en Azure debería ser la siguiente:
 

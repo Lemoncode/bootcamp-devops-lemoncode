@@ -12,7 +12,7 @@ En este caso, vamos a utilizar un balanceador de carga público para poder acced
 
 ```bash	
 LOAD_BALANCER_NAME="frontend-lb"
-LB_IP_NAME="tour-of-heroes-lb-ip"
+LB_IP_NAME="tour-of-heroes-lb-ip-$RANDOM"
 PROBE_NAME="frontend-probe"
 BACKEND_POOL_NAME="tour-of-heroes-backend-pool"
 ````
@@ -197,7 +197,7 @@ echo -e "Try to access the front end VM using the public IP address of the load 
 
 FRONTEND_LB_PUBLIC_IP=$(az network public-ip show \
 --resource-group $RESOURCE_GROUP \
---name $PUBLIC_IP_NAME \
+--name $LB_IP_NAME \
 --query ipAddress \
 --output tsv)
 
@@ -231,7 +231,7 @@ FQDN_FRONTEND_VM_2=$(az vm create \
 --admin-password $FRONTEND_VM_ADMIN_PASSWORD \
 --vnet-name $VNET_NAME \
 --subnet $FRONTEND_SUBNET_NAME \
---public-ip-address-dns-name tour-of-heroes-frontend-vm \
+--public-ip-address-dns-name $FRONTEND_DNS_LABEL-2 \
 --nsg "${FRONTEND_VM_NSG_NAME}-2" \
 --size $VM_SIZE --query "fqdns" -o tsv)
 

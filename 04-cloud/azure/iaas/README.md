@@ -20,7 +20,7 @@ RESOURCE_GROUP="tour-of-heroes-on-vms"
 LOCATION="uksouth"
 VM_SIZE="Standard_B2s"
 
-STORAGE_ACCOUNT_NAME="tourofheroesbackups"
+STORAGE_ACCOUNT_NAME="tourofheroesbackups$RANDOM"
 ```
 
 o si estás en Windows:
