@@ -44,7 +44,7 @@ A **security group is a virtual firewall for your EC2 instance**. It will contro
 - Protocol: TCP, UDP, ICMP
 - Port Range: Which port are allowed as part of the rule
 
-## Source and Destnation
+## Source and Destination
 
 - Security Group
   - ID of another security group
