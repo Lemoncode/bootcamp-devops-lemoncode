@@ -12,7 +12,7 @@ Construir los distintos recursos de Kubernetes para generar un clúster, como el
 
 Crear un `Deployment` para `todo-front`, usar el `Dockerfile` de este directorio **02-distributed/todo-front**, para generar la imagen necesaria. Notar que existe `ARG API_HOST` dentro del fichero `Dockerfile`, lo podemos omitir en este caso, sólo está ahí para poder probar el contenedor de Docker en local.
 
-> **Nota**: Podéis usar la imagen `lemoncodersbc/lc-todo-api:v5-2024`
+> **Nota**: Podéis usar la imagen `lemoncodersbc/lc-todo-front:v5-2024`
 
 Al ejecutar un contenedor a partir de la imagen anterior, el puerto expuesto para http es el 80. 
 
@@ -22,7 +22,7 @@ Crear un `Cluster IP Service` que exponga `todo-front` dentro del clúster.
 
 Crear un `Deployment` para `todo-api`, usar el `Dockerfile` de este directorio **02-distributed/todo-api**, para generar la imagen necesaria.
 
-> **Nota**: Puedes usar la imagen `lemoncodersbc/lc-todo-front:v5-2024`
+> **Nota**: Puedes usar la imagen `lemoncodersbc/lc-todo-api:v5-2024`
 
 Al ejecutar un contenedor a partir de la imagen anaterior, el puerto por defecto es el 3000, pero se lo podemos alimentar a partir de  variables de entorono, las variables de entorno serían las siguientes
 
