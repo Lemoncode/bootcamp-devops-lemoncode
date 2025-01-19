@@ -9,11 +9,12 @@ ssh -i "your_key" ec2-user@<public_dns>
 Install Docker
 
 ```bash
-sudo dnf update
-sudo dnf install docker -y
+# Install Docker
+sudo yum update -y
+sudo yum install -y docker
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo usermod -aG docker $USER 
+sudo usermod -aG docker $USER
 newgrp docker
 ```
 
@@ -30,7 +31,7 @@ docker run -d -p 27017:27017 \
 
 Connect to an app tier instance, for example `app1`
 
-Ping to db instance
+Ping to db instance using the private DNS
 
 ```bash
 nslookup ip-172-31-101-99.eu-west-3.compute.internal
@@ -51,7 +52,7 @@ Check Mongo connectivity. Test Mongo connectivity. From EC2 Dashboard, we can ch
 - 172.31.101.99
 
 ```bash
-sudo dnf -y install telnet
+sudo yum -y install telnet
 telnet ip-172-31-101-99.eu-west-3.compute.internal 27017
 ```
 

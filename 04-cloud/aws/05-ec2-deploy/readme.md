@@ -84,12 +84,12 @@ whoami
 Notice that our user is `ec2-user`, this is fine. By the way the user name, will depend on picked AMI. Lets try to install Docker and spin up an Nginx server.
 
 ```bash
-sudo dnf update
-sudo dnf install docker -y
+#!/bin/bash
+sudo yum update -y
+sudo yum install -y docker
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo usermod -aG docker $USER 
-newgrp docker
+sudo usermod -aG docker $USER
 ```
 
 ```bash

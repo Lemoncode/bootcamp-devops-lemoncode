@@ -50,6 +50,26 @@ Right now, we need to SSH into each machine to install Docker. We can avoid this
 
 ## Creating and HTTP Target Group
 
+### What is a Target Group?
+
+A target group in AWS is a key component of Elastic Load Balancing (ELB) that serves as a logical grouping of targets to which traffic can be routed. Here are the main points about target groups:
+
+1. Purpose: Target groups are used to distribute incoming traffic across multiple targets, such as EC2 instances, IP addresses, or Lambda functions.
+
+2. Load Balancer Association: They are associated with Application Load Balancers, Network Load Balancers, or Gateway Load Balancers to define where traffic should be directed.
+
+3. Health Checks: Target groups allow you to configure health checks to ensure that traffic is only routed to healthy targets.
+
+4. Routing Rules: You can create routing rules in your load balancer to direct specific types of requests to different target groups.
+
+5. Auto Scaling Integration: Target groups can be used with Auto Scaling groups to automatically register or deregister instances as they are launched or terminated.
+
+6. Flexibility: You can register the same target with multiple target groups, allowing for flexible traffic distribution strategies.
+
+7. Attributes: Target groups have configurable attributes such as deregistration delay, load balancing algorithm, and stickiness settings.
+
+8. Monitoring: They provide metrics and health status information for your targets, helping you monitor the performance of your application.
+
 ### Supported Protocols
 
 - HTTP
@@ -117,11 +137,11 @@ We're going to deploy the web front end on `web2` and `web3` and add those insta
 
 ### Stickiness Duration
 
-- How long load balancer will maintain sticky session between clinet and target
+- How long load balancer will maintain sticky session between client and target
 - Load balancer sets a browser cookie with a unique, encrypted value
 - Client sends back the cookie with each subsequent request
 - Between 1 second and 7 days
 
 [Demo: Sticky Sessions](./demos/11-sticky-session/readme.md)
 
-[Demo: Idle Timeout]()
+[Demo: Idle Timeout](./demos/12-idle-timeout.md/readme.md)

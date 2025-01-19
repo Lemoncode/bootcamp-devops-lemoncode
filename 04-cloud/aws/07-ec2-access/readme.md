@@ -37,7 +37,7 @@
 ## Outbound Access on EC2
 
 - Default security group allows all outbound access from EC2
-    - Access restricted if oubound rule is removed or changed
+    - Access restricted if outbound rule is removed or changed
 - Return response from http server or machine still works
     - Security group rules are stateful
         - Inbound rule allows port 80 so response is automatically allowed regardless of outbound rules

@@ -12,6 +12,8 @@
 
 ## Create and Use a Bastion Server
 
+> Page 1
+
 [Demo: Create and Use a Bastion Server](./demos/01-bastion-server.md)
 
 ## Disable Auto-assign Public IP
