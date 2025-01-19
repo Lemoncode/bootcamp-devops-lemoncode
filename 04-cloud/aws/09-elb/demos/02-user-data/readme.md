@@ -6,8 +6,8 @@ Create `install-docker.txt`
 
 ```bash
 #!/bin/bash
-sudo dnf update
-sudo dnf install docker -y
+sudo yum update -y
+sudo yum install -y docker
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo usermod -aG docker $USER
@@ -59,7 +59,7 @@ With this we're finally ready to try to start our instance with user data:
 > NOTE: We have taken the image id from region AMI Catalog
 
 ```bash
-aws ec2 run-instances --image-id ami-07355fe79b493752d \
+aws ec2 run-instances --image-id ami-0ef0975ebdd78b77b \
  --count 1 --instance-type t3.micro \
  --key-name dublin_key --subnet-id $SUBNET --security-group-ids $SSHSG \
  --region eu-west-1 \

@@ -71,7 +71,11 @@ VPC_ID=$(aws ec2 create-vpc --cidr-block 172.31.0.0/16  \
   | jq -r '.Vpc."VpcId"')
 ```
 
-> Enable DNS hostnames from console
+> Enable DNS hostnames from console or using AWS CLI as follows:
+
+```bash
+aws ec2 modify-vpc-attribute --vpc-id $VPC_ID --enable-dns-hostnames "{\"Value\":true}"
+```
 
 ### Create web tier subnets
 
@@ -193,6 +197,8 @@ IMAGE_ID=ami-0302f42a44bf53a45
 
 ### Create web instances
 
+> Ensure that `devops_trainer_key` is created in the desired region
+
 ```bash
 aws ec2 run-instances \
     --image-id $IMAGE_ID \
@@ -202,7 +208,7 @@ aws ec2 run-instances \
     --security-group-ids $WEBSG \
     --associate-public-ip-address \
     --private-ip-address 172.31.1.21 \
-    --tag-specifications ResourceType=instance,Tags='[{Key=name,Value=web1}]'
+    --tag-specifications ResourceType=instance,Tags='[{Key=Name,Value=web1}]'
 ```
 
 ```bash
@@ -214,7 +220,7 @@ aws ec2 run-instances \
     --security-group-ids $WEBSG \
     --associate-public-ip-address \
     --private-ip-address 172.31.2.22 \
-    --tag-specifications ResourceType=instance,Tags='[{Key=name,Value=web2}]'
+    --tag-specifications ResourceType=instance,Tags='[{Key=Name,Value=web2}]'
 ```
 
 ```bash

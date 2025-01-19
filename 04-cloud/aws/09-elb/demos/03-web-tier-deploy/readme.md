@@ -1,6 +1,6 @@
 # Demo
 
-We're going to SSH into web1 and deploy the web front end using `Docker`. We're then going to browse directly to web1's public IP address and verify that the web front end is actually working. 
+We're going to SSH into web1 and deploy the web front end using `Docker`. We're then going to browse directly to web1's public IP address and verify that the web frontend is actually working. 
 
 - SSH into `web1`
 - Deploy the front end using Docker
