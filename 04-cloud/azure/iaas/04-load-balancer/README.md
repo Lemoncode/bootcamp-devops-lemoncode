@@ -319,7 +319,7 @@ echo -e "Add the frontend vm 2 to the backend pool"
 az network lb address-pool address add  \
 --resource-group $RESOURCE_GROUP \
 --lb-name $LOAD_BALANCER_NAME \
---pool-name frontend-backend-pool \
+--pool-name $BACKEND_POOL_NAME \
 --name tour-of-heroes-front-end-vm-2 \
 --ip-address $FRONTEND_VM_PRIVATE_IP_2 \
 --vnet $VNET_NAME
