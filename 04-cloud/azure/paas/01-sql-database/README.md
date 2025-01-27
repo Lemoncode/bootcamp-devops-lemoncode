@@ -8,7 +8,7 @@ Lo primero que necesitas es cargar algunas variables de entorno:
 
 ```bash
 # Database variables
-SQL_SERVER_NAME="heroes-sql-server"
+SQL_SERVER_NAME="heroes-sql-server-$RANDOM"
 SQL_USER="sqladmin"
 SQL_PASSWORD="P@ssw0rrd"
 startIp="0.0.0.0"
@@ -19,7 +19,7 @@ o si estás en Windows:
 
 ```pwsh
 # Database variables
-$SQL_SERVER_NAME="heroes-sql-server"
+$SQL_SERVER_NAME="heroes-sql-server-$RANDOM"
 $SQL_USER="sqladmin"
 $SQL_PASSWORD="P@ssw0rd!"
 $startIp="0.0.0.0"

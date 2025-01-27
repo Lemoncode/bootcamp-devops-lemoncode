@@ -9,7 +9,7 @@ Lo primero que necesitas es cargar algunas variables de entorno:
 ```bash
 # App Service variables
 APP_SVC_PLAN_NAME="tour-of-heroes-plan"
-WEB_API_NAME="tour-of-heroes-api"
+WEB_API_NAME="tour-of-heroes-api-$RANDOM"
 ```
 
 o si estás en Windows:
@@ -17,7 +17,7 @@ o si estás en Windows:
 ```pwsh
 # App Service variables
 $APP_SVC_PLAN_NAME="tour-of-heroes-plan"
-$WEB_API_NAME="tour-of-heroes-api"
+$WEB_API_NAME="tour-of-heroes-api-$RANDOM"
 ```
 
 >Importante: asegúrate de que el nombre de la web app es único en Azure.
@@ -117,6 +117,8 @@ echo "Clone the repo..."
 git clone https://github.com/0GiS0/tour-of-heroes-dotnet-api.git
 cd tour-of-heroes-dotnet-api
 
+dotnet build
+cd src
 dotnet publish tour-of-heroes-api.csproj -o ./publish
 
 cd publish
@@ -136,6 +138,7 @@ echo "Clone the repo..."
 git clone https://github.com/0GiS0/tour-of-heroes-dotnet-api.git
 cd tour-of-heroes-dotnet-api
 
+cd src
 dotnet publish tour-of-heroes-api.csproj -o ./publish
 
 cd publish
