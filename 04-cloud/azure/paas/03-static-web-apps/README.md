@@ -8,7 +8,7 @@ Como en el resto de los servicios, lo primero que vamos a hacer es cargar alguna
 
 ```bash
 # Static Web App variables
-WEB_APP_NAME="tour-of-heroes-web"
+WEB_APP_NAME="tour-of-heroes-web_$RANDOM"
 GITHUB_USER_NAME="0gis0"
 ```
 
