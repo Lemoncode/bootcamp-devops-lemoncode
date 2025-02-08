@@ -22,7 +22,7 @@ Y voilà! Ya tienes KEDA habilitado en tu cluster de AKS. Ahora podríamos crear
 Para este ejemplo lo que vamos a hacer es escalar la API de nuestro Tour of heroes en función a una cola de mensajes de Azure Storage. Así que lo siguiente que necesitamos es crear una cuenta de almacenamiento en Azure:
 
 ```bash
-STORAGE_ACCOUNT_NAME=storage$(uuidgen | cut -d '-' -f5 | tr '[A-Z]' '[a-z]')
+STORAGE_ACCOUNT_NAME=storage$RANDOM
 
 az storage account create \
 --name $STORAGE_ACCOUNT_NAME \
@@ -45,7 +45,7 @@ STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
 Una vez creada la cuenta de almacenamiento, vamos a crear una cola de mensajes:
 
 ```bash
-QUEUE_NAME=queue$(uuidgen | cut -d '-' -f5 | tr '[A-Z]' '[a-z]')
+QUEUE_NAME=queue$RAMDOM
 az storage queue create \
 --name $QUEUE_NAME \
 --account-name $STORAGE_ACCOUNT_NAME
