@@ -45,7 +45,7 @@ STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
 Una vez creada la cuenta de almacenamiento, vamos a crear una cola de mensajes:
 
 ```bash
-QUEUE_NAME=queue$RAMDOM
+QUEUE_NAME=queue$RANDOM
 az storage queue create \
 --name $QUEUE_NAME \
 --account-name $STORAGE_ACCOUNT_NAME
@@ -87,6 +87,12 @@ Puedes comprobar que el mismo se ha creado sin problemas con este comando:
 kubectl get scaledobject -n tour-of-heroes
 ```
 
+Para comprobar si hay algún error en el ScaledObject, puedes ejecutar el siguiente comando:
+
+```bash
+kubectl describe scaledobject/azure-queue-scaledobject -n tour-of-heroes
+```
+
 Para que el ScaledObject funcione debemos modificar el deployment de la API para que tenga la variable de entorno que almacena la cadena de conexión a la cuenta de almacenamiento:
 
 ```bash
@@ -120,7 +126,7 @@ done
 ```
 Si todo se ha configurado correctamente, verás como el número de pods de la API se incrementa en función del número de mensajes que se van insertando en la cola de mensajes.
 
-Tadaaa! Ya tienes tu API escalando automáticamente en función de eventos externos.
+Tadaaa 🎉! Ya tienes tu API escalando automáticamente en función de eventos externos.
 
 Ahora elimina los mensajes de la cola de mensajes:
 
