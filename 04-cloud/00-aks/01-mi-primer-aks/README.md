@@ -5,8 +5,8 @@ Para poder ejecutar los siguientes comando necesitas tener instalado Azure CLI c
 Una vez lo tengas, utiliza estas variables de entorno para configurar las tuyas propias si fuera necesario:
 
 ```bash
-RESOURCE_GROUP="bootcamp-lemoncode"
-AKS_NAME="lemoncode-cluster"
+RESOURCE_GROUP="bootcamp-lemoncode$RANDOM"
+AKS_NAME="lemoncode-cluster$RANDOM"
 LOCATION="spaincentral"
 ```
 

@@ -8,7 +8,7 @@ Lo primero que vamos a hacer es crearnos un recurso de este tipo, en el mismo gr
 
 ```bash
 RESOURCE_GROUP="bootcamp-lemoncode"
-ACR_NAME="lemoncodeacr"
+ACR_NAME="lemoncodeacr$RANDOM"
 LOCATION="spaincentral"
 
 az acr create -n ${ACR_NAME} -g ${RESOURCE_GROUP} --sku Basic --location ${LOCATION}
