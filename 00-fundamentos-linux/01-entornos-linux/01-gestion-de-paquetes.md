@@ -17,7 +17,7 @@ Ejemplos de gestores de paquetes:
 - `pacman` - utilizados en sistemas basados en Arch (`yay` y derivados para el repositorio AUR).
 - `rpm`, `yum` y su sucesora `dnf` - utilizados en sistemas basados en Red Hat Enterprise Linux.
 - `nix` - gestor de paquetes sin distribución específica
-- `portage` - utilizados en sistemas basadaos en Gentoo
+- `portage` - utilizados en sistemas basados en Gentoo
 
 Las distribuciones que utilizan gestores de paquetes obtienen sus paquetes de **repositorios**. Los repositorios son servidores públicos cuyo objetivo es almacenar paquetes a disposición de los usuarios. Existen repositorios oficiales y no oficiales. Los paquetes que provienen de repositorios oficiales son mantenidos por las entidades que crearon la distribución. Los repositorios no oficiales son mantenidos por la comunidad para aportar paquetes que los creadores de la distribución no admiten como paquetes core por diversos motivos (por ejemplo, filosofía OpenSource).
 
