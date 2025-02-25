@@ -115,6 +115,6 @@ $ echo Mi usuario es USER
 Mi usuario es USER
 ```
 
-> También podemos utilizar el comando `printenv <varname>` para mostrar el contenido de una variable. Sin argumentos mostrará t
+> También podemos utilizar el comando `printenv <varname>` para mostrar el contenido de una variable. Sin argumentos mostrará todas
 
 En apartados posteriores de _scripting_ veremos cómo trabajar con variables.
