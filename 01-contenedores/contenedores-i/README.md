@@ -62,9 +62,36 @@ Si haces clic sobre el enlace podrás acceder al servidor web que has creado con
 ![Acceso al servidor web de Nginx](imagenes/En%20localhost%208080%20Welcome%20to%20Nginx.png)
 
 
-Para esta primera clase, te recomiendo ejecutar todos los comandos directamente en el Terminal integrado en Docker Desktop, así podrás ver el resultado en la interfaz gráfica al instante.
+¡🎉 Enhorabuena! Has creado tu primer contenedor con un servidor web Nginx. Pero esto es solo el principio. A medida que avancemos, aprenderás a personalizar y gestionar tus contenedores de manera más efectiva.
+
+Y ahora que ya lo has visto todo desde la interfaz gráfica de Docker Desktop, vamos a ver cómo podemos hacer lo mismo pero desde la línea de comandos, que es la forma más común de trabajar con Docker en la vida real. Para ello, abre el terminal integrado de Docker Desktop haciendo clic en el icono de la terminal en la parte superior derecha de la ventana:
 
 ![Terminal integrado en Docker Desktop](imagenes/Terminal%20integrado%20en%20Docker%20Desktop.png)
+
+## 🐳 Docker CLI
+
+Docker CLI (Command Line Interface) es la herramienta que te permite interactuar con Docker desde la línea de comandos. Aunque Docker Desktop ofrece una interfaz gráfica, es recomendable familiarizarse con el CLI para aprovechar al máximo las capacidades de Docker. 
+
+Para hacer lo mismo que hicimos antes desde la interfaz gráfica, vamos a usar el comando `docker run` para crear un contenedor con Nginx. Abre el terminal integrado de Docker Desktop y ejecuta el siguiente comando:
+
+```bash
+docker run nginx
+```
+
+Este comando descargará la imagen de Nginx (si no la tienes ya) y creará un contenedor a partir de ella. Sin embargo, a este nuevo contenedor le ocurrirá lo mismo que a los que creamos inicialmente y es que no podremos acceder a él desde nuestro navegador, ya que no hemos mapeado ningún puerto. Así que vamos a hacer lo mismo que hicimos antes pero ahora desde la línea de comandos.
+
+Para mapear el puerto del contenedor al de tu máquina local, usa el siguiente comando:
+
+```bash
+docker run --publish 8080:80 nginx
+```
+
+Por otro lado, en estos dos casos te darás cuenta de que el terminal queda "bloqueado" y no puedes hacer nada más hasta que pares el contenedor. Esto es porque Nginx es un servidor web que necesita estar activo para poder responder a las peticiones. Si quieres ejecutar el contenedor en segundo plano, puedes usar la opción `-d` o `--detach`:
+
+```bash
+docker run --detach --publish 8080:80 nginx
+```
+
 
 ## Visual Studio Code y Docker
 
