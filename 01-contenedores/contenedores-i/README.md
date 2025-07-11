@@ -6,7 +6,7 @@
 
 - [🧰 Cómo instalar Docker en tu máquina local](#-cómo-instalar-docker-en-tu-máquina-local)
 - [👀 Conociendo Docker desde Docker Desktop](#-conociendo-docker-desde-docker-desktop)
-  - [🚀 Misión 1: Mi primer contenedor con un servidor web](#-misión-1-mi-primer-contenedor-con-un-servidor-web)
+  - [🚀 Mi primer contenedor con un servidor web](#-mi-primer-contenedor-con-un-servidor-web)
 - [🐳 Docker CLI](#-docker-cli)
 - [Visual Studio Code y Docker](#visual-studio-code-y-docker)
 - [🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache](#-ejecutar-un-contenedor-usando-el-terminal-de-vs-code-para-un-servidor-web-apache)
@@ -20,7 +20,11 @@
 - [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor)
 - [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor)
 - [🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?](#️-y-si-quiero-eliminarlo-del-todo-de-mi-ordenador)
-- [🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
+- [� Comandos Docker más comunes](#-comandos-docker-más-comunes)
+- [�🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
+- [ℹ️ Información del sistema Docker](#️-información-del-sistema-docker)
+- [✨ Gordon AI](#-gordon-ai)
+- [✨ GitHub Copilot](#-github-copilot)
 - [🎉 ¡Felicidades!](#-felicidades)
 
 ## 🧰 Cómo instalar Docker en tu máquina local
@@ -492,6 +496,8 @@ En esta primera clase has aprendido a:
 - 📚 Dominar los comandos Docker más comunes del día a día.
 - 🗄️ Crear y gestionar un SQL Server dockerizado.
 - ℹ️ Obtener información del sistema Docker.
+- ✨ Conocer Gordon AI, el asistente de Docker.
+- ✨ Usar GitHub Copilot como apoyo en el desarrollo.
 
 En la siguiente clase veremos cómo crear nuestras propias imágenes de Docker.
 
