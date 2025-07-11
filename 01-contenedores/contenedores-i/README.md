@@ -99,13 +99,13 @@ Ahora que tienes Docker Desktop instalado, puedes integrarlo con Visual Studio C
 
 A partir de este momento, usaremos este editor para todas nuestras prácticas, ya que es gratuito, multiplataforma y muy popular entre los desarrolladores. Si no lo tienes instalado, descárgalo desde [su página oficial](https://code.visualstudio.com/).
 
-## 🏁 Ejecuta tu primer contenedor
+## 🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache
 
 ```bash
-docker run hello-world
+docker run httpd
 ```
 
-`hello-world` es la imagen que usas para crear tu contenedor. Una imagen es como una clase: contiene un SO, una aplicación y sus dependencias. Si lo lanzas desde el terminal integrado, verás que aparece un nuevo contenedor que se pone en verde y rápidamente pasa a gris. Esto es porque el contenedor `hello-world` se ejecuta una vez y se para.
+`httpd` es la imagen que usas para crear tu contenedor. De esta forma creas un contenedor con un servidor web pero en lugar de Nginx, usas Apache.
 
 Para ver las imágenes descargadas en tu local:
 
@@ -119,21 +119,48 @@ O bien:
 docker images
 ```
 
-## 🏗️ ¿Y estas imágenes de dónde vienen?
+```bash
+docker image ls
+```
+
+O bien:
+```bash
+docker images
+```
+
+```bash
+docker image ls
+```
+
+También puedes ver las imágenes a través de la extesión de VS Code, en el apartado Images. Y si seleccionas cualquiera de ellas podrás ver las acciones que puedes hacer con las mismas.
+
+## 🏗️ Docker Hub web
 
 Todas las imágenes por defecto de Docker vienen de [Docker Hub](https://hub.docker.com/), un repositorio de imágenes que puedes usar en tus proyectos. Puedes buscar imágenes en Docker Hub desde la interfaz gráfica de Docker Desktop o desde el CLI. Por ejemplo, para buscar un servidor web como Nginx:
 
 ```bash
-docker search nginx
+docker search httpd
 ```
 
-Y para ejecutarlo:
+
+Por supuesto hay otro tipo de imágenes como de Sistemas Operativos, Bases de Datos, etc. Puedes buscar lo que necesites y ver las imágenes disponibles. Si por ejemplo quisieramos un contenedor con Ubuntu, podríamos buscarlo así:
 
 ```bash
-docker run nginx
+docker search ubuntu
 ```
 
-A diferencia de `hello-world`, este contenedor sigue ejecutándose y el terminal queda "esperando" a que termines. Esto es porque Nginx es un servidor web y necesita estar activo para que puedas acceder a él. Pero... ¿cómo accedemos? ¡Vamos a verlo! 👇
+Y ejecutar un contenedor con Ubuntu:
+
+```bash
+docker run ubuntu
+```
+
+Pero... ¿Qué ha pasado? pues que en este caso, que es un poquito diferente al de los servidores web, al ejecutar el comando `docker run ubuntu` no hemos especificado ningún comando a ejecutar dentro del contenedor, por lo que este se ha cerrado inmediatamente. Para evitar esto, podemos ejecutar un shell interactivo dentro del contenedor:
+
+```bash
+docker run --interactive --tty ubuntu /bin/bash
+```
+
 
 ## 🌐 Mapear puerto de contenedor a los puertos de mi máquina local
 
