@@ -23,7 +23,7 @@ Este repositorio incluye un **Dev Container** configurado con todas las herramie
 ### 💻 Cómo usar el Dev Container
 
 1. Abre el proyecto en VS Code
-2. Instala la extensión "Dev Containers"
+2. Instala la extensión [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers)
 3. Presiona `Ctrl+Shift+P` y selecciona "Dev Containers: Reopen in Container"
 4. ¡Todo listo para empezar!
 
