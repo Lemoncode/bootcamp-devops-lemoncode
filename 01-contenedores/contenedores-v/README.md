@@ -19,38 +19,6 @@ Hoy vamos a aprender cómo nuestros contenedores pueden hablar entre ellos, desd
 - [🎭 Los diferentes tipos de redes: Eligiendo tu estilo](#-los-diferentes-tipos-de-redes-eligiendo-tu-estilo)
 - [🎉 ¡Felicidades, eres oficialmente un ninja de redes!](#-felicidades-eres-oficialmente-un-ninja-de-redes)
 
-## 🚀 Antes de empezar: Preparación Express
-
-Para aprovechar al máximo estas 2.5 horas de networking ninja, asegúrate de tener todo listo:
-
-### ✅ **Prerequisitos técnicos:**
-```bash
-# Verificar que Docker funciona
-docker run hello-world
-
-# Pre-descargar las imágenes que usaremos (ahorra tiempo en clase)
-docker pull nginx
-docker pull httpd
-docker pull alpine
-
-# Instalar jq para visualizar JSON bonito (opcional pero recomendado)
-# En macOS: brew install jq
-# En Ubuntu: sudo apt install jq
-# En Windows: choco install jq
-```
-
-### ⏱️ **Distribución de tiempo recomendada:**
-- **Conceptos básicos y bridge** (45 min)
-- **Redes personalizadas** (45 min) 
-- **Port mapping y casos especiales** (45 min)
-- **Limpieza y Q&A** (15 min)
-
-### 🎯 **Para instructores:**
-- Tener un entorno Docker limpio antes de empezar
-- Considerar hacer las demos en vivo vs. mostrar resultados pre-preparados
-- Preparar ejemplos de troubleshooting comunes
-
----
 
 ## 🤔 ¿Qué diablos es esto del networking?
 
