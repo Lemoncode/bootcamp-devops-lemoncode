@@ -2,6 +2,27 @@
 
 ![Docker](imagenes/Contenedores%20I%20-%20Hello%20World%20-%20Lemoncode.jpeg)
 
+## 📋 Agenda
+
+- [🧰 Cómo instalar Docker en tu máquina local](#-cómo-instalar-docker-en-tu-máquina-local)
+- [👀 Conociendo Docker desde Docker Desktop](#-conociendo-docker-desde-docker-desktop)
+  - [🚀 Misión 1: Mi primer contenedor con un servidor web](#-misión-1-mi-primer-contenedor-con-un-servidor-web)
+- [🐳 Docker CLI](#-docker-cli)
+- [Visual Studio Code y Docker](#visual-studio-code-y-docker)
+- [🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache](#-ejecutar-un-contenedor-usando-el-terminal-de-vs-code-para-un-servidor-web-apache)
+- [🏗️ Docker Hub web](#️-docker-hub-web)
+- [🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él](#️-ejecutar-un-contenedor-y-lanzar-un-shell-interactivo-en-él)
+- [🌐 Mapear puerto de contenedor a los puertos de mi máquina local](#-mapear-puerto-de-contenedor-a-los-puertos-de-mi-máquina-local)
+- [🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?](#️-y-si-quiero-ejecutar-un-contenedor-en-segundo-plano)
+- [📋 Listar todos los contenedores que tengo en ejecución](#-listar-todos-los-contenedores-que-tengo-en-ejecución)
+- [🏷️ Bautizar contenedores](#️-bautizar-contenedores)
+- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución)
+- [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor)
+- [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor)
+- [🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?](#️-y-si-quiero-eliminarlo-del-todo-de-mi-ordenador)
+- [🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
+- [🎉 ¡Felicidades!](#-felicidades)
+
 ## 🧰 Cómo instalar Docker en tu máquina local
 
 A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/). Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
