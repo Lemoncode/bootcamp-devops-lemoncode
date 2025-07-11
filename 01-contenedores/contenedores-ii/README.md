@@ -595,3 +595,28 @@ docker build -t <nombre-imagen>:<tag> .   # Construir imagen desde Dockerfile
 ```
 
 ---
+
+
+<!--
+## ⏱️ Distribución temporal (3 horas)
+
+**Primera hora (60 min):**
+- 🚀 Repaso y creación de contenedores (15 min)
+- 📂 Gestión de imágenes locales (15 min)
+- 📥 Descarga de imágenes (15 min)
+- 🔧 Conceptos fundamentales - Parte 1: Variables y reinicio (15 min)
+
+**Segunda hora (60 min):**
+- 🔧 Conceptos fundamentales - Parte 2: Seguridad y memoria (15 min)
+- 🌟 Galería de imágenes útiles - Sesión práctica (45 min)
+  - *Esta es la sección más divertida y práctica*
+
+**Tercera hora (60 min):**
+- 🌐 Otros registros (10 min)
+- 🔍 Búsqueda de imágenes (15 min)
+- 🛠️ Crear imagen personalizada (20 min)
+- 🔎 Inspección y análisis (10 min)
+- 📋 Introducción a Dockerfile (15 min)
+
+**Tiempo de buffer: ~10-15 minutos** para Q&A y troubleshooting
+-->
