@@ -126,7 +126,7 @@ A partir de este momento, usaremos este editor para todas nuestras prácticas, y
 docker run httpd
 ```
 
-`httpd` es la imagen que usas para crear tu contenedor. De esta forma creas un contenedor con un servidor web pero en lugar de Nginx, usas Apache.
+`httpd` es la imagen oficial de Apache HTTP Server que usas para crear tu contenedor. De esta forma creas un contenedor con un servidor web Apache, que es una alternativa muy popular a Nginx.
 
 Para ver las imágenes descargadas en tu local:
 
@@ -140,27 +140,20 @@ O bien:
 docker images
 ```
 
-```bash
-docker image ls
-```
-
-O bien:
-```bash
-docker images
-```
-
-```bash
-docker image ls
-```
-
-También puedes ver las imágenes a través de la extesión de VS Code, en el apartado Images. Y si seleccionas cualquiera de ellas podrás ver las acciones que puedes hacer con las mismas.
+También puedes ver las imágenes a través de la extensión de VS Code, en el apartado Images. Y si seleccionas cualquiera de ellas podrás ver las acciones que puedes hacer con las mismas.
 
 ## 🏗️ Docker Hub web
 
-Todas las imágenes por defecto de Docker vienen de [Docker Hub](https://hub.docker.com/), un repositorio de imágenes que puedes usar en tus proyectos. Puedes buscar imágenes en Docker Hub desde la interfaz gráfica de Docker Desktop o desde el CLI. Por ejemplo, para buscar un servidor web como Nginx:
+Todas las imágenes por defecto de Docker vienen de [Docker Hub](https://hub.docker.com/), un repositorio de imágenes que puedes usar en tus proyectos. Puedes buscar imágenes en Docker Hub desde la interfaz gráfica de Docker Desktop o desde el CLI. Por ejemplo, para buscar un servidor web como Apache:
 
 ```bash
 docker search httpd
+```
+
+O si quisiéramos buscar Nginx:
+
+```bash
+docker search nginx
 ```
 
 
@@ -196,32 +189,32 @@ exit
 
 ## 🌐 Mapear puerto de contenedor a los puertos de mi máquina local
 
-Para acceder a un contenedor desde tu máquina local necesitas mapear el puerto del contenedor al de tu máquina. Por ejemplo, para acceder a Nginx mapea el puerto 80 del contenedor al 8080 de tu máquina:
+Para acceder a un contenedor desde tu máquina local necesitas mapear el puerto del contenedor al de tu máquina. Por ejemplo, para acceder a Apache mapea el puerto 80 del contenedor al 8080 de tu máquina:
 
 ```bash
-docker run --publish 8080:80 nginx
+docker run --publish 8081:80 httpd
 ```
 
 O bien:
 
 ```bash
-docker run -p 8080:80 nginx
+docker run -p 8081:80 httpd
 ```
 
-Ahora si accedes a [http://localhost:8080](http://localhost:8080) verás el servidor web de Nginx. 🌍
+Ahora si accedes a [http://localhost:8081](http://localhost:8081) verás el servidor web de Apache. 🌍
 
 ## 🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?
 
 Puedes ejecutar un contenedor en segundo plano usando la opción `-d` o `--detach`:
 
 ```bash
-docker run --detach -p 8080:80 nginx
+docker run --detach -p 8080:80 httpd
 ```
 
 O bien:
 
 ```bash
-docker run -d -p 8080:80 nginx
+docker run -d -p 8080:80 httpd
 ```
 
 ## 📋 Listar todos los contenedores que tengo en ejecución
@@ -249,7 +242,7 @@ docker ps -a
 Docker asigna nombres aleatorios a los contenedores, pero puedes elegir el nombre que quieras con la opción `--name`:
 
 ```bash
-docker run -d --name web -p 9090:80 nginx
+docker run -d --name web -p 9090:80 httpd
 ```
 
 Para ver el nuevo contenedor llamado `web`:
@@ -270,23 +263,23 @@ docker ps -a
 Puedes conectarte a un contenedor en ejecución desde Docker Desktop o desde el CLI. Por ejemplo:
 
 ```bash
-docker run --name webserver -d nginx 
+docker run --name webserver -d httpd 
 ```
 
 Y luego:
 
 ```bash
 docker exec -it webserver bash # Ejecuto bash dentro del contenedor y con -it me atacho a él
-cat /etc/nginx/nginx.conf 
+cat /etc/apache2/apache2.conf
 exit
 ```
 
 ## 🛠️ Ejecutar comandos desde mi local dentro del contenedor
 
-Puedes usar el subcomando `exec` para ejecutar comandos dentro del contenedor. Por ejemplo, para ver los logs de Nginx:
+Puedes usar el subcomando `exec` para ejecutar comandos dentro del contenedor. Por ejemplo, para ver los archivos de log de Apache:
 
 ```bash
-docker exec web ls /var/log/nginx
+docker exec web ls /var/log/apache2
 ```
 
 ## 🛑 ¿Cómo paro un contenedor?
@@ -300,7 +293,7 @@ docker stop web
 Para volver a arrancarlo:
 
 ```bash
-docker start my-web
+docker start web
 ```
 
 ## 🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?
@@ -308,13 +301,13 @@ docker start my-web
 Asegúrate de que el contenedor está parado:
 
 ```bash
-docker stop my-web
+docker stop web
 ```
 
 Y elimínalo:
 
 ```bash
-docker rm my-web
+docker rm web
 ```
 
 Comprueba que ya no aparece:
