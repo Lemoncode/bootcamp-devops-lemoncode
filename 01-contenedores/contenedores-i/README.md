@@ -155,10 +155,21 @@ Y ejecutar un contenedor con Ubuntu:
 docker run ubuntu
 ```
 
-Pero... ¿Qué ha pasado? pues que en este caso, que es un poquito diferente al de los servidores web, al ejecutar el comando `docker run ubuntu` no hemos especificado ningún comando a ejecutar dentro del contenedor, por lo que este se ha cerrado inmediatamente. Para evitar esto, podemos ejecutar un shell interactivo dentro del contenedor:
+Pero... ¿Qué ha pasado? pues que en este caso, que es un poquito diferente al de los servidores web, al ejecutar el comando `docker run ubuntu` no hemos especificado ningún comando a ejecutar dentro del contenedor, por lo que este se ha cerrado inmediatamente. 
+
+## 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él
+
+Para evitar esto, podemos ejecutar un shell interactivo dentro del contenedor:
 
 ```bash
 docker run --interactive --tty ubuntu /bin/bash
+```
+
+Para comprobar que estás dentro del contenedor, puedes ejecutar:
+
+```bash
+cat /etc/os-release
+exit
 ```
 
 
@@ -231,27 +242,6 @@ También puedes renombrar contenedores existentes:
 ```bash
 docker rename NOMBRE_ASIGNADO_POR_DOCKER hello-world
 docker ps -a
-```
-
-## 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él
-
-Para lanzar un shell interactivo en un contenedor:
-
-```bash
-docker run --interactive --tty ubuntu /bin/bash
-```
-
-O bien:
-
-```bash
-docker run -it ubuntu /bin/bash
-```
-
-Comprueba la versión del SO dentro del contenedor:
-
-```bash
-cat /etc/os-release
-exit
 ```
 
 ## 🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?
