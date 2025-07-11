@@ -16,7 +16,8 @@
 - [▶️ Ejecutar un nuevo contenedor](#️-ejecutar-un-nuevo-contenedor-usando-tu-nueva-imagen)
 - [🏗️ Imágenes multi-stage](#️-imágenes-multi-stage)
 - [🎯 Docker Bake](#-docker-bake)
-- [📦 Publicar nuestras imágenes en Docker Hub](#-publicar-nuestras-imágenes-en-docker-hub)
+- [� Docker Build Checks](#-docker-build-checks)
+- [�📦 Publicar nuestras imágenes en Docker Hub](#-publicar-nuestras-imágenes-en-docker-hub)
 - [📚 Resumen de lo aprendido](#-resumen-de-lo-aprendido)
 
 ---
@@ -293,16 +294,305 @@ docker buildx bake
 docker buildx bake doom-web-multi
 ```
 
-### 💡 Ventajas de usar Bake
+---
 
-1. **🎯 Consistencia**: Todos en el equipo usan la misma configuración
-2. **⚡ Eficiencia**: Builds paralelos y reutilización de capas
-3. **📖 Legibilidad**: Configuración clara y documentada
-4. **🔧 Flexibilidad**: Variables y herencia entre targets
-5. **🌐 Multi-plataforma**: Builds para diferentes arquitecturas fácilmente
+## 🔍 Docker Build Checks
+
+**Docker Build Checks** es una característica beta introducida en Dockerfile 1.8 que te permite validar tu configuración de build y realizar una serie de verificaciones antes de ejecutar tu build. Es como un **linter avanzado** para tu Dockerfile y opciones de build, o un modo de **dry-run** para builds. 🎯
+
+### 🌟 ¿Por qué usar Build Checks?
+
+- **✅ Validación temprana**: Detecta problemas antes de ejecutar el build
+- **📋 Mejores prácticas**: Asegura que tu Dockerfile sigue las recomendaciones actuales
+- **🚫 Anti-patrones**: Identifica patrones problemáticos en tu configuración
+- **🔒 Seguridad**: Ayuda a detectar configuraciones inseguras
+- **⚡ Eficiencia**: Ahorra tiempo evitando builds fallidos
+
+### 🛠️ Requisitos
+
+- **Buildx**: versión 0.15.0 o posterior
+- **docker/build-push-action**: versión 6.6.0 o posterior
+- **docker/bake-action**: versión 5.6.0 o posterior
+
+### 🚀 Uso básico
+
+Por defecto, los checks se ejecutan automáticamente cuando haces un build:
+
+```bash
+docker build .
+```
+
+**Salida de ejemplo:**
+```
+[+] Building 3.5s (11/11) FINISHED
+...
+
+1 warning found (use --debug to expand):
+  - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 7)
+```
+
+### 🔍 Verificar sin construir
+
+Para ejecutar solo los checks sin construir la imagen:
+
+```bash
+docker build --check .
+```
+
+**Ejemplo de salida detallada:**
+```
+[+] Building 1.5s (5/5) FINISHED
+=> [internal] connecting to local controller
+=> [internal] load build definition from Dockerfile
+=> => transferring dockerfile: 253B
+
+JSONArgsRecommended - https://docs.docker.com/go/dockerfile/rule/json-args-recommended/
+JSON arguments recommended for ENTRYPOINT/CMD to prevent unintended behavior related to OS signals
+Dockerfile:7
+--------------------
+5 |
+6 |     COPY index.js .
+7 | >>> CMD node index.js
+8 |
+--------------------
+```
+
+### 📝 Ejemplo práctico con nuestro proyecto doom-web
+
+Vamos a probar los checks con nuestro Dockerfile actual:
+
+```bash
+cd doom-web
+docker build --check .
+```
+
+Si hay warnings, puedes ver más detalles con:
+
+```bash
+docker --debug build --check .
+```
+
+### ⚙️ Configuración avanzada
+
+#### 🚨 Fallar el build en violaciones
+
+Puedes configurar que el build falle cuando se encuentren violaciones usando la directiva `check=error=true`:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=error=true
+
+FROM node:20-alpine
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD npm start  # Esto generará un warning que ahora será un error
+```
+
+También puedes configurarlo vía CLI:
+
+```bash
+docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=error=true" .
+```
+
+#### 🙈 Omitir checks específicos
+
+Para saltar checks específicos:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=skip=JSONArgsRecommended,StageNameCasing
+
+FROM alpine AS BASE_STAGE
+CMD echo "Hello, world!"
+```
+
+O vía CLI:
+
+```bash
+docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=JSONArgsRecommended" .
+```
+
+Para saltar todos los checks:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=skip=all
+```
+
+#### 🧪 Checks experimentales
+
+Para habilitar checks experimentales:
+
+```bash
+docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=experimental=all" .
+```
+
+O en el Dockerfile:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=experimental=all
+```
+
+#### 🔧 Combinando parámetros
+
+Puedes combinar múltiples configuraciones separándolas con punto y coma:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=skip=JSONArgsRecommended;error=true;experimental=all
+```
+
+### 🎮 Aplicando checks a nuestro proyecto doom-web
+
+Crear un `Dockerfile.checked` que siga las mejores prácticas:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=error=true
+
+FROM node:20-alpine AS base
+
+LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
+
+WORKDIR /usr/src/app
+
+# Mejores prácticas para el manejo de dependencias
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar archivos de la aplicación
+COPY . .
+
+# Exponer puerto
+EXPOSE 3000
+
+# Usar user no-root por seguridad
+RUN chown -R node:node /usr/src/app
+USER node
+
+# Usar formato JSON para CMD (evita warnings)
+CMD ["npm", "start"]
+```
+
+Probar los checks:
+
+```bash
+docker build --check -f Dockerfile.checked .
+```
+
+### 🎯 Integración con Docker Bake
+
+También puedes usar checks con Docker Bake añadiendo la configuración en tu `docker-bake.hcl`:
+
+```hcl
+target "doom-web-checked" {
+  context = "."
+  dockerfile = "Dockerfile.checked"
+  tags = ["doom-web:checked"]
+  args = {
+    BUILDKIT_DOCKERFILE_CHECK = "error=true"
+  }
+}
+
+target "doom-web-dry-run" {
+  context = "."
+  dockerfile = "Dockerfile"
+  args = {
+    BUILDKIT_DOCKERFILE_CHECK = "error=true;experimental=all"
+  }
+  call = "check"  # Solo ejecutar checks, no build
+}
+```
+
+Ejecutar:
+
+```bash
+# Solo checks
+docker buildx bake doom-web-dry-run --check
+
+# Build con checks estrictos
+docker buildx bake doom-web-checked
+```
+
+### 🔧 Checks más comunes
+
+| Check | Descripción | Ejemplo problemático |
+|-------|-------------|---------------------|
+| **JSONArgsRecommended** | CMD/ENTRYPOINT deberían usar formato JSON | `CMD npm start` ❌ |
+| **StageNameCasing** | Nombres de stage deberían estar en minúsculas | `FROM alpine AS BASE_STAGE` ❌ |
+| **FromAsCasing** | La palabra AS debería estar en mayúsculas | `FROM alpine as base` ❌ |
+| **NoEmptyCommand** | Comandos no deberían estar vacíos | `RUN` ❌ |
+| **UndefinedVariable** | Variables no definidas en ARG | `RUN echo $UNDEFINED_VAR` ❌ |
+
+### 📊 Integración con CI/CD
+
+#### GitHub Actions
+
+```yaml
+name: Docker Build with Checks
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build with checks
+        uses: docker/build-push-action@v6.6.0
+        with:
+          context: .
+          push: false
+          build-args: |
+            BUILDKIT_DOCKERFILE_CHECK=error=true
+```
+
+Los checks aparecerán como anotaciones en las pull requests de GitHub! 📝
+
+### 💡 Mejores prácticas
+
+1. **🎯 Usa checks desde el inicio**: Integra checks en tu workflow de desarrollo
+2. **⚠️ Trata warnings como errores**: Usa `check=error=true` en producción
+3. **📋 Documenta excepciones**: Si skips checks, documenta por qué
+4. **🔄 Actualiza regularmente**: Los checks evolucionan con las mejores prácticas
+5. **👥 Estandariza en equipo**: Usa la misma configuración en todo el proyecto
+
+### 🎯 Ejercicio práctico
+
+1. Ejecuta checks en nuestro Dockerfile actual:
+   ```bash
+   cd doom-web
+   docker build --check .
+   ```
+
+2. Corrige los warnings encontrados creando un `Dockerfile.best-practices`
+
+3. Añade la configuración a tu `docker-bake.hcl`:
+   ```hcl
+   target "doom-web-validated" {
+     context = "."
+     dockerfile = "Dockerfile.best-practices"
+     tags = ["doom-web:validated"]
+     args = {
+       BUILDKIT_DOCKERFILE_CHECK = "error=true"
+     }
+   }
+   ```
+
+4. Prueba el build con checks estrictos:
+   ```bash
+   docker buildx bake doom-web-validated
+   ```
 
 > [!TIP]
-> 💡 **Consejo**: Instala la [extensión de Docker para VS Code](https://marketplace.visualstudio.com/items?itemName=docker.docker) para obtener linting y navegación de código en archivos Bake.
+> 💡 **Consejo**: Instala la [extensión de Docker para VS Code](https://marketplace.visualstudio.com/items?itemName=docker.docker) para obtener linting en tiempo real de tu Dockerfile.
+
+---
 
 ## 📦 Publicar nuestras imágenes en Docker Hub
 
@@ -399,10 +689,20 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
    - Builds concurrentes y paralelos
    - Mejor organización para proyectos complejos
 
-5. **📦 Publicación en Docker Hub**: Distribución de imágenes
+5. **� Docker Build Checks**: Validación y linting avanzado
+   - Detección temprana de problemas en Dockerfiles
+   - Verificación de mejores prácticas de seguridad
+   - Integración con CI/CD para calidad de código
+
+6. **�📦 Publicación en Docker Hub**: Distribución de imágenes
    - Nomenclatura correcta de imágenes
    - Autenticación y push de imágenes
    - Gestión de tags y versiones
+
+6. **🔍 Docker Build Checks**: Validación de configuración de builds
+   - Detección temprana de problemas
+   - Asegura el cumplimiento de mejores prácticas
+   - Identificación de configuraciones inseguras
 
 ### 🛠️ Herramientas exploradas:
 
@@ -410,6 +710,8 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
 - **VS Code Extension**: Generación automática de Dockerfiles
 - **IA Tools**: Microsoft Edge Copilot y GitHub Copilot
 - **Docker Buildx**: Funcionalidades avanzadas con Bake
+- **Docker Build Checks**: Validación y linting de Dockerfiles
+- **Docker Build Checks**: Validación y verificación de Dockerfiles
 
 ### ✨ Beneficios obtenidos:
 
@@ -423,9 +725,10 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
 
 1. Experimentar con diferentes estrategias de multi-stage
 2. Implementar Docker Bake en proyectos reales
-3. Explorar Docker Compose para aplicaciones multi-contenedor
-4. Aprender sobre orquestación con Kubernetes
-5. Profundizar en seguridad de contenedores
+3. Integrar Docker Build Checks en el workflow de desarrollo
+4. Explorar Docker Compose para aplicaciones multi-contenedor
+5. Aprender sobre orquestación con Kubernetes
+6. Profundizar en seguridad de contenedores
 
 > [!SUCCESS]
 > 🎉 **¡Felicitaciones!** Ya dominas los fundamentos de la contenerización. Estás listo para el siguiente nivel: orquestación de contenedores.
