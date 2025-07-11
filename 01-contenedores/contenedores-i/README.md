@@ -2,18 +2,60 @@
 
 ![Docker](imagenes/Contenedores%20I%20-%20Hello%20World%20-%20Lemoncode.jpeg)
 
-## 🚀 Cómo instalar Docker en tu máquina local
+## 🧰 Cómo instalar Docker en tu máquina local
 
-A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de Docker Desktop, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/). Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
+A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/). Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
 
 ## 👀 Conociendo Docker desde Docker Desktop
 
-Cuando hayas instalado Docker Desktop verás que puedes empezar de forma muy visual. Pero es recomendable dominar la línea de comandos, ya que es la forma más rápida y común de trabajar con Docker en la vida real. Así puedes versionar, automatizar y compartir tus comandos, además de que a veces no tendrás acceso a la interfaz gráfica.
+Cuando hayas instalado Docker Desktop verás que puedes empezar de forma muy visual, aunque es posible que al principio no tengas muy claro qué es lo que tienes que hacer 😅. Aunque es recomendable dominar la línea de comandos, ya que es la forma más rápida y común de trabajar con Docker en la vida real, vamos a empezar por lo sencillo para luego ir avanzando cada vez un poco más y que te vayas sintiendo cómod@ con los diferentes conceptos.
+
+### 🚀 Misión 1: Mi primer contenedor con un servidor web
+
+Ok, como estamos en el módulo de contenedores, y ya tenemos instalado todo lo que necesitamos para empezar, nuestra primera misión va a ser, lógicamente, pues crear nuestro primer contenedor, como no podía ser de otra manera 😅 Y para este primer ejemplo vamos a crear un contenedor que dentro tenga un servidor web, en este caso usando Nginx, aunque podría ser cualquier otro, como también veremos.
+
+Ahora mismo en nuestra instalación de Docker Desktop no tenemos absolutamente nada, así que vamos a ver paso a paso cómo podemos crear este contenedor desde aquí.
+
+#### Paso 1: buscar la imagen de Nginx
+
+Lo primero que necesitas es saber la imagen que podemos utilizar para tener un contenedor con Nginx ¿Y cómo puedo saber esto? Pues para ello tenemos que ir la sección llamada **Docker Hub** dentro de Docker Desktop:
+
+![Docker Hub en Docker Desktop](imagenes/Docker%20Hub%20en%20Docker%20Desktop.png)
+
+Aquí vas a poder ver que tenemos un buscador donde podemos investigar qué imágenes hay disponibles, listas para usar. Por lo que si busco por `nginx` seré capaz de encontrar lo que busco.
+
+![nginx Docker Hub en Docker Desktop](imagenes/Nginx_en%20Docker%20Hub.png)
+
+Si hago clic sobre la misma...
+
+![Información sobre la imagen de Nginx](imagenes/Información%20sobre%20la%20imagen%20de%20nginx.png)
+
+Podrás ver información relacionada con la imagen, como por ejemplo las etiquetas disponibles, la descripción de la misma, etc. Ya entraremos más en detalle en todo esto, pero por ahora lo que nos interesa es ejecutar un contenedor que utilice la misma, así que vamos a ejecutar el botón **Run** que aparece en la parte superior derecha de la pantalla.
+
+Al hacerlo ocurriran dos cosas:
+
+1. En la parte inferior dice que está haciendo pull de la imagen, es decir, descargándola a tu máquina local.
+2. Te aparecerá un dialogo donde te pide un par de valores y la opción de ejecutar el contenedor.
+
+![Ejecutar contenedor de Nginx](imagenes/Ejecutar%20un%20nuevo%20contenedor%20desde%20Docker%20Desktop.png)
+
+Como por ahora no tenemos mucha idea, vamos a hacer clic directamente sobre el botón **Run** y veremos qué ocurre. Si todo ha ido bien, deberías ver en la sección de **Containers** que ya tienes un contenedor en ejecución 🚀, y si haces clic sobre él podrás ver más información relacionada con el mismo 🎉
+
+
+>[!IMPORTANT]
+>Es muy importante que tengas en cuenta que una imagen no es un contenedor. Es decir, que yo podría repetir este proceso varias veces y crear varios contenedores a partir de la misma imagen, cada uno con su propia configuración, estado, etc. Por ejemplo, si vuelves a hacer clic en el botón **Run** verás que te aparece un nuevo diálogo donde puedes configurar el nombre del contenedor, los puertos que quieres mapear, etc. Podríamos decir que una imagen es como una plantilla, y un contenedor es una instancia de esa plantilla.
+
+
+
+
+
+
+
+
 
 Para esta primera clase, te recomiendo ejecutar todos los comandos directamente en el Terminal integrado en Docker Desktop, así podrás ver el resultado en la interfaz gráfica al instante.
 
 ![Terminal integrado en Docker Desktop](imagenes/Terminal%20integrado%20en%20Docker%20Desktop.png)
-
 
 ## Visual Studio Code y Docker
 
@@ -22,8 +64,6 @@ Ahora que tienes Docker Desktop instalado, puedes integrarlo con Visual Studio C
 A partir de este momento, usaremos este editor para todas nuestras prácticas, ya que es gratuito, multiplataforma y muy popular entre los desarrolladores. Si no lo tienes instalado, descárgalo desde [su página oficial](https://code.visualstudio.com/).
 
 ## 🏁 Ejecuta tu primer contenedor
-
-Vamos a ejecutar nuestro primer contenedor. Quédate en el apartado de contenedores y ejecuta el siguiente comando en el terminal:
 
 ```bash
 docker run hello-world
@@ -36,12 +76,14 @@ Para ver las imágenes descargadas en tu local:
 ```bash
 docker image ls
 ```
+
 O bien:
+
 ```bash
 docker images
 ```
 
-## 🏗️ ¿Y estas imágenes de dónde vienen? 
+## 🏗️ ¿Y estas imágenes de dónde vienen?
 
 Todas las imágenes por defecto de Docker vienen de [Docker Hub](https://hub.docker.com/), un repositorio de imágenes que puedes usar en tus proyectos. Puedes buscar imágenes en Docker Hub desde la interfaz gráfica de Docker Desktop o desde el CLI. Por ejemplo, para buscar un servidor web como Nginx:
 
@@ -64,7 +106,9 @@ Para acceder a un contenedor desde tu máquina local necesitas mapear el puerto 
 ```bash
 docker run --publish 8080:80 nginx
 ```
+
 O bien:
+
 ```bash
 docker run -p 8080:80 nginx
 ```
@@ -78,7 +122,9 @@ Puedes ejecutar un contenedor en segundo plano usando la opción `-d` o `--detac
 ```bash
 docker run --detach -p 8080:80 nginx
 ```
+
 O bien:
+
 ```bash
 docker run -d -p 8080:80 nginx
 ```
@@ -96,7 +142,9 @@ Para ver todos los contenedores (incluidos los parados):
 ```bash
 docker ps --all
 ```
+
 O bien:
+
 ```bash
 docker ps -a
 ```
@@ -129,7 +177,9 @@ Para lanzar un shell interactivo en un contenedor:
 ```bash
 docker run --interactive --tty ubuntu /bin/bash
 ```
+
 O bien:
+
 ```bash
 docker run -it ubuntu /bin/bash
 ```
