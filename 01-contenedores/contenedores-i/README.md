@@ -16,8 +16,6 @@ Ok, como estamos en el módulo de contenedores, y ya tenemos instalado todo lo q
 
 Ahora mismo en nuestra instalación de Docker Desktop no tenemos absolutamente nada, así que vamos a ver paso a paso cómo podemos crear este contenedor desde aquí.
 
-#### Paso 1: buscar la imagen de Nginx
-
 Lo primero que necesitas es saber la imagen que podemos utilizar para tener un contenedor con Nginx ¿Y cómo puedo saber esto? Pues para ello tenemos que ir la sección llamada **Docker Hub** dentro de Docker Desktop:
 
 ![Docker Hub en Docker Desktop](imagenes/Docker%20Hub%20en%20Docker%20Desktop.png)
@@ -46,11 +44,13 @@ Como por ahora no tenemos mucha idea, vamos a hacer clic directamente sobre el b
 >Es muy importante que tengas en cuenta que una imagen no es un contenedor. Es decir, que yo podría repetir este proceso varias veces y crear varios contenedores a partir de la misma imagen, cada uno con su propia configuración, estado, etc. Por ejemplo, si vuelves a hacer clic en el botón **Run** verás que te aparece un nuevo diálogo donde puedes configurar el nombre del contenedor, los puertos que quieres mapear, etc. Podríamos decir que una imagen es como una plantilla, y un contenedor es una instancia de esa plantilla.
 
 
+Vale, ya tengo uno o varios contenedores con nginx, pero si ahora accedo a http://locahost no tengo ningun servidor web funcionando, ¿por qué? pues porque estos contenedores viven en un entorno aislado, y para poder acceder a ellos desde mi máquina local tengo que mapear los puertos del contenedor a los de mi máquina. Esto lo veremos más adelante, pero por ahora vamos a ver cómo podemos hacer esto desde la interfaz gráfica de Docker Desktop.
 
+Si ahora vuelvo a crear un nuevo contenedor y hago clic en el botón **Run** de nuevo, verás que en el diálogo que aparece un cuadro de texto donde puedo proporcionar un puerto.
 
+![Crear un contenedor indicando un puerto de mapeo](imagenes/Crear%20un%20contenedor%20indicando%20un%20puerto%20de%20mapeo.png)
 
-
-
+A lo que se refiere es a un puerto de mi máquina local que esté libre por el cual yo quiera/pueda acceder a este nuevo contenedor que voy a crear. En mi ejemplo he usado el puerto 8080 pero podría ser cualquier otro por encima de 1024, ya que los puertos por debajo de este número suelen estar reservados para servicios del sistema operativo.
 
 
 Para esta primera clase, te recomiendo ejecutar todos los comandos directamente en el Terminal integrado en Docker Desktop, así podrás ver el resultado en la interfaz gráfica al instante.
