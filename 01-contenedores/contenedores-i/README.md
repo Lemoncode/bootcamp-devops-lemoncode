@@ -31,7 +31,7 @@ A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es
 
 Cuando hayas instalado Docker Desktop verás que puedes empezar de forma muy visual, aunque es posible que al principio no tengas muy claro qué es lo que tienes que hacer 😅. Aunque es recomendable dominar la línea de comandos, ya que es la forma más rápida y común de trabajar con Docker en la vida real, vamos a empezar por lo sencillo para luego ir avanzando cada vez un poco más y que te vayas sintiendo cómod@ con los diferentes conceptos.
 
-### 🚀 Misión 1: Mi primer contenedor con un servidor web
+## Mi primer contenedor con un servidor web
 
 Ok, como estamos en el módulo de contenedores, y ya tenemos instalado todo lo que necesitamos para empezar, nuestra primera misión va a ser, lógicamente, pues crear nuestro primer contenedor, como no podía ser de otra manera 😅 Y para este primer ejemplo vamos a crear un contenedor que dentro tenga un servidor web, en este caso usando Nginx, aunque podría ser cualquier otro, como también veremos.
 
@@ -437,6 +437,34 @@ docker info                        # Información detallada del sistema Docker
 ```
 
 El comando `docker version` te mostrará las versiones del cliente y servidor Docker, mientras que `docker info` te dará información completa sobre el estado del sistema, incluyendo número de contenedores, imágenes, configuración de red, y más.
+
+## ✨ Gordon AI
+
+Ahora que ya te he contado todo lo que deberías de saber en el día 1 de tu inicio en el mundo de los contenedores, no puedo evitar mecionar que a partir de ahora vas a tener una ayuda adicional en la que te vas a poder apoyar dudante este camino. Y es que como parte de Docker tienes a tu disposición un asistente IA llamado **Gordon** que te ayudará a resolver dudas y problemas comunes. Puedes acceder a él desde Docker Desktop haciendo clic en la sección **✨ Ask Gordon** en el menú de la izquierda. 
+
+
+Donde podrás ver un chat y un historico de las conversaciones que has tenido con él, de tal forma que puedas retomarlas en cualquier momento.
+
+Además, también es posible hablar con él a través del terminal, por si no estás usando directamente Docker Desktop. Para ello puedes lanzar un comando como el siguiente:
+
+
+```bash
+docker ai "How can I run a container with Nginx?"
+```
+
+El único inconveniente a día de hoy es que Gordon solo está disponible en inglés, por lo que tendrás que hacer las preguntas en este idioma. Si intento lo mismo en español:
+
+```bash
+docker ai "¿Cómo puedo ejecutar un contenedor con Nginx?"
+```
+
+A veces funciona, pero en otras ocasiones no. Así que te recomiendo que uses el inglés para interactuar con él.
+
+## ✨ GitHub Copilot
+
+Si estás usando Visual Studio Code, también puedes aprovechar [GitHub Copilot](https://github.com/features/copilot) para obtener sugerencias de código y completar automáticamente tus comandos de Docker. Este tiene un plan gratuito que te permite usarlo con ciertas limitaciones. También dispone de un chat donde puedes hacerle preguntas y te ayudará a resolver dudas sobre Docker y otros temas relacionados con el desarrollo.
+
+Lo ideal es que aprendas los conceptos básicos de Docker y que puedas apoyarte en estos agentes, te ayuden a resolver dudas y te den sugerencias de código, pero no que dependas de ellos para todo. Así que te animo a que practiques y experimentes con Docker por tu cuenta, y uses estas herramientas como apoyo cuando lo necesites.
 
 ---
 
