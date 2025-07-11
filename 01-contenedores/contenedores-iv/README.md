@@ -67,6 +67,28 @@ docker run -d --name halloween-web-v -v "$(pwd)"/web-content:/usr/share/nginx/ht
 
 🔄 Si cambias el contenido de la carpeta `web-content` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
 
+### 🚀 Ejemplo práctico: Desarrollo en vivo
+
+Vamos a ver el poder de los bind mounts para desarrollo. Con el contenedor corriendo, edita el archivo `web-content/index.html`:
+
+```bash
+# Edita el archivo (puedes usar cualquier editor)
+echo "<h1>¡Cambio en vivo!</h1><p>Hora actual: $(date)</p>" > web-content/index.html
+
+# Recarga la página en http://localhost:8081 y verás el cambio inmediatamente
+```
+
+**🎯 Casos de uso reales para bind mounts:**
+- **Desarrollo web**: Cambios instantáneos sin rebuild
+- **Configuración**: Archivos de config externos al contenedor
+- **Logs**: Acceder a logs desde el host
+- **Scripts**: Ejecutar scripts del host en contenedor
+
+⚠️ **Limitaciones en producción:**
+- Dependencia del filesystem del host
+- Problemas de permisos entre sistemas
+- No funciona bien en clusters distribuidos
+
 #### Usar el bind mount como read-only
 
 También puedes montar un bind mount como read-only. Esto significa que desde tu máquina podrás cambiar el contenido sin problemas pero desde dentro del contenedor no se podrá. 🔒 Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
@@ -176,6 +198,56 @@ docker volume rm halloween-data
 docker volume prune -f
 ```
 
+### 📦 Backup y restore de volúmenes
+
+Los volúmenes son críticos para la persistencia de datos. Aquí te mostramos cómo hacer backup y restore:
+
+#### Crear un backup de un volumen
+
+```bash
+# Crear un contenedor temporal para hacer backup
+docker run --rm -v halloween-data:/data -v $(pwd):/backup alpine \
+  tar czf /backup/halloween-data-backup.tar.gz -C /data .
+
+# Verificar que el backup se creó
+ls -la halloween-data-backup.tar.gz
+```
+
+#### Restaurar desde un backup
+
+```bash
+# Crear un nuevo volumen
+docker volume create halloween-data-restored
+
+# Restaurar los datos
+docker run --rm -v halloween-data-restored:/data -v $(pwd):/backup alpine \
+  tar xzf /backup/halloween-data-backup.tar.gz -C /data
+
+# Verificar la restauración
+docker run --rm -v halloween-data-restored:/data alpine ls -la /data
+```
+
+### 🔄 Migración de datos entre volúmenes
+
+A veces necesitas mover datos de un volumen a otro:
+
+```bash
+# Copiar datos de un volumen a otro
+docker run --rm -v halloween-data:/source -v new-volume:/destination alpine \
+  sh -c "cp -r /source/* /destination/"
+```
+
+### 💡 Comparación: Bind mounts vs Volúmenes
+
+| Característica | Bind Mounts | Volúmenes |
+|---------------|-------------|-----------|
+| **Portabilidad** | ❌ Depende del host | ✅ Gestionado por Docker |
+| **Desarrollo** | ✅ Ideal | ⚠️ Menos directo |
+| **Producción** | ⚠️ Problemático | ✅ Recomendado |
+| **Backup** | 🤷 Manual | ✅ Herramientas Docker |
+| **Permisos** | ⚠️ Complejos | ✅ Gestionados |
+| **Rendimiento** | ✅ Directo | ✅ Optimizado |
+
 ## 🧠 Tmpfs mount
 
 La última forma de almacenar datos en Docker es utilizando un tmpfs mount. Un tmpfs mount es un sistema de archivos temporal que se almacena en la memoria RAM de tu host. ⚡ Esto significa que si apagas tu máquina, perderás todos los datos que hayas almacenado en tu contenedor.
@@ -194,6 +266,30 @@ docker run -dit --name tmptest2 --tmpfs /app nginx:latest
 ```bash	
 docker container inspect tmptest2 | grep "Tmpfs" -A 2
 ```
+
+### 🎯 Casos de uso para tmpfs
+
+**¿Cuándo usar tmpfs mount?**
+- **Datos temporales**: Cachés, archivos temporales
+- **Información sensible**: Passwords, tokens (se borran al apagar)
+- **Alto rendimiento**: Operaciones que requieren I/O muy rápido
+- **Testing**: Datos que no necesitas persistir
+
+**Ejemplo práctico con cache:**
+
+```bash
+# Contenedor con cache en memoria
+docker run -dit --name redis-cache \
+  --tmpfs /data \
+  -p 6379:6379 \
+  redis:alpine redis-server --dir /data
+
+# Verificar que funciona
+docker exec redis-cache redis-cli ping
+```
+
+> [!WARNING]
+> ⚠️ **Importante**: Todo en tmpfs se pierde al reiniciar el contenedor. Úsalo solo para datos que puedes permitirte perder.
 
 
 ## 📊 Monitorización 
@@ -262,6 +358,158 @@ Aunque ya lo vimos en alguna clase anterior, es importante recordar que para ver
 docker logs ping-service
 ```
 
+### 📊 Logs avanzados: Filtros y formatos
+
+Docker logs tiene opciones muy útiles para analizar problemas:
+
+```bash
+# Ver solo las últimas 10 líneas
+docker logs --tail 10 ping-service
+
+# Seguir logs en tiempo real (como tail -f)
+docker logs -f ping-service
+
+# Ver logs con timestamps
+docker logs -t ping-service
+
+# Filtrar logs por tiempo
+docker logs --since="2024-01-01T00:00:00" ping-service
+docker logs --until="2024-12-31T23:59:59" ping-service
+
+# Combinar opciones
+docker logs -f --tail 20 -t ping-service
+```
+
+### 🚨 Troubleshooting con logs
+
+**Buscar errores comunes:**
+
+```bash
+# Buscar errores en logs
+docker logs ping-service 2>&1 | grep -i error
+
+# Ver logs de contenedor que falló
+docker logs --details container-that-failed
+
+# Analizar logs de múltiples contenedores
+docker logs $(docker ps -q) 2>&1 | grep -i "warning\|error"
+```
+
+### 🔧 Limpieza inteligente del sistema
+
+Además de `docker system df`, puedes hacer limpieza selectiva:
+
+```bash
+# Limpiar todo lo no utilizado (¡cuidado!)
+docker system prune -a
+
+# Limpiar solo imágenes sin usar
+docker image prune
+
+# Limpiar solo contenedores parados
+docker container prune
+
+# Limpiar solo volúmenes no utilizados
+docker volume prune
+
+# Ver qué se eliminaría sin hacerlo
+docker system prune --dry-run
+```
+
+### 📈 Monitorización avanzada
+
+**Monitoring de múltiples contenedores:**
+
+```bash
+# Stats de todos los contenedores
+docker stats
+
+# Stats con formato personalizado
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}"
+
+# Solo un contenedor específico cada 2 segundos
+docker stats --no-stream ping-service
+```
+
+**Alertas básicas con scripts:**
+
+```bash
+# Script simple para alertar si CPU > 80%
+#!/bin/bash
+CPU_USAGE=$(docker stats --no-stream --format "{{.CPUPerc}}" ping-service | sed 's/%//')
+if (( $(echo "$CPU_USAGE > 80" | bc -l) )); then
+    echo "⚠️ ALERTA: CPU al ${CPU_USAGE}%"
+fi
+```
+
 ## 🔌 Docker extensions
 
 Existen varias extensiones de Docker que nos permiten monitorizar nuestros contenedores de una forma más visual. 🎨 Puedes encontrarlas en el apartado de extensiones de Docker Desktop o a través del marketplace: https://hub.docker.com/search?q=&type=extension&sort=pull_count&order=desc
+
+### 🌟 Extensiones recomendadas
+
+**Para monitorización:**
+- **Disk usage**: Visualiza el uso de espacio de Docker
+- **Logs Explorer**: Interfaz avanzada para análisis de logs
+- **Resource Usage**: Gráficos de CPU, memoria y red
+
+**Para desarrollo:**
+- **Volumes Backup & Share**: Backup y compartir volúmenes fácilmente
+- **Docker Scout**: Análisis de vulnerabilidades en imágenes
+
+### 🎯 Ejercicios prácticos para consolidar
+
+**Ejercicio 1: Setup de desarrollo completo**
+```bash
+# 1. Crear un bind mount para desarrollo web
+# 2. Editar archivos en vivo y ver cambios
+# 3. Configurar logs en tiempo real
+# 4. Monitorizar recursos mientras desarrollas
+```
+
+**Ejercicio 2: Gestión de datos empresarial**
+```bash
+# 1. Crear volúmenes para datos persistentes
+# 2. Hacer backup de volúmenes
+# 3. Simular fallo y recuperación
+# 4. Compartir datos entre múltiples servicios
+```
+
+**Ejercicio 3: Optimización y monitorización**
+```bash
+# 1. Usar tmpfs para cachés temporales
+# 2. Monitorizar uso de recursos
+# 3. Analizar logs para troubleshooting
+# 4. Limpiar sistema manteniendo lo esencial
+```
+
+> [!TIP]
+> 💡 **Consejo final**: En producción, siempre usa volúmenes para datos críticos, bind mounts solo para desarrollo, y tmpfs para datos temporales que requieren alto rendimiento.
+
+<!--
+## ⏱️ Distribución temporal sugerida (3 horas)
+
+**Primera hora (60 min):**
+- 🔗 Bind mounts completo (45 min)
+  - Explicación conceptual (10 min)
+  - Práctica con --mount (15 min) 
+  - Práctica con -v (10 min)
+  - Read-only bind mount (10 min)
+- ☕ Mini break (15 min)
+
+**Segunda hora (60 min):**
+- 💾 Volúmenes - Parte 1 (60 min)
+  - Crear y usar volúmenes básicos (30 min)
+  - Volúmenes automáticos (15 min)
+  - Compartir entre contenedores (15 min)
+
+**Tercera hora (60 min):**
+- 💾 Volúmenes - Parte 2 (20 min)
+  - Inspección y limpieza
+- 🧠 Tmpfs mount (15 min)
+- 📊 Monitorización (20 min)
+  - Sesión práctica con docker events, stats, logs
+- 🔌 Docker extensions + tiempo libre (5 min)
+
+**Tiempo de buffer: ~30 minutos** - Perfecto para experimentación extra
+-->
