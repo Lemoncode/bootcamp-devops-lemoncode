@@ -14,6 +14,13 @@ Para esta primera clase, te recomiendo ejecutar todos los comandos directamente 
 
 ![Terminal integrado en Docker Desktop](imagenes/Terminal%20integrado%20en%20Docker%20Desktop.png)
 
+
+## Visual Studio Code y Docker
+
+Ahora que tienes Docker Desktop instalado, puedes integrarlo con Visual Studio Code para una experiencia aún más fluida. Asegúrate de tener instalada [la extensión Container Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-containers). Esto te permitirá gestionar contenedores, imágenes y redes directamente desde el editor. Además, como tienes instalado Docker CLI, podrás ejecutar comandos de Docker desde el terminal integrado de VS Code.
+
+A partir de este momento, usaremos este editor para todas nuestras prácticas, ya que es gratuito, multiplataforma y muy popular entre los desarrolladores. Si no lo tienes instalado, descárgalo desde [su página oficial](https://code.visualstudio.com/).
+
 ## 🏁 Ejecuta tu primer contenedor
 
 Vamos a ejecutar nuestro primer contenedor. Quédate en el apartado de contenedores y ejecuta el siguiente comando en el terminal:
