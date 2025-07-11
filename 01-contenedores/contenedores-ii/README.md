@@ -13,6 +13,7 @@ En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión b
 - 🖼️ Crear imágenes personalizadas mediante commits
 - 🔎 Inspeccionar y analizar la estructura de imágenes
 - 🗑️ Optimizar el espacio eliminando imágenes no utilizadas
+- 🤖 Conocer Docker Model Runner para IA y modelos de lenguaje
 
 ### 📚 Contenido
 1. [Crear contenedores desde imágenes](#crear-un-contenedor-a-partir-de-una-imagen-de-docker)
@@ -25,7 +26,8 @@ En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión b
 8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente)
 9. [Inspección y análisis](#inspeccionando-una-imagen)
 10. [Limpieza y mantenimiento](#eliminar-una-imagen)
-11. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen)
+11. [Docker Model Runner: IA y modelos de lenguaje](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
+12. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen)
 
 ---
 
@@ -133,7 +135,7 @@ Las variables de entorno permiten configurar aplicaciones sin modificar la image
 
 **🔍 Variables más comunes:**
 - `TZ`: Zona horaria (America/New_York, Europe/London, etc.)
-- `PUID/PGID`: IDs de usuario/grupo para manejo de permisos
+- `PUID/PGID`: IDs de usuario/grupo para manejo de permisos. 
 - `PASSWORD/USER`: Credenciales de acceso
 - `DB_*`: Configuración de base de datos
 - `APP_*`: Configuraciones específicas de la aplicación
@@ -476,6 +478,66 @@ Si quisiéramos eliminar SOLO las imágenes que no se están utilizando:
 docker image prune -a
 ```
 
+## 🤖 Docker Model Runner: IA y modelos de lenguaje en contenedores
+
+Antes de profundizar en la creación de imágenes con Dockerfile, es importante conocer **Docker Model Runner**, una característica beta que representa el futuro de la IA en el ecosistema Docker. Esta herramienta revoluciona la forma en que trabajamos con modelos de inteligencia artificial y grandes modelos de lenguaje (LLMs).
+
+### 🎯 **¿Qué es Docker Model Runner?**
+
+Docker Model Runner es una herramienta integrada en Docker Desktop y Docker Engine que permite gestionar, ejecutar y desplegar modelos de IA de forma sencilla. Está diseñada específicamente para desarrolladores que quieren integrar capacidades de IA en sus aplicaciones sin complicaciones.
+
+### ✨ **Características principales**
+
+- **🔄 Gestión simplificada**: Descarga y sube modelos directamente desde/hacia Docker Hub
+- **🌐 APIs compatibles con OpenAI**: Sirve modelos con endpoints familiares para fácil integración
+- **📦 Empaquetado OCI**: Convierte archivos GGUF en artefactos OCI y publícalos en cualquier registro
+- **💻 Interfaz dual**: Interactúa desde línea de comandos o la GUI de Docker Desktop
+- **📊 Gestión local**: Administra modelos locales y visualiza logs de ejecución
+
+### 🚀 **Cómo funciona**
+
+Los modelos se descargan desde Docker Hub la primera vez que se usan y se almacenan localmente. Se cargan en memoria solo cuando se solicita y se descargan cuando no están en uso para optimizar recursos. Después de la descarga inicial, quedan en caché para acceso rápido.
+
+### 🛠️ **Comandos esenciales**
+
+```bash
+# Habilitar Docker Model Runner (desde Docker Desktop settings)
+# Beta features > Enable Docker Model Runner
+
+# Verificar instalación
+docker model version
+
+# Ejecutar un modelo
+docker model run ai/gemma3
+
+# Listar modelos locales
+docker model ls
+```
+
+### 🔗 **Modelos disponibles**
+
+Todos los modelos están disponibles en el [namespace público de Docker Hub](https://hub.docker.com/u/ai).
+
+### 💡 **Casos de uso típicos**
+
+- **Desarrollo de aplicaciones GenAI**: Integra IA en tus apps sin configuración compleja
+- **Prototipado rápido**: Prueba diferentes modelos localmente antes del despliegue
+- **Pipelines CI/CD**: Incluye capacidades de IA en tus flujos de trabajo automatizados
+- **Experimentación ML**: Testa modelos sin depender de servicios externos
+
+
+```
+### 🔍 **Compatibilidad con herramientas existentes**
+
+Docker Model Runner se integra perfectamente con:
+- **Docker Compose**: Incluye modelos en tus stacks multi-contenedor
+- **Testcontainers**: Para Java y Go, permite testing con modelos de IA
+- **Dockerfile**: Puedes referenciar modelos en tus imágenes personalizadas
+
+> 💡 **¿Por qué es importante?** Docker Model Runner democratiza el acceso a la IA, permitiendo que cualquier desarrollador pueda trabajar con modelos avanzados usando las herramientas Docker que ya conoce. Es especialmente valioso para crear aplicaciones que necesiten procesamiento de lenguaje natural, generación de texto, o análisis semántico.
+
+---
+
 ## 📋 Introducción a Dockerfile: Construyendo tu primera imagen
 
 Hasta ahora hemos usado `docker commit` para crear imágenes a partir de contenedores modificados, pero esta no es la mejor práctica en el mundo real. La forma correcta y reproducible de crear imágenes es usando un `Dockerfile`.
@@ -539,60 +601,29 @@ docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 
 ---
 
-## 🎓 Resumen: Lo que hemos aprendido hoy
+## � ¡Felicidades!
 
-### ✅ Conceptos clave dominados
-- **Gestión de imágenes locales**: Listar, filtrar y organizar imágenes en nuestro sistema
-- **Descarga estratégica**: Usar `docker pull` con versiones específicas y digests para mayor control
-- **Parámetros fundamentales**: Variables de entorno, políticas de reinicio y opciones de seguridad
-- **Registros múltiples**: Trabajar con Docker Hub, Google Artifact Registry, Microsoft Container Registry
-- **Búsqueda avanzada**: Filtrar imágenes por estrellas, oficiales, y formatear resultados
-- **Creación de imágenes personalizadas**: Usar `docker commit` para crear imágenes a partir de contenedores modificados
-- **Inspección profunda**: Analizar capas, configuración y metadata de imágenes
-- **Limpieza eficiente**: Mantener el sistema optimizado eliminando imágenes no utilizadas
-- **Introducción a Dockerfile**: Fundamentos para construir imágenes de forma reproducible
+En esta segunda clase has aprendido a:
 
-### 🛠️ Comandos esenciales que ya manejas
-```bash
-# Gestión básica
-docker images                    # Listar imágenes locales
-docker pull <imagen>:<tag>       # Descargar imagen específica
-docker rmi <imagen>              # Eliminar imagen
-docker image prune -a            # Limpiar imágenes no utilizadas
+- 🚀 Crear contenedores desde imágenes Docker de forma eficiente.
+- 📂 Gestionar imágenes locales: listar, filtrar y organizar tu colección de imágenes.
+- 📥 Descargar imágenes estratégicamente con versiones específicas y digests.
+- 🔧 Dominar conceptos fundamentales: variables de entorno, políticas de reinicio y opciones de seguridad.
+- 🌟 Explorar una galería completa de imágenes útiles de LinuxServer y otros proveedores.
+- 🌐 Trabajar con registros múltiples: Docker Hub, Google Artifact Registry, Microsoft Container Registry.
+- 🔍 Realizar búsquedas avanzadas en Docker Hub con filtros y formato personalizado.
+- 🛠️ Crear imágenes personalizadas usando `docker commit` y modificando contenedores existentes.
+- 🔎 Inspeccionar imágenes en profundidad: analizar capas, configuración y metadata.
+- 🗑️ Mantener el sistema optimizado eliminando imágenes no utilizadas.
+- 🤖 Conocer Docker Model Runner: la herramienta beta para gestionar modelos de IA y LLMs.
+- 🌐 Integrar modelos de IA usando APIs compatibles con OpenAI desde contenedores.
+- ⚡ Ejecutar aplicaciones GenAI localmente con Docker Model Runner.
+- 📋 Introducción a Dockerfile: fundamentos para construir imágenes de forma reproducible.
+- 🎯 Entender las mejores prácticas: por qué Dockerfile es superior a `docker commit`.
 
-# Búsqueda y filtrado
-docker search --filter=stars=50 nginx
-docker images --filter="label=maintainer=value"
+En la siguiente clase profundizaremos en Dockerfile y aprenderás a crear imágenes optimizadas para producción.
 
-# Creación personalizada
-docker commit <contenedor> <nueva-imagen>:<tag>
-
-# Inspección
-docker inspect <imagen>
-dive <imagen>                    # Herramienta externa para análisis de capas
-
-# Parámetros avanzados
-docker run -e TZ=Europe/Madrid -p 8080:80 --restart=unless-stopped nginx
-
-# Introducción a Dockerfile
-docker build -t <nombre-imagen>:<tag> .   # Construir imagen desde Dockerfile
-```
-
-### 🔧 Parámetros clave aprendidos
-```bash
-# Variables de entorno
--e PUID=1000 -e PGID=1000 -e TZ=Europe/Madrid
-
-# Políticas de reinicio
---restart=unless-stopped  # Reinicia salvo parada manual
---restart=always         # Reinicia siempre
---restart=on-failure     # Solo si falla
-
-# Seguridad y rendimiento
---security-opt seccomp=unconfined  # Para apps gráficas
---shm-size="1gb"                   # Memoria compartida
---privileged                       # Acceso completo (usar con cuidado)
-```
+Happy coding {🍋}
 
 ---
 
