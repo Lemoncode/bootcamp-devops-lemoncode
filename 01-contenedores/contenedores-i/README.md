@@ -37,8 +37,9 @@ Al hacerlo ocurriran dos cosas:
 
 ![Ejecutar contenedor de Nginx](imagenes/Ejecutar%20un%20nuevo%20contenedor%20desde%20Docker%20Desktop.png)
 
-Como por ahora no tenemos mucha idea, vamos a hacer clic directamente sobre el botón **Run** y veremos qué ocurre. Si todo ha ido bien, deberías ver en la sección de **Containers** que ya tienes un contenedor en ejecución 🚀, y si haces clic sobre él podrás ver más información relacionada con el mismo 🎉
+Como por ahora no tenemos mucha idea, vamos a hacer clic directamente sobre el botón **Run** y veremos qué ocurre. Si todo ha ido bien, deberías ver en la sección de **Containers** que ya tienes un contenedor en ejecución 🚀
 
+Cuando tienes un contenedor en ejecución verás que esté se está ejecutando porque tiene un circulo verde al lado del nombre. Pero como puedes ver, también se pueden parar, e incluso eliminar, contenedores. Además si hacemos clic sobre los tres puntos que aparecen al lado del nombre del contenedor, veremos que podemos acceder a más opciones, como por ejemplo ver los logs del contenedor, abrir una terminal dentro del mismo, etc. Y más recientemente también puedes ver que aparecen unas estrellitas ✨ al lado del botón de parada, que es el acceso rápido a **Gordon** el asistente IA de Docker que te ayudará a resolver dudas y problemas comunes. Lo veremos también con cariño más adelante para que puedas sacarle también partido y te ayude a aprender más sobre Docker.
 
 >[!IMPORTANT]
 >Es muy importante que tengas en cuenta que una imagen no es un contenedor. Es decir, que yo podría repetir este proceso varias veces y crear varios contenedores a partir de la misma imagen, cada uno con su propia configuración, estado, etc. Por ejemplo, si vuelves a hacer clic en el botón **Run** verás que te aparece un nuevo diálogo donde puedes configurar el nombre del contenedor, los puertos que quieres mapear, etc. Podríamos decir que una imagen es como una plantilla, y un contenedor es una instancia de esa plantilla.
