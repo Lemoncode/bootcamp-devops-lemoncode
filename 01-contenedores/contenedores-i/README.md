@@ -318,6 +318,51 @@ docker ps -a
 
 También puedes hacerlo desde la interfaz gráfica de Docker Desktop.
 
+## 📚 Comandos Docker más comunes
+
+Ahora que ya has aprendido los conceptos básicos, aquí tienes un resumen de los comandos Docker más utilizados en el día a día:
+
+### 🏃 Ejecutar contenedores
+```bash
+docker run httpd                    # Ejecutar un contenedor
+docker run -d httpd                 # Ejecutar en segundo plano
+docker run -p 8080:80 httpd         # Mapear puertos
+docker run --name mi-apache httpd   # Asignar nombre personalizado
+```
+
+### 📋 Listar y gestionar contenedores
+```bash
+docker ps                          # Ver contenedores en ejecución
+docker ps -a                       # Ver todos los contenedores
+docker stop mi-apache               # Parar un contenedor
+docker start mi-apache              # Iniciar un contenedor parado
+docker restart mi-apache            # Reiniciar un contenedor
+```
+
+### 🔧 Ejecutar comandos en contenedores
+```bash
+docker exec -it mi-apache bash     # Abrir terminal interactiva
+docker exec mi-apache ls /var/www  # Ejecutar comando específico
+```
+
+### 🖼️ Gestionar imágenes
+```bash
+docker images                      # Listar imágenes locales
+docker search apache               # Buscar imágenes en Docker Hub
+```
+
+### ℹ️ Información del sistema
+```bash
+docker version                     # Ver versión de Docker
+docker info                        # Información del sistema Docker
+```
+
+### 🗑️ Limpiar recursos
+```bash
+docker rm mi-apache                # Eliminar contenedor
+docker rm $(docker ps -aq)         # Eliminar todos los contenedores parados
+```
+
 ### ⚡ Comandos combinados para limpiar rápido
 
 Para parar y eliminar todos los contenedores:
@@ -382,6 +427,17 @@ O bien, todo de golpe:
 docker rm -f mysqlserver
 ```
 
+## ℹ️ Información del sistema Docker
+
+Para obtener información detallada sobre tu instalación de Docker, puedes usar estos comandos útiles:
+
+```bash
+docker version                     # Ver versión de Docker
+docker info                        # Información detallada del sistema Docker
+```
+
+El comando `docker version` te mostrará las versiones del cliente y servidor Docker, mientras que `docker info` te dará información completa sobre el estado del sistema, incluyendo número de contenedores, imágenes, configuración de red, y más.
+
 ---
 
 ## 🎉 ¡Felicidades!
@@ -390,19 +446,24 @@ En esta primera clase has aprendido a:
 
 - 🖥️ Instalar Docker Desktop en tu máquina local.
 - 👀 Conocer Docker desde Docker Desktop.
-- 🏁 Ejecutar tu primer contenedor.
+- 🚀 Crear tu primer contenedor con un servidor web (Nginx).
+- 🐳 Trabajar con Docker CLI desde la línea de comandos.
+- 🔧 Integrar Visual Studio Code con Docker.
+- 🏁 Ejecutar contenedores Apache usando el Terminal de VS Code.
 - 📦 Ver las imágenes descargadas en tu local.
 - 🔍 Buscar imágenes en Docker Hub.
+- 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él.
 - 🌐 Mapear puertos de contenedor a tu máquina local.
 - 🕹️ Ejecutar un contenedor en segundo plano.
 - 📋 Listar todos los contenedores en ejecución.
-- 🏷️ Bautizar contenedores.
-- 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él.
+- 🏷️ Bautizar contenedores con nombres personalizados.
 - 🔄 Ejecutar comandos en un contenedor ya en ejecución.
 - 🛠️ Ejecutar comandos desde tu local dentro del contenedor.
-- 🛑 Parar un contenedor.
-- 🗑️ Eliminar un contenedor.
-- 🗄️ SQL Server dockerizado.
+- 🛑 Parar y reiniciar contenedores.
+- 🗑️ Eliminar contenedores del todo de tu ordenador.
+- 📚 Dominar los comandos Docker más comunes del día a día.
+- 🗄️ Crear y gestionar un SQL Server dockerizado.
+- ℹ️ Obtener información del sistema Docker.
 
 En la siguiente clase veremos cómo crear nuestras propias imágenes de Docker.
 
