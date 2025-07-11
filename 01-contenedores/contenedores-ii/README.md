@@ -353,6 +353,35 @@ docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
 docker run mcr.microsoft.com/mcr/hello-world
 ```
 
+## 🗄️ Crear tu propio registro Docker privado en un contenedor
+
+Puedes levantar un registro privado de Docker en tu máquina usando la imagen oficial `registry`. Esto es útil para compartir imágenes en tu equipo o entorno local.
+
+```bash
+docker run -d -p 5000:5000 --name registry registry:2
+```
+
+Esto inicia un registro accesible en `localhost:5000`.
+
+### 📦 Subir una imagen a tu registro privado
+
+1. Etiqueta la imagen para tu registro local:
+  ```bash
+  docker tag nginx localhost:5000/nginx
+  ```
+2. Sube la imagen:
+  ```bash
+  docker push localhost:5000/nginx
+  ```
+
+### ⬇️ Descargar una imagen desde tu registro privado
+
+```bash
+docker pull localhost:5000/nginx
+```
+
+> 💡 **Tip:** Para entornos de producción, añade autenticación y TLS. Consulta la [documentación oficial](https://docs.docker.com/registry/) para más opciones.
+
 ## 🔍 Buscar imágenes en Docker Hub
 
 Ya vimos en el primer día cómo buscar imágenes en Docker Hub, pero vamos a recordarlo.
