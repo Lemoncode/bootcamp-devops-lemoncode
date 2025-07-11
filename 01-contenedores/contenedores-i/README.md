@@ -52,6 +52,14 @@ Si ahora vuelvo a crear un nuevo contenedor y hago clic en el botón **Run** de 
 
 A lo que se refiere es a un puerto de mi máquina local que esté libre por el cual yo quiera/pueda acceder a este nuevo contenedor que voy a crear. En mi ejemplo he usado el puerto 8080 pero podría ser cualquier otro por encima de 1024, ya que los puertos por debajo de este número suelen estar reservados para servicios del sistema operativo.
 
+Al ejecutar el comando **Run** verás que en la sección de **Containers** aparece un nuevo contenedor pero este es diferente al resto, ya que tiene un enlace a un puerto de tu máquina local, en este caso el 8080. 
+
+![Crear un contenedor indicando un puerto de mapeo](imagenes/Containers%20-%20contenedor%20con%20puerto%20mapeado.png)
+
+Si haces clic sobre el enlace podrás acceder al servidor web que has creado con Nginx.
+
+![Acceso al servidor web de Nginx](imagenes/En%20localhost%208080%20Welcome%20to%20Nginx.png)
+
 
 Para esta primera clase, te recomiendo ejecutar todos los comandos directamente en el Terminal integrado en Docker Desktop, así podrás ver el resultado en la interfaz gráfica al instante.
 
