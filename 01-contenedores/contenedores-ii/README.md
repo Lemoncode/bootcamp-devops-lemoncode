@@ -1,11 +1,37 @@
-# Día 2: Trabajando con imágenes
+# 📦 Día 2: Trabajando con imágenes Docker
 
 ![Docker](imagenes/Trabajando%20con%20imagenes%20de%20Docker.jpeg)
 
+## 📋 Agenda del día
+
+En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión básica hasta una introducción a la creación de imágenes personalizadas con Dockerfile. Veremos cómo buscar, descargar y crear imágenes, así como optimizar nuestro entorno Docker.
+
+### 🎯 Objetivos
+- 🔍 Explorar y gestionar imágenes Docker
+- 📥 Descargar imágenes desde diferentes registros
+- 🛠️ Dominar parámetros esenciales de contenedores
+- 🖼️ Crear imágenes personalizadas mediante commits
+- 🔎 Inspeccionar y analizar la estructura de imágenes
+- 🗑️ Optimizar el espacio eliminando imágenes no utilizadas
+
+### 📚 Contenido
+1. [Crear contenedores desde imágenes](#crear-un-contenedor-a-partir-de-una-imagen-de-docker)
+2. [Gestión de imágenes locales](#comprobar-las-imagenes-que-ya-tenemos-en-local)
+3. [Descarga de imágenes](#pulling-o-descargar-una-imagen)
+4. [Conceptos fundamentales](#conceptos-fundamentales-que-necesitas-conocer)
+5. [Galería de imágenes útiles](#algunas-imágenes-interesantes)
+6. [Registros alternativos](#otros-registros-diferentes-a-docker-hub)
+7. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
+8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente)
+9. [Inspección y análisis](#inspeccionando-una-imagen)
+10. [Limpieza y mantenimiento](#eliminar-una-imagen)
+11. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen)
+
+---
 
 En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
-## Crear un contenedor a partir de una imagen de docker
+## 🚀 Crear un contenedor a partir de una imagen de docker
 
 Como ya vimos en el primer día, para crear un contenedor a partir de una imagen de Docker, simplemente tenemos que ejecutar el siguiente comando:
 
@@ -22,7 +48,7 @@ docker run -d --rm -p 6060:80 nginx
 
 Lo bueno de ello es que una vez que tienes esta imagen en local la ejecución de un contenedor es muy rápida, ya que no tienes que descargar la imagen de nuevo.
 
-## Comprobar las imagenes que ya tenemos en local
+## 📂 Comprobar las imagenes que ya tenemos en local
 
 Pero antes de empezar vamos a recordar cómo podíamos ver las imágenes que tenemos en local:
 
@@ -54,7 +80,7 @@ También podemos filtrar el resultado usando --filter
 docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
 ```
 
-## Pulling o descargar una imagen
+## 📥 Pulling o descargar una imagen
 
 Para descargar una imagen no es necesario tener que ejecutar un contenedor, simplemente con el comando `pull` es suficiente.
 
@@ -79,7 +105,7 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 ```
 
-## Descargar todas las versiones/tags de una imagen
+## 📦 Descargar todas las versiones/tags de una imagen
 
 Si por algún motivo necesitas descargar todas las versiones de una imagen puedes hacerlo de la siguiente manera:
 
@@ -89,23 +115,94 @@ docker pull -a wordpress
 
 Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo debido a este mensaje: `[DEPRECATION NOTICE] Docker Image Format v1 and Docker Image manifest version 2, schema 1 support is disabled by default and will be removed in an upcoming release. Suggest the author of docker.io/library/wordpress:3 to upgrade the image to the OCI Format or Docker Image manifest v2, schema 2. More information at https://docs.docker.com/go/deprecated-image-specs/` no se puede hacer. Este mensaje significa que la imagen que estás intentando descargar no es compatible con la versión actual de Docker.
 
+## 🔧 Conceptos fundamentales que necesitas conocer
 
-## Algunas imágenes interesantes
+Antes de lanzar contenedores con configuraciones avanzadas, es importante entender los parámetros que veremos en los ejemplos siguientes.
 
-Las de [LinuxServer](https://www.linuxserver.io/) son muy interesantes, ya que tienen imágenes de aplicaciones muy conocidas como Plex, Nextcloud, etc.
+### 🌍 **Variables de entorno (-e)**
 
-Un servidor de **Radarr** (gestor de películas):
+Las variables de entorno permiten configurar aplicaciones sin modificar la imagen. Son muy comunes en imágenes de LinuxServer y otras:
+
+```bash
+# Ejemplos de variables típicas
+-e PUID=1000          # User ID - para permisos de archivos
+-e PGID=1000          # Group ID - para permisos de grupo
+-e TZ=Europe/Madrid   # Timezone - zona horaria del contenedor
+-e PASSWORD=lemoncode # Configuración específica de la app
+```
+
+**🔍 Variables más comunes:**
+- `TZ`: Zona horaria (America/New_York, Europe/London, etc.)
+- `PUID/PGID`: IDs de usuario/grupo para manejo de permisos
+- `PASSWORD/USER`: Credenciales de acceso
+- `DB_*`: Configuración de base de datos
+- `APP_*`: Configuraciones específicas de la aplicación
+
+### 🔄 **Políticas de reinicio (--restart)**
+
+Controlan qué hace Docker cuando el contenedor se detiene:
+
+```bash
+--restart=no              # No reiniciar nunca (por defecto)
+--restart=always          # Reiniciar siempre
+--restart=unless-stopped  # Reiniciar a menos que se pare manualmente
+--restart=on-failure      # Solo reiniciar si falla
+--restart=on-failure:3    # Reiniciar máximo 3 veces si falla
+```
+
+**💡 Recomendación**: Usar `unless-stopped` para servicios que quieres que arranquen con el sistema pero puedas parar manualmente.
+
+### 🔒 **Opciones de seguridad (--security-opt)**
+
+Configuran políticas de seguridad del contenedor:
+
+```bash
+--security-opt seccomp=unconfined  # Deshabilita el filtro de llamadas del sistema
+--security-opt apparmor=unconfined # Deshabilita AppArmor
+--security-opt no-new-privileges   # Evita escalada de privilegios
+```
+
+**⚠️ Importante**: `seccomp=unconfined` se usa para apps gráficas que necesitan acceso completo al sistema, pero reduce la seguridad.
+
+### 🧠 **Memoria compartida (--shm-size)**
+
+Algunos navegadores y apps gráficas necesitan más memoria compartida:
+
+```bash
+--shm-size="1gb"    # Asigna 1GB de memoria compartida
+--shm-size="512m"   # Asigna 512MB
+```
+
+**🎯 Uso típico**: Firefox, Chrome, aplicaciones que renderizan gráficos.
+
+### 🎭 **Privilegios (--privileged)**
+
+Da acceso completo al sistema host al contenedor:
+
+```bash
+--privileged  # Acceso completo (usar con precaución)
+```
+
+**🚨 Solo usar cuando sea absolutamente necesario** (ej: Home Assistant para acceso a hardware USB).
+
+---
+
+## 🌟 Algunas imágenes interesantes
+
+Las de [LinuxServer](https://www.linuxserver.io/) son muy interesantes, ya que tienen imágenes de aplicaciones muy conocidas como Plex, Nextcloud, etc. **Ahora que conoces los conceptos fundamentales, fíjate cómo se aplican en estos ejemplos:**
+
+Un servidor de **🎬 Radarr** (gestor de películas):
 
 ```bash
 docker run \
 --name=radarr \
--e UMASK_SET=022 `# control permissions of files and directories created by Radarr` \
--e TZ=Europe/Madrid `# Specify a timezone to use EG Europe/London, this is required for Radarr` \
--p 7878:7878 `# The port for the Radarr webinterface` \
+-e UMASK_SET=022 `# Variables de entorno para configurar permisos` \
+-e TZ=Europe/Madrid `# Zona horaria - ¡ya sabes para qué sirve!` \
+-p 7878:7878 `# Puerto expuesto para la interfaz web` \
 linuxserver/radarr:5.11.0
 ```
 
-**Plex** (servidor de medios):
+**📺 Plex** (servidor de medios):
 
 ```bash
 docker run \
@@ -115,125 +212,103 @@ docker run \
 linuxserver/plex
 ```
 
-**DuckDNS** (para tener un dominio gratuito) ⚠️ pendiente de probar
-
-```bash
-docker run -d \
---name=duckdns \
---net=host `#optional` \
--e PUID=1000 `#optional` \
--e PGID=1000 `#optional` \
--e TZ=Etc/UTC `#optional` \
--e SUBDOMAINS=subdomain1,subdomain2 \
--e TOKEN=token \
--e UPDATE_IP=ipv4 `#optional` \
--e LOG_FILE=false `#optional` \
--v /path/to/duckdns/config:/config `#optional` \
---restart unless-stopped \
-lscr.io/linuxserver/duckdns:latest
-```
-
-**VS Code Server** (Visual Studio Code en un contenedor)
+**💻 VS Code Server** (Visual Studio Code en un contenedor)
 
 ```bash
 docker run -d \
 --name=code-server \
--e PUID=1000 \
--e PGID=1000 \
--e TZ=Etc/UTC \
--e PASSWORD=lemoncode \
+-e PUID=1000 `# ID de usuario para permisos` \
+-e PGID=1000 `# ID de grupo para permisos` \
+-e TZ=Etc/UTC `# Zona horaria` \
+-e PASSWORD=lemoncode `# Variable para configurar contraseña` \
 -p 8443:8443 \
 lscr.io/linuxserver/code-server:latest
 ```
 
-Blender (software de modelado 3D)
+🎨 Blender (software de modelado 3D)
 
 ```bash
 docker run -d \
 --name=blender \
--e PUID=1000 \
--e PGID=1000 \
--e TZ=Etc/UTC \
--p 3000:3000 \
--p 3001:3001 \
+-e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC `# Variables típicas de LinuxServer` \
+-p 3000:3000 -p 3001:3001 \
 lscr.io/linuxserver/blender:latest
 ```
 
-Speedtest Tracker (para hacer tests de velocidad) > Pendiente de probar
-https://docs.speedtest-tracker.dev/getting-started/installation/installation
+⚡ Speedtest Tracker (para hacer tests de velocidad)
 
 ```bash
 docker run -d --name speedtest-tracker \
- -p 9090:80 \
--p 8443:443 \
--e PUID=1000 \
--e PGID=1000 \
--e APP_KEY=base64:nyXzCn22VeDmKSdUqul5IOFUFCFv3UoZ02FQm0y+8uk= \
--e DB_CONNECTION=sqlite \
+ -p 9090:80 -p 8443:443 \
+-e PUID=1000 -e PGID=1000 `# Variables de permisos` \
+-e APP_KEY=base64:nyXzCn22VeDmKSdUqul5IOFUFCFv3UoZ02FQm0y+8uk= `# Config específica` \
+-e DB_CONNECTION=sqlite `# Configuración de base de datos` \
 lscr.io/linuxserver/speedtest-tracker:latest
 ```
 
-Filezilla (cliente FTP)
+📁 Filezilla (cliente FTP)
 
 ```bash
 docker run -d \
   --name=filezilla \
-  --security-opt seccomp=unconfined `#optional` \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -p 3000:3000 \
-  -p 3001:3001 \
-  --restart unless-stopped \
+  --security-opt seccomp=unconfined `# ¡Recuerdas esto! Para apps gráficas` \
+  -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC \
+  -p 3000:3000 -p 3001:3001 \
+  --restart unless-stopped `# Política de reinicio que aprendiste` \
   lscr.io/linuxserver/filezilla:latest
 ```
 
-BabbyBuddy (para llevar un seguimiento de la alimentación de tu bebé)
+👶 BabbyBuddy (para llevar un seguimiento de la alimentación de tu bebé)
 
 ```bash
-# admin/admin
+# admin/admin (credenciales por defecto)
 
 docker run -d \
   --name=babybuddy \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -e CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,https://babybuddy.domain.com \
+  -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC \
+  -e CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,https://babybuddy.domain.com `# Variable específica de seguridad` \
   -p 8000:8000 \
   lscr.io/linuxserver/babybuddy:latest
 ```
 
-**LibreOffice** (suite ofimática)
+**📄 LibreOffice** (suite ofimática)
 
 ```bash
 docker run -d \
   --name=libreoffice \
-  --security-opt seccomp=unconfined `#optional` \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -p 3000:3000 \
-  -p 3002:3001 \
+  --security-opt seccomp=unconfined `# Para aplicación gráfica` \
+  -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC \
+  -p 3000:3000 -p 3002:3001 \
   lscr.io/linuxserver/libreoffice:latest
 
-  docker rm -f libreoffice
+docker rm -f libreoffice  # Para limpiar después de probar
 ```
 
-**Firefox** (navegador web)
+**🦊 Firefox** (navegador web)
 
 ```bash
 docker run -d \
   --name=firefox \
-  --security-opt seccomp=unconfined `#optional` \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -e FIREFOX_CLI=https://www.lemoncode.net/ `#optional` \
-  -p 3000:3000 \
-  -p 3001:3001 \
-  --shm-size="1gb" \
+  --security-opt seccomp=unconfined `# Necesario para el navegador` \
+  -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC \
+  -e FIREFOX_CLI=https://www.lemoncode.net/ `# URL inicial personalizada` \
+  -p 3000:3000 -p 3001:3001 \
+  --shm-size="1gb" `# ¡Memoria compartida para el navegador!` \
   lscr.io/linuxserver/firefox:latest
 ```
+
+**🏠 Home Assistant** (plataforma de domótica open source)
+
+```bash
+docker run -d \
+  --name homeassistant \
+  --restart=unless-stopped `# Reinicio automático inteligente` \
+  -e TZ=Europe/Madrid `# Zona horaria importante para automatizaciones` \
+  -p 8123:8123 \
+  ghcr.io/home-assistant/home-assistant:stable
+```
+
+> 💡 **Tip**: Home Assistant es perfecto para automatizar tu hogar. Tras el primer arranque, accede a `http://localhost:8123` para completar la configuración inicial. ¡Puedes integrar desde luces inteligentes hasta sensores de temperatura!
 
 ¿Y cómo sé qué puertos tengo que abrir? Pues en la documentación de cada imagen te lo indican. Por ejemplo, en la de [Radarr](https://hub.docker.com/r/linuxserver/radarr) te indican que tienes que abrir el puerto 7878.
 Por otro lado, puedes saber qué puerto puedes exponer para una imagen que ya tienes descargada con el siguiente comando:
@@ -257,12 +332,12 @@ docker rm -f $(docker ps -a -q)
 [Aquí](https://fleet.linuxserver.io/) puedes ver todas las que tienen.
 
 
-## Otros registros diferentes a Docker Hub
+## 🌐 Otros registros diferentes a Docker Hub
 
 Hasta ahora hemos estado trabajando con Docker Hub, pero hay otros registros de imágenes como Artifact Registry de Google, el cual ha sustituido a Google Container Registry, Azure Container Registry, Amazon Elastic Container Registry, etc. con los que también puedes trabajar. En general estos son los que se suelen usar en los entornos corporativos.
 
 
-### Google Container Registry > Artifact Registry
+### 🔍 Google Container Registry > Artifact Registry
 
 Para que veas cómo funciona, vamos a descargar una imagen de Artifact Registry de Google.
 
@@ -270,17 +345,17 @@ Para que veas cómo funciona, vamos a descargar una imagen de Artifact Registry 
 docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
 ```
 
-### Microsoft Artifact Registry
+### 🏢 Microsoft Artifact Registry
 
 ```bash
 docker run mcr.microsoft.com/mcr/hello-world
 ```
 
-## Buscar imágenes en Docker Hub
+## 🔍 Buscar imágenes en Docker Hub
 
 Ya vimos en el primer día cómo buscar imágenes en Docker Hub, pero vamos a recordarlo.
 
-Podemos hacerlo a através del CLI de Docker:
+Podemos hacerlo a través del CLI de Docker:
 
 ```bash
 docker search microsoft
@@ -307,7 +382,7 @@ docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
 ```
 
-## El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
+## 🏷️ El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
 
 Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera:
 
@@ -315,7 +390,7 @@ Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerl
 curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
 ```
 
-## Crear tu propia imagen a partir de una imagen existente
+## 🛠️ Crear tu propia imagen a partir de una imagen existente
 
 Vamos a tomar por ejemplo la imagen llamada nginx y vamos a crear una imagen propia a partir de ella utilizando un contenedor el cual vamos a utilizar para modificar el contenido.
 
@@ -347,7 +422,7 @@ Y ahora vamos a crear un nuevo contenedor a partir de esta imagen:
 docker run -d --name whale-nginx -p 8081:80 whale-nginx:v1
 ```
 
-## Inspeccionando una imagen
+## 🔎 Inspeccionando una imagen
 
 Para inspeccionar una imagen puedes hacerlo de la siguiente manera:
 
@@ -357,7 +432,7 @@ docker inspect whale-nginx:v1
 
 El apartado llamado `Layers` te indica cuántas capas tiene la imagen. Esto es importante porque cada instrucción en el Dockerfile genera una capa, excepto las que contienen metadata.
 
-## Dive: herramienta para explorar imágenes
+## 🏊‍♂️ Dive: herramienta para explorar imágenes
 
 Existe una herramienta llamada Dive que te permite explorar las capas de una imagen. Para instalarla simplemente tienes que hacer lo siguiente:
 
@@ -387,7 +462,7 @@ A día de hoy esto mismo puedes hacer en Docker Desktop, simplemente seleccionan
 
 ![Capas de una imagen en Docker Desktop](imagenes/Capas%20de%20una%20imagen.png)
 
-## Eliminar una imagen
+## 🗑️ Eliminar una imagen
 
 Si intentamos eliminar una imagen y hay algún contenedor que la está utilizando no será posible, dará error, incluso si este ya terminó de ejecutarse.
 
@@ -400,3 +475,248 @@ Si quisiéramos eliminar SOLO las imágenes que no se están utilizando:
 ```bash
 docker image prune -a
 ```
+
+## 📋 Introducción a Dockerfile: Construyendo tu primera imagen
+
+Hasta ahora hemos usado `docker commit` para crear imágenes a partir de contenedores modificados, pero esta no es la mejor práctica en el mundo real. La forma correcta y reproducible de crear imágenes es usando un `Dockerfile`.
+
+### 🎯 **¿Por qué Dockerfile es mejor que docker commit?**
+
+- **Reproducible**: Cualquiera puede recrear exactamente la misma imagen
+- **Versionable**: Se puede guardar en Git junto con tu código
+- **Transparente**: Se ve exactamente qué contiene la imagen
+- **Automatizable**: Se puede integrar en pipelines CI/CD
+
+### 🚀 **Ejemplo práctico: Dockerizando nuestro contenido web**
+
+Vamos a crear una imagen personalizada usando el contenido del directorio `web` que hemos estado usando:
+
+**Paso 1**: Crear un archivo llamado `Dockerfile` en el directorio `01-contenedores/contenedores-ii/`:
+
+```dockerfile
+# Usa la imagen oficial de nginx como base
+FROM nginx:latest
+
+# Copia nuestro contenido web personalizado
+COPY web/ /usr/share/nginx/html/
+
+# Expone el puerto 80
+EXPOSE 80
+
+# nginx se ejecuta automáticamente al iniciar el contenedor
+```
+
+**Paso 2**: Construir la imagen desde el directorio que contiene el Dockerfile:
+
+```bash
+cd 01-contenedores/contenedores-ii/
+docker build -t mi-nginx-personalizado:v1 .
+```
+
+**Paso 3**: Ejecutar un contenedor de nuestra imagen personalizada:
+
+```bash
+docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
+```
+
+### 🔍 **Comparación: docker commit vs Dockerfile**
+
+| Método | Reproducibilidad | Mantenibilidad | Uso en producción |
+|--------|------------------|----------------|-------------------|
+| `docker commit` | ❌ Baja | ❌ Difícil | ❌ No recomendado |
+| `Dockerfile` | ✅ Alta | ✅ Fácil | ✅ Best practice |
+
+### 🎓 **Lo que aprenderás en el próximo módulo**
+
+- **Sintaxis completa** de Dockerfile
+- **Mejores prácticas** para optimizar imágenes
+- **Multi-stage builds** para imágenes más pequeñas
+- **Gestión de capas** para builds eficientes
+- **Variables y argumentos** para imágenes flexibles
+- **Seguridad** en la construcción de imágenes
+
+> 💡 **Consejo**: El ejemplo que acabamos de ver es básico. En el próximo módulo aprenderás a crear Dockerfiles mucho más sofisticados y optimizados para aplicaciones reales.
+
+---
+
+## 🎓 Resumen: Lo que hemos aprendido hoy
+
+### ✅ Conceptos clave dominados
+- **Gestión de imágenes locales**: Listar, filtrar y organizar imágenes en nuestro sistema
+- **Descarga estratégica**: Usar `docker pull` con versiones específicas y digests para mayor control
+- **Parámetros fundamentales**: Variables de entorno, políticas de reinicio y opciones de seguridad
+- **Registros múltiples**: Trabajar con Docker Hub, Google Artifact Registry, Microsoft Container Registry
+- **Búsqueda avanzada**: Filtrar imágenes por estrellas, oficiales, y formatear resultados
+- **Creación de imágenes personalizadas**: Usar `docker commit` para crear imágenes a partir de contenedores modificados
+- **Inspección profunda**: Analizar capas, configuración y metadata de imágenes
+- **Limpieza eficiente**: Mantener el sistema optimizado eliminando imágenes no utilizadas
+- **Introducción a Dockerfile**: Fundamentos para construir imágenes de forma reproducible
+
+### 🛠️ Comandos esenciales que ya manejas
+```bash
+# Gestión básica
+docker images                    # Listar imágenes locales
+docker pull <imagen>:<tag>       # Descargar imagen específica
+docker rmi <imagen>              # Eliminar imagen
+docker image prune -a            # Limpiar imágenes no utilizadas
+
+# Búsqueda y filtrado
+docker search --filter=stars=50 nginx
+docker images --filter="label=maintainer=value"
+
+# Creación personalizada
+docker commit <contenedor> <nueva-imagen>:<tag>
+
+# Inspección
+docker inspect <imagen>
+dive <imagen>                    # Herramienta externa para análisis de capas
+
+# Parámetros avanzados
+docker run -e TZ=Europe/Madrid -p 8080:80 --restart=unless-stopped nginx
+
+# Introducción a Dockerfile
+docker build -t <nombre-imagen>:<tag> .   # Construir imagen desde Dockerfile
+```
+
+### 🔧 Parámetros clave aprendidos
+```bash
+# Variables de entorno
+-e PUID=1000 -e PGID=1000 -e TZ=Europe/Madrid
+
+# Políticas de reinicio
+--restart=unless-stopped  # Reinicia salvo parada manual
+--restart=always         # Reinicia siempre
+--restart=on-failure     # Solo si falla
+
+# Seguridad y rendimiento
+--security-opt seccomp=unconfined  # Para apps gráficas
+--shm-size="1gb"                   # Memoria compartida
+--privileged                       # Acceso completo (usar con cuidado)
+```
+
+---
+
+## � Conceptos fundamentales que necesitas conocer
+
+Antes de lanzar contenedores con configuraciones avanzadas, es importante entender los parámetros que hemos visto en los ejemplos anteriores.
+
+### 🌍 **Variables de entorno (-e)**
+
+Las variables de entorno permiten configurar aplicaciones sin modificar la imagen. Son muy comunes en imágenes de LinuxServer y otras:
+
+```bash
+# Ejemplos de variables típicas
+-e PUID=1000          # User ID - para permisos de archivos
+-e PGID=1000          # Group ID - para permisos de grupo
+-e TZ=Europe/Madrid   # Timezone - zona horaria del contenedor
+-e PASSWORD=lemoncode # Configuración específica de la app
+```
+
+**🔍 Variables más comunes:**
+- `TZ`: Zona horaria (America/New_York, Europe/London, etc.)
+- `PUID/PGID`: IDs de usuario/grupo para manejo de permisos
+- `PASSWORD/USER`: Credenciales de acceso
+- `DB_*`: Configuración de base de datos
+- `APP_*`: Configuraciones específicas de la aplicación
+
+### 🔄 **Políticas de reinicio (--restart)**
+
+Controlan qué hace Docker cuando el contenedor se detiene:
+
+```bash
+--restart=no              # No reiniciar nunca (por defecto)
+--restart=always          # Reiniciar siempre
+--restart=unless-stopped  # Reiniciar a menos que se pare manualmente
+--restart=on-failure      # Solo reiniciar si falla
+--restart=on-failure:3    # Reiniciar máximo 3 veces si falla
+```
+
+**💡 Recomendación**: Usar `unless-stopped` para servicios que quieres que arranquen con el sistema pero puedas parar manualmente.
+
+### � **Opciones de seguridad (--security-opt)**
+
+Configuran políticas de seguridad del contenedor:
+
+```bash
+--security-opt seccomp=unconfined  # Deshabilita el filtro de llamadas del sistema
+--security-opt apparmor=unconfined # Deshabilita AppArmor
+--security-opt no-new-privileges   # Evita escalada de privilegios
+```
+
+**⚠️ Importante**: `seccomp=unconfined` se usa para apps gráficas que necesitan acceso completo al sistema, pero reduce la seguridad.
+
+### 🧠 **Memoria compartida (--shm-size)**
+
+Algunos navegadores y apps gráficas necesitan más memoria compartida:
+
+```bash
+--shm-size="1gb"    # Asigna 1GB de memoria compartida
+--shm-size="512m"   # Asigna 512MB
+```
+
+**🎯 Uso típico**: Firefox, Chrome, aplicaciones que renderizan gráficos.
+
+### 🎭 **Privilegios (--privileged)**
+
+Da acceso completo al sistema host al contenedor:
+
+```bash
+--privileged  # Acceso completo (usar con precaución)
+```
+
+**🚨 Solo usar cuando sea absolutamente necesario** (ej: Home Assistant para acceso a hardware USB).
+
+## 🚀 Demos adicionales sugeridas
+
+### 1. 📊 **Demo: Análisis de seguridad con Trivy**
+```bash
+# Instalar Trivy para análisis de vulnerabilidades
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy:latest image nginx:latest
+
+# Generar reporte en formato JSON
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $(pwd):/output aquasec/trivy:latest image \
+  --format json --output /output/nginx-report.json nginx:latest
+```
+
+### 2. � **Demo: Monitorización de uso de imágenes**
+```bash
+# Script para analizar uso de espacio por imágenes
+docker system df -v
+
+# Identificar imágenes huérfanas (dangling)
+docker images --filter "dangling=true"
+
+# Ver historial de una imagen
+docker history nginx:latest --no-trunc
+```
+
+### 3. 🌊 **Demo: Auto-actualización con Watchtower**
+```bash
+# Auto-actualización de contenedores con Watchtower
+docker run -d \
+  --name watchtower \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  containrrr/watchtower \
+  --schedule "0 0 4 * * *" \
+  --cleanup
+
+# Etiquetar contenedores para auto-update
+docker run -d --label=com.centurylinklabs.watchtower.enable=true nginx:latest
+```
+
+### 🎯 **Próximos pasos recomendados**
+1. **Día 3**: Dockerfile y construcción de imágenes desde cero
+2. **Día 4**: Docker Compose para aplicaciones multi-contenedor
+3. **Día 5**: Networking avanzado y volumes persistentes
+4. **Día 6**: Seguridad y mejores prácticas en producción
+
+### 📚 **Recursos adicionales**
+- [Docker Official Images](https://hub.docker.com/search?q=&type=image&image_filter=official)
+- [Awesome Docker](https://github.com/veggiemonk/awesome-docker)
+- [Docker Security Best Practices](https://docs.docker.com/engine/security/)
+- [Container Structure Tests](https://github.com/GoogleContainerTools/container-structure-test)
+
+---
+*💡 **Tip profesional**: Siempre revisa el Dockerfile de las imágenes oficiales para aprender mejores prácticas y entender cómo están construidas.*
