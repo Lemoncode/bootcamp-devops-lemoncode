@@ -434,33 +434,15 @@ docker inspect whale-nginx:v1
 
 El apartado llamado `Layers` te indica cuántas capas tiene la imagen. Esto es importante porque cada instrucción en el Dockerfile genera una capa, excepto las que contienen metadata.
 
-## 🏊‍♂️ Dive: herramienta para explorar imágenes
+## 🔎 Explorando las capas de una imagen
 
-Existe una herramienta llamada Dive que te permite explorar las capas de una imagen. Para instalarla simplemente tienes que hacer lo siguiente:
-
-```bash
-https://github.com/wagoodman/dive
-```
-
-En MacOs:
+Las imágenes Docker están compuestas por capas, cada una representando un cambio incremental. Puedes ver las capas de una imagen con el siguiente comando:
 
 ```bash
-brew install dive
+docker history whale-nginx:v1
 ```
 
-O en Windows:
-
-```bash
-go get github.com/wagoodman/dive
-```
-
-Ok ¿y cómo se usa? Pues simplemente tienes que ejecutar el siguiente comando:
-
-```bash
-dive nginx
-```
-
-A día de hoy esto mismo puedes hacer en Docker Desktop, simplemente seleccionando la imagen:
+A día de hoy puedes hacer en Docker Desktop, simplemente seleccionando la imagen:
 
 ![Capas de una imagen en Docker Desktop](imagenes/Capas%20de%20una%20imagen.png)
 
