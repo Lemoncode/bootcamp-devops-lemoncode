@@ -8,7 +8,7 @@ En este repositorio encontrarás todo el material necesario para el **Bootcamp D
 
 Este bootcamp está diseñado para proporcionar una formación completa en DevOps, cubriendo desde los fundamentos de Linux hasta tecnologías avanzadas de orquestación, CI/CD, cloud computing e infraestructura como código.
 
-## � Entorno de Desarrollo
+## 🧑🏽‍💻👩🏼‍💻 Entorno de Desarrollo
 
 Este repositorio incluye un **Dev Container** configurado con todas las herramientas necesarias para el bootcamp:
 
