@@ -1,4 +1,4 @@
-# 🐳 Laboratorio Contenedores - Misiones del final del módulo 🦸🏼‍♀️🦸🏼
+# 🐳 Laboratorio Contenedores - Misiones del final del módulo 🕵🏻‍♀️🫆
 
 ![Laboratorio Docker](images/Laboratorio%20Docker.png)
 
