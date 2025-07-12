@@ -1,6 +1,6 @@
 # Día VI: Docker Compose y Docker Swarm 🚀
 
-![Docker Compose y Swarm](imagenes/Docker%20compose.png)
+![Docker Compose](imagenes/Docker%20compose.png)
 
 ## 📋 Agenda
 
@@ -190,6 +190,8 @@ docker compose -p my_wordpress down
 ```
 
 ## 🌊 Introducción a Docker Swarm
+
+![Docker Swarm](imagenes/Docker%20Swarm.png)
 
 Docker Swarm es el orquestador nativo de Docker que te permite crear y gestionar un cluster de nodos Docker. Es perfecto para aplicaciones que necesitan alta disponibilidad y escalabilidad.
 

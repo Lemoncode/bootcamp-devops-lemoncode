@@ -1,23 +1,28 @@
-# Laboratorio Contenedores Docker
+# 🐳 Laboratorio Contenedores - Misiones del final del módulo 🦸🏼‍♀️🦸🏼
 
-## Ejercicio 1
+![Laboratorio Docker](images/Laboratorio%20Docker.png)
 
-Dockeriza la aplicación dentro de [lemoncode-challenge](./), la cual está compuesta de 3 partes:
+>[!IMPORTANT]
+> Antes de lanzarte a contenerizar todo, ¡relájate y prueba la aplicación tal como está! 😌 Lo único que necesitas es tener MongoDB funcionando. Empieza creando MongoDB en Docker y usa un cliente como MongoDB Compass (¡que ya viste en clase!) para añadir datos que tu API pueda devolver. A partide aquí ya estás list@ para comprobar lo que has aprendido.
 
-- Un front-end con Node.js
-- Un backend en .NET (`dotnet-stack`) o en Node.js (`node-stack`) que utiliza un MongoDB para almacenar la información.
-- El MongoDB donde se almacena la información en una base de datos.
+## 🎯 Misión 1: Dockeriza como un Pro
 
-Nota: como has podido comprobar, el directorio `lemoncode-challenge` tiene dos carpetas: `dotnet-stack` y `node-stack`. En ambos casos el frontend es el mismo, sólo cambia el backend. Usa el stack que prefieras.
+¡Es hora de poner en práctica todo lo aprendido! 💪 Vas a dockerizar una aplicación completa dentro de [lemoncode-challenge](./), que está compuesta de 3 partes increíbles:
 
-### Requisitos del ejercicio
+- 🌐 **Frontend**: Una interfaz con Node.js
+- ⚙️ **Backend**: Elige tu aventura - .NET (`dotnet-stack`) o Node.js (`node-stack`) que se conecta con MongoDB
+- 🗄️ **Base de datos**: MongoDB para almacenar toda la información
 
-1. Los tres componentes deben estar en una red llamada `lemoncode-challenge`.
-2. El backend debe comunicarse con el mongodb a través de esta URL `mongodb://some-mongo:27017`.
-3. El front-end debe comunicarse con la api a través de `http://topics-api:5000/api/topics`.
-4. El front-end debe estar mapeado con el host para ser accesible a través del puerto 8080.
-5. El MongoDB debe almacenar la información que va generando en un volumen, mapeado a la ruta `/data/db`.
-6. Este debe de tener una base de datos llamada `TopicstoreDb` con una colección llamada `Topics`. La colección `Topics` debe tener esta estructura:
+> 💡 **¡Libertad de elección!** Como habrás notado, tienes dos carpetas: `dotnet-stack` y `node-stack`. El frontend es idéntico en ambos casos, solo cambia el backend. ¡Elige el que más te motive!
+
+### 📋 Misión: Cumple estos requisitos
+
+1. 🌐 Los tres componentes deben vivir en armonía en una red llamada `lemoncode-challenge`
+2. 🔗 El backend debe comunicarse con MongoDB usando esta URL mágica: `mongodb://some-mongo:27017`
+3. 🚀 El frontend debe conectar con la API mediante: `http://topics-api:5000/api/topics`
+4. 🌍 El frontend debe ser accesible desde tu navegador en el puerto `8080`
+5. 💾 MongoDB debe persistir los datos en un volumen mapeado a `/data/db`
+6. 📊 Crea una base de datos llamada `TopicstoreDb` con una colección `Topics` que tenga esta estructura:
 
 ```json
 {
@@ -26,18 +31,30 @@ Nota: como has podido comprobar, el directorio `lemoncode-challenge` tiene dos c
 }
 ```
 
-¡Añade varios registros!
+🎉 **¡No olvides añadir varios registros para hacer tu app más interesante!**
 
-__Tip para backend__: Antes de intentar contenerizar y llevar a cabo todos los pasos del ejercicio se recomienda intentar ejecutar la aplicación sin hacer cambios en ella. En este caso, lo único que es posible que “no tengamos a mano” es el MongoDB. Por lo que empieza por crear este en Docker, usa un cliente como el que vimos en el primer día de clase (MongoDB Compass) para añadir datos que pueda devolver la API.
+__Tip para backend__: Antes de intentar contenerizar y llevar a cabo todos los pasos del ejercicio se recomienda intentar ejecutar la aplicación sin hacer cambios en ella. En este caso, lo único que es posible que “no tengamos a mano” es el MongoDB. Por lo que empieza por crear este en Docker, usa un cliente como MongoDB Compass para añadir datos que pueda devolver la API.
 
 ![Mongo compass](./images/mongodbcompass.png)
 
-Nota: es más fácil si abres Visual Studio Code desde la carpeta `backend` para hacer las pruebas y las modificaciones que si te abres desde la raíz del repo. Para ejecutar este código solo debes lanzar `dotnet run` si usas el stack de .NET, o `npm install && npm start` si usas el stack de Node.js.
+> 💎 **Pro Tip**: Abre Visual Studio Code directamente desde la carpeta `backend` para hacer las pruebas. ¡Te ahorrará tiempo! Para ejecutar el código:
+> - .NET stack: `dotnet run` 
+> - Node.js stack: `npm install && npm start`
 
-__Tip para frontend__: Para ejecutar el frontend abre esta carpeta en VS Code y ejecuta primero `npm install`. Una vez instaladas las dependencias ya puedes ejecutarla con `npm start`. Debería de abrirse un navegador con lo siguiente:
+**🎨 Para el Frontend**: 
+Abre la carpeta frontend en VS Code y ejecuta `npm install` para instalar las dependencias. Luego `npm start` y ¡voilà! Tu navegador debería mostrar algo así:
 
 ![Topics](./images/topics.png)
 
-## Ejercicio 2
+## 🎪 Misión 2: ¡Docker Compose al Rescate!
 
-Ahora que ya tienes la aplicación del ejercicio 1 dockerizada, utiliza Docker Compose para lanzar todas las piezas a través de este. Debes plasmar todo lo necesario para que esta funcione como se espera: la red que utilizan, el volumen que necesita MongoDB, las variables de entorno, el puerto que expone la web y la API. Además debes indicar qué comandos utilizarías para levantar el entorno, pararlo y eliminarlo.
+¡Ahora viene la parte divertida! 🎊 Toma tu aplicación dockerizada de la misión 1 y usa Docker Compose para orquestar todas las piezas como un director de orquesta.
+
+### 🎯 Tu misión incluye:
+- 🌐 Configurar la red que conecta todos los servicios
+- 💾 Definir el volumen que necesita MongoDB para persistir datos
+- 🔧 Establecer las variables de entorno necesarias
+- 🚪 Exponer los puertos correctos para web y API
+- 📝 Documentar los comandos para levantar, parar y eliminar el entorno
+
+¡Demuestra que eres un maestro de la orquestación de contenedores! 🎭✨
