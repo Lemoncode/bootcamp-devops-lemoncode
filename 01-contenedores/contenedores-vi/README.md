@@ -135,6 +135,38 @@ docker compose stop
 docker compose down
 ```
 
+## Compose Watch
+
+Docker Compose Watch permite que los servicios se actualicen automáticamente cuando editas archivos en tu proyecto. Es ideal para desarrollo, ya que puedes ver los cambios reflejados en los contenedores sin reiniciar manualmente.
+
+Ventajas principales:
+
+Sincronización automática de archivos entre tu máquina y el contenedor.
+Puedes ignorar carpetas (por ejemplo, node_modules/) para mejorar el rendimiento.
+Permite acciones como sync (sincronizar), rebuild (reconstruir imagen) y sync+restart (sincronizar y reiniciar servicio).
+Configuración básica:
+
+Se añade la sección develop.watch en el servicio que quieres monitorizar.
+Ejemplo de acciones:
+sync: Sincroniza archivos modificados.
+rebuild: Reconstruye la imagen si se modifica un archivo clave (ej. package.json).
+sync+restart: Sincroniza y reinicia el servicio (útil para cambios en config).
+
+
+Para poder usar Compose Watch debes tener una configuración como la que se ve en `compose.watch.yml`:
+
+Y levantar el entorno de la siguiente forma:
+
+```bash
+docker compose -f compose.watch.yml up --watch
+```
+
+### Combinar varios archivos de Compose
+
+### Perfiles en Docker Compose
+
+Los perfiles en Docker Compose permiten definir diferentes configuraciones para un mismo servicio, facilitando la gestión de entornos de desarrollo, pruebas y producción. Puedes activar un perfil específico al levantar los servicios.
+
 ### 🔧 Gestión avanzada de proyectos
 
 **Construir y ejecutar (útil para aplicaciones propias):**

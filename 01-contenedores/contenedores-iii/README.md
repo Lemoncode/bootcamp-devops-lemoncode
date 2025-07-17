@@ -154,7 +154,15 @@ Usando el comando `docker init`
 Basta con ejecutar `Cmd + P > Add Docker Files to Workspace` y seleccionar Node.js. Te pedirá que le selecciones el package.json y el puerto que utiliza tu app.
 Le diremos que no queremos el archivo de Docker compose, lo dejaremos para más adelante 😃.
 
-### 🤖 4. Usando IA, como por ejemplo con Microsoft Edge.
+### 🤖 4. Usando `docker ai`
+
+Ahora es posible usar el agente de IA de Docker para temas relacionados con Docker. Para poder usarlo debes haber iniciado sesión con tu cuenta de Docker y tenerlo habilitado a través de `Settings > Beta features > Enable Docker AI`.
+
+```bash
+docker ai "¿Puedes crearme un Dockerfile para este proyecto?"
+```
+
+### 🤖 5. Usando IA, como por ejemplo con Microsoft Edge.
 
 Para ello, tienes que usar Microsoft Edge 😇 y en el lado derecho puedes encontrar el icono de Copilot.
 
@@ -164,7 +172,7 @@ Y en el puedes preguntar por ejemplo cómo crear un Dockerfile para una aplicaci
 
 ![Microsoft Edge Copilot](imagenes/Microsoft%20Edge%20Copilot%20-%20Dockerfile.png)
 
-### 🐙 5. Usando GitHub Copilot
+### 🐙 6. Usando GitHub Copilot
 
 GitHub Copilot es una extensión para tu IDE que utiliza IA para ayudarte a programar. Puedes instalarla desde el Visual Studio Code Marketplace.
 
