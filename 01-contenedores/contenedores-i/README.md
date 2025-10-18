@@ -48,15 +48,25 @@ Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en l
 
 ## 🧰 Cómo instalar Docker en tu máquina local 🍋📺
 
-A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/). Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
+A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/).
+
+En los vídeos de la introducción podrás ver:
+
+🐳🍎 [Cómo instalar Docker Desktop en MacOS](https://campus.lemoncode.net/#/training/68c9403afd3dcd0a256a0291/video-player/https%3A%2F%2Fd2gr4gsp182xcm.cloudfront.net%2Fcampus%2Fbootcamp-devops-vi%2Fintroduccion-modulo-2-contenedores%2F01-contenedores-i-demo-1-instalar-docker-desktop-macos.mp4).
+
+🐳🪟 [Cómo instalar Docker Desktop en Windows](https://campus.lemoncode.net/#/training/68c9403afd3dcd0a256a0291/video-player/https%3A%2F%2Fd2gr4gsp182xcm.cloudfront.net%2Fcampus%2Fbootcamp-devops-vi%2Fintroduccion-modulo-2-contenedores%2F02-contenedores-i-demo-2-instalar-docker-desktop-windows.mp4).
+
+ Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
 
 ## 👀 Conociendo Docker desde Docker Desktop 🍋📺
 
 Cuando hayas instalado Docker Desktop verás que puedes empezar de forma muy visual, aunque es posible que al principio no tengas muy claro qué es lo que tienes que hacer 😅. Aunque es recomendable dominar la línea de comandos, ya que es la forma más rápida y común de trabajar con Docker en la vida real, vamos a empezar por lo sencillo para luego ir avanzando cada vez un poco más y que te vayas sintiendo cómod@ con los diferentes conceptos.
 
-### Mi primer contenedor con un servidor web 🍋📺
+En el vídeo [Mi primer contenedor con Docker Desktop](https://campus.lemoncode.net/#/training/68c9403afd3dcd0a256a0291/video-player/https%3A%2F%2Fd2gr4gsp182xcm.cloudfront.net%2Fcampus%2Fbootcamp-devops-vi%2Fintroduccion-modulo-2-contenedores%2F03-contenedores-i-demo-3-mi-primer-contenedor-docker-desktop.mp4) 🍋📺 podrás ver todo esto explicado paso a paso.
 
-Ok, como estamos en el módulo de contenedores, y ya tenemos instalado todo lo que necesitamos para empezar, nuestra primera misión va a ser, lógicamente, pues crear nuestro primer contenedor, como no podía ser de otra manera 😅 Y para este primer ejemplo vamos a crear un contenedor que dentro tenga un servidor web, en este caso usando Nginx, aunque podría ser cualquier otro, como también veremos.
+### 📦 Mi primer contenedor con un servidor web 🍋📺
+
+Ahora que ya tenemos instalado todo lo que necesitamos para empezar, nuestra primera misión va a ser, lógicamente, pues crear nuestro primer contenedor 📦, como no podía ser de otra manera 😅 Y para este primer ejemplo vamos a crear un contenedor que dentro tenga un servidor web, en este caso usando [Nginx](https://nginx.org/), aunque podría ser cualquier otro, como también veremos.
 
 Ahora mismo en nuestra instalación de Docker Desktop no tenemos absolutamente nada, así que vamos a ver paso a paso cómo podemos crear este contenedor desde aquí.
 
@@ -76,7 +86,7 @@ Podrás ver información relacionada con la imagen, como por ejemplo las etiquet
 
 Al hacerlo ocurriran dos cosas:
 
-1. En la parte inferior dice que está haciendo pull de la imagen, es decir, descargándola a tu máquina local.
+1. En la parte inferior dice que está haciendo pull de la imagen, es decir, descargándola 📥 a tu máquina local.
 2. Te aparecerá un dialogo donde te pide un par de valores y la opción de ejecutar el contenedor.
 
 ![Ejecutar contenedor de Nginx](imagenes/Ejecutar%20un%20nuevo%20contenedor%20desde%20Docker%20Desktop.png)
@@ -136,6 +146,7 @@ Por otro lado, en estos dos casos te darás cuenta de que el terminal queda "blo
 docker run --detach --publish 8080:80 nginx
 ```
 
+Y hasta aquí la parte introductoria que pudiste ver en los vídeos del campus. A partir de aquí, vamos a seguir viendo más comandos y opciones que te permitirán gestionar tus contenedores de manera más efectiva.
 
 ## Visual Studio Code y Docker
 
