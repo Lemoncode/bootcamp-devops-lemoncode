@@ -1,41 +1,60 @@
-# Día I: Introducción a Docker 🐳
+# Día I: Introducción a Docker 🐳 ✅
 
 ![Docker](imagenes/Contenedores%20I%20-%20Hello%20World%20-%20Lemoncode.jpeg)
 
+¡Hola lemoncoders! 👋 Con este módulo arrancamos con los contenedores. Pero antes de nada es importante que eches un vistazo a los vídeos de introducción que hemos dejado preparados para ti en el Campus de Lemoncode.
+
+## 🎬 Vídeos de la introducción en el campus
+
+Se asume que has visto los siguientes vídeos para comenzar con este módulo:
+
+| # | Tema |
+|---|------|
+| 1 | 📘 Teoría 
+| 2 | 🛠️ Demo: Instalar Docker Desktop en MacOS | 
+| 3 | 🛠️ Demo: Instalar Docker Desktop en Windows | 
+| 4 | 🧪 Demo: Mi primer contenedor con Docker Desktop | 
+| 5 | 🔤 Demo: Cómo crear tus primeros contenedores desde el terminal de Docker Desktop |
+
+
+Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en los vídeos. Con el resto nos ponemos en la clase online.
+
 ## 📋 Agenda
 
-- [🧰 Cómo instalar Docker en tu máquina local](#-cómo-instalar-docker-en-tu-máquina-local)
-- [👀 Conociendo Docker desde Docker Desktop](#-conociendo-docker-desde-docker-desktop)
-  - [🚀 Mi primer contenedor con un servidor web](#-mi-primer-contenedor-con-un-servidor-web)
-- [🐳 Docker CLI](#-docker-cli)
+- [🧰 Cómo instalar Docker en tu máquina local](#-cómo-instalar-docker-en-tu-máquina-local) 🍋📺
+- [👀 Conociendo Docker desde Docker Desktop](#-conociendo-docker-desde-docker-desktop) 🍋📺
+  - [🚀 Mi primer contenedor con un servidor web](#-mi-primer-contenedor-con-un-servidor-web) 🍋📺
+- [🐳 Docker CLI](#-docker-cli) 🍋📺
 - [Visual Studio Code y Docker](#visual-studio-code-y-docker)
-- [🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache](#-ejecutar-un-contenedor-usando-el-terminal-de-vs-code-para-un-servidor-web-apache)
-- [🏗️ Docker Hub web](#️-docker-hub-web)
-- [🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él](#️-ejecutar-un-contenedor-y-lanzar-un-shell-interactivo-en-él)
-- [🌐 Mapear puerto de contenedor a los puertos de mi máquina local](#-mapear-puerto-de-contenedor-a-los-puertos-de-mi-máquina-local)
+- [🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache](#-ejecutar-un-contenedor-usando-el-terminal-de-vs-code-para-un-servidor-web-apache) 
+- [🏗️ Docker Hub web](#️-docker-hub-web) 
+- [🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él](#️-ejecutar-un-contenedor-y-lanzar-un-shell-interactivo-en-él) 
+- [🌐 Mapear puerto de contenedor a los puertos de mi máquina local](#-mapear-puerto-de-contenedor-a-los-puertos-de-mi-máquina-local) 
 - [🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?](#️-y-si-quiero-ejecutar-un-contenedor-en-segundo-plano)
-- [📋 Listar todos los contenedores que tengo en ejecución](#-listar-todos-los-contenedores-que-tengo-en-ejecución)
+- [📋 Listar todos los contenedores que tengo en ejecución](#-listar-todos-los-contenedores-que-tengo-en-ejecución) 
 - [🏷️ Bautizar contenedores](#️-bautizar-contenedores)
-- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución)
-- [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor)
-- [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor)
+- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución) 
+- [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor) 
+- [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor) 
 - [🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?](#️-y-si-quiero-eliminarlo-del-todo-de-mi-ordenador)
-- [� Comandos Docker más comunes](#-comandos-docker-más-comunes)
-- [�🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
-- [ℹ️ Información del sistema Docker](#️-información-del-sistema-docker)
-- [✨ Gordon AI](#-gordon-ai)
+- [Comandos Docker más comunes](#-comandos-docker-más-comunes) 
+- [🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
+- [ℹ️ Información del sistema Docker](#️-información-del-sistema-docker) 
+- [✨ Gordon AI](#-gordon-ai) 
 - [✨ GitHub Copilot](#-github-copilot)
 - [🎉 ¡Felicidades!](#-felicidades)
 
-## 🧰 Cómo instalar Docker en tu máquina local
+
+
+## 🧰 Cómo instalar Docker en tu máquina local 🍋📺
 
 A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/). Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
 
-## 👀 Conociendo Docker desde Docker Desktop
+## 👀 Conociendo Docker desde Docker Desktop 🍋📺
 
 Cuando hayas instalado Docker Desktop verás que puedes empezar de forma muy visual, aunque es posible que al principio no tengas muy claro qué es lo que tienes que hacer 😅. Aunque es recomendable dominar la línea de comandos, ya que es la forma más rápida y común de trabajar con Docker en la vida real, vamos a empezar por lo sencillo para luego ir avanzando cada vez un poco más y que te vayas sintiendo cómod@ con los diferentes conceptos.
 
-## Mi primer contenedor con un servidor web
+### Mi primer contenedor con un servidor web 🍋📺
 
 Ok, como estamos en el módulo de contenedores, y ya tenemos instalado todo lo que necesitamos para empezar, nuestra primera misión va a ser, lógicamente, pues crear nuestro primer contenedor, como no podía ser de otra manera 😅 Y para este primer ejemplo vamos a crear un contenedor que dentro tenga un servidor web, en este caso usando Nginx, aunque podría ser cualquier otro, como también veremos.
 
@@ -93,7 +112,7 @@ Y ahora que ya lo has visto todo desde la interfaz gráfica de Docker Desktop, v
 
 ![Terminal integrado en Docker Desktop](imagenes/Terminal%20integrado%20en%20Docker%20Desktop.png)
 
-## 🐳 Docker CLI
+## 🐳 Docker CLI 🍋📺
 
 Docker CLI (Command Line Interface) es la herramienta que te permite interactuar con Docker desde la línea de comandos. Aunque Docker Desktop ofrece una interfaz gráfica, es recomendable familiarizarse con el CLI para aprovechar al máximo las capacidades de Docker. 
 
