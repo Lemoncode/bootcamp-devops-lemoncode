@@ -52,7 +52,7 @@ Durante el vídeo de teoría hemos visto los siguientes conceptos clave:
 
 Ahora que ya hemos visto los vídeos, vamos a repasar algunos de los conceptos y comandos más importantes que hemos visto.
 
-## Sección 2: Visual Studio Code para la gestión de mis contenedores (15 minutos)
+## Sección 2: Visual Studio Code para la gestión de mis contenedores
 
 Durante los vídeos pudiste ver cómo ejecutar contenedores desde Docker Desktop y el terminal del mismo. Ahora vamos a ver cómo podemos usar Visual Studio Code como entorno de trabajo. ¿Por qué? Porque es gratuito, multiplataforma y porque vamos a tener extensiones y ayuda adicional para el resto de temas que vamos a ver.
 
