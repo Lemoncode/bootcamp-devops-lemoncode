@@ -232,14 +232,16 @@ docker run --rm alpine sh -c 'echo "Hola" > /tmp/test.txt && cat /tmp/test.txt'
 # Funciona sin problemas porque crear archivos está PERMITIDO
 
 # ❌ OPERACIÓN PELIGROSA BLOQUEADA (CON seccomp por defecto)
-# Intentar acceder a llamadas del sistema avanzadas se bloquea
-docker run --rm alpine sh -c 'strace -e trace=ptrace echo "test"'
-# Falla o se limita - ptrace (debuggear otros procesos) está BLOQUEADO por seguridad
+# Intentar usar strace (que requiere ptrace) - bloqueado por seguridad
+docker run --rm ubuntu bash -c 'apt-get update -qq && apt-get install -y strace -qq && strace -e trace=ptrace echo "test"'
+# Output: strace: trace: execve failed: Operation not permitted
+# ❌ "Operation not permitted" = ptrace está BLOQUEADO por seccomp
 
 # ✅ MISMA OPERACIÓN PERMITIDA (SIN seccomp - security-opt seccomp=unconfined)
-# Desactivamos seccomp = permitimos todas las syscalls
-docker run --rm --security-opt seccomp=unconfined alpine sh -c 'strace -e trace=ptrace echo "test"'
-# ✅ Funciona completamente - ptrace está PERMITIDO (pero es peligroso)
+# Desactivamos seccomp = permitimos todas las syscalls incluyendo ptrace
+docker run --rm --security-opt seccomp=unconfined ubuntu bash -c 'apt-get update -qq && apt-get install -y strace -qq && strace -e trace=ptrace echo "test"'
+# Output: echo(1, "test", 2) = 5
+# ✅ Funciona - ptrace está PERMITIDO (pero es peligroso)
 ```
 
 **¿Qué ves?**
