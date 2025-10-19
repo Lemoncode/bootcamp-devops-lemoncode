@@ -12,7 +12,7 @@ Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 |---|------|
 | 1 | 📘 Teoría |
 | 2 | 🛠️ Demo: Analizar una imagen desde Docker Desktop |
-| 3 | �️ Demo: Etiquetas y digest |
+| 3 | 🏷️ Demo: Etiquetas y digest |
 | 4 | 🌐 Demo: Un vistazo por la web de Docker Hub |
 | 5 | 🧪 Demo: Mi primera imagen de Docker |
 
@@ -37,7 +37,21 @@ Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en l
 
 En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
-## 🚀 Crear un contenedor a partir de una imagen de docker
+## � Conceptos de Día 1 que usaremos hoy
+
+Antes de avanzar, recuerda que en la clase anterior aprendimos parámetros importantes que seguiremos usando:
+
+- **`-d` o `--detach`**: Ejecutar contenedor en background (sin bloquear el terminal)
+- **`--rm`**: Eliminar el contenedor automáticamente al parar (útil para pruebas)
+- **`-it`**: Modo interactivo con terminal (solo para comandos que lo necesitan)
+- **`--restart`**: Políticas de reinicio del contenedor
+- **Límites de CPU/Memoria** (`--memory`, `--cpus`): Controlar recursos
+
+Si necesitas refrescar estos conceptos, vuelve a la sección correspondiente en el README de Día 1.
+
+---
+
+## 📥📦 Crear un contenedor a partir de una imagen de docker
 
 Como ya vimos en el primer día, para crear un contenedor a partir de una imagen de Docker, simplemente tenemos que ejecutar el siguiente comando:
 
@@ -94,7 +108,7 @@ Para descargar una imagen no es necesario tener que ejecutar un contenedor, simp
 docker pull mysql
 ```
 
-Esto es útil cuando queremos descargar una imagen para tenerla en local y usarla más adelante y que el proceso de creación del contenedor sea mucho más rápido. Yo he hecho esto incluso cuando he estado de viaje y he tenido una conexión lenta a internet (o cero internet), para tener las imágenes ya descargadas y no tener que esperar a que se descarguen cuando las necesito.
+**¿Por qué querría hacer esto?** Esto es útil cuando queremos descargar una imagen para tenerla en local y usarla más adelante y que el proceso de creación del contenedor sea mucho más rápido. Yo he hecho esto incluso cuando he estado de viaje y he tenido una conexión lenta a internet (o cero internet), para tener las imágenes ya descargadas y no tener que esperar a que se descarguen cuando las necesito.
 
 Si no especificamos nada más se descargará la imagen con la etiqueta `latest`, pero si queremos una versión específica podemos hacerlo de la siguiente manera:
 
@@ -113,7 +127,18 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 ```
 
-## 📦 Descargar todas las versiones/tags de una imagen
+### � Mejores prácticas al descargar imágenes
+
+| Práctica | Razón | Ejemplo |
+|----------|-------|---------|
+| **Usa versiones específicas** | Evita cambios inesperados | `mysql:8.0.35` en lugar de `mysql:latest` |
+| **Evita usar `latest`** | Tag `latest` puede cambiar sin aviso | Especifica versión de lanzamiento (`8.0`, `v2.1.0`) |
+| **Verifica el digest** | Garantiza que descargaste exactamente lo que esperas | `docker images --digests` |
+| **Usa imágenes oficiales** | Mejor mantenimiento y seguridad | `library/nginx` en lugar de `some-user/nginx` |
+| **Revisa la documentación** | Entiende variables de entorno y configuración necesaria | Lee el README en Docker Hub |
+| **Descarga cuando tengas conexión lenta** | Evita interrupciones durante creación de contenedores | Usa `docker pull` con anticipación |
+
+
 
 Si por algún motivo necesitas descargar todas las versiones de una imagen puedes hacerlo de la siguiente manera:
 
@@ -158,7 +183,7 @@ Configuran políticas de seguridad del contenedor y controlan qué acceso tiene 
 --security-opt no-new-privileges   # Evita escalada de privilegios
 ```
 
-**� Valores por defecto (cuando no especificas nada):**
+**📋 Valores por defecto (cuando no especificas nada):**
 
 Por defecto, Docker aplica configuraciones **seguras y restrictivas**:
 
@@ -168,7 +193,7 @@ Por defecto, Docker aplica configuraciones **seguras y restrictivas**:
 | **apparmor** | `docker-default` | Se aplica el perfil de AppArmor específico de Docker que limita operaciones del contenedor |
 | **privileges** | No permitidos | Los procesos NO pueden escalar privilegios (cambiar de usuario/grupo) |
 
-**�🔍 Entendiendo cada opción:**
+**� Entendiendo cada opción:**
 
 - **`seccomp=unconfined`**: Desactiva el filtro de seguridad de llamadas del sistema (syscalls). Necesario para aplicaciones gráficas como Firefox, Chrome o herramientas de debugging que requieren acceso completo al kernel. **⚠️ Reduce significativamente la seguridad**. Si no lo especificas, Docker mantiene el filtro por defecto (seguro).
 
@@ -368,25 +393,24 @@ docker run -d \
 **🔄 n8n** (plataforma de automatización y orquestación de workflows)
 
 ```bash
-docker run -it --rm \
- --name n8n \
- -p 5678:5678 \
- -e GENERIC_TIMEZONE="Europe/Madrid" \
- -e TZ="Europe/Madrid" \
- -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
- -e N8N_RUNNERS_ENABLED=true \
- -v n8n_data:/home/node/.n8n \
- docker.n8n.io/n8nio/n8n
+docker run -d \
+  --name n8n \
+  -p 5678:5678 \
+  -e GENERIC_TIMEZONE="Europe/Madrid" \
+  -e TZ="Europe/Madrid" \
+  -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+  docker.n8n.io/n8nio/n8n
 ```
 
 **Características principales de n8n:**
 - 🎯 Automatiza workflows entre aplicaciones
 - 🔗 Conecta más de 400 integraciones (APIs, SaaS, etc.)
 - 📊 Interfaz visual para crear automatizaciones sin código
-- 💾 Persiste datos con volúmenes Docker
-- 🚀 Perfecta para DevOps y automatización de procesos
+-  Perfecta para DevOps y automatización de procesos
 
 **Acceso:** Una vez ejecutado, accede a `http://localhost:5678` para completar la configuración inicial.
+
+> 💡 **Nota**: En próximas clases aprenderemos a usar volúmenes (`-v`) para persistir datos en n8n y otras aplicaciones.
 
 ### 📌 ¿Qué puerto tengo que abrir?
 ¿Y cómo sé qué puertos tengo que abrir? Pues en la documentación de cada imagen te lo indican. Por ejemplo, en la de [Radarr](https://hub.docker.com/r/linuxserver/radarr) te indican que tienes que abrir el puerto 7878.
@@ -415,6 +439,16 @@ docker rm -f $(docker ps -a -q)
 
 Hasta ahora hemos estado trabajando con Docker Hub, pero hay otros registros de imágenes como Artifact Registry de Google, el cual ha sustituido a Google Container Registry, Azure Container Registry, Amazon Elastic Container Registry, etc. con los que también puedes trabajar. En general estos son los que se suelen usar en los entornos corporativos.
 
+### 📊 Comparación de registros principales
+
+| Registro | Proveedor | URL/Dominio | Mejor para | Ejemplos |
+|----------|-----------|-------------|-----------|----------|
+| **Docker Hub** | Docker Inc. | `docker.io` | Aplicaciones públicas, comunidad | nginx, ubuntu, mysql |
+| **Google Artifact Registry** | Google Cloud | `gcr.io`, `us-docker.pkg.dev` | Proyectos en GCP | google-samples, cloud-tools |
+| **Microsoft Container Registry** | Microsoft | `mcr.microsoft.com` | Soluciones Microsoft | mssql, dotnet, windows |
+| **Amazon ECR** | AWS | `*.dkr.ecr.*.amazonaws.com` | Proyectos en AWS | aws-cli, lambda-runtime |
+| **Registro privado local** | Tuyo | `localhost:5000` | Desarrollo local, entorno corporativo | tus imágenes personalizadas |
+
 
 ### 🔍 Google Container Registry > Artifact Registry
 
@@ -424,13 +458,21 @@ Para que veas cómo funciona, vamos a descargar una imagen de Artifact Registry 
 docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
 ```
 
+**🔎 Cómo explorar imágenes disponibles en GCR:**
+- **Web**: https://console.cloud.google.com/artifacts/browse
+- **CLI**: `gcloud container images list` (requiere autenticación)
+- **Artifact Hub**: https://artifacthub.io/ (buscador multi-registro)
+
 ### 🏢 Microsoft Artifact Registry
 
 ```bash
 docker run mcr.microsoft.com/mcr/hello-world
 ```
 
-Puedes ir a esta web para ver qué hay por aquí: https://mcr.microsoft.com/
+**🔎 Cómo explorar imágenes disponibles en MCR:**
+- **Web**: https://mcr.microsoft.com/
+- Puedes navegar por categorías (Windows, Linux, .NET, etc.)
+- Cada imagen tiene documentación de uso detallada
 
 ## 🗄️ Crear tu propio registro Docker privado en un contenedor
 
@@ -568,6 +610,25 @@ Si quisiéramos eliminar SOLO las imágenes que no se están utilizando:
 docker image prune -a
 ```
 
+Este comando elimina todas las imágenes que no tienen contenedores asociados (ni en ejecución ni detenidos). Es muy útil para liberar espacio después de experimentar con muchas imágenes.
+
+**⚠️ Advertencia**: `docker image prune -a` elimina TODAS las imágenes no usadas. Asegúrate de que no necesitas ninguna antes de ejecutarlo.
+
+**Otras opciones de limpieza:**
+
+```bash
+# Eliminar imágenes sin etiquetar
+docker image prune -f
+
+# Ver cuánto espacio ahorrarías
+docker image prune -a --dry-run
+
+# Eliminar imágenes creadas hace más de X horas
+docker image prune -a --filter "until=24h"
+```
+
+---
+
 ## 🤖 Docker Model Runner: IA y modelos de lenguaje en contenedores
 
 En los últimos tiempos Docker se ha volcado en integrar capacidades de inteligencia artificial directamente en su ecosistema. Por lo que además de poder crear y gestionar contenedores tradicionales, ahora es posible trabajar con modelos de IA y grandes modelos de lenguaje (LLMs) de forma nativa. Para ello ha creado una herramienta llamada **Docker Model Runner**, la cual te permite descargar imágenes que lo que contienen son modelos de IA listos para usar.
@@ -683,6 +744,51 @@ docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 - **Seguridad** en la construcción de imágenes
 
 > 💡 **Consejo**: El ejemplo que acabamos de ver es básico. En el próximo módulo aprenderás a crear Dockerfiles mucho más sofisticados y optimizados para aplicaciones reales.
+
+---
+
+## 📚 Comandos Docker más comunes en Día 2
+
+Aquí tienes un resumen rápido de los comandos que has aprendido:
+
+### 🏃 Ver y gestionar imágenes
+```bash
+docker images                          # Listar imágenes locales
+docker image ls                        # Alternativa a docker images
+docker images nginx                    # Filtrar por nombre
+docker images --digests                # Ver digests (hashes)
+```
+
+### 📥 Descargar imágenes
+```bash
+docker pull mysql                      # Descargar versión latest
+docker pull mysql:8.0.35              # Descargar versión específica
+docker pull redis@sha256:...          # Descargar por digest
+```
+
+### 🔍 Buscar imágenes
+```bash
+docker search nginx                    # Buscar en Docker Hub
+docker search --filter=stars=50 nginx  # Filtrar por estrellas
+docker search --filter is-official=true nginx  # Solo oficiales
+```
+
+### 🛠️ Crear y gestionar imágenes
+```bash
+docker commit nombre-contenedor nombre-imagen:tag    # Crear imagen desde contenedor
+docker inspect nombre-imagen                        # Inspeccionar imagen
+docker history nombre-imagen                        # Ver capas de la imagen
+docker rmi nombre-imagen                            # Eliminar imagen
+docker image prune -a                               # Limpiar imágenes sin usar
+```
+
+### 🌐 Trabajar con registros
+```bash
+docker pull gcr.io/google-samples/hello-app:1.0     # Descargar de GCR
+docker pull mcr.microsoft.com/mssql/server:2019     # Descargar de MCR
+docker tag nginx localhost:5000/nginx               # Etiquetar para registro local
+docker push localhost:5000/nginx                    # Subir a registro privado
+```
 
 ---
 
