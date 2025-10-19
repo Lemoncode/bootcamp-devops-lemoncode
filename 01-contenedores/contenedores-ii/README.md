@@ -33,21 +33,21 @@ Este módulo te dará las herramientas para:
 
 ### 📚 Contenido
 
-1. [Crear contenedores desde imágenes](#crear-un-contenedor-a-partir-de-una-imagen-de-docker)
-2. [Gestión básica de imágenes](#comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
-3. [Descarga de imágenes](#pulling-o-descargar-una-imagen) 🍋📺
-4. [Conceptos fundamentales](#conceptos-fundamentales-que-necesitas-conocer) 🍋📺
-5. [Galería de imágenes útiles](#algunas-imágenes-interesantes)
-6. [Registros alternativos](#otros-registros-diferentes-a-docker-hub) 🍋📺
-7. [Crear tu propio registro privado](#crear-tu-propio-registro-docker-privado-en-un-contenedor)
+1. [📥 Crear un contenedor a partir de una imagen de Docker](#📥-crear-un-contenedor-a-partir-de-una-imagen-de-docker)
+2. [📂 Comprobar las imagenes que ya tenemos en local](#📂-comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
+3. [📥 Pulling o descargar una imagen](#📥-pulling-o-descargar-una-imagen) 🍋📺
+4. [🌍 Variables de entorno para las imágenes](#🌍-variables-de-entorno-para-las-imagenes) 🍋📺
+5. [🌟 Algunas imágenes interesantes](#🌟-algunas-imágenes-interesantes)
+6. [🌐 Otros registros diferentes a Docker Hub](#🌐-otros-registros-diferentes-a-docker-hub) 🍋📺
+7. [Crear tu propio registro privado](#🔒-crear-tu-propio-registro-docker-privado-en-un-contenedor)
 8. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
 9. [Tags y digests](#tags-y-digests) 
+12. [Limpieza y mantenimiento](#eliminar-una-imagen)
+13. [Docker Extensions](#🧩-docker-extensions-extiende-docker-desktop)
+14. [Docker Model Runner](#🤖-docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
 10. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
 11. [Inspección y análisis](#inspeccionando-una-imagen)
-12. [Limpieza y mantenimiento](#eliminar-una-imagen)
-13. [Docker Extensions](#docker-extensions-extiende-docker-desktop)
-14. [Docker Model Runner](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
-15. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
+15. [Introducción a Dockerfile](#📋-introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
 
 ---
 
@@ -65,7 +65,7 @@ Si necesitas refrescar estos conceptos, vuelve a la sección correspondiente en 
 
 ---
 
-## 📥 Crear un contenedor a partir de una imagen de docker
+## 📥 Crear un contenedor a partir de una imagen de Docker
 
 Como ya vimos en el primer día, para crear un contenedor a partir de una imagen de Docker, simplemente tenemos que ejecutar el siguiente comando:
 
@@ -162,11 +162,8 @@ docker pull -a wordpress
 
 Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo debido a este mensaje: `[DEPRECATION NOTICE] Docker Image Format v1 and Docker Image manifest version 2, schema 1 support is disabled by default and will be removed in an upcoming release. Suggest the author of docker.io/library/wordpress:3 to upgrade the image to the OCI Format or Docker Image manifest v2, schema 2. More information at https://docs.docker.com/go/deprecated-image-specs/` no se puede hacer. Este mensaje significa que la imagen que estás intentando descargar no es compatible con la versión actual de Docker.
 
-## 🔧 Conceptos fundamentales que necesitas conocer
 
-Antes de lanzar contenedores con configuraciones avanzadas, es importante entender los parámetros que veremos en los ejemplos siguientes.
-
-### 🌍 **Variables de entorno (-e)**
+## 🌍 Variables de entorno para las imágenes
 
 Las variables de entorno permiten configurar aplicaciones sin modificar la imagen.
 
@@ -350,6 +347,46 @@ docker rm -f $(docker ps -a -q)
 [Aquí](https://fleet.linuxserver.io/) puedes ver todas las que tienen.
 
 
+## 🔍 Buscar imágenes en Docker Hub
+
+Ya vimos en el primer día cómo buscar imágenes en Docker Hub, pero vamos a recordarlo.
+
+Podemos hacerlo a través del CLI de Docker:
+
+```bash
+docker search microsoft
+docker search google
+docker search aws
+```
+
+
+Que nos devuelva aquella con al menos 50 estrellas:
+
+```bash
+docker search --filter=stars=50 --no-trunc nginx
+```
+
+También puedes pedirle que devuelva solo la oficial:
+
+```bash
+docker search --filter is-official=true nginx
+```
+O incluso puedes formatear la salida de lo que te devuelve `docker search`:
+
+```bash
+docker search --format "{{.Name}}: {{.StarCount}}" nginx
+docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
+```
+
+## 🏷️ Tags y digests
+
+Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera (necesitarás instalar [JQ](https://stedolan.github.io/jq/)):
+
+```bash
+curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
+```
+
+
 ## 🌐 Otros registros diferentes a Docker Hub
 
 Hasta ahora hemos estado trabajando con Docker Hub, pero hay otros registros de imágenes como Artifact Registry de Google, el cual ha sustituido a Google Container Registry, Azure Container Registry, Amazon Elastic Container Registry, etc. con los que también puedes trabajar. En general estos son los que se suelen usar en los entornos corporativos.
@@ -389,26 +426,7 @@ docker run mcr.microsoft.com/mcr/hello-world
 - Puedes navegar por categorías (Windows, Linux, .NET, etc.)
 - Cada imagen tiene documentación de uso detallada
 
-## 🗄️ Crear tu propio registro Docker privado en un contenedor
 
-Puedes levantar un registro privado de Docker en tu máquina usando la imagen oficial `registry`. Esto es útil para compartir imágenes en tu equipo o entorno local.
-
-```bash
-docker run -d -p 5000:5000 --name registry registry:2
-```
-
-Esto inicia un registro accesible en `localhost:5000`.
-
-### 📦 Subir una imagen a tu registro privado
-
-1. Etiqueta la imagen para tu registro local:
-  ```bash
-  docker tag nginx localhost:5000/nginx
-  ```
-2. Sube la imagen:
-  ```bash
-  docker push localhost:5000/nginx
-  ```
 
 ### ⬇️ Descargar una imagen desde tu registro privado
 
@@ -418,44 +436,7 @@ docker pull localhost:5000/nginx
 
 > 💡 **Tip:** Para entornos de producción, añade autenticación y TLS. Consulta la [documentación oficial](https://docs.docker.com/registry/) para más opciones.
 
-## 🔍 Buscar imágenes en Docker Hub
 
-Ya vimos en el primer día cómo buscar imágenes en Docker Hub, pero vamos a recordarlo.
-
-Podemos hacerlo a través del CLI de Docker:
-
-```bash
-docker search microsoft
-docker search google
-docker search aws
-```
-
-
-Que nos devuelva aquella con al menos 50 estrellas:
-
-```bash
-docker search --filter=stars=50 --no-trunc nginx
-```
-
-También puedes pedirle que devuelva solo la oficial:
-
-```bash
-docker search --filter is-official=true nginx
-```
-O incluso puedes formatear la salida de lo que te devuelve `docker search`:
-
-```bash
-docker search --format "{{.Name}}: {{.StarCount}}" nginx
-docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
-```
-
-## 🏷️ Tags y digests
-
-Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera (necesitarás instalar [JQ](https://stedolan.github.io/jq/)):
-
-```bash
-curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
-```
 
 ## 🛠️ Crear tu propia imagen a partir de una imagen existente
 
