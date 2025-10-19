@@ -430,6 +430,8 @@ docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
 docker run mcr.microsoft.com/mcr/hello-world
 ```
 
+Puedes ir a esta web para ver qué hay por aquí: https://mcr.microsoft.com/
+
 ## 🗄️ Crear tu propio registro Docker privado en un contenedor
 
 Puedes levantar un registro privado de Docker en tu máquina usando la imagen oficial `registry`. Esto es útil para compartir imágenes en tu equipo o entorno local.
@@ -568,11 +570,7 @@ docker image prune -a
 
 ## 🤖 Docker Model Runner: IA y modelos de lenguaje en contenedores
 
-Antes de profundizar en la creación de imágenes con Dockerfile, es importante conocer **Docker Model Runner**, una característica beta que representa el futuro de la IA en el ecosistema Docker. Esta herramienta revoluciona la forma en que trabajamos con modelos de inteligencia artificial y grandes modelos de lenguaje (LLMs).
-
-### 🎯 **¿Qué es Docker Model Runner?**
-
-Docker Model Runner es una herramienta integrada en Docker Desktop y Docker Engine que permite gestionar, ejecutar y desplegar modelos de IA de forma sencilla. Está diseñada específicamente para desarrolladores que quieren integrar capacidades de IA en sus aplicaciones sin complicaciones.
+En los últimos tiempos Docker se ha volcado en integrar capacidades de inteligencia artificial directamente en su ecosistema. Por lo que además de poder crear y gestionar contenedores tradicionales, ahora es posible trabajar con modelos de IA y grandes modelos de lenguaje (LLMs) de forma nativa. Para ello ha creado una herramienta llamada **Docker Model Runner**, la cual te permite descargar imágenes que lo que contienen son modelos de IA listos para usar.
 
 ### ✨ **Características principales**
 
@@ -614,7 +612,6 @@ Todos los modelos están disponibles en el [namespace público de Docker Hub](ht
 - **Experimentación ML**: Testa modelos sin depender de servicios externos
 
 
-```
 ### 🔍 **Compatibilidad con herramientas existentes**
 
 Docker Model Runner se integra perfectamente con:
@@ -689,7 +686,7 @@ docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 
 ---
 
-## � ¡Felicidades!
+## 🎉 ¡Felicidades!
 
 En esta segunda clase has aprendido a:
 
@@ -714,28 +711,3 @@ En la siguiente clase profundizaremos en Dockerfile y aprenderás a crear imáge
 Happy coding {🍋}
 
 ---
-
-
-<!--
-## ⏱️ Distribución temporal (3 horas)
-
-**Primera hora (60 min):**
-- 🚀 Repaso y creación de contenedores (15 min)
-- 📂 Gestión de imágenes locales (15 min)
-- 📥 Descarga de imágenes (15 min)
-- 🔧 Conceptos fundamentales - Parte 1: Variables y reinicio (15 min)
-
-**Segunda hora (60 min):**
-- 🔧 Conceptos fundamentales - Parte 2: Seguridad y memoria (15 min)
-- 🌟 Galería de imágenes útiles - Sesión práctica (45 min)
-  - *Esta es la sección más divertida y práctica*
-
-**Tercera hora (60 min):**
-- 🌐 Otros registros (10 min)
-- 🔍 Búsqueda de imágenes (15 min)
-- 🛠️ Crear imagen personalizada (20 min)
-- 🔎 Inspección y análisis (10 min)
-- 📋 Introducción a Dockerfile (15 min)
-
-**Tiempo de buffer: ~10-15 minutos** para Q&A y troubleshooting
--->
