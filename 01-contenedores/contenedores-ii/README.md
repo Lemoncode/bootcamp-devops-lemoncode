@@ -51,7 +51,7 @@ Si necesitas refrescar estos conceptos, vuelve a la sección correspondiente en 
 
 ---
 
-## 📥📦 Crear un contenedor a partir de una imagen de docker
+## 📥 Crear un contenedor a partir de una imagen de docker
 
 Como ya vimos en el primer día, para crear un contenedor a partir de una imagen de Docker, simplemente tenemos que ejecutar el siguiente comando:
 
@@ -127,7 +127,7 @@ docker images --digests
 docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da96085c9c5
 ```
 
-### � Mejores prácticas al descargar imágenes
+### ✅ Mejores prácticas al descargar imágenes
 
 | Práctica | Razón | Ejemplo |
 |----------|-------|---------|

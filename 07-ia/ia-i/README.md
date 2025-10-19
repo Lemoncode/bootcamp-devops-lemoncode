@@ -9,14 +9,22 @@
 Puedes usar herramientas como:
 
 - Ollama
-- AI Foundry Local
-- LLMStudio
+- [Foundry Local](https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-local/get-started)
+- [LM Studio](https://lmstudio.ai/)
 
 
 ### Si tu hardware no da
 
 - GitHub Models
 - OpenRouter
+
+### Modelos ligeros para tu máquina
+
+Aquí te dejo una recomendación de modelos ligeros que puedes probar en tu máquina local:
+
+- qwen
+
+
 
 ### IA para desarrollar 
 
