@@ -129,21 +129,21 @@ Durante los vídeos pudiste ver cómo ejecutar contenedores desde Docker Desktop
 
 Una vez que lo tengas instalado, te recomiendo que instales la extensión llamada: **Container Tools**
 
-![image.png](attachment:ede84805-00a0-493d-ac66-c756a716eb97:image.png)
+![Docker Hub en Docker Desktop](imagenes/Extension%20Container%20Tools.png)
 
 Con ello vamos a conseguir una pestaña adicional en mi Visual Studio Code en la que voy a poder ver todos los contenedores, imágenes, etcétera
 
-![image.png](attachment:a8bc9bb2-a2a4-4a36-a229-3ab7edb9a497:image.png)
+![Docker Hub en Docker Desktop](imagenes/Cómo%20se%20ve%20la%20sección%20de%20container%20tools.png)
 
-Y por otro lado la que nos proporciona Docker
+Y por otro lado la que nos proporciona Docker, llamada Docker DX:
 
-![image.png](attachment:28c7414d-7cb3-4aa4-b8e3-e22bcf5aea41:image.png)
+![Docker DX](imagenes/Extension%20Docker%20DX.png)
 
 Este nos ayudará más adelante cuando hagamos cosas un poquito más avanzadas.
 
 Y con estos dos ya estamos listos para empezar a jugar. Creo que es importante familiarizarnos con algún IDE que tenga soporte para contenedores porque la realidad es que cuando estamos desarrollando aplicaciones, incluso Dockerizadas, es donde vamos a estar la mayor parte del tiempo. Nos iremos apoyando en estas en las siguientes prácticas.
 
-## Sección 3: ampliando con más comandos básicos
+## Sección 3: Ampliando con más comandos básicos
 
 Ahora ya conocemos al menos:
 
