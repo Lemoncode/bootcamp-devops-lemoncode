@@ -365,6 +365,30 @@ docker run -d \
 
 > 💡 **Tip**: Home Assistant es perfecto para automatizar tu hogar. Tras el primer arranque, accede a `http://localhost:8123` para completar la configuración inicial. ¡Puedes integrar desde luces inteligentes hasta sensores de temperatura!
 
+**🔄 n8n** (plataforma de automatización y orquestación de workflows)
+
+```bash
+docker run -it --rm \
+ --name n8n \
+ -p 5678:5678 \
+ -e GENERIC_TIMEZONE="Europe/Madrid" \
+ -e TZ="Europe/Madrid" \
+ -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+ -e N8N_RUNNERS_ENABLED=true \
+ -v n8n_data:/home/node/.n8n \
+ docker.n8n.io/n8nio/n8n
+```
+
+**Características principales de n8n:**
+- 🎯 Automatiza workflows entre aplicaciones
+- 🔗 Conecta más de 400 integraciones (APIs, SaaS, etc.)
+- 📊 Interfaz visual para crear automatizaciones sin código
+- 💾 Persiste datos con volúmenes Docker
+- 🚀 Perfecta para DevOps y automatización de procesos
+
+**Acceso:** Una vez ejecutado, accede a `http://localhost:5678` para completar la configuración inicial.
+
+### 📌 ¿Qué puerto tengo que abrir?
 ¿Y cómo sé qué puertos tengo que abrir? Pues en la documentación de cada imagen te lo indican. Por ejemplo, en la de [Radarr](https://hub.docker.com/r/linuxserver/radarr) te indican que tienes que abrir el puerto 7878.
 Por otro lado, puedes saber qué puerto puedes exponer para una imagen que ya tienes descargada con el siguiente comando:
 

@@ -216,6 +216,12 @@ Para evitar esto, podemos ejecutar un shell interactivo dentro del contenedor:
 docker run --interactive --tty ubuntu /bin/bash
 ```
 
+O la versión abreviada que es más común:
+
+```bash
+docker run -it ubuntu /bin/bash
+```
+
 Para comprobar que estás dentro del contenedor, puedes ejecutar:
 
 ```bash
@@ -223,6 +229,67 @@ cat /etc/os-release
 exit
 ```
 
+### 🔑 Entendiendo el parámetro `-it`
+
+El parámetro `-it` es en realidad la **combinación de dos flags diferentes** que funcionan juntos:
+
+- **`-i` (o `--interactive`)**: Mantiene STDIN abierto incluso sin estar conectado. Esto permite que el contenedor reciba entrada desde tu teclado.
+- **`-t` (o `--tty`)**: Asigna una pseudo-terminal (TTY) al contenedor. Esto proporciona una interfaz interactiva con salida formateada.
+
+**📊 Matriz de comportamientos:**
+
+| Flags | Comportamiento | Caso de uso |
+|-------|----------------|-----------|
+| Sin `-i` ni `-t` | El contenedor se cierra inmediatamente | Comandos que terminan rápidamente |
+| Solo `-i` | Puedes escribir, pero no ves la salida bien formateada | Poco común |
+| Solo `-t` | Ves la salida, pero no puedes escribir | Ver logs sin interactuar |
+| **`-it`** | ✅ **Modo interactivo completo**: escribes y ves la salida formateada | **Usar para shells, debugging, exploración** |
+
+**💡 Analogía:**
+Piénsalo como una videollamada:
+- `-i` = Micrófono activado (puedes hablar)
+- `-t` = Cámara activada (puedes ver)
+- `-it` = Videollamada completa (puedes hablar Y ver)
+
+**🎯 Casos de uso de `-it`:**
+
+```bash
+# Explorar dentro de un contenedor
+docker run -it ubuntu /bin/bash
+
+# Ejecutar un comando interactivo (como un editor)
+docker run -it alpine vi /archivo.txt
+
+# Debugging en un contenedor en ejecución
+docker exec -it my-container bash
+
+# Ejecutar Python interactivamente
+docker run -it python python
+
+# Conectarse a una base de datos
+docker exec -it mi-mysql mysql -u root -p
+```
+
+**⚠️ Importante:**
+- `-it` solo funciona con **comandos que esperan entrada/salida interactiva** (bash, sh, python, mysql, etc.)
+- No uses `-it` con comandos que se ejecutan en background o servicios de larga duración (usa `-d` en su lugar)
+- Si usas `-it` con `-d` (detach), Docker ignorará el `-it` porque `-d` lo anula
+
+**Comparación práctica:**
+
+```bash
+# ❌ MAL: El contenedor termina porque bash se cierra al no tener entrada
+docker run ubuntu /bin/bash
+
+# ❌ MAL: Bash se ejecuta en background, no puedes interactuar
+docker run -d ubuntu /bin/bash
+
+# ✅ BIEN: Obtienes una shell interactiva
+docker run -it ubuntu /bin/bash
+
+# ✅ BIEN: Accedes a un contenedor ya en ejecución
+docker exec -it nombre-contenedor bash
+```
 
 ## 🌐 Mapear puerto de contenedor a los puertos de mi máquina local
 
