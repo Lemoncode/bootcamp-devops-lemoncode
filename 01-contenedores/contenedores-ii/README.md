@@ -34,20 +34,20 @@ Este módulo te dará las herramientas para:
 ### 📚 Contenido
 
 1. [📥 Crear un contenedor a partir de una imagen de Docker](#-crear-un-contenedor-a-partir-de-una-imagen-de-docker)
-2. [📂 Comprobar las imagenes que ya tenemos en local](#📂-comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
-3. [📥 Pulling o descargar una imagen](#📥-pulling-o-descargar-una-imagen) 🍋📺
-4. [🌍 Variables de entorno para las imágenes](#🌍-variables-de-entorno-para-las-imagenes) 🍋📺
-5. [🌟 Algunas imágenes interesantes](#🌟-algunas-imágenes-interesantes)
-6. [🌐 Otros registros diferentes a Docker Hub](#🌐-otros-registros-diferentes-a-docker-hub) 🍋📺
-7. [Crear tu propio registro privado](#🔒-crear-tu-propio-registro-docker-privado-en-un-contenedor)
-8. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
-9. [Tags y digests](#tags-y-digests) 
-12. [Limpieza y mantenimiento](#eliminar-una-imagen)
-13. [Docker Extensions](#🧩-docker-extensions-extiende-docker-desktop)
-14. [Docker Model Runner](#🤖-docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
-10. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
-11. [Inspección y análisis](#inspeccionando-una-imagen)
-15. [Introducción a Dockerfile](#📋-introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
+2. [📂 Comprobar las imagenes que ya tenemos en local](#-comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
+3. [📥 Pulling o descargar una imagen](#-pulling-o-descargar-una-imagen) 🍋📺
+4. [🌍 Variables de entorno para las imágenes](#-variables-de-entorno-para-las-imagenes) 🍋📺
+5. [🌟 Algunas imágenes interesantes](#-algunas-imágenes-interesantes)
+6. [🌐 Otros registros diferentes a Docker Hub](#-otros-registros-diferentes-a-docker-hub) 🍋📺
+7. [Crear tu propio registro privado](#-crear-tu-propio-registro-docker-privado-en-un-contenedor)
+8. [Búsqueda de imágenes](#-buscar-imágenes-en-docker-hub)
+9. [Tags y digests](#-tags-y-digests)
+12. [Limpieza y mantenimiento](#-limpieza-y-mantenimiento)
+13. [Docker Extensions](#-docker-extensions)
+14. [Docker Model Runner](#-docker-model-runner)
+10. [Creación de imágenes personalizadas](#-creación-de-imágenes-personalizadas) 🍋📺
+11. [Inspección y análisis](#-inspección-y-análisis)
+15. [Introducción a Dockerfile](#-introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
 
 ---
 
