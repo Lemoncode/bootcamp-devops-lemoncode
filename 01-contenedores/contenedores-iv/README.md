@@ -442,6 +442,107 @@ if (( $(echo "$CPU_USAGE > 80" | bc -l) )); then
 fi
 ```
 
+
+## 💾 Limitar recursos: CPU y Memoria
+
+Es importante limitar los recursos que puede usar un contenedor para evitar que consuma todos los recursos del host y afecte a otros contenedores o servicios.
+
+### 📊 Limitar Memoria (`--memory` o `-m`)
+
+Especifica la cantidad máxima de memoria RAM que puede usar el contenedor:
+
+```bash
+docker run -d --memory="512m" --name web -p 8080:80 httpd
+```
+
+**Formatos válidos:**
+- `512m` - 512 megabytes
+- `1g` - 1 gigabyte
+- `2g` - 2 gigabytes
+
+**🔍 Cómo funciona:**
+- El contenedor puede usar hasta la cantidad especificada
+- Si intenta exceder el límite, Docker lo mata (OOM - Out of Memory)
+- Sin límite especificado, puede usar toda la RAM disponible
+
+### ⚙️ Limitar CPU (`--cpus`)
+
+Especifica cuántos núcleos de CPU puede usar el contenedor:
+
+```bash
+docker run -d --cpus="1.5" --name web -p 8080:80 httpd
+```
+
+**Ejemplos de uso:**
+- `--cpus="1"` - Usar como máximo 1 núcleo CPU completo
+- `--cpus="0.5"` - Usar el 50% de 1 núcleo (compartido)
+- `--cpus="2"` - Usar 2 núcleos completos
+
+**🔍 Cómo funciona:**
+- El contenedor puede usar hasta ese número de núcleos
+- Si hay más disponibles, puede usarlos cuando otros contenedores no los necesitan
+- Sin límite especificado, puede usar todos los núcleos
+
+### 📋 Limitar CPU Priority (`--cpu-shares`)
+
+Controla la prioridad de CPU en caso de contención:
+
+```bash
+docker run -d --cpu-shares=1024 --name web -p 8080:80 httpd
+```
+
+**Por defecto:** Cada contenedor tiene 1024 shares
+- Si todos los contenedores tienen 1024, comparten CPU equitativamente
+- Si uno tiene 512 y otro 1024, el de 1024 recibe el doble de CPU cuando hay contención
+
+### 🔗 Combinando límites de CPU y Memoria
+
+**Ejemplo práctico: Servidor web seguro**
+
+```bash
+docker run -d \
+  --name production-web \
+  --memory="2g" \
+  --cpus="1.5" \
+  --cpu-shares=1024 \
+  -p 8080:80 \
+  httpd
+```
+
+**Esto significa:**
+- ✅ Máximo 2GB de RAM
+- ✅ Máximo 1.5 núcleos de CPU
+- ✅ Prioridad normal en caso de contención
+
+### 📊 Ver uso de recursos en tiempo real
+
+```bash
+# Ver estadísticas de un contenedor específico
+docker stats web
+
+# Ver estadísticas de todos los contenedores
+docker stats
+
+# Ver con formato personalizado
+docker stats --no-stream
+```
+
+**🎯 Casos de uso comunes:**
+
+| Caso | Configuración |
+|------|---------------|
+| Servidor web de producción | `--memory="2g" --cpus="2"` |
+| Base de datos | `--memory="4g" --cpus="4"` |
+| Aplicación pequeña/prueba | `--memory="256m" --cpus="0.5"` |
+| Tarea background | `--memory="512m" --cpus="0.25"` |
+
+**⚠️ Importante:**
+- Si no especificas límites, el contenedor puede consumir todos los recursos
+- Establecer límites muy bajos puede hacer que la aplicación vaya lenta
+- Monitorea siempre el uso real vs los límites establecidos
+
+**💡 Recomendación:** Para aplicaciones en producción, siempre establece límites de memoria y CPU para proteger la estabilidad del sistema.
+
 ## 🔌 Docker extensions
 
 Existen varias extensiones de Docker que nos permiten monitorizar nuestros contenedores de una forma más visual. 🎨 Puedes encontrarlas en el apartado de extensiones de Docker Desktop o a través del marketplace: https://hub.docker.com/search?q=&type=extension&sort=pull_count&order=desc

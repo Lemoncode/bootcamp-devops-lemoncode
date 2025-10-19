@@ -82,6 +82,12 @@ docker run -d --rm -p 6060:80 nginx
 
 Lo bueno de ello es que una vez que tienes esta imagen en local la ejecución de un contenedor es muy rápida, ya que no tienes que descargar la imagen de nuevo.
 
+---
+
+> [⬆️ Volver al índice](#-contenido)
+
+---
+
 ## 📂 Comprobar las imagenes que ya tenemos en local
 
 Pero antes de empezar vamos a recordar cómo podíamos ver las imágenes que tenemos en local:
@@ -181,6 +187,10 @@ Las variables de entorno permiten configurar aplicaciones sin modificar la image
 - `PASSWORD/USER`: Credenciales de acceso
 - `DB_*`: Configuración de base de datos
 - `APP_*`: Configuraciones específicas de la aplicación
+
+---
+
+> [⬆️ Volver al índice](#-contenido)
 
 ---
 
@@ -525,6 +535,10 @@ docker image prune -a --filter "until=24h"
 
 ---
 
+> [⬆️ Volver al índice](#-contenido)
+
+---
+
 ## 🧩 Docker Extensions: Extiende Docker Desktop
 
 **Docker Extensions** es un ecosistema de complementos que extienden la funcionalidad de Docker Desktop, permitiéndote agregar herramientas e integraciones adicionales directamente desde la interfaz gráfica. Las extensiones te permiten trabajar de manera más eficiente al integrar herramientas populares sin abandonar Docker Desktop.
@@ -583,6 +597,10 @@ Para más información sobre desarrollo de extensiones, consulta la [documentaci
 
 ---
 
+> [⬆️ Volver al índice](#-contenido)
+
+---
+
 ## 🤖 Docker Model Runner: IA y modelos de lenguaje en contenedores
 
 En los últimos tiempos Docker se ha volcado en integrar capacidades de inteligencia artificial directamente en su ecosistema. Por lo que además de poder crear y gestionar contenedores tradicionales, ahora es posible trabajar con modelos de IA y grandes modelos de lenguaje (LLMs) de forma nativa. Para ello ha creado una herramienta llamada **Docker Model Runner**, la cual te permite descargar imágenes que lo que contienen son modelos de IA listos para usar.
@@ -635,6 +653,10 @@ Docker Model Runner se integra perfectamente con:
 - **Dockerfile**: Puedes referenciar modelos en tus imágenes personalizadas
 
 > 💡 **¿Por qué es importante?** Docker Model Runner democratiza el acceso a la IA, permitiendo que cualquier desarrollador pueda trabajar con modelos avanzados usando las herramientas Docker que ya conoce. Es especialmente valioso para crear aplicaciones que necesiten procesamiento de lenguaje natural, generación de texto, o análisis semántico.
+
+---
+
+> [⬆️ Volver al índice](#-contenido)
 
 ---
 
@@ -701,6 +723,10 @@ docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 
 ---
 
+> [⬆️ Volver al índice](#-contenido)
+
+---
+
 ## 📚 Comandos Docker más comunes en Día 2
 
 Aquí tienes un resumen rápido de los comandos que has aprendido:
@@ -743,6 +769,10 @@ docker pull mcr.microsoft.com/mssql/server:2019     # Descargar de MCR
 docker tag nginx localhost:5000/nginx               # Etiquetar para registro local
 docker push localhost:5000/nginx                    # Subir a registro privado
 ```
+
+---
+
+> [⬆️ Volver al índice](#-contenido)
 
 ---
 
