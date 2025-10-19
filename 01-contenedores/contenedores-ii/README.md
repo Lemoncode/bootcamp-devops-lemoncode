@@ -176,7 +176,160 @@ Las variables de entorno permiten configurar aplicaciones sin modificar la image
 
 ### 🔒 **Opciones de seguridad (--security-opt)**
 
-Configuran políticas de seguridad del contenedor y controlan qué acceso tiene el contenedor a las llamadas del sistema:
+Configuran políticas de seguridad del contenedor y controlan qué acceso tiene el contenedor a las llamadas del sistema.
+
+Pero espera, ¿qué son **seccomp** y **AppArmor**? Si es la primera vez que lo escuchas, no te preocupes, es más sencillo de lo que parece:
+
+#### 📚 **¿Qué es seccomp?**
+
+**seccomp** (del inglés "Secure Computing") es un **filtro de seguridad a nivel del kernel de Linux** que actúa como un intermediario entre tus programas y el sistema operativo.
+
+Piénsalo así:
+- Tu aplicación quiere hacer algo (abrir un archivo, crear un proceso, acceder a la red, etc.)
+- El kernel necesita ejecutar una **"llamada del sistema"** (syscall) para hacer eso
+- **seccomp intercepta esa llamada** y comprueba si está permitida según sus reglas
+- Si está permitida → se ejecuta ✅
+- Si NO está permitida → se bloquea 🚫
+
+**Ejemplo real:**
+- Firefox necesita acceder a gráficos de bajo nivel → necesita muchas syscalls especiales
+- Una aplicación web normal → solo necesita syscalls básicas (leer archivos, conectar a red, crear procesos)
+
+Docker por defecto aplica un perfil seccomp que **solo permite las syscalls seguras y necesarias**, bloqueando operaciones peligrosas que podrían comprometer la seguridad del sistema.
+
+#### 📚 **¿Qué es AppArmor?**
+
+**AppArmor** es un **sistema de control de acceso obligatorio (MAC)** que define qué puede y qué no puede hacer cada programa.
+
+Piénsalo como un "permiso de acceso" muy granular:
+- Este programa **puede** leer archivos de `/usr/share/`
+- Este programa **no puede** acceder a `/etc/shadow` (archivo de contraseñas)
+- Este programa **no puede** modificar archivos en `/bin/`
+
+Docker aplica por defecto un perfil AppArmor llamado `docker-default` que restringe las operaciones de los contenedores.
+
+#### 🔄 **seccomp vs AppArmor - ¿Cuál es la diferencia?**
+
+| Aspecto | seccomp | AppArmor |
+|--------|---------|----------|
+| **Qué filtra** | Llamadas del sistema (syscalls) | Acceso a archivos, red, etc. |
+| **Nivel** | Kernel (muy bajo nivel) | Sistema de archivos y red |
+| **Ejemplo bloqueo** | Evita que crees procesos nuevos | Evita que leas `/etc/shadow` |
+| **Overhead** | Muy bajo | Bajo |
+
+Ambos trabajan juntos para crear múltiples capas de seguridad.
+
+#### 🧪 **Ejemplo práctico 1: seccomp - Bloqueando operaciones peligrosas**
+
+**Analogía simple:** seccomp es como un portero que ve qué intenta hacer el contenedor y le dice "sí" o "no" a nivel del kernel.
+
+**Prueba esta comparación:**
+
+```bash
+# ✅ CONTENEDOR NORMAL (CON seccomp por defecto)
+# La mayoría de operaciones funcionan perfectamente
+docker run --rm alpine sh -c 'echo "Hola" > /tmp/test.txt && cat /tmp/test.txt'
+# Funciona sin problemas porque crear archivos está PERMITIDO
+
+# ❌ OPERACIÓN PELIGROSA BLOQUEADA (CON seccomp por defecto)
+# Intentar acceder a llamadas del sistema avanzadas se bloquea
+docker run --rm alpine sh -c 'strace -e trace=ptrace echo "test"'
+# Falla o se limita - ptrace (debuggear otros procesos) está BLOQUEADO por seguridad
+
+# ✅ MISMA OPERACIÓN PERMITIDA (SIN seccomp - security-opt seccomp=unconfined)
+# Desactivamos seccomp = permitimos todas las syscalls
+docker run --rm --security-opt seccomp=unconfined alpine sh -c 'strace -e trace=ptrace echo "test"'
+# ✅ Funciona completamente - ptrace está PERMITIDO (pero es peligroso)
+```
+
+**¿Qué ves?**
+- **Por defecto**: seccomp bloquea operaciones peligrosas (ptrace) ✅ Seguro
+- **Sin seccomp**: Se permite todo, incluso lo peligroso ⚠️ Menos seguro
+
+**📌 ¿Qué es ptrace y por qué está bloqueado?**
+
+`ptrace` es una syscall (llamada del sistema) que permite a un proceso **"espiar" o "debuggear" otros procesos**:
+
+- **Usos legítimos**: Debuggers (gdb, lldb), profilers, herramientas de análisis
+- **Usos maliciosos**: Un contenedor podría usarlo para:
+  - Inyectar código en otros procesos
+  - Leer la memoria de otros procesos (¡y encontrar contraseñas!)
+  - Modificar el comportamiento de otros procesos
+  - Escapar del contenedor accediendo a procesos del host
+
+Por eso Docker **bloquea ptrace por defecto** con seccomp. Si necesitas debuggear o usar herramientas de profiling dentro de un contenedor de desarrollo, es cuando desactivarías seccomp (`--security-opt seccomp=unconfined`), pero **nunca en producción**.
+
+---
+
+#### 🧪 **Ejemplo práctico 2: AppArmor - Bloqueando acceso a archivos sensibles**
+
+**Analogía simple:** AppArmor es como un guardaespaldas que vigila a dónde puede ir el contenedor.
+
+**Prueba esta comparación:**
+
+```bash
+# ✅ ACCESO NORMAL A ARCHIVOS (CON AppArmor por defecto)
+# Puedes leer archivos normales sin problema
+docker run --rm alpine cat /etc/hostname
+# Funciona perfectamente
+
+# ❌ ACCESO A ARCHIVOS SENSIBLES BLOQUEADO (CON AppArmor por defecto)
+# Pero los archivos realmente sensibles están protegidos
+docker run --rm -v /etc:/etc:ro alpine cat /etc/shadow
+# ❌ Permission denied - AppArmor lo bloquea incluso si le das acceso al volumen
+
+# ✅ MISMO ARCHIVO AHORA ACCESIBLE (SIN AppArmor - security-opt apparmor=unconfined)
+# Desactivamos AppArmor = quitamos la protección
+docker run --rm --security-opt apparmor=unconfined -v /etc:/etc:ro alpine cat /etc/shadow
+# ✅ Funciona - AppArmor no está bloqueándolo (pero es peligroso)
+```
+
+**¿Qué ves?**
+- **Por defecto**: AppArmor protege archivos sensibles ✅ Seguro
+- **Sin AppArmor**: Se permite acceder a todo ⚠️ Menos seguro
+
+---
+
+**📌 Conclusión simple:**
+- **seccomp**: "¿Qué operaciones de bajo nivel puedes hacer?" (Por defecto: solo las seguras)
+- **AppArmor**: "¿A dónde puedes ir?" (Por defecto: solo a lugares seguros)
+
+Ambos juntos = contenedor seguro por defecto. Desactívalo solo si realmente lo necesitas.
+
+---
+
+**📝 Detalles adicionales de AppArmor:**
+
+AppArmor también protege directorios del sistema:
+
+```bash
+# CON AppArmor (por defecto - bloquea escritura en /sys)
+docker run --rm alpine sh -c 'echo "test" > /sys/test.txt'
+# ❌ Permission denied - no puedes escribir en /sys
+
+# SIN AppArmor (permite escritura)
+docker run --rm --security-opt apparmor=unconfined alpine sh -c 'echo "test" > /sys/test.txt'
+# ✅ Funciona (aunque /sys sea read-only, AppArmor no lo bloquea a nivel MAC)
+```
+
+---
+
+**✅ Prueba los comandos tú mismo:**
+
+Si quieres ver la diferencia real, ejecuta estos comandos en tu máquina:
+
+```bash
+# 1. Intenta acceder a /etc/shadow (archivo de contraseñas)
+# CON protección (AppArmor):
+docker run --rm -v /etc:/etc:ro alpine cat /etc/shadow 2>&1 | head -1
+# Probablemente: "cat: can't open '/etc/shadow': Permission denied"
+
+# SIN protección (desactivamos AppArmor):
+docker run --rm --security-opt apparmor=unconfined -v /etc:/etc:ro alpine cat /etc/shadow 2>&1 | head -1
+# Funciona - ¡ve el contenido del archivo!
+
+# 2. Conclusión: AppArmor protege archivos sensibles automáticamente
+```
 
 ```bash
 --security-opt seccomp=unconfined  # Deshabilita el filtro de llamadas del sistema
@@ -196,15 +349,51 @@ Por defecto, Docker aplica configuraciones **seguras y restrictivas**:
 
 **� Entendiendo cada opción:**
 
-- **`seccomp=unconfined`**: Desactiva el filtro de seguridad de llamadas del sistema (syscalls). Necesario para aplicaciones gráficas como Firefox, Chrome o herramientas de debugging que requieren acceso completo al kernel. **⚠️ Reduce significativamente la seguridad**. Si no lo especificas, Docker mantiene el filtro por defecto (seguro).
+- **`seccomp=unconfined`**: Desactiva el filtro de seguridad de llamadas del sistema (syscalls). 
+  - **En la práctica**: Tu contenedor puede hacer prácticamente cualquier cosa a nivel del kernel, incluyendo operaciones peligrosas que podrían comprometer el host.
+  - **Cuándo necesitas esto**: Aplicaciones gráficas como Firefox, Chrome o herramientas de debugging de bajo nivel que requieren acceso directo al kernel (ej: Frida, GDB con capacidades especiales).
+  - **El coste**: **⚠️ Reduce significativamente la seguridad**. Un atacante podría usar syscalls peligrosas para escapar del contenedor o comprometer el host.
+  - **Si no lo especificas**: Docker mantiene el filtro por defecto (seguro), bloqueando syscalls peligrosas como `ptrace`, `kexec`, `bpf`, etc.
+  - **Ejemplo**: Firefox necesita `mmap` con permisos especiales y acceso a `/dev/dri/` (gráficos), por eso requiere `seccomp=unconfined`.
 
-- **`apparmor=unconfined`**: Desactiva AppArmor (Mandatory Access Control en Linux). AppArmor proporciona una capa adicional de control de acceso. Al desactivarlo, se permiten más operaciones. Normalmente no es necesario desactivar esto. Si no lo especificas, se aplica el perfil `docker-default` (recomendado).
+- **`apparmor=unconfined`**: Desactiva AppArmor (el sistema de control de acceso obligatorio de Linux).
+  - **En la práctica**: Sin AppArmor, tu contenedor tiene acceso mucho más permisivo al sistema de archivos y puede acceder a más recursos.
+  - **Cuándo necesitas esto**: Raramente. La mayoría de aplicaciones funcionan bien con el perfil `docker-default`. Solo en casos muy específicos donde necesites acceso a archivos o directorios que AppArmor bloquea.
+  - **El coste**: Aumenta la superficie de ataque. Un contenedor malicioso podría acceder a más recursos del sistema.
+  - **Si no lo especificas**: Se aplica el perfil `docker-default`, que es una buena combinación de seguridad y funcionalidad.
+  - **Diferencia respecto a seccomp**: Mientras seccomp filtra *qué* se puede hacer a nivel del kernel, AppArmor filtra *a dónde* se puede acceder (archivos, puertos, etc.).
 
-- **`no-new-privileges`**: Evita que procesos dentro del contenedor puedan escalar privilegios. Es una buena práctica de seguridad para aplicaciones que no necesitan cambiar de usuario/grupo durante la ejecución. Este comportamiento es el **por defecto** en Docker, así que no necesitas especificarlo a menos que uses `--privileged`.
+- **`no-new-privileges`**: Evita que procesos dentro del contenedor puedan **escalar privilegios** (cambiar de usuario/grupo o ganar más permisos).
+  - **En la práctica**: Un proceso que corre como usuario normal (ej: www-data) NO puede convertirse en root, incluso si encuentra una vulnerabilidad en setuid binaries.
+  - **Ejemplo de ataque bloqueado**: Sin `no-new-privileges`, un atacante podría aprovechar un binario setuid para escalar a root. Con esta opción, se previene.
+  - **Caso de uso**: Aplicaciones que no necesitan cambiar de usuario durante su ejecución (la mayoría).
+  - **El coste**: Muy bajo. Principalmente la restricción de que no puedas usar `sudo` o funcionalidades que requieran cambio de usuario dentro del contenedor.
+  - **Si no lo especificas**: Este es el **por defecto** en Docker, así que tu aplicación ya está protegida contra escalada de privilegios.
 
 **⚠️ Importante**: `seccomp=unconfined` se usa para apps gráficas que necesitan acceso completo al sistema, pero reduce la seguridad. Solo úsalo cuando sea absolutamente necesario.
 
 **💡 Recomendación**: La configuración por defecto de Docker es segura. Mantén la restricción si tu aplicación no necesita acceso de bajo nivel. Solo desactívalo cuando sea necesario, y siempre como última opción después de otros intentos.
+
+#### 🎯 **Resumen: Las tres capas de seguridad**
+
+Docker proporciona tres capas de seguridad que trabajan juntas:
+
+1. **seccomp**: ¿Qué syscalls (operaciones de kernel) puedo ejecutar?
+   - Por defecto: Bloqueado (muy restrictivo)
+   - Activado en: Aplicaciones gráficas (Firefox, Chrome), debugging de bajo nivel
+2. **AppArmor**: ¿A qué archivos, puertos y recursos puedo acceder?
+   - Por defecto: Perfil `docker-default` (restrictivo pero funcional)
+   - Raramente necesitas desactivarlo
+3. **no-new-privileges**: ¿Puedo cambiar de usuario/grupo para ganar más permisos?
+   - Por defecto: Desactivado (protegido contra escalada)
+   - Previene que un atacante use vulnerabilidades para convertirse en root
+
+**Analogía**: Es como entrar en una escuela:
+- **seccomp** = "¿Qué actividades puedo hacer?" (solo las permitidas por la dirección)
+- **AppArmor** = "¿A qué lugares puedo acceder?" (aulas permitidas, no la directiva)
+- **no-new-privileges** = "¿Puedo pretender ser un profesor?" (no, el sistema lo bloquea)
+
+Todas juntas crean un contenedor **muy restringido pero funcional** que es seguro por defecto.
 
 **Ejemplos de uso:**
 
