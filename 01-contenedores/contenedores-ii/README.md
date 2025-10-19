@@ -30,14 +30,15 @@ Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en l
 8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
 9. [Inspección y análisis](#inspeccionando-una-imagen)
 10. [Limpieza y mantenimiento](#eliminar-una-imagen)
-11. [Docker Model Runner: IA y modelos de lenguaje](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
-12. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
+11. [Docker Extensions: Extiende Docker Desktop](#docker-extensions-extiende-docker-desktop)
+12. [Docker Model Runner: IA y modelos de lenguaje](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
+13. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
 
 ---
 
 En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
-## � Conceptos de Día 1 que usaremos hoy
+## 📋 Conceptos de Día 1 que usaremos hoy
 
 Antes de avanzar, recuerda que en la clase anterior aprendimos parámetros importantes que seguiremos usando:
 
@@ -626,6 +627,64 @@ docker image prune -a --dry-run
 # Eliminar imágenes creadas hace más de X horas
 docker image prune -a --filter "until=24h"
 ```
+
+---
+
+## 🧩 Docker Extensions: Extiende Docker Desktop
+
+**Docker Extensions** es un ecosistema de complementos que extienden la funcionalidad de Docker Desktop, permitiéndote agregar herramientas e integraciones adicionales directamente desde la interfaz gráfica. Las extensiones te permiten trabajar de manera más eficiente al integrar herramientas populares sin abandonar Docker Desktop.
+
+
+### ✨ **¿Qué son Docker Extensions?**
+
+Docker Extensions son aplicaciones pequeñas que se ejecutan como contenedores y añaden funcionalidades a Docker Desktop. Actúan como un puente entre Docker y otras herramientas de desarrollo, permitiendo:
+
+- **Integración con herramientas populares**: Kubernetes, Snyk, Portainer, LazyDocker, etc.
+- **Interfaz visual mejorada**: Alternativas a la CLI para tareas comunes
+- **Automatización**: Scripts y workflows para tareas repetitivas
+- **Monitoreo avanzado**: Análisis de contenedores, imágenes y recursos
+- **Seguridad**: Escaneo de vulnerabilidades y análisis de seguridad
+
+### 🚀 **Cómo instalar Docker Extensions**
+
+#### **Paso 1: Acceder a la tienda de extensiones**
+
+1. Abre **Docker Desktop**
+2. Haz clic en el icono de **"Extensions"** en la barra lateral (icono de piezas de puzzle)
+3. Se abrirá la tienda de extensiones de Docker
+
+#### **Paso 2: Buscar e instalar una extensión**
+
+Por ejemplo, para instalar **Portainer** (gestor visual de contenedores):
+
+1. En la barra de búsqueda, escribe "Portainer"
+2. Haz clic en el resultado de Portainer
+3. Haz clic en el botón **"Install"**
+4. Espera a que se descargue e instale (normalmente tarda unos segundos)
+
+#### **Paso 3: Usar la extensión**
+
+Una vez instalada, aparecerá en la barra lateral de Docker Desktop y podrás acceder a ella haciendo clic.
+
+![Extensiones de Docker Desktop](imagenes/Extensiones%20de%20Docker.png)
+
+
+### ⚙️ **Crear tus propias extensiones (Avanzado)**
+
+Si eres desarrollador, puedes crear tus propias extensiones usando:
+- **React** para la interfaz de usuario
+- **Docker SDK** para interactuar con el engine
+- **Docker Compose** para empaquetar la extensión
+
+Para más información sobre desarrollo de extensiones, consulta la [documentación oficial de Docker Extensions](https://docs.docker.com/desktop/extensions/dev/).
+
+### 🎓 **Lo que aprendes con Docker Extensions**
+
+- ✅ Cómo extender Docker Desktop con funcionalidad adicional
+- ✅ Integración con herramientas de seguridad (Snyk)
+- ✅ Gestión visual alternativa a la CLI
+- ✅ Automatización de tareas comunes
+- ✅ Acceso a funcionalidades avanzadas sin scripting
 
 ---
 
