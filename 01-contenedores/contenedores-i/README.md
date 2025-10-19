@@ -10,7 +10,7 @@ Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 
 | # | Tema |
 |---|------|
-| 1 | 📘 Teoría 
+| 1 | 📘 Teoría
 | 2 | 🛠️ Demo: Instalar Docker Desktop en MacOS | 
 | 3 | 🛠️ Demo: Instalar Docker Desktop en Windows | 
 | 4 | 🧪 Demo: Mi primer contenedor con Docker Desktop | 
@@ -31,9 +31,12 @@ Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en l
 - [🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él](#️-ejecutar-un-contenedor-y-lanzar-un-shell-interactivo-en-él) 
 - [🌐 Mapear puerto de contenedor a los puertos de mi máquina local](#-mapear-puerto-de-contenedor-a-los-puertos-de-mi-máquina-local) 
 - [🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?](#️-y-si-quiero-ejecutar-un-contenedor-en-segundo-plano)
+- [🔄 Políticas de reinicio (--restart)](#-políticas-de-reinicio---restart)
+- [🗑️ Limpiar automáticamente el contenedor (--rm)](#️-limpiar-automáticamente-el-contenedor---rm)
 - [📋 Listar todos los contenedores que tengo en ejecución](#-listar-todos-los-contenedores-que-tengo-en-ejecución) 
 - [🏷️ Bautizar contenedores](#️-bautizar-contenedores)
-- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución) 
+- [💾 Limitar recursos: CPU y Memoria](#-limitar-recursos-cpu-y-memoria)
+- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución)
 - [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor) 
 - [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor) 
 - [🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?](#️-y-si-quiero-eliminarlo-del-todo-de-mi-ordenador)
@@ -251,6 +254,70 @@ O bien:
 docker run -d -p 8080:80 httpd
 ```
 
+## 🔄 Políticas de reinicio (--restart)
+
+Controlan qué hace Docker cuando el contenedor se detiene:
+
+```bash
+--restart=no              # No reiniciar nunca (por defecto)
+--restart=always          # Reiniciar siempre
+--restart=unless-stopped  # Reiniciar a menos que se pare manualmente
+--restart=on-failure      # Solo reiniciar si falla
+--restart=on-failure:3    # Reiniciar máximo 3 veces si falla
+```
+
+**💡 Recomendación**: Usar `unless-stopped` para servicios que quieres que arranquen con el sistema pero puedas parar manualmente.
+
+Ejemplo de uso:
+
+```bash
+docker run -d --restart=unless-stopped -p 8080:80 httpd
+```
+
+## 🗑️ Limpiar automáticamente el contenedor (--rm)
+
+La opción `--rm` elimina automáticamente el contenedor cuando se detiene. Es muy útil para no dejar contenedores "basura" acumulándose en tu sistema.
+
+```bash
+docker run --rm -p 8080:80 httpd
+```
+
+O combinado con otras opciones:
+
+```bash
+docker run -d --rm --name web -p 8080:80 httpd
+```
+
+**📊 Comparación de comportamientos:**
+
+| Comando | Qué sucede al parar el contenedor |
+|---------|----------------------------------|
+| `docker run httpd` | El contenedor queda **parado pero guardado** en el sistema. Ocupa espacio. |
+| `docker run --rm httpd` | El contenedor se **elimina automáticamente**. No deja rastro. |
+
+**🎯 Casos de uso:**
+
+- **Usa `--rm`**: Para experimentar, probar, debugging, contenedores temporales
+- **No uses `--rm`**: Para servicios que quieres mantener (bases de datos, servidores en producción)
+
+**💡 Ejemplos prácticos:**
+
+```bash
+# Probar una imagen rápidamente (con --rm para no dejar basura)
+docker run --rm ubuntu echo "¡Hola desde Ubuntu!"
+
+# Ejecutar un script de prueba (desaparece automáticamente)
+docker run --rm -v $(pwd):/app mi-app:latest /app/test.sh
+
+# Servidor temporal de prueba (se limpia al parar)
+docker run -d --rm --name temp-server -p 9090:80 nginx
+
+# Acceder a un shell interactivo y limpiarse automáticamente
+docker run --rm -it ubuntu /bin/bash
+```
+
+**⚠️ Importante**: Si usas `--rm` con `-d` (detach), el contenedor se eliminará tan pronto se detenga, incluso si hay errores. Asegúrate de tener logs configurados si lo necesitas.
+
 ## 📋 Listar todos los contenedores que tengo en ejecución
 
 Para ver los contenedores en ejecución:
@@ -292,7 +359,107 @@ docker rename NOMBRE_ASIGNADO_POR_DOCKER hello-world
 docker ps -a
 ```
 
-## 🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?
+## 💾 Limitar recursos: CPU y Memoria
+
+Es importante limitar los recursos que puede usar un contenedor para evitar que consuma todos los recursos del host y afecte a otros contenedores o servicios.
+
+### 📊 Limitar Memoria (`--memory` o `-m`)
+
+Especifica la cantidad máxima de memoria RAM que puede usar el contenedor:
+
+```bash
+docker run -d --memory="512m" --name web -p 8080:80 httpd
+```
+
+**Formatos válidos:**
+- `512m` - 512 megabytes
+- `1g` - 1 gigabyte
+- `2g` - 2 gigabytes
+
+**🔍 Cómo funciona:**
+- El contenedor puede usar hasta la cantidad especificada
+- Si intenta exceder el límite, Docker lo mata (OOM - Out of Memory)
+- Sin límite especificado, puede usar toda la RAM disponible
+
+### ⚙️ Limitar CPU (`--cpus`)
+
+Especifica cuántos núcleos de CPU puede usar el contenedor:
+
+```bash
+docker run -d --cpus="1.5" --name web -p 8080:80 httpd
+```
+
+**Ejemplos de uso:**
+- `--cpus="1"` - Usar como máximo 1 núcleo CPU completo
+- `--cpus="0.5"` - Usar el 50% de 1 núcleo (compartido)
+- `--cpus="2"` - Usar 2 núcleos completos
+
+**🔍 Cómo funciona:**
+- El contenedor puede usar hasta ese número de núcleos
+- Si hay más disponibles, puede usarlos cuando otros contenedores no los necesitan
+- Sin límite especificado, puede usar todos los núcleos
+
+### 📋 Limitar CPU Priority (`--cpu-shares`)
+
+Controla la prioridad de CPU en caso de contención:
+
+```bash
+docker run -d --cpu-shares=1024 --name web -p 8080:80 httpd
+```
+
+**Por defecto:** Cada contenedor tiene 1024 shares
+- Si todos los contenedores tienen 1024, comparten CPU equitativamente
+- Si uno tiene 512 y otro 1024, el de 1024 recibe el doble de CPU cuando hay contención
+
+### 🔗 Combinando límites de CPU y Memoria
+
+**Ejemplo práctico: Servidor web seguro**
+
+```bash
+docker run -d \
+  --name production-web \
+  --memory="2g" \
+  --cpus="1.5" \
+  --cpu-shares=1024 \
+  -p 8080:80 \
+  httpd
+```
+
+**Esto significa:**
+- ✅ Máximo 2GB de RAM
+- ✅ Máximo 1.5 núcleos de CPU
+- ✅ Prioridad normal en caso de contención
+
+### 📊 Ver uso de recursos en tiempo real
+
+```bash
+# Ver estadísticas de un contenedor específico
+docker stats web
+
+# Ver estadísticas de todos los contenedores
+docker stats
+
+# Ver con formato personalizado
+docker stats --no-stream
+```
+
+**🎯 Casos de uso comunes:**
+
+| Caso | Configuración |
+|------|---------------|
+| Servidor web de producción | `--memory="2g" --cpus="2"` |
+| Base de datos | `--memory="4g" --cpus="4"` |
+| Aplicación pequeña/prueba | `--memory="256m" --cpus="0.5"` |
+| Tarea background | `--memory="512m" --cpus="0.25"` |
+
+**⚠️ Importante:**
+- Si no especificas límites, el contenedor puede consumir todos los recursos
+- Establecer límites muy bajos puede hacer que la aplicación vaya lenta
+- Monitorea siempre el uso real vs los límites establecidos
+
+**💡 Recomendación:** Para aplicaciones en producción, siempre establece límites de memoria y CPU para proteger la estabilidad del sistema.
+
+## �🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?
 
 Puedes conectarte a un contenedor en ejecución desde Docker Desktop o desde el CLI. Por ejemplo:
 

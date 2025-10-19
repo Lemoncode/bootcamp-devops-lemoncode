@@ -2,32 +2,36 @@
 
 ![Docker](imagenes/Trabajando%20con%20imagenes%20de%20Docker.jpeg)
 
-## 📋 Agenda del día
+¡Hola lemoncoder 👋🏻! En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión básica hasta una introducción a la creación de imágenes personalizadas con Dockerfile. Veremos cómo buscar, descargar y crear imágenes, así como optimizar nuestro entorno Docker.
 
-En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión básica hasta una introducción a la creación de imágenes personalizadas con Dockerfile. Veremos cómo buscar, descargar y crear imágenes, así como optimizar nuestro entorno Docker.
+## 🎬 Vídeos de la introducción en el campus
 
-### 🎯 Objetivos
-- 🔍 Explorar y gestionar imágenes Docker
-- 📥 Descargar imágenes desde diferentes registros
-- 🛠️ Dominar parámetros esenciales de contenedores
-- 🖼️ Crear imágenes personalizadas mediante commits
-- 🔎 Inspeccionar y analizar la estructura de imágenes
-- 🗑️ Optimizar el espacio eliminando imágenes no utilizadas
-- 🤖 Conocer Docker Model Runner para IA y modelos de lenguaje
+Se asume que has visto los siguientes vídeos para comenzar con este módulo:
+
+| # | Tema |
+|---|------|
+| 1 | 📘 Teoría |
+| 2 | 🛠️ Demo: Analizar una imagen desde Docker Desktop |
+| 3 | �️ Demo: Etiquetas y digest |
+| 4 | 🌐 Demo: Un vistazo por la web de Docker Hub |
+| 5 | 🧪 Demo: Mi primera imagen de Docker |
+
+Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en los vídeos. Con el resto nos ponemos en la clase online.
+
 
 ### 📚 Contenido
 1. [Crear contenedores desde imágenes](#crear-un-contenedor-a-partir-de-una-imagen-de-docker)
-2. [Gestión de imágenes locales](#comprobar-las-imagenes-que-ya-tenemos-en-local)
-3. [Descarga de imágenes](#pulling-o-descargar-una-imagen)
-4. [Conceptos fundamentales](#conceptos-fundamentales-que-necesitas-conocer)
+2. [Gestión de imágenes locales](#comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
+3. [Descarga de imágenes](#pulling-o-descargar-una-imagen) 🍋📺
+4. [Conceptos fundamentales](#conceptos-fundamentales-que-necesitas-conocer) 🍋📺
 5. [Galería de imágenes útiles](#algunas-imágenes-interesantes)
-6. [Registros alternativos](#otros-registros-diferentes-a-docker-hub)
+6. [Registros alternativos](#otros-registros-diferentes-a-docker-hub) 🍋📺
 7. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
-8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente)
+8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
 9. [Inspección y análisis](#inspeccionando-una-imagen)
 10. [Limpieza y mantenimiento](#eliminar-una-imagen)
 11. [Docker Model Runner: IA y modelos de lenguaje](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
-12. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen)
+12. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
 
 ---
 
@@ -90,6 +94,8 @@ Para descargar una imagen no es necesario tener que ejecutar un contenedor, simp
 docker pull mysql
 ```
 
+Esto es útil cuando queremos descargar una imagen para tenerla en local y usarla más adelante y que el proceso de creación del contenedor sea mucho más rápido. Yo he hecho esto incluso cuando he estado de viaje y he tenido una conexión lenta a internet (o cero internet), para tener las imágenes ya descargadas y no tener que esperar a que se descarguen cuando las necesito.
+
 Si no especificamos nada más se descargará la imagen con la etiqueta `latest`, pero si queremos una versión específica podemos hacerlo de la siguiente manera:
 
 ```bash
@@ -123,7 +129,7 @@ Antes de lanzar contenedores con configuraciones avanzadas, es importante entend
 
 ### 🌍 **Variables de entorno (-e)**
 
-Las variables de entorno permiten configurar aplicaciones sin modificar la imagen. Son muy comunes en imágenes de LinuxServer y otras:
+Las variables de entorno permiten configurar aplicaciones sin modificar la imagen.
 
 ```bash
 # Ejemplos de variables típicas
@@ -140,23 +146,11 @@ Las variables de entorno permiten configurar aplicaciones sin modificar la image
 - `DB_*`: Configuración de base de datos
 - `APP_*`: Configuraciones específicas de la aplicación
 
-### 🔄 **Políticas de reinicio (--restart)**
 
-Controlan qué hace Docker cuando el contenedor se detiene:
-
-```bash
---restart=no              # No reiniciar nunca (por defecto)
---restart=always          # Reiniciar siempre
---restart=unless-stopped  # Reiniciar a menos que se pare manualmente
---restart=on-failure      # Solo reiniciar si falla
---restart=on-failure:3    # Reiniciar máximo 3 veces si falla
-```
-
-**💡 Recomendación**: Usar `unless-stopped` para servicios que quieres que arranquen con el sistema pero puedas parar manualmente.
 
 ### 🔒 **Opciones de seguridad (--security-opt)**
 
-Configuran políticas de seguridad del contenedor:
+Configuran políticas de seguridad del contenedor y controlan qué acceso tiene el contenedor a las llamadas del sistema:
 
 ```bash
 --security-opt seccomp=unconfined  # Deshabilita el filtro de llamadas del sistema
@@ -164,7 +158,66 @@ Configuran políticas de seguridad del contenedor:
 --security-opt no-new-privileges   # Evita escalada de privilegios
 ```
 
-**⚠️ Importante**: `seccomp=unconfined` se usa para apps gráficas que necesitan acceso completo al sistema, pero reduce la seguridad.
+**� Valores por defecto (cuando no especificas nada):**
+
+Por defecto, Docker aplica configuraciones **seguras y restrictivas**:
+
+| Opción | Por defecto | Qué significa |
+|--------|-------------|---------------|
+| **seccomp** | `default` (restrictivo) | Docker aplica un perfil de seccomp que filtra llamadas del sistema peligrosas. Protege contra ataques a nivel de kernel |
+| **apparmor** | `docker-default` | Se aplica el perfil de AppArmor específico de Docker que limita operaciones del contenedor |
+| **privileges** | No permitidos | Los procesos NO pueden escalar privilegios (cambiar de usuario/grupo) |
+
+**�🔍 Entendiendo cada opción:**
+
+- **`seccomp=unconfined`**: Desactiva el filtro de seguridad de llamadas del sistema (syscalls). Necesario para aplicaciones gráficas como Firefox, Chrome o herramientas de debugging que requieren acceso completo al kernel. **⚠️ Reduce significativamente la seguridad**. Si no lo especificas, Docker mantiene el filtro por defecto (seguro).
+
+- **`apparmor=unconfined`**: Desactiva AppArmor (Mandatory Access Control en Linux). AppArmor proporciona una capa adicional de control de acceso. Al desactivarlo, se permiten más operaciones. Normalmente no es necesario desactivar esto. Si no lo especificas, se aplica el perfil `docker-default` (recomendado).
+
+- **`no-new-privileges`**: Evita que procesos dentro del contenedor puedan escalar privilegios. Es una buena práctica de seguridad para aplicaciones que no necesitan cambiar de usuario/grupo durante la ejecución. Este comportamiento es el **por defecto** en Docker, así que no necesitas especificarlo a menos que uses `--privileged`.
+
+**⚠️ Importante**: `seccomp=unconfined` se usa para apps gráficas que necesitan acceso completo al sistema, pero reduce la seguridad. Solo úsalo cuando sea absolutamente necesario.
+
+**💡 Recomendación**: La configuración por defecto de Docker es segura. Mantén la restricción si tu aplicación no necesita acceso de bajo nivel. Solo desactívalo cuando sea necesario, y siempre como última opción después de otros intentos.
+
+**Ejemplos de uso:**
+
+```bash
+# Contenedor seguro (sin especificar nada, usa valores por defecto)
+docker run -d --name mi-app mi-app:latest
+# ✅ Tiene: seccomp restrictivo + apparmor + no-new-privileges
+
+# Para una aplicación gráfica que necesita acceso completo
+docker run -d \
+  --security-opt seccomp=unconfined \
+  --name firefox \
+  lscr.io/linuxserver/firefox:latest
+# ⚠️ Menos seguro, pero necesario para apps gráficas
+
+# Para una aplicación de debugging que necesita más permisos
+docker run -d \
+  --security-opt seccomp=unconfined \
+  --security-opt apparmor=unconfined \
+  --name debug-app \
+  mi-app-debug:latest
+# ⚠️ Máximo permiso (usar solo para debugging)
+
+# Para una aplicación que quieres mantener segura (explícitamente)
+docker run -d \
+  --security-opt no-new-privileges \
+  --name secure-app \
+  mi-app:latest
+# ✅ Especificamos explícitamente que no hay escalada de privilegios
+```
+
+**📊 Matriz de seguridad:**
+
+```
+Más seguro  ───────────────────────────────── Menos seguro
+    ↓                                            ↓
+[Por defecto] → [no-new-privileges] → [seccomp=unconfined] → [--privileged]
+  (seguro)      (muy seguro)          (arriesgado)           (muy arriesgado)
+```
 
 ### 🧠 **Memoria compartida (--shm-size)**
 
