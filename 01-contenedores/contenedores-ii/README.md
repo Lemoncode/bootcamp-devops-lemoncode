@@ -8,35 +8,48 @@
 
 Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 
-| # | Tema |
-|---|------|
-| 1 | 📘 Teoría |
-| 2 | 🛠️ Demo: Analizar una imagen desde Docker Desktop |
-| 3 | 🏷️ Demo: Etiquetas y digest |
-| 4 | 🌐 Demo: Un vistazo por la web de Docker Hub |
-| 5 | 🧪 Demo: Mi primera imagen de Docker |
+| # | Tema | Contenido Clave |
+|---|------|-----------------|
+| 1 | 📘 Teoría | Conceptos fundamentales de imágenes, capas, registros y nomenclatura |
+| 2 | 🛠️ Demo: Analizar una imagen desde Docker Desktop | Inspeccionar imágenes, ver capas, explorar la estructura interna |
+| 3 | 🏷️ Demo: Etiquetas y digest | Entender tags, versiones y digests SHA256 |
+| 4 | 🌐 Demo: Un vistazo por la web de Docker Hub | Navegar por Docker Hub, buscar imágenes, entender documentación |
+| 5 | 🧪 Demo: Mi primera imagen de Docker | Crear una imagen personalizada con Dockerfile básico |
 
 Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en los vídeos. Con el resto nos ponemos en la clase online.
 
+## 🎯 Qué aprenderás en este módulo
+
+En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. **En esta clase vamos a dominar las imágenes**: cómo buscarlas, descargarlas inteligentemente, crearlas personalizadas, y entender el ecosistema completo de Docker.
+
+Este módulo te dará las herramientas para:
+- ✅ Gestionar eficientemente el ciclo de vida de imágenes
+- ✅ Buscar y elegir las imágenes adecuadas para tus necesidades
+- ✅ Crear imágenes personalizadas reproducibles
+- ✅ Entender los registros de Docker y cómo funcionan
+- ✅ Optimizar tu entorno Docker y mantenerlo limpio
+- ✅ Explorar herramientas avanzadas del ecosistema Docker
+
 
 ### 📚 Contenido
+
 1. [Crear contenedores desde imágenes](#crear-un-contenedor-a-partir-de-una-imagen-de-docker)
-2. [Gestión de imágenes locales](#comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
+2. [Gestión básica de imágenes](#comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
 3. [Descarga de imágenes](#pulling-o-descargar-una-imagen) 🍋📺
 4. [Conceptos fundamentales](#conceptos-fundamentales-que-necesitas-conocer) 🍋📺
 5. [Galería de imágenes útiles](#algunas-imágenes-interesantes)
 6. [Registros alternativos](#otros-registros-diferentes-a-docker-hub) 🍋📺
-7. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
-8. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
-9. [Inspección y análisis](#inspeccionando-una-imagen)
-10. [Limpieza y mantenimiento](#eliminar-una-imagen)
-11. [Docker Extensions: Extiende Docker Desktop](#docker-extensions-extiende-docker-desktop)
-12. [Docker Model Runner: IA y modelos de lenguaje](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
-13. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
+7. [Crear tu propio registro privado](#crear-tu-propio-registro-docker-privado-en-un-contenedor)
+8. [Búsqueda de imágenes](#buscar-imágenes-en-docker-hub)
+9. [Tags y digests](#tags-y-digests) 
+10. [Creación de imágenes personalizadas](#crear-tu-propia-imagen-a-partir-de-una-imagen-existente) 🍋📺
+11. [Inspección y análisis](#inspeccionando-una-imagen)
+12. [Limpieza y mantenimiento](#eliminar-una-imagen)
+13. [Docker Extensions](#docker-extensions-extiende-docker-desktop)
+14. [Docker Model Runner](#docker-model-runner-ia-y-modelos-de-lenguaje-en-contenedores)
+15. [Introducción a Dockerfile](#introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
 
 ---
-
-En la primera clase vimos cómo instalar Docker, cómo funcionan los contenedores y cómo crear y ejecutar un contenedor a partir de una imagen. En esta clase vamos a ver cómo trabajar con imágenes, cómo buscarlas, descargarlas, crearlas y subirlas a Docker Hub.
 
 ## 📋 Conceptos de Día 1 que usaremos hoy
 
@@ -436,9 +449,9 @@ docker search --format "{{.Name}}: {{.StarCount}}" nginx
 docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsAutomated}}\t{{.IsOfficial}}" nginx
 ```
 
-## 🏷️ El CLI no te devuelve los tags, pero puedes hacerlo así, instalando JQ (https://stedolan.github.io/jq/)
+## 🏷️ Tags y digests
 
-Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera:
+Por otro lado, si quieres ver los tags de una imagen en Docker Hub puedes hacerlo de la siguiente manera (necesitarás instalar [JQ](https://stedolan.github.io/jq/)):
 
 ```bash
 curl -s -S 'https://registry.hub.docker.com/v2/repositories/library/nginx/tags/' | jq '."results"[]["name"]' | sort
@@ -756,23 +769,34 @@ docker push localhost:5000/nginx                    # Subir a registro privado
 
 En esta segunda clase has aprendido a:
 
-- 🚀 Crear contenedores desde imágenes Docker de forma eficiente.
-- 📂 Gestionar imágenes locales: listar, filtrar y organizar tu colección de imágenes.
-- 📥 Descargar imágenes estratégicamente con versiones específicas y digests.
-- 🔧 Dominar conceptos fundamentales: variables de entorno, políticas de reinicio y opciones de seguridad.
-- 🌟 Explorar una galería completa de imágenes útiles de LinuxServer y otros proveedores.
-- 🌐 Trabajar con registros múltiples: Docker Hub, Google Artifact Registry, Microsoft Container Registry.
-- 🔍 Realizar búsquedas avanzadas en Docker Hub con filtros y formato personalizado.
-- 🛠️ Crear imágenes personalizadas usando `docker commit` y modificando contenedores existentes.
-- 🔎 Inspeccionar imágenes en profundidad: analizar capas, configuración y metadata.
-- 🗑️ Mantener el sistema optimizado eliminando imágenes no utilizadas.
-- 🤖 Conocer Docker Model Runner: la herramienta beta para gestionar modelos de IA y LLMs.
-- 🌐 Integrar modelos de IA usando APIs compatibles con OpenAI desde contenedores.
-- ⚡ Ejecutar aplicaciones GenAI localmente con Docker Model Runner.
-- 📋 Introducción a Dockerfile: fundamentos para construir imágenes de forma reproducible.
-- 🎯 Entender las mejores prácticas: por qué Dockerfile es superior a `docker commit`.
+- 🚀 **Crear contenedores desde imágenes**: Usar comandos `docker run` con parámetros avanzados.
+- 📂 **Gestión de imágenes**: Listar, filtrar, inspeccionar y organizar tu colección de imágenes locales.
+- 📥 **Descargar inteligentemente**: Usar versiones específicas, digests y evitar sorpresas con `latest`.
+- 🔧 **Conceptos fundamentales**: Variables de entorno (TZ, PUID, PGID), políticas de reinicio y seguridad.
+- 🌟 **Galería de aplicaciones**: Conocer imágenes útiles de LinuxServer, oficial y otros proveedores.
+- 🌐 **Registros múltiples**: Trabajar con Docker Hub, Google Artifact Registry, Microsoft Container Registry.
+- 🗄️ **Registro privado local**: Crear y gestionar tu propio registro Docker en un contenedor.
+- 🔍 **Buscar imágenes**: Navegar Docker Hub con filtros avanzados y formato personalizado.
+- 🏷️ **Tags y digests**: Entender la nomenclatura y verificar integridad de imágenes.
+- 🛠️ **Crear imágenes personalizadas**: Usar `docker commit` para modificar contenedores existentes.
+- 🔎 **Inspeccionar imágenes**: Analizar capas (layers), configuración y metadata en profundidad.
+- 🗑️ **Optimizar espacio**: Eliminar imágenes no utilizadas y mantener tu entorno limpio.
+- 🧩 **Docker Extensions**: Extender funcionalidades de Docker Desktop con complementos.
+- 🤖 **Docker Model Runner**: Gestionar modelos de IA y LLMs directamente desde Docker (ya disponible en producción).
+- 📋 **Introducción a Dockerfile**: Fundamentos para crear imágenes de forma reproducible y profesional.
 
-En la siguiente clase profundizaremos en Dockerfile y aprenderás a crear imágenes optimizadas para producción.
+### 🎯 Lo más importante
+
+**La progresión es clara:** Hemos pasado de simplemente _ejecutar_ contenedores (Día 1) a _dominar_ las imágenes, sus fuentes, cómo crearlas y cómo optimizar nuestro flujo de trabajo. Ahora tienes las herramientas para trabajar profesionalmente con Docker.
+
+### 📚 Próximos pasos
+
+En el **Día 3** profundizaremos en **Dockerfile**, aprendiendo a:
+- Sintaxis completa y mejores prácticas
+- Multi-stage builds
+- Optimización de capas
+- Seguridad en la construcción de imágenes
+- Integración con CI/CD
 
 Happy coding {🍋}
 
