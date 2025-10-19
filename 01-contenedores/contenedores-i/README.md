@@ -17,49 +17,19 @@ Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 | 5 | 🔤 Demo: Cómo crear tus primeros contenedores desde el terminal de Docker Desktop |
 
 
-Te he dejado marcada en la agenda 🍋📺 aquellas secciones que se tratan en los vídeos. Con el resto nos ponemos en la clase online.
 
-## 📋 Agenda
+## 📺 Previously on Lemoncode...
 
-- [🧰 Cómo instalar Docker en tu máquina local](#-cómo-instalar-docker-en-tu-máquina-local) 🍋📺
-- [👀 Conociendo Docker desde Docker Desktop](#-conociendo-docker-desde-docker-desktop) 🍋📺
-  - [🚀 Mi primer contenedor con un servidor web](#-mi-primer-contenedor-con-un-servidor-web) 🍋📺
-- [🐳 Docker CLI](#-docker-cli) 🍋📺
-- [Visual Studio Code y Docker](#visual-studio-code-y-docker)
-- [🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache](#-ejecutar-un-contenedor-usando-el-terminal-de-vs-code-para-un-servidor-web-apache) 
-- [🏗️ Docker Hub web](#️-docker-hub-web) 
-- [🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él](#️-ejecutar-un-contenedor-y-lanzar-un-shell-interactivo-en-él) 
-- [🌐 Mapear puerto de contenedor a los puertos de mi máquina local](#-mapear-puerto-de-contenedor-a-los-puertos-de-mi-máquina-local) 
-- [🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?](#️-y-si-quiero-ejecutar-un-contenedor-en-segundo-plano)
-- [🔄 Políticas de reinicio (--restart)](#-políticas-de-reinicio---restart)
-- [🗑️ Limpiar automáticamente el contenedor (--rm)](#️-limpiar-automáticamente-el-contenedor---rm)
-- [📋 Listar todos los contenedores que tengo en ejecución](#-listar-todos-los-contenedores-que-tengo-en-ejecución) 
-- [🏷️ Bautizar contenedores](#️-bautizar-contenedores)
-- [💾 Limitar recursos: CPU y Memoria](#-limitar-recursos-cpu-y-memoria)
-- [🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?](#-cómo-ejecutar-comandos-en-un-contenedor-ya-en-ejecución)
-- [🛠️ Ejecutar comandos desde mi local dentro del contenedor](#️-ejecutar-comandos-desde-mi-local-dentro-del-contenedor) 
-- [🛑 ¿Cómo paro un contenedor?](#-cómo-paro-un-contenedor) 
-- [🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?](#️-y-si-quiero-eliminarlo-del-todo-de-mi-ordenador)
-- [Comandos Docker más comunes](#-comandos-docker-más-comunes) 
-- [🗄️ SQL Server dockerizado](#️-sql-server-dockerizado)
-- [ℹ️ Información del sistema Docker](#️-información-del-sistema-docker) 
-- [✨ Gordon AI](#-gordon-ai) 
-- [✨ GitHub Copilot](#-github-copilot)
-- [🎉 ¡Felicidades!](#-felicidades)
+**Teoría**
 
+Durante el vídeo de teoría hemos visto los siguientes conceptos clave:
 
+- ¿Qué es un contenedor?
+- Diferencia imagen vs contenedor
+- ¿Qué es Docker?
+- Arquitectura de Docker
+- ¿Qué es Docker Hub?
 
-## 🧰 Cómo instalar Docker en tu máquina local 🍋📺
-
-A día de hoy, la forma más sencilla de instalar Docker en tu máquina local es a través de **Docker Desktop**, el cual está disponible tanto para Windows, como para Linux y Mac. Descarga el instalable que necesites para tu sistema operativo [desde la página oficial](https://www.docker.com/).
-
-En los vídeos de la introducción podrás ver:
-
-🐳🍎 [Cómo instalar Docker Desktop en MacOS](https://campus.lemoncode.net/#/training/68c9403afd3dcd0a256a0291/video-player/https%3A%2F%2Fd2gr4gsp182xcm.cloudfront.net%2Fcampus%2Fbootcamp-devops-vi%2Fintroduccion-modulo-2-contenedores%2F01-contenedores-i-demo-1-instalar-docker-desktop-macos.mp4).
-
-🐳🪟 [Cómo instalar Docker Desktop en Windows](https://campus.lemoncode.net/#/training/68c9403afd3dcd0a256a0291/video-player/https%3A%2F%2Fd2gr4gsp182xcm.cloudfront.net%2Fcampus%2Fbootcamp-devops-vi%2Fintroduccion-modulo-2-contenedores%2F02-contenedores-i-demo-2-instalar-docker-desktop-windows.mp4).
-
- Una vez instalado, ¡ya estamos listos para empezar a jugar! ✨
 
 ## 👀 Conociendo Docker desde Docker Desktop 🍋📺
 
@@ -151,518 +121,237 @@ docker run --detach --publish 8080:80 nginx
 
 Y hasta aquí la parte introductoria que pudiste ver en los vídeos del campus. A partir de aquí, vamos a seguir viendo más comandos y opciones que te permitirán gestionar tus contenedores de manera más efectiva.
 
-## Visual Studio Code y Docker
+Ahora que ya hemos visto los vídeos, vamos a repasar algunos de los conceptos y comandos más importantes que hemos visto.
 
-Ahora que tienes Docker Desktop instalado, puedes integrarlo con Visual Studio Code para una experiencia aún más fluida. Asegúrate de tener instalada [la extensión Container Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-containers). Esto te permitirá gestionar contenedores, imágenes y redes directamente desde el editor. Además, como tienes instalado Docker CLI, podrás ejecutar comandos de Docker desde el terminal integrado de VS Code.
+## Sección 2: Visual Studio Code para la gestión de mis contenedores
 
-A partir de este momento, usaremos este editor para todas nuestras prácticas, ya que es gratuito, multiplataforma y muy popular entre los desarrolladores. Si no lo tienes instalado, descárgalo desde [su página oficial](https://code.visualstudio.com/).
+Durante los vídeos pudiste ver cómo ejecutar contenedores desde Docker Desktop y el terminal del mismo. Ahora vamos a ver cómo podemos usar Visual Studio Code como entorno de trabajo. ¿Por qué? Porque es gratuito, multiplataforma y porque vamos a tener extensiones y ayuda adicional para el resto de temas que vamos a ver.
 
-## 🏁 Ejecutar un contenedor usando el Terminal de VS Code para un servidor web Apache
+Una vez que lo tengas instalado, te recomiendo que instales la extensión llamada: **Container Tools**
 
-```bash
-docker run httpd
+![image.png](attachment:ede84805-00a0-493d-ac66-c756a716eb97:image.png)
+
+Con ello vamos a conseguir una pestaña adicional en mi Visual Studio Code en la que voy a poder ver todos los contenedores, imágenes, etcétera
+
+![image.png](attachment:a8bc9bb2-a2a4-4a36-a229-3ab7edb9a497:image.png)
+
+Y por otro lado la que nos proporciona Docker
+
+![image.png](attachment:28c7414d-7cb3-4aa4-b8e3-e22bcf5aea41:image.png)
+
+Este nos ayudará más adelante cuando hagamos cosas un poquito más avanzadas.
+
+Y con estos dos ya estamos listos para empezar a jugar. Creo que es importante familiarizarnos con algún IDE que tenga soporte para contenedores porque la realidad es que cuando estamos desarrollando aplicaciones, incluso Dockerizadas, es donde vamos a estar la mayor parte del tiempo. Nos iremos apoyando en estas en las siguientes prácticas.
+
+## Sección 3: ampliando con más comandos básicos
+
+Ahora ya conocemos al menos:
+
+El comando que necesitamos para ejecutar un contenedor:
+
+```jsx
+docker run -p 8080:80 -d nginx
 ```
 
-`httpd` es la imagen oficial de Apache HTTP Server que usas para crear tu contenedor. De esta forma creas un contenedor con un servidor web Apache, que es una alternativa muy popular a Nginx.
+También vimos que es posible poner nombres a los contenedores desde la interfaz y también desde el terminal:
 
-Para ver las imágenes descargadas en tu local:
-
-```bash
-docker image ls
+```jsx
+docker run --name web -p 8081:80 -d nginx
 ```
 
-O bien:
+Para listar los contenedores que se están ejecutando
 
-```bash
-docker images
+```jsx
+docker ps
 ```
 
-También puedes ver las imágenes a través de la extensión de VS Code, en el apartado Images. Y si seleccionas cualquiera de ellas podrás ver las acciones que puedes hacer con las mismas.
+Para poder listar todos los contenedores:
 
-## 🏗️ Docker Hub web
-
-Todas las imágenes por defecto de Docker vienen de [Docker Hub](https://hub.docker.com/), un repositorio de imágenes que puedes usar en tus proyectos. Puedes buscar imágenes en Docker Hub desde la interfaz gráfica de Docker Desktop o desde el CLI. Por ejemplo, para buscar un servidor web como Apache:
-
-```bash
-docker search httpd
+```jsx
+docker ps -a
 ```
 
-O si quisiéramos buscar Nginx:
+Desde la interfaz es todo mucho más sencillo, por supuesto, pero en general vamos a pasar más tiempo en el terminal, por lo que es importante que conozcas todos estos comandos. Vamos a ver algunos más que también son importantes:
 
-```bash
-docker search nginx
-```
+### Shells interactivos
 
+En estos dos ejemplos anteriores hemos probado con contenedores que contienen servidores web y esto hace que solo con ejecutarlos ellos ya tienen preconfigurada una instrucción, un comando, que les mantiene con vida. Sin embargo hay otro tipos de contenedores que si no le especificamos algo más como parte de `docker run` nada más intentar ejecutarlos estos se van a parar. Como por ejemplo:
 
-Por supuesto hay otro tipo de imágenes como de Sistemas Operativos, Bases de Datos, etc. Puedes buscar lo que necesites y ver las imágenes disponibles. Si por ejemplo quisieramos un contenedor con Ubuntu, podríamos buscarlo así:
-
-```bash
-docker search ubuntu
-```
-
-Y ejecutar un contenedor con Ubuntu:
-
-```bash
+```jsx
 docker run ubuntu
 ```
 
-Pero... ¿Qué ha pasado? pues que en este caso, que es un poquito diferente al de los servidores web, al ejecutar el comando `docker run ubuntu` no hemos especificado ningún comando a ejecutar dentro del contenedor, por lo que este se ha cerrado inmediatamente. 
+Aquí, que no he indicado el -d ni nada, nada más lanzar este comando el terminal me ha sido devuelto. De hecho si lanzo el comando que me devuelve todos los contenedores:
 
-## 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él
-
-Para evitar esto, podemos ejecutar un shell interactivo dentro del contenedor:
-
-```bash
-docker run --interactive --tty ubuntu /bin/bash
-```
-
-O la versión abreviada que es más común:
-
-```bash
-docker run -it ubuntu /bin/bash
-```
-
-Para comprobar que estás dentro del contenedor, puedes ejecutar:
-
-```bash
-cat /etc/os-release
-exit
-```
-
-### 🔑 Entendiendo el parámetro `-it`
-
-El parámetro `-it` es en realidad la **combinación de dos flags diferentes** que funcionan juntos:
-
-- **`-i` (o `--interactive`)**: Mantiene STDIN abierto incluso sin estar conectado. Esto permite que el contenedor reciba entrada desde tu teclado.
-- **`-t` (o `--tty`)**: Asigna una pseudo-terminal (TTY) al contenedor. Esto proporciona una interfaz interactiva con salida formateada.
-
-**📊 Matriz de comportamientos:**
-
-| Flags | Comportamiento | Caso de uso |
-|-------|----------------|-----------|
-| Sin `-i` ni `-t` | El contenedor se cierra inmediatamente | Comandos que terminan rápidamente |
-| Solo `-i` | Puedes escribir, pero no ves la salida bien formateada | Poco común |
-| Solo `-t` | Ves la salida, pero no puedes escribir | Ver logs sin interactuar |
-| **`-it`** | ✅ **Modo interactivo completo**: escribes y ves la salida formateada | **Usar para shells, debugging, exploración** |
-
-**💡 Analogía:**
-Piénsalo como una videollamada:
-- `-i` = Micrófono activado (puedes hablar)
-- `-t` = Cámara activada (puedes ver)
-- `-it` = Videollamada completa (puedes hablar Y ver)
-
-**🎯 Casos de uso de `-it`:**
-
-```bash
-# Explorar dentro de un contenedor
-docker run -it ubuntu /bin/bash
-
-# Ejecutar un comando interactivo (como un editor)
-docker run -it alpine vi /archivo.txt
-
-# Debugging en un contenedor en ejecución
-docker exec -it my-container bash
-
-# Ejecutar Python interactivamente
-docker run -it python python
-
-# Conectarse a una base de datos
-docker exec -it mi-mysql mysql -u root -p
-```
-
-**⚠️ Importante:**
-- `-it` solo funciona con **comandos que esperan entrada/salida interactiva** (bash, sh, python, mysql, etc.)
-- No uses `-it` con comandos que se ejecutan en background o servicios de larga duración (usa `-d` en su lugar)
-- Si usas `-it` con `-d` (detach), Docker ignorará el `-it` porque `-d` lo anula
-
-**Comparación práctica:**
-
-```bash
-# ❌ MAL: El contenedor termina porque bash se cierra al no tener entrada
-docker run ubuntu /bin/bash
-
-# ❌ MAL: Bash se ejecuta en background, no puedes interactuar
-docker run -d ubuntu /bin/bash
-
-# ✅ BIEN: Obtienes una shell interactiva
-docker run -it ubuntu /bin/bash
-
-# ✅ BIEN: Accedes a un contenedor ya en ejecución
-docker exec -it nombre-contenedor bash
-```
-
-## 🌐 Mapear puerto de contenedor a los puertos de mi máquina local
-
-Para acceder a un contenedor desde tu máquina local necesitas mapear el puerto del contenedor al de tu máquina. Por ejemplo, para acceder a Apache mapea el puerto 80 del contenedor al 8080 de tu máquina:
-
-```bash
-docker run --publish 8081:80 httpd
-```
-
-O bien:
-
-```bash
-docker run -p 8081:80 httpd
-```
-
-Ahora si accedes a [http://localhost:8081](http://localhost:8081) verás el servidor web de Apache. 🌍
-
-## 🕹️ ¿Y si quiero ejecutar un contenedor en segundo plano?
-
-Puedes ejecutar un contenedor en segundo plano usando la opción `-d` o `--detach`:
-
-```bash
-docker run --detach -p 8080:80 httpd
-```
-
-O bien:
-
-```bash
-docker run -d -p 8080:80 httpd
-```
-
-## 🔄 Políticas de reinicio (--restart)
-
-Controlan qué hace Docker cuando el contenedor se detiene:
-
-```bash
---restart=no              # No reiniciar nunca (por defecto)
---restart=always          # Reiniciar siempre
---restart=unless-stopped  # Reiniciar a menos que se pare manualmente
---restart=on-failure      # Solo reiniciar si falla
---restart=on-failure:3    # Reiniciar máximo 3 veces si falla
-```
-
-**💡 Recomendación**: Usar `unless-stopped` para servicios que quieres que arranquen con el sistema pero puedas parar manualmente.
-
-Ejemplo de uso:
-
-```bash
-docker run -d --restart=unless-stopped -p 8080:80 httpd
-```
-
-## 🗑️ Limpiar automáticamente el contenedor (--rm)
-
-La opción `--rm` elimina automáticamente el contenedor cuando se detiene. Es muy útil para no dejar contenedores "basura" acumulándose en tu sistema.
-
-```bash
-docker run --rm -p 8080:80 httpd
-```
-
-O combinado con otras opciones:
-
-```bash
-docker run -d --rm --name web -p 8080:80 httpd
-```
-
-**📊 Comparación de comportamientos:**
-
-| Comando | Qué sucede al parar el contenedor |
-|---------|----------------------------------|
-| `docker run httpd` | El contenedor queda **parado pero guardado** en el sistema. Ocupa espacio. |
-| `docker run --rm httpd` | El contenedor se **elimina automáticamente**. No deja rastro. |
-
-**🎯 Casos de uso:**
-
-- **Usa `--rm`**: Para experimentar, probar, debugging, contenedores temporales
-- **No uses `--rm`**: Para servicios que quieres mantener (bases de datos, servidores en producción)
-
-**💡 Ejemplos prácticos:**
-
-```bash
-# Probar una imagen rápidamente (con --rm para no dejar basura)
-docker run --rm ubuntu echo "¡Hola desde Ubuntu!"
-
-# Ejecutar un script de prueba (desaparece automáticamente)
-docker run --rm -v $(pwd):/app mi-app:latest /app/test.sh
-
-# Servidor temporal de prueba (se limpia al parar)
-docker run -d --rm --name temp-server -p 9090:80 nginx
-
-# Acceder a un shell interactivo y limpiarse automáticamente
-docker run --rm -it ubuntu /bin/bash
-```
-
-**⚠️ Importante**: Si usas `--rm` con `-d` (detach), el contenedor se eliminará tan pronto se detenga, incluso si hay errores. Asegúrate de tener logs configurados si lo necesitas.
-
-## 📋 Listar todos los contenedores que tengo en ejecución
-
-Para ver los contenedores en ejecución:
-
-```bash
-docker ps
-```
-
-Para ver todos los contenedores (incluidos los parados):
-
-```bash
-docker ps --all
-```
-
-O bien:
-
-```bash
+```jsx
 docker ps -a
 ```
 
-## 🏷️ Bautizar contenedores
+Veras que el mismo existió pero que está parado ¿Y esto por qué es así? Pues en generar, imágenes que solo contienen un sistema operativo si no les dices qué comando quieres lanzar cuando se ejecuten o no te “enganchas” a los mismos la ejecución finalizará y no habrás podido hacer nada con ellos.
 
-Docker asigna nombres aleatorios a los contenedores, pero puedes elegir el nombre que quieras con la opción `--name`:
+Así que ahora vamos a engancharnos:
 
-```bash
-docker run -d --name web -p 9090:80 httpd
+```jsx
+docker run -it ubuntu /bin/bash
 ```
 
-Para ver el nuevo contenedor llamado `web`:
+Como puedes ver, con el parámetro `-it` soy capaz de decirle a Docker “Oye, quiero ejecutar este contenedor pero me quiero enganchar a él” y, en este caso, usando un terminal con el shell bash. Básicamente lo que ocurre es que soy capaz de engancharme a un terminal dentro de este contenedor y hasta que no me salga del mismo pues podré lanzar comando como si estuviera conectado a través de ssh o similar.
 
-```bash
-docker ps
+### Ejecutar comandos desde fuera
+
+Si no quiero mantenerme enganchado a terminal de un contenedor como en el caso anterior, lo que puedo hacer es lanzar comandos a la vez que los creo y que cuando finalice el mismo que se pare el contenedor.
+
+Con este veríamos la información del sistema operativo:
+
+```jsx
+docker run -it ubuntu /bin/bash -c "cat /etc/os-release"
 ```
 
-También puedes renombrar contenedores existentes:
+Listar los archivos que hay en la home del usuario que se utiliza por defecto:
 
-```bash
-docker rename NOMBRE_ASIGNADO_POR_DOCKER hello-world
-docker ps -a
+```jsx
+docker run -it ubuntu /bin/bash -c "ls -la ~"
 ```
 
-## �🔄 ¿Cómo ejecutar comandos en un contenedor ya en ejecución?
+En estos dos casos los contenedores se crean antes o para lanzar estos comandos, pero si quiero lanzar un comando dentro de un contenedor que ya existe también es posible:
 
-Puedes conectarte a un contenedor en ejecución desde Docker Desktop o desde el CLI. Por ejemplo:
-
-```bash
-docker run --name webserver -d httpd 
+```jsx
+docker exec web cat /etc/os-release
 ```
 
-Y luego:
+### Rebautizar contenedores
 
-```bash
-docker exec -it webserver bash # Ejecuto bash dentro del contenedor y con -it me atacho a él
-cat /etc/apache2/apache2.conf
-exit
+Y hablando de contenedores con nombre que nosotros hemos elegido, si quisieramos rebautizar otros que en su momento no le pusimos nombre podemos hacerlo de forma sencilla usando el subcomando `rename`
+
+```jsx
+docker rename NOMBRE_ANTIGUO NOMBRE_NUEVO
 ```
 
-## 🛠️ Ejecutar comandos desde mi local dentro del contenedor
+### Variables de entorno
 
-Puedes usar el subcomando `exec` para ejecutar comandos dentro del contenedor. Por ejemplo, para ver los archivos de log de Apache:
+Como te puedes imaginar, lo que hemos visto hasta ahora son ejecuciones muy básicas de los contenedores, pero en general a ese `docker run` le suelen acompañar un montón de parámetros, dependiendo del tipo de contenedor que estemos intentando ejecutar. Sin duda, las variables de entorno suelen ser de las más comunes ¿por qué? porque en general se intenta que la configuración de los contenedores sean algo personalizables, desde el timezone si necesitan la fecha y hora esos contenedores para funcionar, hasta usuarios, contraseñas, etcera.
 
-```bash
-docker exec web ls /var/log/apache2
-```
+Un ejemplo claro sería una base de datos, donde en general cuando la creo o instalo necesito de un usuario administrador y una contraseña.
 
-## 🛑 ¿Cómo paro un contenedor?
-
-Para parar un contenedor:
-
-```bash
-docker stop web
-```
-
-Para volver a arrancarlo:
-
-```bash
-docker start web
-```
-
-## 🗑️ ¿Y si quiero eliminarlo del todo de mi ordenador?
-
-Asegúrate de que el contenedor está parado:
-
-```bash
-docker stop web
-```
-
-Y elimínalo:
-
-```bash
-docker rm web
-```
-
-Comprueba que ya no aparece:
-
-```bash
-docker ps -a
-```
-
-También puedes hacerlo desde la interfaz gráfica de Docker Desktop.
-
-## 📚 Comandos Docker más comunes
-
-Ahora que ya has aprendido los conceptos básicos, aquí tienes un resumen de los comandos Docker más utilizados en el día a día:
-
-### 🏃 Ejecutar contenedores
-```bash
-docker run httpd                    # Ejecutar un contenedor
-docker run -d httpd                 # Ejecutar en segundo plano
-docker run -p 8080:80 httpd         # Mapear puertos
-docker run --name mi-apache httpd   # Asignar nombre personalizado
-```
-
-### 📋 Listar y gestionar contenedores
-```bash
-docker ps                          # Ver contenedores en ejecución
-docker ps -a                       # Ver todos los contenedores
-docker stop mi-apache               # Parar un contenedor
-docker start mi-apache              # Iniciar un contenedor parado
-docker restart mi-apache            # Reiniciar un contenedor
-```
-
-### 🔧 Ejecutar comandos en contenedores
-```bash
-docker exec -it mi-apache bash     # Abrir terminal interactiva
-docker exec mi-apache ls /var/www  # Ejecutar comando específico
-```
-
-### 🖼️ Gestionar imágenes
-```bash
-docker images                      # Listar imágenes locales
-docker search apache               # Buscar imágenes en Docker Hub
-```
-
-### ℹ️ Información del sistema
-```bash
-docker version                     # Ver versión de Docker
-docker info                        # Información del sistema Docker
-```
-
-### 🗑️ Limpiar recursos
-```bash
-docker rm mi-apache                # Eliminar contenedor
-docker rm $(docker ps -aq)         # Eliminar todos los contenedores parados
-```
-
-### ⚡ Comandos combinados para limpiar rápido
-
-Para parar y eliminar todos los contenedores:
-
-```bash
-docker stop $(docker ps -aq)
-docker rm $(docker ps -aq)
-```
-
-## 🗄️ SQL Server dockerizado
-
-Vamos a ver cómo usar Docker para tener un SQL Server en tu máquina local. Por ejemplo, para desarrollo, puedes usar la imagen oficial de Microsoft:
-
-```bash
-docker run --name mysqlserver \
+```jsx
+docker run --name db \
 -p 1433:1433 \
 -e 'ACCEPT_EULA=Y' \
 -e 'SA_PASSWORD=Lem0nCode!' \
 -d mcr.microsoft.com/mssql/server:2019-latest
 ```
 
+En este ejemplo sencillo podemos ver lo siguiente:
+
 - `docker run`: lanza un contenedor.
 - `--name db`: nombre del contenedor.
-- `-p 1433:1433`: mapea el puerto.
+- `-p 1433:1433` : mapea el puerto.
 - `-e 'ACCEPT_EULA=Y'`: acepta la licencia.
 - `-e 'SA_PASSWORD=Lem0nCode!'`: contraseña del usuario `sa`.
 - `-d mcr.microsoft.com/mssql/server:2019-latest`: imagen a usar.
 
-Conéctate al contenedor:
+Para este caso, [podría utilizar la extensión MSSQL en Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-mssql.mssql) e intentar acceder a esta base de datos.
 
-```bash
-docker exec -it mysqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Lem0nCode! 
+### Arrancar y parar contenedores
+
+Por diferentes motivos, hay contenedores que una vez creaste que se pueden haber parado y contenedores que se están ejecutando y quieres pararlos.
+
+Si quieres arrancarlos de nuevo puedes hacerlo con:
+
+```jsx
+docker start NOMBRE_O_ID_DEL_CONTENEDOR
 ```
 
-Crea una base de datos y una tabla:
+y para pararlos:
 
-```sql
-CREATE DATABASE Lemoncode;
-GO
-USE Lemoncode;
-GO
-CREATE TABLE Courses(ID int, Name varchar(max), Fecha DATE);
-GO
-SET LANGUAGE ENGLISH;
-GO
-INSERT INTO Courses VALUES (1, 'Bootcamp DevOps', '2024-10-8'), (2,'Máster Frontend','2024-10-08');
-GO
+```jsx
+docker stop NOMBRE_O_ID_DEL_CONTENEDOR
 ```
 
-Conéctate con Visual Studio Code, [con la extensión MSSQL](https://marketplace.visualstudio.com/items?itemName=ms-mssql.mssql), a tu `localhost:1433` y tendrás acceso a tu SQL Server dockerizado! 🗃️
+### Políticas de reinicio
 
-Cuando termines, para y elimina tu SQL Server dockerizado:
+Algo que también es bastante interesante que conozcas es la posibilidad de poder indicar, cuando creas un contenedor, si quieres que el mismo se ejecute de manera automática cuando arrancas tu máquina. Imaginate que el día de mañana te mola esto y tienes dentro una aplicación que te gustaría que esté disponible cada vez que arrancas el ordenador.
 
-```bash
-exit
-docker stop mysqlserver && docker rm mysqlserver
+`--restart=no`           # No reiniciar nunca (por defecto)
+`--restart=always`          # Reiniciar siempre
+`--restart=unless-stopped`  # Reiniciar a menos que se pare manualmente
+`--restart=on-failure`      # Solo reiniciar si falla
+`--restart=on-failure:3`    # Reiniciar máximo 3 veces si falla
+
+Por ejemplo, imagínate que tengo algo así:
+
+```jsx
+docker run --name nginx-always-on -d --restart=always nginx
 ```
 
-O bien, todo de golpe:
+Este siempre se arrancará.
 
-```bash
-docker rm -f mysqlserver
+## Sección 4: Limpieza
+
+Ahora ya hemos conseguido lanzar varios contenedores y descargar diferentes imágenes por lo que ha llegado el momento de hacer limpieza. Para ello te voy a enseñar los comandos más útiles en este sentido.
+
+### Eliminar un contenedor
+
+Para eliminar un solo contenedor solamente tienes que lanzar este comando:
+
+```jsx
+docker rm NOMBRE_O_ID_DEL_CONTENEDOR
 ```
 
-## ℹ️ Información del sistema Docker
+Pero ¡ojo! para que un contenedor pueda ser eliminado usando este comando debe estar parado. En el caso de que no lo esté deberías ejecutar antes `docker stop` o bien puedes forzar su eliminación:
 
-Para obtener información detallada sobre tu instalación de Docker, puedes usar estos comandos útiles:
-
-```bash
-docker version                     # Ver versión de Docker
-docker info                        # Información detallada del sistema Docker
+```jsx
+docker rm -f NOMBRE_O_ID_DEL_CONTENEDOR
 ```
 
-El comando `docker version` te mostrará las versiones del cliente y servidor Docker, mientras que `docker info` te dará información completa sobre el estado del sistema, incluyendo número de contenedores, imágenes, configuración de red, y más.
+### Eliminar una imagen
 
-## ✨ Gordon AI
+Para eliminar una sola imagen el comando a ejecutar es el siguiente:
 
-Ahora que ya te he contado todo lo que deberías de saber en el día 1 de tu inicio en el mundo de los contenedores, no puedo evitar mecionar que a partir de ahora vas a tener una ayuda adicional en la que te vas a poder apoyar dudante este camino. Y es que como parte de Docker tienes a tu disposición un asistente IA llamado **Gordon** que te ayudará a resolver dudas y problemas comunes. Puedes acceder a él desde Docker Desktop haciendo clic en la sección **✨ Ask Gordon** en el menú de la izquierda. 
-
-
-Donde podrás ver un chat y un historico de las conversaciones que has tenido con él, de tal forma que puedas retomarlas en cualquier momento.
-
-Además, también es posible hablar con él a través del terminal, por si no estás usando directamente Docker Desktop. Para ello puedes lanzar un comando como el siguiente:
-
-
-```bash
-docker ai "How can I run a container with Nginx?"
+```jsx
+docker rmi NOMBRE_O_ID_DE_LA_IMAGEN
 ```
 
-El único inconveniente a día de hoy es que Gordon solo está disponible en inglés, por lo que tendrás que hacer las preguntas en este idioma. Si intento lo mismo en español:
+Pero ¡ojo! solo se puede eliminar una imagen si esta no está siendo usada por ningún contenedor. 
 
-```bash
-docker ai "¿Cómo puedo ejecutar un contenedor con Nginx?"
+### Eliminar todos los contenedores
+
+Por otro lado, si lo que quieres es eliminar de un plumazo todos los contenedores que tienes en tu máquina porque has lanzado diferentes pruebas puedes hacerlo usando este comando combo:
+
+```jsx
+docker rm $(docker ps -aq)
 ```
 
-A veces funciona, pero en otras ocasiones no. Así que te recomiendo que uses el inglés para interactuar con él.
+La primera parte es lo que hemos visto anteriormente y la segunda lo que hace es recuperar los IDs de todos los contenedores.
 
-## ✨ GitHub Copilot
+### Eliminar todas las imágenes
 
-Si estás usando Visual Studio Code, también puedes aprovechar [GitHub Copilot](https://github.com/features/copilot) para obtener sugerencias de código y completar automáticamente tus comandos de Docker. Este tiene un plan gratuito que te permite usarlo con ciertas limitaciones. También dispone de un chat donde puedes hacerle preguntas y te ayudará a resolver dudas sobre Docker y otros temas relacionados con el desarrollo.
+Si quisiera hacer lo mismo para las imágenes que no están siendo usadas:
 
-Lo ideal es que aprendas los conceptos básicos de Docker y que puedas apoyarte en estos agentes, te ayuden a resolver dudas y te den sugerencias de código, pero no que dependas de ellos para todo. Así que te animo a que practiques y experimentes con Docker por tu cuenta, y uses estas herramientas como apoyo cuando lo necesites.
+```jsx
+docker rmi $(docker images -q)
+```
 
----
+## Sección 5: IA para ayudarnos con Docker
 
-## 🎉 ¡Felicidades!
+Como bonus a esta clase, quiero contarte de dos herramientas que te van a ser útil durante tu aprendizaje:
 
-En esta primera clase has aprendido a:
+### Gordon AI
 
-- 🖥️ Instalar Docker Desktop en tu máquina local.
-- 👀 Conocer Docker desde Docker Desktop.
-- 🚀 Crear tu primer contenedor con un servidor web (Nginx).
-- 🐳 Trabajar con Docker CLI desde la línea de comandos.
-- 🔧 Integrar Visual Studio Code con Docker.
-- 🏁 Ejecutar contenedores Apache usando el Terminal de VS Code.
-- 📦 Ver las imágenes descargadas en tu local.
-- 🔍 Buscar imágenes en Docker Hub.
-- 🖥️ Ejecutar un contenedor y lanzar un shell interactivo en él.
-- 🌐 Mapear puertos de contenedor a tu máquina local.
-- 🕹️ Ejecutar un contenedor en segundo plano.
-- 📋 Listar todos los contenedores en ejecución.
-- 🏷️ Bautizar contenedores con nombres personalizados.
-- 🔄 Ejecutar comandos en un contenedor ya en ejecución.
-- 🛠️ Ejecutar comandos desde tu local dentro del contenedor.
-- 🛑 Parar y reiniciar contenedores.
-- 🗑️ Eliminar contenedores del todo de tu ordenador.
-- 📚 Dominar los comandos Docker más comunes del día a día.
-- 🗄️ Crear y gestionar un SQL Server dockerizado.
-- ℹ️ Obtener información del sistema Docker.
-- ✨ Conocer Gordon AI, el asistente de Docker.
-- ✨ Usar GitHub Copilot como apoyo en el desarrollo.
+Se trata de un agente nuevo que está dentro de Docker Desktop, y también desde el terminal, al cual vamos a poder preguntarle sobre temas relacionados con Docker. Como por ejemplo, desde el chat de Docker Desktop podría preguntarle cosas como:
 
-En la siguiente clase veremos cómo crear nuestras propias imágenes de Docker.
+- “¿Cómo puedo ejecutar un contenedor con nginx?”
 
-Happy coding {🍋}
+![image.png](attachment:ade79b14-613d-4738-b80b-29a2bebc89ae:image.png)
+
+y lo mismo desde el terminal usando `docker ai`:
+
+```jsx
+docker ai "¿Cómo puedo ejecutar un contenedor con Nginx?"  
+```
+
+### GitHub Copilot
+
+Por otro lado, barriendo para casa, también podéis usar de forma gratuita GitHub Copilot, el cual también os puede ayudar con dudas o problemas que podáis encontraros con Docker y otras tecnologías.
+
+Y es que la IA amigos ya forma parte de nuestras vidas en diferentes formatos y cómo no iba a estar también en el mundo de los contenedores.
