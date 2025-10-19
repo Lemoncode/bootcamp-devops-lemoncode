@@ -272,11 +272,11 @@ docker stop NOMBRE_O_ID_DEL_CONTENEDOR
 
 Algo que también es bastante interesante que conozcas es la posibilidad de poder indicar, cuando creas un contenedor, si quieres que el mismo se ejecute de manera automática cuando arrancas tu máquina. Imaginate que el día de mañana te mola esto y tienes dentro una aplicación que te gustaría que esté disponible cada vez que arrancas el ordenador.
 
-`--restart=no`           # No reiniciar nunca (por defecto)
-`--restart=always`          # Reiniciar siempre
-`--restart=unless-stopped`  # Reiniciar a menos que se pare manualmente
-`--restart=on-failure`      # Solo reiniciar si falla
-`--restart=on-failure:3`    # Reiniciar máximo 3 veces si falla
+- `--restart=no`           # No reiniciar nunca (por defecto)
+- `--restart=always`          # Reiniciar siempre
+- `--restart=unless-stopped`  # Reiniciar a menos que se pare manualmente
+- `--restart=on-failure`      # Solo reiniciar si falla
+- `--restart=on-failure:3`    # Reiniciar máximo 3 veces si falla
 
 Por ejemplo, imagínate que tengo algo así:
 
