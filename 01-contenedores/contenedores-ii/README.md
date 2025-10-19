@@ -33,7 +33,7 @@ Este módulo te dará las herramientas para:
 
 ### 📚 Contenido
 
-1. [📥 Crear un contenedor a partir de una imagen de Docker](#📥-crear-un-contenedor-a-partir-de-una-imagen-de-docker)
+1. [📥 Crear un contenedor a partir de una imagen de Docker](#-crear-un-contenedor-a-partir-de-una-imagen-de-docker)
 2. [📂 Comprobar las imagenes que ya tenemos en local](#📂-comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
 3. [📥 Pulling o descargar una imagen](#📥-pulling-o-descargar-una-imagen) 🍋📺
 4. [🌍 Variables de entorno para las imágenes](#🌍-variables-de-entorno-para-las-imagenes) 🍋📺
