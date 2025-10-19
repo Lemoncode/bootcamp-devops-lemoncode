@@ -31,24 +31,6 @@ Este módulo te dará las herramientas para:
 - ✅ Explorar herramientas avanzadas del ecosistema Docker
 
 
-### 📚 Contenido
-
-1. [📥 Crear un contenedor a partir de una imagen de Docker](#-crear-un-contenedor-a-partir-de-una-imagen-de-docker)
-2. [📂 Comprobar las imagenes que ya tenemos en local](#-comprobar-las-imagenes-que-ya-tenemos-en-local) 🍋📺
-3. [📥 Pulling o descargar una imagen](#-pulling-o-descargar-una-imagen) 🍋📺
-4. [🌍 Variables de entorno para las imágenes](#-variables-de-entorno-para-las-imagenes) 🍋📺
-5. [🌟 Algunas imágenes interesantes](#-algunas-imágenes-interesantes)
-6. [🌐 Otros registros diferentes a Docker Hub](#-otros-registros-diferentes-a-docker-hub) 🍋📺
-7. [Crear tu propio registro privado](#-crear-tu-propio-registro-docker-privado-en-un-contenedor)
-8. [Búsqueda de imágenes](#-buscar-imágenes-en-docker-hub)
-9. [Tags y digests](#-tags-y-digests)
-12. [Limpieza y mantenimiento](#-limpieza-y-mantenimiento)
-13. [Docker Extensions](#-docker-extensions)
-14. [Docker Model Runner](#-docker-model-runner)
-10. [Creación de imágenes personalizadas](#-creación-de-imágenes-personalizadas) 🍋📺
-11. [Inspección y análisis](#-inspección-y-análisis)
-15. [Introducción a Dockerfile](#-introducción-a-dockerfile-construyendo-tu-primera-imagen) 🍋📺
-
 ---
 
 ## 📋 Conceptos de Día 1 que usaremos hoy
@@ -56,10 +38,10 @@ Este módulo te dará las herramientas para:
 Antes de avanzar, recuerda que en la clase anterior aprendimos parámetros importantes que seguiremos usando:
 
 - **`-d` o `--detach`**: Ejecutar contenedor en background (sin bloquear el terminal)
+- **`-p` o `--publish`**: Mapear puertos del contenedor al host
 - **`--rm`**: Eliminar el contenedor automáticamente al parar (útil para pruebas)
 - **`-it`**: Modo interactivo con terminal (solo para comandos que lo necesitan)
 - **`--restart`**: Políticas de reinicio del contenedor
-- **Límites de CPU/Memoria** (`--memory`, `--cpus`): Controlar recursos
 
 Si necesitas refrescar estos conceptos, vuelve a la sección correspondiente en el README de Día 1.
 
