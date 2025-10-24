@@ -2,7 +2,7 @@
 
 ![Docker](imagenes/Trabajando%20con%20imagenes%20de%20Docker.jpeg)
 
-¡Hola lemoncoder 👋🏻! En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión básica hasta una introducción a la creación de imágenes personalizadas con Dockerfile. Veremos cómo buscar, descargar y crear imágenes a partir de otras, así como optimizar nuestro entorno Docker.
+¡Hola lemoncoder 👋🏻! En esta sesión aprenderemos a dominar las imágenes Docker, desde su gestión básica hasta una introducción a la creación de imágenes personalizadas con Dockerfile. Veremos algunas imágenes interesantes que nos demuestren lo fácil que es usar contenedores para todo, así como crear nuestras primeras imágenes básicas con unas pocas instrucciones.
 
 ## 🎬 Vídeos de la introducción en el campus
 
@@ -10,7 +10,7 @@ Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 
 | # | Tema | Contenido Clave |
 |---|------|-----------------|
-| 1 | 📘 Teoría | Conceptos fundamentales de imágenes, capas, registros y nomenclatura |
+| 1 | 📘 Teoría | Conceptos fundamentales de imágenes, capas, pulling, registros y nomenclatura |
 | 2 | 🛠️ Demo: Analizar una imagen desde Docker Desktop | Inspeccionar imágenes, ver capas, explorar la estructura interna |
 | 3 | 🏷️ Demo: Etiquetas y digest | Entender tags, versiones y digests SHA256 |
 | 4 | 🌐 Demo: Un vistazo por la web de Docker Hub | Navegar por Docker Hub, buscar imágenes, entender documentación |
@@ -22,9 +22,7 @@ Antes de avanzar, recuerda que en la clase anterior aprendimos parámetros impor
 
 - **`--name`**: Asignar un nombre personalizado al contenedor
 - **`-d` o `--detach`**: Ejecutar contenedor en background (sin bloquear el terminal)
-- **`-p` o `--publish`**: Mapear puertos del contenedor al host
-- **`--rm`**: Eliminar el contenedor automáticamente al parar (útil para pruebas)
-- **`-it`**: Modo interactivo con terminal (solo para comandos que lo necesitan)
+- **`-it`**: Modo interactivo con terminal 
 - **`--restart`**: Políticas de reinicio del contenedor
 - **`docker ps`**: Listar contenedores en ejecución
 - **`docker ps -a`**: Listar todos los contenedores (incluidos los detenidos)
@@ -90,12 +88,6 @@ También podemos filtrar el resultado usando --filter
 docker images --filter="label=maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>"
 ```
 
-Por otro lado, si queremos saber cuánto pesan las imágenes que tenemos en local podemos hacerlo de la siguiente manera:
-
-```bash
-docker images --format "{{.Repository}}:{{.Tag}} {{.Size}}"
-```
-
 Piensa que estas imágenes cuando se descargan se hacen de una forma incremental, es decir, si dos imágenes comparten capas estas solo se descargarán una vez. Por ejemplo, si tienes la imagen de `nginx` y la de `nginx:alpine` la segunda solo descargará las capas que no tenga ya descargadas de la primera. También puede diferir el tamaño que ocupa la imagen dependiendo de la arquitectura para la que esté construida (amd64, arm64, etc.), ya que en realidad son imágenes diferentes.
 
 ## 📥 Pulling o descargar una imagen
@@ -132,7 +124,7 @@ docker pull redis@sha256:800f2587bf3376cb01e6307afe599ddce9439deafbd4fb8562829da
 | **Usa versiones específicas** | Evita cambios inesperados | `mysql:8.0.35` en lugar de `mysql:latest` |
 | **Evita usar `latest`** | Tag `latest` puede cambiar sin aviso | Especifica versión de lanzamiento (`8.0`, `v2.1.0`) |
 | **Verifica el digest** | Garantiza que descargaste exactamente lo que esperas | `docker images --digests` |
-| **Usa imágenes oficiales** | Mejor mantenimiento y seguridad | `library/nginx` en lugar de `some-user/nginx` |
+| **Usa imágenes oficiales** | Mejor mantenimiento y seguridad | `nginx` en lugar de `some-user/nginx` |
 | **Revisa la documentación** | Entiende variables de entorno y configuración necesaria | Lee el README en Docker Hub |
 | **Descarga cuando tengas conexión lenta** | Evita interrupciones durante creación de contenedores | Usa `docker pull` con anticipación |
 
@@ -148,16 +140,7 @@ Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo de
 
 ## 🌍 Variables de entorno para las imágenes
 
-Las variables de entorno permiten configurar los contenedores sin tener que modificar la imagen. Muchas imágenes populares permiten configurar aspectos clave de la aplicación a través de variables de entorno.
-
-Cuando ejecutas un contenedor, puedes pasar variables de entorno usando la opción `-e` o `--env` seguida del nombre y valor de la variable. Por ejemplo:
-
-**🔍 Variables más comunes:**
-- `TZ`: Zona horaria (America/New_York, Europe/London, etc.)
-- `PUID/PGID`: IDs de usuario/grupo para manejo de permisos. 
-- `PASSWORD/USER`: Credenciales de acceso
-- `DB_*`: Configuración de base de datos
-- `APP_*`: Configuraciones específicas de la aplicación
+Ya comentamos en la clase anterior que es posible utilizar variables de entorno para configurar los contenedores que ejecutamos a partir de una imagen. Esto es muy útil, ya que muchas imágenes utilizan variables de entorno para configurar aspectos importantes como usuarios, contraseñas, puertos, etc.
 
 También puedes pasar un archivo con múltiples variables usando `--env-file`:
 
@@ -168,10 +151,13 @@ docker run --name pihole -d \
   pihole/pihole:latest
 ```
 
-Y con esto tendrás Pi-hole corriendo en `http://localhost:9091` con las variables de entorno definidas en el archivo `pihole.env`.
-
 
 Si tienes muchas variables de entorno, usar un archivo `.env` es más limpio y manejable que pasarlas todas en la línea de comandos.
+
+Y con esto tendrás Pi-hole corriendo en `http://localhost:9091` con las variables de entorno definidas en el archivo `pihole.env`.
+
+>[!INFORMATION]
+>Pihole es una herramienta fantástica para bloquear anuncios y rastreadores a nivel de red. Puedes configurarlo como tu servidor DNS y disfrutar de una navegación más limpia y rápida en todos tus dispositivos conectados a la red.
 
 
 ## 🌟 Algunas imágenes interesantes
@@ -197,19 +183,6 @@ docker run \
 -p 32400:32400 \
 -d \
 linuxserver/plex
-```
-
-**💻 VS Code Server** (Visual Studio Code en un contenedor)
-
-```bash
-docker run -d \
---name=code-server \
--e PUID=1000 `# ID de usuario para permisos` \
--e PGID=1000 `# ID de grupo para permisos` \
--e TZ=Etc/UTC `# Zona horaria` \
--e PASSWORD=lemoncode `# Variable para configurar contraseña` \
--p 8443:8443 \
-lscr.io/linuxserver/code-server:latest
 ```
 
 🎨 Blender (software de modelado 3D)
@@ -392,138 +365,9 @@ docker run  -p 8080:8080 gcr.io/google-samples/hello-app:1.0
 docker run mcr.microsoft.com/mcr/hello-world
 ```
 
-## 🧩 Docker Extensions: Extiende Docker Desktop
-
-Otra cosa que podemos descargar de Docker Hub son las **Docker Extensions**. Este es un ecosistema de complementos que extienden la funcionalidad de Docker Desktop, permitiéndote agregar herramientas e integraciones adicionales directamente desde la interfaz gráfica. Las extensiones te permiten trabajar de manera más eficiente al integrar herramientas populares sin abandonar Docker Desktop.
-
-
-### ✨ **¿Qué son Docker Extensions?**
-
-Docker Extensions son aplicaciones pequeñas que se ejecutan como contenedores y añaden funcionalidades a Docker Desktop. Actúan como un puente entre Docker y otras herramientas de desarrollo, permitiendo:
-
-- **Integración con herramientas populares**: Kubernetes, Snyk, Portainer, LazyDocker, etc.
-- **Interfaz visual mejorada**: Alternativas a la CLI para tareas comunes
-- **Automatización**: Scripts y workflows para tareas repetitivas
-- **Monitoreo avanzado**: Análisis de contenedores, imágenes y recursos
-- **Seguridad**: Escaneo de vulnerabilidades y análisis de seguridad
-
-### 🚀 **Cómo instalar Docker Extensions**
-
-#### **Paso 1: Acceder a la tienda de extensiones**
-
-1. Abre **Docker Desktop**
-2. Haz clic en el icono de **"Extensions"** en la barra lateral (icono de piezas de puzzle)
-3. Se abrirá la tienda de extensiones de Docker
-
-#### **Paso 2: Buscar e instalar una extensión**
-
-Por ejemplo, para instalar **Portainer** (gestor visual de contenedores):
-
-1. En la barra de búsqueda, escribe "Portainer"
-2. Haz clic en el resultado de Portainer
-3. Haz clic en el botón **"Install"**
-4. Espera a que se descargue e instale (normalmente tarda unos segundos)
-
-#### **Paso 3: Usar la extensión**
-
-Una vez instalada, aparecerá en la barra lateral de Docker Desktop y podrás acceder a ella haciendo clic.
-
-![Extensiones de Docker Desktop](imagenes/Extensiones%20de%20Docker.png)
-
-
-### ⚙️ **Crear tus propias extensiones (Avanzado)**
-
-Si eres desarrollador, puedes crear tus propias extensiones usando:
-- **React** para la interfaz de usuario
-- **Docker SDK** para interactuar con el engine
-- **Docker Compose** para empaquetar la extensión
-
-Para más información sobre desarrollo de extensiones, consulta la [documentación oficial de Docker Extensions](https://docs.docker.com/desktop/extensions/dev/).
-
-## 🤖 Docker Model Runner: IA y modelos de lenguaje en contenedores
-
-En los últimos tiempos Docker se ha volcado en integrar capacidades de inteligencia artificial directamente en su ecosistema. Por lo que además de poder crear y gestionar contenedores tradicionales, ahora es posible trabajar con modelos de IA y grandes modelos de lenguaje (LLMs) de forma nativa. Para ello ha creado una herramienta llamada **Docker Model Runner**, la cual te permite descargar imágenes que lo que contienen son modelos de IA listos para usar.
-
-### ✨ **Características principales**
-
-- **🔄 Gestión simplificada**: Descarga y sube modelos directamente desde/hacia Docker Hub
-- **🌐 APIs compatibles con OpenAI**: Sirve modelos con endpoints familiares para fácil integración
-- **📦 Empaquetado OCI**: Convierte archivos GGUF en artefactos OCI y publícalos en cualquier registro
-- **💻 Interfaz dual**: Interactúa desde línea de comandos o la GUI de Docker Desktop
-- **📊 Gestión local**: Administra modelos locales y visualiza logs de ejecución
-
-### 🚀 **Cómo funciona**
-
-Los modelos se descargan desde Docker Hub la primera vez que se usan y se almacenan localmente. Se cargan en memoria solo cuando se solicita y se descargan cuando no están en uso para optimizar recursos. Después de la descarga inicial, quedan en caché para acceso rápido.
-
-### 🛠️ **Comandos esenciales**
-
-```bash
-# Habilitar Docker Model Runner (desde Docker Desktop settings)
-# Beta features > Enable Docker Model Runner
-
-# Verificar instalación
-docker model version
-
-# Ejecutar un modelo
-docker model run ai/gemma3
-
-# Listar modelos locales
-docker model ls
-```
-
-### 🔗 **Modelos disponibles**
-
-Todos los modelos están disponibles en el [namespace público de Docker Hub](https://hub.docker.com/u/ai).
-
-### 💡 **Casos de uso típicos**
-
-- **Desarrollo de aplicaciones GenAI**: Integra IA en tus apps sin configuración compleja
-- **Prototipado rápido**: Prueba diferentes modelos localmente antes del despliegue
-- **Pipelines CI/CD**: Incluye capacidades de IA en tus flujos de trabajo automatizados
-- **Experimentación ML**: Testa modelos sin depender de servicios externos
-
-
-## 🛠️ Crear tu propia imagen a partir de una imagen existente
-
-Vale, yo creo que ya hemos jugado bastante con las imágenes que ya existen. Ahora lo que te quiero mostrar es cómo podemos crear nuestra propia imagen a partir de otra imagen existente.
-
-Vamos a tomar por ejemplo la imagen llamada nginx y vamos a crear una imagen propia a partir de ella utilizando un contenedor el cual vamos a utilizar para modificar el contenido.
-
-```bash
-docker run -d --name nginx-container -p 8080:80 nginx
-```
-
-Ahora lo que vamos a hacer es utilizar el contenido del directorio llamado `web` para modificar lo que hay en el directorio `/usr/share/nginx/html` del contenedor.
-
-```bash
-docker cp 01-contenedores/contenedores-ii/web/. nginx-container:/usr/share/nginx/html
-```
-
-Ahora que ya hemos modificado la imagen vamos a crear una nueva imagen a partir de ella. Para ello vamos a hacer un `commit` de la imagen.
-
-```bash
-docker commit nginx-container whale-nginx:v1
-```
-
-Si ahora haces un `docker images` verás que tienes una nueva imagen llamada `whale-nginx` con la etiqueta `v1`.
-
-```bash
-docker images
-```
-
-Y ahora vamos a crear un nuevo contenedor a partir de esta imagen:
-
-```bash
-docker run -d --name whale-nginx -p 8081:80 whale-nginx:v1
-```
-
-Si ahora accedes a `http://localhost:8081` verás que tienes el contenido que hemos copiado en el contenedor original.
-
-
 ## 📋 Introducción a Dockerfile: Construyendo tu primera imagen
 
-Si bien es cierto que con `docker commit` se pueden crear imágenes a partir de contenedores modificados, esta no es la mejor práctica en el mundo real. La forma correcta y reproducible de crear imágenes es usando un `Dockerfile`.
+Después de haber visto varias imágenes de otros, quizás ya te pique el gusanillo de saber cómo crear las tuyas propias. La forma recomendada de crear imágenes Docker es utilizando un archivo llamado `Dockerfile`, el cual contiene una serie de instrucciones que Docker interpreta para construir la imagen paso a paso.
 
 ### 🎯 **¿Por qué Dockerfile es mejor que docker commit?**
 
@@ -534,7 +378,7 @@ Si bien es cierto que con `docker commit` se pueden crear imágenes a partir de 
 
 ### 🚀 **Ejemplo práctico: Dockerizando nuestro contenido web**
 
-Vamos a crear una imagen personalizada usando el contenido del directorio `web` que hemos estado usando:
+Vamos a crear una imagen personalizada usando el contenido del directorio `web`, el cuál contiene un simple sitio web estático. Usaremos `nginx` como servidor web base.
 
 **Paso 1**: Crear un archivo llamado `Dockerfile` en el directorio `01-contenedores/contenedores-ii/`:
 
@@ -551,50 +395,49 @@ EXPOSE 80
 # nginx se ejecuta automáticamente al iniciar el contenedor
 ```
 
+Vale, y ahora que tenemos el Dockerfile, ¿cómo construimos la imagen?
+
 **Paso 2**: Construir la imagen desde el directorio que contiene el Dockerfile:
+
+Para construir la imagen necesitamos usar el comando `docker build`y la forma más sencilla (con menos parámetros) de hacerlo es posicionandonos en el mismo directorio donde está el Dockerfile: 
 
 ```bash
 cd 01-contenedores/contenedores-ii/
+```
+y ejecutamos:
+
+```bash 
+
 docker build -t mi-nginx-personalizado:v1 .
 ```
 
+Y voilà! Después de unos segundos tendrás tu imagen personalizada creada. Para comprobar que la tienes puedes hacer:
+
+```bash
+docker images
+```
+
+y ahí estará `mi-nginx-personalizado` con la etiqueta `v1`.
+
+¿Y cómo ejecuto un contenedor a partir de esta imagen?
+
+
 **Paso 3**: Ejecutar un contenedor de nuestra imagen personalizada:
+
+Para ejecutarlo es básicamente de la misma forma que ejecutamos cualquier otra imagen que descarguemos de cualquier registro:
 
 ```bash
 docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 ```
 
-### 🔍 **Comparación: docker commit vs Dockerfile**
+## Bonus ✨
 
-| Método | Reproducibilidad | Mantenibilidad | Uso en producción |
-|--------|------------------|----------------|-------------------|
-| `docker commit` | ❌ Baja | ❌ Difícil | ❌ No recomendado |
-| `Dockerfile` | ✅ Alta | ✅ Fácil | ✅ Best practice |
-
-### 🎓 **Lo que aprenderás en el próximo módulo**
-
-- **Sintaxis completa** de Dockerfile
-- **Mejores prácticas** para optimizar imágenes
-- **Multi-stage builds** para imágenes más pequeñas
-- **Gestión de capas** para builds eficientes
-- **Variables y argumentos** para imágenes flexibles
-- **Seguridad** en la construcción de imágenes
-
-> 💡 **Consejo**: El ejemplo que acabamos de ver es básico. En el próximo módulo aprenderás a crear Dockerfiles mucho más sofisticados y optimizados para aplicaciones reales.
+Al finalizar la clase, te mostré brevemente una nueva característica de Docker, la cual nos va a permitir depurar estos Dockerfile de la misma forma que lo hacemos con el código de nuestras aplicaciones. [Puedes leer más información en este artículo](https://www.linkedin.com/posts/docker_debug-docker-builds-with-visual-studio-code-activity-7386119752697466881-OA-0/) o echar un vistazo a este vídeo del canal de return(GiS) (COMING SOON!);
 
 ## 🎉 ¡Felicidades!
 
-En esta segunda clase has aprendido a:
+Ya has llegado al final de este módulo que, junto con los vídeos introductorios y la clase online en directo, te ha permitido conocer los conceptos fundamentales de las imágenes Docker, desde su gestión básica hasta la creación de imágenes personalizadas con Dockerfile.
 
-- Gestionar imágenes Docker: buscar, descargar y listar
-- Usar variables de entorno para configurar contenedores
-- Explorar registros alternativos a Docker Hub
-- Crear imágenes personalizadas usando `docker commit`
-- Introducción a Dockerfile para construir imágenes reproducibles
-
-### 🎯 Lo más importante
-
-**La progresión es clara:** Hemos pasado de simplemente _ejecutar_ contenedores (Día 1) a _dominar_ las imágenes, sus fuentes, cómo crearlas y cómo optimizar nuestro flujo de trabajo. Ahora tienes las herramientas para trabajar profesionalmente con Docker.
 
 ### 📚 Próximos pasos
 
