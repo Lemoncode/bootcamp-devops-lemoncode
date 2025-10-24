@@ -473,6 +473,16 @@ Al finalizar la clase, te mostré brevemente una nueva característica de Docker
 
 Ya has llegado al final de este módulo que, junto con los vídeos introductorios y la clase online en directo, te ha permitido conocer los conceptos fundamentales de las imágenes Docker, desde su gestión básica hasta la creación de imágenes personalizadas con Dockerfile.
 
+## Ejercicio sugerido
+
+Si quieres probarte a ti mismo en el arte de crear imágenes Docker, te propongo el siguiente reto:
+
+1. Crea un directorio llamado `mi-aplicacion`.
+2. Dentro de este directorio, crea un archivo `index.html` con contenido HTML básico
+3. Crea un `Dockerfile` que use `httpd` como base y copie tu `index.html` al lugar correcto para servirlo. Busca la imagen base que sea menos pesada.
+4. Construye la imagen con el nombre `mi-aplicacion-web` y etiqueta `v1`.
+5. Ejecuta un contenedor a partir de tu imagen y accede a tu aplicación web en el navegador.
+
 
 ### 📚 Próximos pasos
 
