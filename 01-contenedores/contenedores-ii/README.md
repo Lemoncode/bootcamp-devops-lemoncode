@@ -138,6 +138,37 @@ docker pull -a wordpress
 Si bien es cierto que antes funcionaba este comando sin problemas ahora mismo debido a este mensaje: `[DEPRECATION NOTICE] Docker Image Format v1 and Docker Image manifest version 2, schema 1 support is disabled by default and will be removed in an upcoming release. Suggest the author of docker.io/library/wordpress:3 to upgrade the image to the OCI Format or Docker Image manifest v2, schema 2. More information at https://docs.docker.com/go/deprecated-image-specs/` no se puede hacer. Este mensaje significa que la imagen que estás intentando descargar no es compatible con la versión actual de Docker.
 
 
+## Las imágenes son multi-arquitectura
+
+Docker hace tan bien su trabajo que probablemente no te hayas dado cuenta de que una imagen no es realmente una sola imagen sino varias ¿A qué me refiero con esto? pues a que cuando creamos o alguien crea una imagen tiene que crear tantas imagenes como arquitecturas quiera soportar (amd64, arm64, etc.) y luego Docker las agrupa todas bajo un mismo nombre de imagen. A esto se le llama imágenes multi-arquitectura. No suele ocurrir a menudo con las más usadas pero en ciertas ocasiones te puedes encontrar con que una imagen que querías utilizar no está disponible para tu ordenador.
+
+¿Y cómo puedo saber qué arquitectura tengo?
+
+Dependiendo de tu sistema operativo puedes usar:
+
+```bash
+uname -m
+```
+
+o también:
+
+```
+arch
+```
+
+y si estás en Windows puedes usar lo siguiente:
+
+```powershell
+Get-CimInstance Win32_OperatingSystem | Select-Object OSArchitecture
+```
+
+Lo normal es que ni compruebes esto ni que compruebes si la imagen está disponible para tu arquitectura o no lo está pero si quieres saber para qué arquitecturas está generada cierta imagen puedes hacerlo usando este comando:
+
+
+```bash
+docker manifest inspect NOMBRE_DE_LA_IMAGEN:TAG
+```
+
 ## 🌍 Variables de entorno para las imágenes
 
 Ya comentamos en la clase anterior que es posible utilizar variables de entorno para configurar los contenedores que ejecutamos a partir de una imagen. Esto es muy útil, ya que muchas imágenes utilizan variables de entorno para configurar aspectos importantes como usuarios, contraseñas, puertos, etc.
@@ -429,6 +460,10 @@ Para ejecutarlo es básicamente de la misma forma que ejecutamos cualquier otra 
 ```bash
 docker run -d --name mi-web -p 8080:80 mi-nginx-personalizado:v1
 ```
+
+## Demostración de cómo dos imagenes pueden compartir capas
+
+Ahora que ya has creado tu primera imagen de Docker, es importante que sepas que cuanto más "reutilices" instrucciones entre los diferentes Dockerfiles que crees (siempre que sea posible, claro está 🤓), más capas compartirán entre ellas y por lo tanto ocuparán menos espacio en disco y se descargarán más rápido. Para que veas esto en acción te he dejado el ejemplo que mostré durante la clase en el directorio [dos-imagenes-comparten-capas](./dos-imagenes-comparten-capas/) el cuál tiene su propio README.md con las instrucciones para que puedas probarlo tú mismx.
 
 ## Bonus ✨
 
