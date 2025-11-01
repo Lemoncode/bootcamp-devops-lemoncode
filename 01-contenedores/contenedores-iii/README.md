@@ -41,980 +41,6 @@ Para poder contenerizar cualquier aplicación necesitamos un archivo llamado `Do
 
 En este caso necesitamos conocer los comandos necesarios para construir una imagen de Docker. Puedes encontrar todos los que existen en la [documentación oficial](https://docs.docker.com/engine/reference/builder/). Para este caso, vamos a utilizar un archivo `Dockerfile` que ya está creado en el directorio `doom-web` llamado `Dockerfile`.
 
-#### 🚫 El archivo .dockerignore
-
-Aunque es un archivo opcional es más que recomendado el uso del archivo `.dockerignore`. Este archivo se utiliza para indicar a Docker qué archivos y carpetas no debe incluir en la imagen. Es muy útil para evitar incluir archivos innecesarios en la imagen, como por ejemplo archivos de logs 📄, archivos temporales ⏱️, etc.
-
-#### 🔨 Generar la imagen en base al Dockerfile
-
-Una vez que tenemos el archivo `Dockerfile` y el archivo `.dockerignore` podemos generar la imagen de Docker. Para ello, necesitamos ejecutar el siguiente comando:
-
-```bash
-docker build -t doom-web:v1 .
-```
-
-Si ahora comprobamos las imágenes que tenemos en nuestro sistema, deberíamos ver la imagen que acabamos de crear:
-
-```bash
-docker images
-```
-
-Si queremos ver el historial de la imagen que acabamos de crear, podemos ejecutar el siguiente comando:
-
-```bash
-docker history doom-web:v1
-```
-
-## ▶️ Ejecutar un nuevo contenedor usando tu nueva imagen:
-
-```bash
-docker run -p 8080:3000 doom-web:v1
-```
-
-## 🏗️ Imágenes multi-stage
-
-Cuando creamos imágenes de Docker, a veces necesitamos instalar herramientas adicionales para construir nuestra aplicación, como por ejemplo compiladores 🔧, linters 🔍, herramientas de testing 🧪, etc. Sin embargo, estas herramientas no son necesarias en la imagen final, ya que solo necesitamos el binario de nuestra aplicación. Si no lo tenemos en cuenta, nuestra imagen final será más grande de lo necesario.
-
-Para que lo veas con un ejemplo, vamos a instalar todo lo que nuestra aplicación potencialmente puede instalar, para ello modifica el Dockerfile para ejecutar el test con eslint:
-
-```Dockerfile
-FROM node:20-alpine
-
-LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
-
-# ENV NODE_ENV=production
-
-WORKDIR /usr/src/app
-
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-
-RUN npm install
-
-COPY . .
-# #Ejecuta los tests de eslint
-RUN npm test
-
-EXPOSE 3000
-
-RUN chown -R node /usr/src/app
-
-USER node
-
-CMD ["npm", "start"]
-```
-
-Ahora, si volvemos a generar la imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado 📈.
-
-```bash
-docker build --tag=doom-web:v2 . -f Dockerfile.dev
-docker images
-```
-
-En este caso la imagen solo pesa 1 mega más que la anterior, pero si tu aplicación es más grande, la diferencia puede ser mucho mayor.
-
-### 🎭 Multi-stage Builds 
-
-Con multi-stage lo que se hace es utilizar múltiples `FROM` dentro del mismo Dockerfile.
-- Cada `FROM` utiliza una imagen base diferente y cada una inicia un nuevo stage o paso en la construcción de la imagen
-- El último `FROM` produce la imagen final, el resto solo serán intermediarios
-- Puedes copiar archivos de un stage a otro, dejando atrás todo lo que no quieres para la imagen final
-- La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
-- El objetivo final es tener una imagen productiva lo más **fit** 🏃‍♀️ posible y **segura** 🔒
-
-Mismo ejemplo con multi-stages:
-
-```bash
-docker  build -t doom-web:multi-stage . -f Dockerfile.multistages
-```
-
-Si revisamos las imágenes finales, `doom-web:v1` y `doom-web:multi-stage` deberían de tener el mismo peso
-
-```bash
-docker images
-```
-
-Existen lo que se llaman las imágenes intermedias, o dangling images, que son las que se generan en cada uno de los stages. Para eliminarlas, podemos ejecutar el siguiente comando:
-
-```bash
-docker image prune
-```
-
-Y como puedes ver, la imagen generada con multi-stage es mucho más pequeña que la generada sin multi-stage. ✨
-
-## Docker debug
-
-En la última versión de Docker Desktop disponible en la fecha de la última edición de este contenido, la v4.49, se ha puesto a disposición de todos los usuarios la funcionalidad llamada [Docker Debug](https://docs.docker.com/reference/cli/docker/debug/). Esta funcionalidad nos permite depurar nuestras imágenes de Docker de una manera muy sencilla.
-
-```bash
-docker debug doom-web:multi-stage
-```
-
-## Depurar la construcción de la imagen
-
-Por otro lado, también a día de hoy existe la posibilidad de depurar la construcción de la imagen usando la extensión Docker DX y Visual Studio Code.
-
----
-
-## 🌍 Crear imágenes multi-arquitectura
-
-A día de hoy, tenemos que preparar nuestras aplicaciones para que se ejecuten en diferentes arquitecturas (Intel/AMD x86_64, ARM, ARM64, etc.). Docker permite crear imágenes que funcionen en múltiples plataformas.
-
-### 🎯 ¿Por qué multi-arquitectura?
-
-- **🖥️ Desarrollo local**: Desarrollo en Mac M1/M2 (ARM64)
-- **☁️ Producción en cloud**: Servidores Intel en AWS/GCP/Azure (x86_64)
-- **📱 Edge computing**: Dispositivos ARM como Raspberry Pi
-- **📦 Compatibilidad**: Una sola imagen para todos
-
-### 🛠️ Requisitos
-
-- Docker Desktop con BuildKit activado (por defecto en versiones recientes)
-- Docker Buildx habilitado
-
-
-Verifica que tienes buildx:
-
-```bash
-docker buildx ls
-```
-
->[!NOTE]
->Si no aparece nada, actualiza Docker Desktop.
-
-### 📋 Arquitecturas soportadas
-
-Las más comunes:
-
-| Arquitectura | Alias | Descripción |
-|---|---|---|
-| `linux/amd64` | x86_64 | Intel/AMD 64-bit |
-| `linux/arm64` | aarch64 | ARM 64-bit (Mac M1/M2, algunos servidores) |
-| `linux/arm/v7` | armhf | ARM 32-bit (Raspberry Pi 2/3) |
-| `linux/386` | i386 | Intel 32-bit (Obsoleto) |
-| `linux/ppc64le` | ppc64le | PowerPC 64-bit |
-| `windows/amd64` | - | Windows 64-bit |
-
-### 🚀 Crear imagen multi-arquitectura
-
-#### Opción 1: Con docker buildx build
-
-Lo cierto es que crear una imagen multi-arquitectura es tan sencillo como especificar las plataformas que queremos soportar con la opción `--platform`.
-
-```bash
-# Construir para múltiples arquitecturas (sin push)
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t doom-web:latest \
-  --load .
-```
-
-#### Opción 2: Con docker buildx build y push automático
-
-```bash
-# Construir y pushear a Docker Hub automáticamente
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t tu-usuario/doom-web:latest \
-  --push \
-  .
-```
-
-#### Opción 3: Sin login a Docker Hub (local testing)
-
-```bash
-# Para testing local, crear una imagen multi-arch
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t doom-web:multi-arch \
-  -o type=oci,dest=./output \
-  .
-```
-
-### 🏗️ Dockerfile para multi-arquitectura
-
-Para asegurar compatibilidad, usa imágenes base que soporten múltiples arquitecturas:
-
-```dockerfile
-# ✅ BUENO: Soporta múltiples arquitecturas
-FROM node:20-alpine
-FROM python:3.11-slim
-FROM golang:1.21
-
-# ❌ MALO: Solo amd64
-FROM node:20
-FROM ubuntu:22.04
-```
-
-### 📝 Ejemplo completo: Multi-stage + Multi-arquitectura
-
-```dockerfile
-# syntax=docker/dockerfile:1
-
-# Stage 1: Build
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-RUN npm prune --production
-
-# Stage 2: Runtime
-FROM node:20-alpine
-
-WORKDIR /app
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-
-RUN chown -R node:node /app
-USER node
-
-EXPOSE 3000
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
-
-CMD ["node", "dist/server.js"]
-```
-
-Construir:
-
-```bash
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t tu-usuario/doom-web:v1.0 \
-  --push \
-  .
-```
-
-### 🔍 Inspeccionar imagen multi-arquitectura
-
-```bash
-# Ver las arquitecturas de una imagen en Docker Hub
-docker buildx imagetools inspect tu-usuario/doom-web:v1.0
-
-# Output:
-# Name:      docker.io/tu-usuario/doom-web:v1.0
-# MediaType: application/vnd.docker.distribution.manifest.list.v2+json
-# Digest:    sha256:abc123...
-#
-# Manifests:
-#   Name:      tu-usuario/doom-web:v1.0
-#   Platform:  linux/amd64
-#
-#   Name:      tu-usuario/doom-web:v1.0
-#   Platform:  linux/arm64
-```
-
-### 🎯 Con Docker Bake
-
-Definir en `docker-bake.hcl`:
-
-```hcl
-target "doom-web-multiarch" {
-  context = "."
-  dockerfile = "Dockerfile"
-  tags = ["tu-usuario/doom-web:v1.0", "tu-usuario/doom-web:latest"]
-  platforms = ["linux/amd64", "linux/arm64"]
-  output = ["type=registry"]  # Push automático
-}
-```
-
-Ejecutar:
-
-```bash
-docker buildx bake doom-web-multiarch
-```
-
-### 💡 Mejores prácticas
-
-1. **Testa localmente antes de pushear**:
-   ```bash
-   docker buildx build --platform linux/amd64 -t doom-web:test .
-   docker run doom-web:test
-   ```
-
-2. **Usa imágenes base slim/alpine**:
-   ```dockerfile
-   FROM node:20-alpine  # ✅ Multi-arch
-   FROM node:20-bookworm  # ❌ Más pesado
-   ```
-
-3. **Evita RUN con herramientas específicas de arquitectura**:
-   ```dockerfile
-   # ❌ MALO
-   RUN apt-get install -y x86-64 specific tool
-   
-   # ✅ BUENO
-   RUN if [ "$BUILDPLATFORM" != "$TARGETPLATFORM" ]; then ...; fi
-   ```
-
-4. **Build args para arquitectura objetivo**:
-   ```dockerfile
-   ARG TARGETARCH
-   RUN echo "Building for $TARGETARCH"
-   ```
-
----
-
-## 🏗️ Diferentes Builders en Docker
-
-Docker Buildx proporciona múltiples **builders** que podemos usar para optimizar nuestras construcciones.
-
-### 🎯 ¿Qué es un Builder?
-
-Un builder es una instancia del motor de construcción de Docker que ejecuta los builds. Diferentes builders tienen diferentes capacidades y configuraciones:
-
-- **docker-container**: Completo, soporta multi-arch, pero más lento
-- **docker**: Nativo del daemon, más rápido pero limitado
-- **kubernetes**: Para entornos de Kubernetes
-- **remote**: Builders remotos para CI/CD
-
-### 📋 Ver builders disponibles
-
-```bash
-docker buildx ls
-```
-
-Salida típica:
-
-```
-NAME/NODE         DRIVER/ENDPOINT          STATUS  BUILDKIT
-mybuilder/*       docker-container         running v0.13.0
-  mybuilder0      unix:///var/run/docker.sock    running v0.13.0
-desktop-linux    docker                   running v0.12.0
-```
-
-### 🆕 Crear un builder personalizado
-
-#### Builder 1: Optimizado para velocidad (docker-container)
-
-```bash
-docker buildx create \
-  --name fast-builder \
-  --driver docker-container \
-  --use \
-  --bootstrap
-```
-
-Este builder:
-- Ejecuta en un contenedor separado
-- Soporta multi-arquitectura
-- Mejor rendimiento en builds complejos
-
-#### Builder 2: Builder remoto para CI/CD
-
-```bash
-docker buildx create \
-  --name ci-builder \
-  --driver docker-container \
-  --use
-```
-
-#### Builder 3: Kubectl (para Kubernetes)
-
-```bash
-docker buildx create \
-  --name k8s-builder \
-  --driver kubernetes \
-  --use
-```
-
-Requiere estar conectado a un cluster de Kubernetes:
-
-```bash
-docker buildx create \
-  --name k8s-builder \
-  --driver kubernetes \
-  --allow-insecure-entitlement security.insecure \
-  --use
-```
-
-### 🎛️ Gestionar builders
-
-```bash
-# Listar todos los builders
-docker buildx ls
-
-# Ver información detallada
-docker buildx du
-
-# Usar un builder específico
-docker buildx use fast-builder
-
-# Inspeccionar builder
-docker buildx inspect fast-builder
-
-# Eliminar builder
-docker buildx rm fast-builder
-
-# Detener builder
-docker buildx stop fast-builder
-
-# Reiniciar builder
-docker buildx start fast-builder
-```
-
-### 🚀 Usar builders específicos en builds
-
-```bash
-# Usar el builder por defecto
-docker build -t doom-web:v1 .
-
-# Con buildx y builder específico
-docker buildx build \
-  --builder fast-builder \
-  -t doom-web:v1 \
-  .
-
-# Multi-arquitectura con builder específico
-docker buildx build \
-  --builder k8s-builder \
-  --platform linux/amd64,linux/arm64 \
-  -t tu-usuario/doom-web:v1 \
-  --push \
-  .
-```
-
-### 📊 Estadísticas de builders
-
-```bash
-# Ver uso de disco de builders
-docker buildx du
-
-# Output:
-# ID                           RECLAIMABLE SIZE
-# mybuilder0                   5.2GB    false
-# desktop-linux                2.3GB    false
-
-# Limpiar caché del builder
-docker buildx prune --all --builder fast-builder
-```
-
-### 🎮 Ejemplo práctico: Builders en docker-bake.hcl
-
-```hcl
-# Definir builder a usar
-variable "BUILDER" {
-  default = "fast-builder"
-}
-
-target "doom-web-prod" {
-  context = "."
-  dockerfile = "Dockerfile"
-  tags = ["doom-web:prod"]
-  builder = var.BUILDER
-  output = ["type=docker"]
-}
-
-target "doom-web-multiarch" {
-  context = "."
-  dockerfile = "Dockerfile"
-  tags = ["tu-usuario/doom-web:latest"]
-  platforms = ["linux/amd64", "linux/arm64"]
-  builder = "k8s-builder"  # Usar builder específico
-  output = ["type=registry"]
-}
-```
-
-Ejecutar:
-
-```bash
-# Usar builder por defecto
-docker buildx bake doom-web-prod
-
-# Usar builder específico
-docker buildx bake --builder fast-builder doom-web-prod
-
-# Multi-arquitectura con builder remoto
-docker buildx bake doom-web-multiarch
-```
-
-### 🔍 Optimizaciones por builder
-
-| Builder | Velocidad | Multi-arch | CI/CD | Cache persistente |
-|---------|-----------|-----------|-------|-------------------|
-| docker | ⚡⚡⚡ | ❌ | ❌ | ⚠️ |
-| docker-container | ⚡⚡ | ✅ | ✅ | ✅ |
-| kubernetes | ⚡ | ✅ | ✅ | ✅ |
-| remote | ⚡ | ✅ | ✅ | ✅ |
-
----
-
-## 🔍 Docker Build Checks
-
-**Docker Build Checks** es una característica introducida en Dockerfile 1.8 que te permite validar tu configuración de build y realizar una serie de verificaciones antes de ejecutar tu build. Es como un **linter avanzado** para tu Dockerfile y opciones de build, o un modo de **dry-run** para builds. 🎯
-
-### 🌟 ¿Por qué usar Build Checks?
-
-- **✅ Validación temprana**: Detecta problemas antes de ejecutar el build
-- **📋 Mejores prácticas**: Asegura que tu Dockerfile sigue las recomendaciones actuales
-- **🚫 Anti-patrones**: Identifica patrones problemáticos en tu configuración
-- **🔒 Seguridad**: Ayuda a detectar configuraciones inseguras
-- **⚡ Eficiencia**: Ahorra tiempo evitando builds fallidos
-
-### 🛠️ Requisitos
-
-- **Buildx**: versión 0.15.0 o posterior
-- **docker/build-push-action**: versión 6.6.0 o posterior
-- **docker/bake-action**: versión 5.6.0 o posterior
-
-### 🚀 Uso básico
-
-Por defecto, los checks se ejecutan automáticamente cuando haces un build:
-
-```bash
-docker build .
-```
-
-**Salida de ejemplo:**
-```
-[+] Building 3.5s (11/11) FINISHED
-...
-
-1 warning found (use --debug to expand):
-  - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 7)
-```
-
-### 🔍 Verificar sin construir
-
-Para ejecutar solo los checks sin construir la imagen:
-
-```bash
-docker build --check .
-```
-
-**Ejemplo de salida detallada:**
-```
-[+] Building 1.5s (5/5) FINISHED
-=> [internal] connecting to local controller
-=> [internal] load build definition from Dockerfile
-=> => transferring dockerfile: 253B
-
-JSONArgsRecommended - https://docs.docker.com/go/dockerfile/rule/json-args-recommended/
-JSON arguments recommended for ENTRYPOINT/CMD to prevent unintended behavior related to OS signals
-Dockerfile:7
---------------------
-5 |
-6 |     COPY index.js .
-7 | >>> CMD node index.js
-8 |
---------------------
-```
-
-### 📝 Ejemplo práctico con nuestro proyecto doom-web
-
-Vamos a probar los checks con nuestro Dockerfile actual:
-
-```bash
-cd doom-web
-docker build --check .
-```
-
-Si hay warnings, puedes ver más detalles con:
-
-```bash
-docker --debug build --check .
-```
-
-### ⚙️ Configuración avanzada
-
-#### 🚨 Fallar el build en violaciones
-
-Puedes configurar que el build falle cuando se encuentren violaciones usando la directiva `check=error=true`:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=error=true
-
-FROM node:20-alpine
-COPY package*.json ./
-RUN npm install
-COPY . .
-CMD npm start  # Esto generará un warning que ahora será un error
-```
-
-También puedes configurarlo vía CLI:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=error=true" .
-```
-
-#### 🙈 Omitir checks específicos
-
-Para saltar checks específicos:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=JSONArgsRecommended,StageNameCasing
-
-FROM alpine AS BASE_STAGE
-CMD echo "Hello, world!"
-```
-
-O vía CLI:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=JSONArgsRecommended" .
-```
-
-Para saltar todos los checks:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=all
-```
-
-#### 🧪 Checks experimentales
-
-Para habilitar checks experimentales:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=experimental=all" .
-```
-
-O en el Dockerfile:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=experimental=all
-```
-
-#### 🔧 Combinando parámetros
-
-Puedes combinar múltiples configuraciones separándolas con punto y coma:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=JSONArgsRecommended;error=true;experimental=all
-```
-
-### 🎮 Aplicando checks a nuestro proyecto doom-web
-
-Crear un `Dockerfile.checked` que siga las mejores prácticas:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=error=true
-
-FROM node:20-alpine AS base
-
-LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
-
-WORKDIR /usr/src/app
-
-# Mejores prácticas para el manejo de dependencias
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
-
-# Copiar archivos de la aplicación
-COPY . .
-
-# Exponer puerto
-EXPOSE 3000
-
-# Usar user no-root por seguridad
-RUN chown -R node:node /usr/src/app
-USER node
-
-# Usar formato JSON para CMD (evita warnings)
-CMD ["npm", "start"]
-```
-
-Probar los checks:
-
-```bash
-docker build --check -f Dockerfile.checked .
-```
-
-### 🎯 Integración con Docker Bake
-
-También puedes usar checks con Docker Bake añadiendo la configuración en tu `docker-bake.hcl`:
-
-```hcl
-target "doom-web-checked" {
-  context = "."
-  dockerfile = "Dockerfile.checked"
-  tags = ["doom-web:checked"]
-  args = {
-    BUILDKIT_DOCKERFILE_CHECK = "error=true"
-  }
-}
-
-target "doom-web-check-only" {
-  context = "."
-  dockerfile = "Dockerfile"
-  args = {
-    BUILDKIT_DOCKERFILE_CHECK = "error=true;experimental=all"
-  }
-  output = ["type=cacheonly"]
-}
-```
-
-Ejecutar:
-
-```bash
-# Build con checks estrictos
-docker buildx bake doom-web-checked
-
-# Solo ejecutar checks sin build
-docker buildx build --check -f Dockerfile.checked .
-```
-
-### 🔧 Checks más comunes
-
-| Check | Descripción | Ejemplo problemático | Solución |
-|-------|-------------|---------------------|----------|
-| **JSONArgsRecommended** | CMD/ENTRYPOINT deberían usar formato JSON | `CMD npm start` ❌ | `CMD ["npm", "start"]` ✅ |
-| **StageNameCasing** | Nombres de stage deberían estar en minúsculas | `FROM alpine AS BASE_STAGE` ❌ | `FROM alpine AS base` ✅ |
-| **FromAsCasing** | La palabra AS debería estar en mayúsculas | `FROM alpine as base` ❌ | `FROM alpine AS base` ✅ |
-| **NoEmptyCommand** | Comandos no deberían estar vacíos | `RUN` ❌ | `RUN echo "hello"` ✅ |
-| **UndefinedVariable** | Variables no definidas en ARG | `RUN echo $UNDEFINED` ❌ | `ARG MY_VAR` y luego usar ✅ |
-| **SeeminglyEmptyBase** | Imagen base muy grande | `FROM ubuntu` ❌ | `FROM alpine` ✅ |
-| **OfficialRepositoriesDiscouraged** | Usar registros que no sean oficiales | - | Usar tags específicos |
-
-### 📊 Integración con CI/CD
-
-#### GitHub Actions
-
-```yaml
-name: Docker Build with Checks
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Run build checks
-        uses: docker/build-push-action@v6.6.0
-        with:
-          context: .
-          push: false
-          build-args: |
-            BUILDKIT_DOCKERFILE_CHECK=error=true
-```
-
-Los checks aparecerán como anotaciones en las pull requests de GitHub! 📝
-
-### 💡 Mejores prácticas
-
-1. **🎯 Usa checks desde el inicio**: Integra checks en tu workflow de desarrollo
-2. **⚠️ Trata warnings como errores**: Usa `check=error=true` en producción
-3. **📋 Documenta excepciones**: Si skips checks, documenta por qué
-4. **🔄 Actualiza regularmente**: Los checks evolucionan con las mejores prácticas
-5. **👥 Estandariza en equipo**: Usa la misma configuración en todo el proyecto
-
-### 🎯 Ejercicio práctico
-
-1. Ejecuta checks en nuestro Dockerfile actual:
-   ```bash
-   cd doom-web
-   docker build --check .
-   ```
-
-2. Corrige los warnings encontrados creando un `Dockerfile.best-practices`
-
-3. Añade la configuración a tu `docker-bake.hcl`:
-   ```hcl
-   target "doom-web-validated" {
-     context = "."
-     dockerfile = "Dockerfile.best-practices"
-     tags = ["doom-web:validated"]
-     args = {
-       BUILDKIT_DOCKERFILE_CHECK = "error=true"
-     }
-   }
-   ```
-
-4. Prueba el build con checks estrictos:
-   ```bash
-   docker buildx bake doom-web-validated
-   ```
-
-> [!TIP]
-> 💡 **Consejo**: Instala la [extensión de Docker para VS Code](https://marketplace.visualstudio.com/items?itemName=docker.docker) para obtener linting en tiempo real de tu Dockerfile.
-
----
-
-## 📦 Publicar nuestras imágenes en Docker Hub
-
-Para poder publicar nuestras imágenes en Docker Hub, lo primero que necesitamos es tener una cuenta en Docker Hub. Si no tienes una, puedes crear una cuenta gratuita en [https://hub.docker.com/](https://hub.docker.com/) 🆓. Hay un plan gratuito que te permite tener ilimitados repositorios públicos y un repositorio privado.
-
-Una vez que la tengas, necesitas hacer login bien a través del terminal:
-
-```bash
-docker login
-```
-
-O bien a través de **Docker Desktop** 🖥️.
-
-### 🏷️ Bautizar las imagenes correctamente
-
-Para poder publicar nuestras imágenes en Docker Hub, necesitamos bautizarlas correctamente. El nombre de la imagen debe seguir el siguiente formato:
-
-```
-<nombre-de-usuario-o-organización-en-docker-hub>/<nombre-de-la-imagen>:<tag>
-```
-
-Por ejemplo, si mi usuario en Docker Hub es `0GiS0` y la imagen se llama `doom-web` y le quiero poner el tag `v1`, el nombre de la imagen sería:
-
-```
-0GiS0/doom-web:v1
-```
-
-Si no especificamos un tag, Docker utilizará el tag `latest` por defecto.
-
-Vamos a probarlo:
-
-```bash
-docker build -t 0GiS0/doom-web:v1 .
-```
-
-Una vez que tenemos la imagen creada, necesitamos hacer push de la imagen a Docker Hub:
-
-```bash
-docker push 0GiS0/doom-web:v1
-```
-
-Si ahora vamos a Docker Hub, deberíamos ver la imagen que acabamos de subir. 🎉
-
-También puedes añadir alias a las imágenes existentes para que no tengas que volver a hacer el proceso de build:
-
-```bash
-docker tag doom-web:v1 0gis0/doom-web:v2
-docker push 0gis0/doom-web:v2
-```
-
-### 🏷️ Nomenclatura de tags
-
-Es una buena práctica usar tags significativos:
-
-```bash
-# Tags por versión
-docker build -t tu-usuario/doom-web:1.0.0 .
-docker build -t tu-usuario/doom-web:1.0 .
-docker build -t tu-usuario/doom-web:latest .
-
-# Tags por fecha
-docker build -t tu-usuario/doom-web:2024-11-01 .
-
-# Tags por ambiente
-docker build -t tu-usuario/doom-web:prod .
-docker build -t tu-usuario/doom-web:staging .
-docker build -t tu-usuario/doom-web:dev .
-
-# Tags descriptivos
-docker build -t tu-usuario/doom-web:v1.0-alpine .
-docker build -t tu-usuario/doom-web:v1.0-ubuntu .
-```
-
-### 🔗 Crear alias de imágenes
-
-```bash
-# Crear alias sin rebuildar
-docker tag doom-web:v1 tu-usuario/doom-web:latest
-docker tag doom-web:v1 tu-usuario/doom-web:stable
-
-# Push de todos los alias
-docker push tu-usuario/doom-web:v1
-docker push tu-usuario/doom-web:latest
-docker push tu-usuario/doom-web:stable
-```
-
-### 📊 Ver información de push
-
-```bash
-# Ver progreso detallado
-docker push -a tu-usuario/doom-web
-
-# Ver historial de push
-docker history tu-usuario/doom-web:v1
-```
-
-### 🎯 Publicar con Docker Bake
-
-También puedes usar Bake para publicar directamente a Docker Hub. Modifica tu archivo `docker-bake.hcl`:
-
-```hcl
-target "doom-web-publish" {
-  context = "."
-  dockerfile = "Dockerfile"
-  tags = ["tu-usuario/doom-web:latest", "tu-usuario/doom-web:v1.0"]
-  platforms = ["linux/amd64", "linux/arm64"]
-  output = ["type=registry"]  # Esto hace push automáticamente
-}
-
-target "doom-web-multiarch-publish" {
-  context = "."
-  dockerfile = "Dockerfile.multistages"
-  tags = [
-    "tu-usuario/doom-web:v1.0-multiarch",
-    "tu-usuario/doom-web:latest-multiarch"
-  ]
-  platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7"]
-  output = ["type=registry"]
-}
-
-target "doom-web-dev-publish" {
-  context = "."
-  dockerfile = "Dockerfile.dev"
-  tags = ["tu-usuario/doom-web:dev"]
-  output = ["type=registry"]
-}
-```
-
-Y ejecuta:
-
-```bash
-# Publicar versión de producción
-docker buildx bake doom-web-publish
-
-# Publicar con multi-arquitectura
-docker buildx bake doom-web-multiarch-publish
-
-# Publicar versión de desarrollo
-docker buildx bake doom-web-dev-publish
-
-# Publicar todo de una vez
-docker buildx bake
-```
-
-### 🔐 Registros privados
-
-Si quieres usar un registro privado:
-
-```bash
-# Login a registro privado
-docker login registro-privado.com
-
-# Tag para registro privado
-docker build -t registro-privado.com/doom-web:v1 .
-
-# Push a registro privado
-docker push registro-privado.com/doom-web:v1
-```
-
-### 📋 Verificar imagen en Docker Hub
-
-```bash
-# Ver imagen publicada
-docker pull tu-usuario/doom-web:v1
-
-# Ejecutar desde Docker Hub
-docker run -p 3000:3000 tu-usuario/doom-web:v1
-
-# Ver las capas de la imagen en Docker Hub
-docker inspect tu-usuario/doom-web:v1 | jq '.RootFS'
-```
-
----
 
 ### ⚡ 2. Usando `docker init` en Docker CLI
 
@@ -1066,50 +92,10 @@ Esto generará:
 
 - `Dockerfile` - Para producción
 - `.dockerignore` - Archivos a ignorar
-- `compose.yaml` - Para desarrollo con Docker Compose (opcional)
+- `compose.yaml` - Para desarrollo con Docker Compose (opcional) Se verá más adelante
 
-#### 📋 Resultado de `docker init`
 
-El Dockerfile generado será similar a:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-
-ARG NODE_VERSION=20
-
-FROM node:${NODE_VERSION}-alpine
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --only=production
-
-COPY . .
-
-EXPOSE 3000
-
-USER node
-
-CMD ["npm", "start"]
-```
-
-#### �️ Siguiente paso
-
-Una vez generados los archivos, puedes construir la imagen:
-
-```bash
-docker build -t doom-web:init .
-docker run -p 3000:3000 doom-web:init
-```
-
-> [!TIP]
-> 💡 **Consejo**: El archivo `compose.yaml` generado es perfecto como punto de partida para desarrollo local con volúmenes y bind mounts.
-
----
-
-### �🆚 3. Usando la extensión de Docker de Visual Studio Code
+### 🆚 3. Usando la extensión de Docker de Visual Studio Code
 
 La extensión oficial de Docker para VS Code ofrece una forma visual e interactiva de generar Dockerfiles.
 
@@ -1150,44 +136,6 @@ El asistente te pedirá:
 - **Include optional Docker Compose file**: Selecciona NO por ahora (lo veremos después)
 - **Include Docker Compose file for debugging**: NO
 
-#### 📦 Archivos generados
-
-Generará automáticamente:
-
-- `Dockerfile` (producción)
-- `Dockerfile.dev` (desarrollo)
-- `.dockerignore`
-
-El Dockerfile tendrá esta estructura:
-
-```dockerfile
-FROM node:20-alpine
-
-ENV NODE_ENV=production
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm ci --only=production
-
-COPY . .
-
-EXPOSE 3000
-
-CMD ["node", "server.js"]
-```
-
-#### 🚀 Próximas acciones
-
-```bash
-# Construir la imagen
-docker build -t doom-web:vscode .
-
-# Ejecutar el contenedor
-docker run -p 3000:3000 doom-web:vscode
-```
-
 ---
 
 ### 🤖 4. Usando `docker ai` - AI Gordon 🦾
@@ -1225,25 +173,6 @@ docker ai "Crea un Dockerfile para una aplicación Node.js con:
 - Usuario no-root
 - Multi-stage build
 - Node 20-alpine"
-```
-
-#### 📤 Resultados
-
-Docker AI te mostrará:
-
-```
-Based on your requirements, here's a recommended Dockerfile:
-
-FROM node:20-alpine as builder
-...
-
-FROM node:20-alpine as runtime
-...
-
-Tips:
-- Consider using .dockerignore to exclude files
-- Use health checks for production
-- Keep your base images updated
 ```
 
 #### 💡 Ejemplos de prompts útiles
@@ -1316,40 +245,7 @@ La app usa Express, debe exponer el puerto 3000, y necesito
 una versión de desarrollo y otra de producción.
 ```
 
-**Respuesta de Copilot:**
-```dockerfile
-FROM node:20-alpine
 
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
-```
-
-#### 🎯 Ventajas
-
-- 🔄 **Contexto visual**: Ve el código que necesita ser contenerizado
-- 💬 **Conversacional**: Puedes hacer seguimientos y ajustes
-- 🎨 **Explicaciones**: Te explica qué hace cada línea
-- 🔗 **Integración**: Acceso directo desde el navegador
-
-#### 💡 Mejores prácticas para prompts
-
-```markdown
-Pregunta bien estructurada:
-- QUÉ: "Genera un Dockerfile para una app Node.js"
-- DETALLES: "Usa node:20-alpine como base"
-- REQUISITOS: "Soporta puerto 3000, incluye health check"
-- OBJETIVO: "Optimizar para producción"
-```
-
----
 
 ### 🐙 6. Usando GitHub Copilot
 
@@ -1384,100 +280,525 @@ GitHub Copilot es una extensión de IA para tu IDE que genera código con contex
    - Sea seguro (usuario no-root)
    ```
 
-#### 📝 Ejemplo de generación
+#### 🚫 El archivo .dockerignore
 
-**Inicio del Dockerfile:**
-```dockerfile
-FROM node:20-alpine
+Aunque es un archivo opcional es más que recomendado el uso del archivo `.dockerignore`. Este archivo se utiliza para indicar a Docker qué archivos y carpetas no debe incluir en la imagen. Es muy útil para evitar incluir archivos innecesarios en la imagen, como por ejemplo archivos de logs 📄, archivos temporales ⏱️, etc.
+
+#### 🔨 Generar la imagen en base al Dockerfile
+
+Una vez que tenemos el archivo `Dockerfile` y el archivo `.dockerignore` podemos generar la imagen de Docker. Para ello, necesitamos ejecutar el siguiente comando:
+
+```bash
+docker build -t doom-web:v1 .
 ```
 
-Presiona Tab y Copilot completará:
+Si ahora comprobamos las imágenes que tenemos en nuestro sistema, deberíamos ver la imagen que acabamos de crear:
 
-```dockerfile
+```bash
+docker images
+```
+
+Si queremos ver el historial de la imagen que acabamos de crear, podemos ejecutar el siguiente comando:
+
+```bash
+docker history doom-web:v1
+```
+
+## ▶️ Ejecutar un nuevo contenedor usando tu nueva imagen:
+
+```bash
+docker run -p 8080:3000 doom-web:v1
+```
+
+## 🏗️ Imágenes multi-stage
+
+Cuando creamos imágenes de Docker, a veces necesitamos instalar herramientas adicionales para construir nuestra aplicación, como por ejemplo compiladores 🔧, linters 🔍, herramientas de testing 🧪, etc. Sin embargo, estas herramientas no son necesarias en la imagen final, ya que solo necesitamos el binario de nuestra aplicación. Si no lo tenemos en cuenta, nuestra imagen final será más grande de lo necesario.
+
+Para que lo veas con un ejemplo, vamos a instalar todo lo que nuestra aplicación potencialmente puede instalar, para ello modifica el Dockerfile para ejecutar el test con eslint:
+
+```Dockerfile
 FROM node:20-alpine
 
-LABEL maintainer="Your Name"
+LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
 
-WORKDIR /app
+# ENV NODE_ENV=production
 
-COPY package*.json ./
+WORKDIR /usr/src/app
+
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
 RUN npm install
 
 COPY . .
+# #Ejecuta los tests de eslint
+RUN npm test
 
 EXPOSE 3000
 
-RUN chown -R node:node /app
+RUN chown -R node /usr/src/app
 
 USER node
 
 CMD ["npm", "start"]
 ```
 
-#### 💎 Ventajas únicas de GitHub Copilot
+Ahora, si volvemos a generar la imagen, después de que arregles los errores que reporta eslint, comprobarás que ha engordado 📈.
 
-- 🧠 **Contexto del proyecto**: Entiende tu código existente
-- 📚 **Aprendizaje**: Aprende patrones de tu codebase
-- 🤖 **Predicción**: Anticipa lo que necesitarás
-- 🔄 **Iterativo**: Puedes refinarlo línea a línea
-- 👥 **Explicaciones**: Explica su código generado
+```bash
+docker build --tag=doom-web:v2 . -f Dockerfile.dev
+docker images
+```
 
-#### 🎯 Ejemplo práctico: Multi-stage con Copilot
+En este caso la imagen "solo" pesa 25MB mega más que la anterior, pero si tu aplicación es más grande, la diferencia puede ser mucho mayor.
 
-1. Abre Chat de Copilot
-2. Pregunta:
-   ```
-   Create a multi-stage Dockerfile that:
-   1. Builds and tests the Node app in one stage
-   2. Runs only the app in a minimal Alpine image
-   3. Uses non-root user
-   4. Includes health checks
-   ```
-3. Copilot generará:
+### 🎭 Multi-stage Builds 
+
+Con multi-stage lo que se hace es utilizar múltiples `FROM` dentro del mismo Dockerfile.
+- Cada `FROM` utiliza una imagen base diferente y cada una inicia un nuevo stage o paso en la construcción de la imagen
+- El último `FROM` produce la imagen final, el resto solo serán intermediarios
+- Puedes copiar archivos de un stage a otro, dejando atrás todo lo que no quieres para la imagen final
+- La idea es simple: crea imagenes adicionales con las herramientas que necesitas (compiladores, linters, herramientas de testing, etc.) pero que no son necesarias para producción
+- El objetivo final es tener una imagen productiva lo más **fit** 🏃‍♀️ posible y **segura** 🔒
+
+Mismo ejemplo con multi-stages:
+
+```bash
+docker  build -t doom-web:multi-stage . -f Dockerfile.multistages
+```
+
+Si revisamos las imágenes finales, `doom-web:v1` y `doom-web:multi-stage` deberían de tener el mismo peso
+
+```bash
+docker images
+```
+
+Existen lo que se llaman las imágenes intermedias, o dangling images, que son las que se generan en cada uno de los stages. Para eliminarlas, podemos ejecutar el siguiente comando:
+
+```bash
+docker image prune
+```
+
+Y como puedes ver, la imagen generada con multi-stage es mucho más pequeña que la generada sin multi-stage. ✨
+
+## Docker debug
+
+En la última versión de Docker Desktop disponible en la fecha de la última edición de este contenido, la v4.49, se ha puesto a disposición de todos los usuarios la funcionalidad llamada [Docker Debug](https://docs.docker.com/reference/cli/docker/debug/). Esta funcionalidad nos permite depurar nuestras imágenes de Docker de una manera muy sencilla.
+
+```bash
+docker debug doom-web:multi-stage
+```
+
+Esta comando es útil cuando quieres explorar o probar cosas dentro de esa imagen que has creado sin tener que instalar imágenes adicionales que no quieres que formen parte de tu imagen final.
+
+y esto también valdría para un contenedor en ejecución:
+
+```bash
+docker debug <container_id>
+```
+
+Esto en realidad lo que hace es crear un contenedor con una imagen especial de depuración basada en la distribución de Linux NixOS, que tiene un montón de herramientas de depuración preinstaladas, como `curl`, `wget`, `vim`, `htop`, `strace`, etc. Puedes ver todas las herramientas disponibles en la [documentación oficial](https://docs.docker.com/reference/cli/docker/debug/#debug-image-included-tools). También monta el sistema de archivos de la imagen o contenedor que estás depurando, por lo que puedes explorar los archivos y directorios como si estuvieras dentro del contenedor original. Además, si necesitas instalar alguna herramienta adicional, puedes hacerlo utilizando simplemente `install <tool>`.
+
+## Depurar la construcción de la imagen
+
+Por otro lado, también a día de hoy existe la posibilidad de depurar la construcción de la imagen usando la extensión Docker DX y Visual Studio Code.
+
+---
+
+## 🌍 Crear imágenes multi-arquitectura
+
+A día de hoy, tenemos que preparar nuestras aplicaciones para que se ejecuten en diferentes arquitecturas (Intel/AMD x86_64, ARM, ARM64, etc.). Docker permite crear imágenes que funcionen en múltiples plataformas.
+
+### 🎯 ¿Por qué multi-arquitectura?
+
+- **🖥️ Desarrollo local**: Desarrollo en Mac M1/M2 (ARM64)
+- **☁️ Producción en cloud**: Servidores Intel en AWS/GCP/Azure (x86_64)
+- **📱 Edge computing**: Dispositivos ARM como Raspberry Pi
+- **📦 Compatibilidad**: Una sola imagen para todos
+
+### 🛠️ Requisitos
+
+- Docker Desktop con BuildKit activado (por defecto en versiones recientes)
+- Docker Buildx habilitado
+
+
+Verifica que tienes buildx:
+
+```bash
+docker buildx ls
+```
+
+>[!NOTE]
+>Si no aparece nada, actualiza Docker Desktop.
+
+### 📋 Arquitecturas soportadas
+
+Las más comunes:
+
+| Arquitectura | Alias | Descripción |
+|---|---|---|
+| `linux/amd64` | x86_64 | Intel/AMD 64-bit |
+| `linux/arm64` | aarch64 | ARM 64-bit (Mac M1/M2, algunos servidores) |
+| `linux/arm/v7` | armhf | ARM 32-bit (Raspberry Pi 2/3) |
+| `linux/386` | i386 | Intel 32-bit (Obsoleto) |
+| `linux/ppc64le` | ppc64le | PowerPC 64-bit |
+| `windows/amd64` | - | Windows 64-bit |
+
+### 🚀 Crear imagen multi-arquitectura
+
+Lo cierto es que crear una imagen multi-arquitectura es tan sencillo como especificar las plataformas que queremos soportar con la opción `--platform`.
+
+```bash
+# Construir para múltiples arquitecturas (sin push)
+docker build \
+  --platform linux/amd64,linux/arm64 \
+  -t doom-web:v4 \
+  --load .
+```
+
+El parámetro `--load` carga la imagen en el daemon local después de construirla. ¿Qué significa esto? Pues que la imagen estará disponible localmente para ejecutar contenedores.
+
+En contraste, si usamos `--push`, la imagen se subirá directamente a un registro (Docker Hub, etc.) y no estará disponible localmente.
+
+
+>[!NOTE]
+> Antiguamente era necesario usar docker buildx build para esto, pero ahora docker build  es en realidad un alias a docker buildx build.
+
+El resultado será una imagen que contiene múltiples variantes para cada arquitectura especificada. Se puede ver de forma sencilla a través de Docker Desktop:
+
+![Docker Desktop multi-arch](./imagenes/Imagen%20multi-arquitectura%20con%20docker%20build.png)
+
+
+### 🔍 Inspeccionar imagen multi-arquitectura
+
+```bash
+docker manifest inspect doom-web:v4
+```
+
+o bien
+
+```bash
+docker inspect doom-web:v4 --format='{{.Architecture}} {{.Os}}'
+```
+
+## 🏗️ Diferentes Builders en Docker
+
+Docker Buildx proporciona múltiples **builders** que podemos usar para optimizar nuestras construcciones.
+
+### 🎯 ¿Qué es un Builder?
+
+Un builder es una instancia del motor de construcción de Docker que ejecuta los builds. Diferentes builders tienen diferentes capacidades y configuraciones:
+
+- **docker-container**: Completo, soporta multi-arch, pero más lento
+- **docker**: Nativo del daemon, más rápido pero limitado
+- **kubernetes**: Para entornos de Kubernetes
+- **remote**: Builders remotos para CI/CD
+
+### 📋 Ver builders disponibles
+
+```bash
+docker buildx ls
+```
+
+### ¿Por qué usar diferentes builders?
+
+- **⚡ Velocidad**: Algunos builders son más rápidos para builds simples
+- **🌐 Multi-arquitectura**: Algunos soportan múltiples arquitecturas
+- **🔄 CI/CD**: Builders remotos para integración continua
+
+
+### 🆕 Crear un builder personalizado
+
+#### Builder 1: Optimizado para velocidad (docker-container)
+
+```bash
+docker buildx create \
+  --name fast-builder \
+  --driver docker-container \
+  --use \
+  --bootstrap
+```
+
+Este builder:
+- Ejecuta en un contenedor separado
+- Soporta multi-arquitectura
+- Mejor rendimiento en builds complejos
+
+Para usarlo:
+
+```bash
+docker buildx use fast-builder
+```
+
+y podemos probarlo con:
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t doom-web:v5 \
+  --load .
+```
+
+o si no hemos indicado `--use`:
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t doom-web:v5 \
+  --builder fast-builder \
+  --load .
+```
+
+#### Builder para Kubernetes
+
+```bash
+docker buildx create \
+  --name k8s-builder \
+  --driver kubernetes \
+  --use
+```
+
+Requiere estar conectado a un cluster de Kubernetes:
+
+```bash
+docker buildx create \
+  --name k8s-builder \
+  --driver kubernetes \
+  --allow-insecure-entitlement security.insecure \
+  --use
+```
+
+### 🎛️ Gestionar builders
+
+```bash
+# Listar todos los builders
+docker buildx ls
+
+# Ver información detallada
+docker buildx du
+
+# Usar un builder específico
+docker buildx use fast-builder
+
+# Inspeccionar builder
+docker buildx inspect fast-builder
+
+# Eliminar builder
+docker buildx rm fast-builder
+
+# Detener builder
+docker buildx stop fast-builder
+
+# Reiniciar builder
+docker buildx start fast-builder
+```
+---
+
+## 🔍 Docker Build Checks
+
+**Docker Build Checks** es una característica introducida en Dockerfile 1.8 que te permite validar tu configuración de build y realizar una serie de verificaciones antes de ejecutar tu build. Es como un **linter avanzado** para tu Dockerfile y opciones de build, o un modo de **dry-run** para builds. 🎯
+
+### 🌟 ¿Por qué usar Build Checks?
+
+- **✅ Validación temprana**: Detecta problemas antes de ejecutar el build
+- **📋 Mejores prácticas**: Asegura que tu Dockerfile sigue las recomendaciones actuales
+- **🚫 Anti-patrones**: Identifica patrones problemáticos en tu configuración
+- **🔒 Seguridad**: Ayuda a detectar configuraciones inseguras
+- **⚡ Eficiencia**: Ahorra tiempo evitando builds fallidos
+
+
+### 🚀 Uso básico
+
+Por defecto, los checks se ejecutan automáticamente cuando haces un build:
+
+
+```bash
+docker build . -f Dockerfile.checks
+```
+
+Deberías ver warnings o errores si tu Dockerfile no sigue las mejores prácticas.
+
+
+### 🔍 Verificar sin construir
+
+Para ejecutar solo los checks sin construir la imagen:
+
+```bash
+docker build --check . -f Dockerfile.checks
+```
+
+Si quieres que la build falle en caso de warnings añade estas dos líneas al inicio de tu Dockerfile:
+
 
 ```dockerfile
 # syntax=docker/dockerfile:1
-FROM node:20-alpine AS builder
+# check=error=true
+```
+O en el Dockerfile:
 
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run test
-RUN npm run build
-
-FROM node:20-alpine
-
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
-
-RUN chown -R node:node /app
-USER node
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node healthcheck.js
-
-EXPOSE 3000
-CMD ["npm", "start"]
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=experimental=all
 ```
 
-#### 🚀 Comandos de Copilot Chat
+#### 🔧 Combinando parámetros
+
+Puedes combinar múltiples configuraciones separándolas con punto y coma:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+# check=skip=JSONArgsRecommended;error=true;experimental=all
+```
+
+Por otro lado, si tienes instalada la extensión Docker DX también verás los warnings y errores directamente en el editor de Visual Studio Code. 🖥️
+
+
+### 🔧 Checks más comunes
+
+| Check | Descripción | Ejemplo problemático | Solución |
+|-------|-------------|---------------------|----------|
+| **JSONArgsRecommended** | CMD/ENTRYPOINT deberían usar formato JSON | `CMD npm start` ❌ | `CMD ["npm", "start"]` ✅ |
+| **StageNameCasing** | Nombres de stage deberían estar en minúsculas | `FROM alpine AS BASE_STAGE` ❌ | `FROM alpine AS base` ✅ |
+| **FromAsCasing** | La palabra AS debería estar en mayúsculas | `FROM alpine as base` ❌ | `FROM alpine AS base` ✅ |
+| **NoEmptyCommand** | Comandos no deberían estar vacíos | `RUN` ❌ | `RUN echo "hello"` ✅ |
+| **UndefinedVariable** | Variables no definidas en ARG | `RUN echo $UNDEFINED` ❌ | `ARG MY_VAR` y luego usar ✅ |
+| **SeeminglyEmptyBase** | Imagen base muy grande | `FROM ubuntu` ❌ | `FROM alpine` ✅ |
+| **OfficialRepositoriesDiscouraged** | Usar registros que no sean oficiales | - | Usar tags específicos |
+
+### 📊 Integración con CI/CD
+
+#### GitHub Actions
+
+```yaml
+name: Docker Build with Checks
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Run build checks
+        uses: docker/build-push-action@v6.6.0
+        with:
+          context: .
+          push: false
+          build-args: |
+            BUILDKIT_DOCKERFILE_CHECK=error=true
+```
+
+Los checks aparecerán como anotaciones en las pull requests de GitHub! 📝
+
+### 💡 Mejores prácticas
+
+1. **🎯 Usa checks desde el inicio**: Integra checks en tu workflow de desarrollo
+2. **⚠️ Trata warnings como errores**: Usa `check=error=true` en producción
+3. **📋 Documenta excepciones**: Si skips checks, documenta por qué
+4. **🔄 Actualiza regularmente**: Los checks evolucionan con las mejores prácticas
+5. **👥 Estandariza en equipo**: Usa la misma configuración en todo el proyecto
+
+
+---
+
+## 📦 Publicar nuestras imágenes en Docker Hub
+
+Para poder publicar nuestras imágenes en Docker Hub, lo primero que necesitamos es tener una cuenta en Docker Hub. Si no tienes una, puedes crear una cuenta gratuita en [https://hub.docker.com/](https://hub.docker.com/) 🆓. Hay un plan gratuito que te permite tener ilimitados repositorios públicos y un repositorio privado.
+
+Una vez que la tengas, necesitas hacer login bien a través del terminal:
 
 ```bash
-# Refine una sugerencia
-/fix "Error en la línea X"
+docker login
+```
 
-# Explicar el código
-/explain
+O bien a través de **Docker Desktop** 🖥️.
 
-# Generar tests
-/test
+### 🏷️ Bautizar las imagenes correctamente
 
-# Optimizar
-/optimize
+Para poder publicar nuestras imágenes en Docker Hub, necesitamos bautizarlas correctamente. El nombre de la imagen debe seguir el siguiente formato:
+
+```
+<nombre-de-usuario-o-organización-en-docker-hub>/<nombre-de-la-imagen>:<tag>
+```
+
+Por ejemplo, si mi usuario en Docker Hub es `0GiS0` y la imagen se llama `doom-web` y le quiero poner el tag `v1`, el nombre de la imagen sería:
+
+```
+0GiS0/doom-web:v1
+```
+
+Si no especificamos un tag, Docker utilizará el tag `latest` por defecto.
+
+Vamos a probarlo:
+
+```bash
+docker build -t 0gis0/doom-web:v1 .
+```
+
+Una vez que tenemos la imagen creada, necesitamos hacer push de la imagen a Docker Hub:
+
+```bash
+docker push 0gis0/doom-web:v1
+```
+
+También se puede hacer en un único paso:
+
+```bash
+docker build -t 0gis0/doom-web:v1 . --push
+```
+
+Si ahora vamos a Docker Hub, deberíamos ver la imagen que acabamos de subir. 🎉
+
+También puedes añadir alias a las imágenes existentes para que no tengas que volver a hacer el proceso de build:
+
+```bash
+docker tag doom-web:v1 0gis0/doom-web:v2
+docker push 0gis0/doom-web:v2
+```
+
+### 🏷️ Nomenclatura de tags
+
+Es una buena práctica usar tags significativos:
+
+```bash
+# Tags por versión
+docker build -t tu-usuario/doom-web:1.0.0 .
+docker build -t tu-usuario/doom-web:1.0 .
+docker build -t tu-usuario/doom-web:latest .
+
+# Tags por fecha
+docker build -t tu-usuario/doom-web:2024-11-01 .
+
+# Tags por ambiente
+docker build -t tu-usuario/doom-web:prod .
+docker build -t tu-usuario/doom-web:staging .
+docker build -t tu-usuario/doom-web:dev .
+
+# Tags descriptivos
+docker build -t tu-usuario/doom-web:v1.0-alpine .
+docker build -t tu-usuario/doom-web:v1.0-ubuntu .
+```
+
+### 🔗 Crear alias de imágenes
+
+```bash
+# Crear alias sin rebuildar
+docker tag doom-web:v1 tu-usuario/doom-web:latest
+docker tag doom-web:v1 tu-usuario/doom-web:stable
+
+# Push de todos los alias
+docker push tu-usuario/doom-web:v1
+docker push tu-usuario/doom-web:latest
+docker push tu-usuario/doom-web:stable
+```
+
+### 📊 Ver información de push
+
+```bash
+# Ver progreso detallado
+docker push -a tu-usuario/doom-web
 ```
 
 ---
@@ -2133,304 +1454,6 @@ docker-build:
 
 ---
 
-## � Resumen de lo aprendido que te permite validar tu configuración de build y realizar una serie de verificaciones antes de ejecutar tu build. Es como un **linter avanzado** para tu Dockerfile y opciones de build, o un modo de **dry-run** para builds. 🎯
-
-### 🌟 ¿Por qué usar Build Checks?
-
-- **✅ Validación temprana**: Detecta problemas antes de ejecutar el build
-- **📋 Mejores prácticas**: Asegura que tu Dockerfile sigue las recomendaciones actuales
-- **🚫 Anti-patrones**: Identifica patrones problemáticos en tu configuración
-- **🔒 Seguridad**: Ayuda a detectar configuraciones inseguras
-- **⚡ Eficiencia**: Ahorra tiempo evitando builds fallidos
-
-### 🛠️ Requisitos
-
-- **Buildx**: versión 0.15.0 o posterior
-- **docker/build-push-action**: versión 6.6.0 o posterior
-- **docker/bake-action**: versión 5.6.0 o posterior
-
-### 🚀 Uso básico
-
-Por defecto, los checks se ejecutan automáticamente cuando haces un build:
-
-```bash
-docker build .
-```
-
-**Salida de ejemplo:**
-```
-[+] Building 3.5s (11/11) FINISHED
-...
-
-1 warning found (use --debug to expand):
-  - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 7)
-```
-
-### 🔍 Verificar sin construir
-
-Para ejecutar solo los checks sin construir la imagen:
-
-```bash
-docker build --check .
-```
-
-**Ejemplo de salida detallada:**
-```
-[+] Building 1.5s (5/5) FINISHED
-=> [internal] connecting to local controller
-=> [internal] load build definition from Dockerfile
-=> => transferring dockerfile: 253B
-
-JSONArgsRecommended - https://docs.docker.com/go/dockerfile/rule/json-args-recommended/
-JSON arguments recommended for ENTRYPOINT/CMD to prevent unintended behavior related to OS signals
-Dockerfile:7
---------------------
-5 |
-6 |     COPY index.js .
-7 | >>> CMD node index.js
-8 |
---------------------
-```
-
-### 📝 Ejemplo práctico con nuestro proyecto doom-web
-
-Vamos a probar los checks con nuestro Dockerfile actual:
-
-```bash
-cd doom-web
-docker build --check .
-```
-
-Si hay warnings, puedes ver más detalles con:
-
-```bash
-docker --debug build --check .
-```
-
-### ⚙️ Configuración avanzada
-
-#### 🚨 Fallar el build en violaciones
-
-Puedes configurar que el build falle cuando se encuentren violaciones usando la directiva `check=error=true`:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=error=true
-
-FROM node:20-alpine
-COPY package*.json ./
-RUN npm install
-COPY . .
-CMD npm start  # Esto generará un warning que ahora será un error
-```
-
-También puedes configurarlo vía CLI:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=error=true" .
-```
-
-#### 🙈 Omitir checks específicos
-
-Para saltar checks específicos:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=JSONArgsRecommended,StageNameCasing
-
-FROM alpine AS BASE_STAGE
-CMD echo "Hello, world!"
-```
-
-O vía CLI:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=JSONArgsRecommended" .
-```
-
-Para saltar todos los checks:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=all
-```
-
-#### 🧪 Checks experimentales
-
-Para habilitar checks experimentales:
-
-```bash
-docker build --build-arg "BUILDKIT_DOCKERFILE_CHECK=experimental=all" .
-```
-
-O en el Dockerfile:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=experimental=all
-```
-
-#### 🔧 Combinando parámetros
-
-Puedes combinar múltiples configuraciones separándolas con punto y coma:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=skip=JSONArgsRecommended;error=true;experimental=all
-```
-
-### 🎮 Aplicando checks a nuestro proyecto doom-web
-
-Crear un `Dockerfile.checked` que siga las mejores prácticas:
-
-```dockerfile
-# syntax=docker/dockerfile:1
-# check=error=true
-
-FROM node:20-alpine AS base
-
-LABEL maintainer="Gisela Torres <gisela.torres@returngis.net>"
-
-WORKDIR /usr/src/app
-
-# Mejores prácticas para el manejo de dependencias
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
-
-# Copiar archivos de la aplicación
-COPY . .
-
-# Exponer puerto
-EXPOSE 3000
-
-# Usar user no-root por seguridad
-RUN chown -R node:node /usr/src/app
-USER node
-
-# Usar formato JSON para CMD (evita warnings)
-CMD ["npm", "start"]
-```
-
-Probar los checks:
-
-```bash
-docker build --check -f Dockerfile.checked .
-```
-
-### 🎯 Integración con Docker Bake
-
-También puedes usar checks con Docker Bake añadiendo la configuración en tu `docker-bake.hcl`:
-
-```hcl
-target "doom-web-checked" {
-  context = "."
-  dockerfile = "Dockerfile.checked"
-  tags = ["doom-web:checked"]
-  args = {
-    BUILDKIT_DOCKERFILE_CHECK = "error=true"
-  }
-}
-
-target "doom-web-dry-run" {
-  context = "."
-  dockerfile = "Dockerfile"
-  args = {
-    BUILDKIT_DOCKERFILE_CHECK = "error=true;experimental=all"
-  }
-  call = "check"  # Solo ejecutar checks, no build
-}
-```
-
-Ejecutar:
-
-```bash
-# Solo checks
-docker buildx bake doom-web-dry-run --check
-
-# Build con checks estrictos
-docker buildx bake doom-web-checked
-```
-
-### 🔧 Checks más comunes
-
-| Check | Descripción | Ejemplo problemático |
-|-------|-------------|---------------------|
-| **JSONArgsRecommended** | CMD/ENTRYPOINT deberían usar formato JSON | `CMD npm start` ❌ |
-| **StageNameCasing** | Nombres de stage deberían estar en minúsculas | `FROM alpine AS BASE_STAGE` ❌ |
-| **FromAsCasing** | La palabra AS debería estar en mayúsculas | `FROM alpine as base` ❌ |
-| **NoEmptyCommand** | Comandos no deberían estar vacíos | `RUN` ❌ |
-| **UndefinedVariable** | Variables no definidas en ARG | `RUN echo $UNDEFINED_VAR` ❌ |
-
-### 📊 Integración con CI/CD
-
-#### GitHub Actions
-
-```yaml
-name: Docker Build with Checks
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Build with checks
-        uses: docker/build-push-action@v6.6.0
-        with:
-          context: .
-          push: false
-          build-args: |
-            BUILDKIT_DOCKERFILE_CHECK=error=true
-```
-
-Los checks aparecerán como anotaciones en las pull requests de GitHub! 📝
-
-### 💡 Mejores prácticas
-
-1. **🎯 Usa checks desde el inicio**: Integra checks en tu workflow de desarrollo
-2. **⚠️ Trata warnings como errores**: Usa `check=error=true` en producción
-3. **📋 Documenta excepciones**: Si skips checks, documenta por qué
-4. **🔄 Actualiza regularmente**: Los checks evolucionan con las mejores prácticas
-5. **👥 Estandariza en equipo**: Usa la misma configuración en todo el proyecto
-
-### 🎯 Ejercicio práctico
-
-1. Ejecuta checks en nuestro Dockerfile actual:
-   ```bash
-   cd doom-web
-   docker build --check .
-   ```
-
-2. Corrige los warnings encontrados creando un `Dockerfile.best-practices`
-
-3. Añade la configuración a tu `docker-bake.hcl`:
-   ```hcl
-   target "doom-web-validated" {
-     context = "."
-     dockerfile = "Dockerfile.best-practices"
-     tags = ["doom-web:validated"]
-     args = {
-       BUILDKIT_DOCKERFILE_CHECK = "error=true"
-     }
-   }
-   ```
-
-4. Prueba el build con checks estrictos:
-   ```bash
-   docker buildx bake doom-web-validated
-   ```
-
-> [!TIP]
-> 💡 **Consejo**: Instala la [extensión de Docker para VS Code](https://marketplace.visualstudio.com/items?itemName=docker.docker) para obtener linting en tiempo real de tu Dockerfile.
-
----
-
----
-
 ## 📚 Resumen de lo aprendido
 
 En este módulo hemos cubierto los aspectos fundamentales de la contenerización de aplicaciones con Docker:
@@ -2465,36 +1488,7 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
    - Autenticación y push de imágenes
    - Gestión de tags y versiones
 
-6. **🔍 Docker Build Checks**: Validación de configuración de builds
-   - Detección temprana de problemas
-   - Asegura el cumplimiento de mejores prácticas
-   - Identificación de configuraciones inseguras
 
-### 🛠️ Herramientas exploradas:
-
-- **Docker CLI**: Comandos básicos de construcción
-- **VS Code Extension**: Generación automática de Dockerfiles
-- **IA Tools**: Microsoft Edge Copilot y GitHub Copilot
-- **Docker Buildx**: Funcionalidades avanzadas con Bake
-- **Docker Build Checks**: Validación y linting de Dockerfiles
-- **Docker Build Checks**: Validación y verificación de Dockerfiles
-
-### ✨ Beneficios obtenidos:
-
-- ⚡ **Eficiencia**: Builds más rápidos y optimizados
-- 🔒 **Seguridad**: Imágenes mínimas con menos superficie de ataque
-- 👥 **Colaboración**: Configuraciones compartidas y consistentes
-- 🌐 **Portabilidad**: Aplicaciones que funcionan en cualquier entorno
-- 📈 **Escalabilidad**: Base sólida para orquestación y microservicios
-
-### 🎯 Próximos pasos recomendados:
-
-1. Experimentar con diferentes estrategias de multi-stage
-2. Implementar Docker Bake en proyectos reales
-3. Integrar Docker Build Checks en el workflow de desarrollo
-4. Explorar Docker Compose para aplicaciones multi-contenedor
-5. Aprender sobre orquestación con Kubernetes
-6. Profundizar en seguridad de contenedores
 
 > [!SUCCESS]
 > 🎉 **¡Felicitaciones!** Ya dominas los fundamentos de la contenerización. Estás listo para el siguiente nivel: orquestación de contenedores.
