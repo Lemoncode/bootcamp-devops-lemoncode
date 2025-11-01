@@ -879,5 +879,13 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
    - Mejor organización para proyectos complejos
 
 
+## 🎓 Ejercicios propuestos
+
+
+
+
+
+
+
 > [!SUCCESS]
 > 🎉 **¡Felicitaciones!** Ya dominas los fundamentos de la contenerización. Estás listo para el siguiente nivel: orquestación de contenedores.
