@@ -7,7 +7,7 @@ WORKDIR /app
 #Copio los archivos package.json y package-lock,son(el asterisco si exsite) en el raíz de mi directorio de trabajo, /app.
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 #Instalo las dependencias de mi aplicación, ejecutando el comando npm install
 RUN npm install 
