@@ -881,10 +881,28 @@ En este módulo hemos cubierto los aspectos fundamentales de la contenerización
 
 ## 🎓 Ejercicios propuestos
 
+### 🐍 Aplicación de ejemplo: Confetti Party Web
+
+Tu misión será contenerizar una aplicación web simple en Python que se encuentra en el directorio `confetti-web`.
+
+Como ya te comenté al inicio de esta clase, siempre es recomendable ejecutar la aplicación localmente antes de contenerizarla para asegurarte de que funciona correctamente.
+
+```bash
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Ejecutar la aplicación
+python app.py
+```
+
+Haz clic en la URL local que te muestra la aplicación para verificar que la aplicación funciona correctamente.
 
 
+## 🌍 Ejercicio 2: Distribución multi-arquitectura y publicación
 
+### 📋 Objetivo
 
+Crear y publicar una imagen multi-arquitectura, de la aplicación anterior, en Docker Hub con al menos soporte para `linux/amd64` y `linux/arm64`. Implementar una estrategia de tagging efectiva y utilizar Docker Build Checks para asegurar la calidad de la imagen. Además, crear una configuración de Docker Bake para facilitar futuras construcciones.
 
 
 > [!SUCCESS]
