@@ -127,7 +127,9 @@ docker volume ls
 Si quisieramos utilizar este volumen en un contenedor, podríamos hacerlo de la siguiente manera:
 
 ```bash
-docker run -d --name halloween-with-volume --mount source=halloween-data,target=/usr/share/nginx/html/ -p 8083:80 nginx
+docker run -d --name halloween-with-volume \
+--mount source=halloween-data,target=/usr/share/nginx/html/ \
+-p 8083:80 nginx
 ```
 
 En este caso el volumen `halloween-data` se ha montado en la carpeta `/usr/share/nginx/html/` del contenedor `halloween-volume`.
@@ -143,7 +145,9 @@ docker cp web-content/. halloween-with-volume:/usr/share/nginx/html/
 También es posible crear un contenedor que a su vez cree un volumen. ✨
 
 ```bash
-docker run -d --name halloween-demo -v web-data:/usr/share/nginx/html/ -p 8084:80 nginx
+docker run -d --name halloween-demo \
+-v web-data:/usr/share/nginx/html/ \
+-p 8084:80 nginx
 ```
 
 En este caso, al ejecutarse el contenedor `halloween-demo` se creará un volumen llamado `web-data` que se montará en la carpeta `/usr/share/nginx/html/` del contenedor.
@@ -154,18 +158,39 @@ Y de nuevo, añadir los datos a nuestro volumen:
 docker cp web-content/. halloween-demo:/usr/share/nginx/html/
 ```
 
-### Asociar el volúmens a varios contenedores
+<!-- Contenido fuera de los vídeos de introducción -->
 
-Puedes asociar varios contenedores al mismo volumen a la vez 🔄
+### Asociar el volumen a varios contenedores
+
+Otro escenario en el que te puedes encontrar es que necesites asociar varios contenedores al mismo volumen a la vez 🔄
+
+Esto es útil cuando tienes varios contenedores que necesitan acceder a los mismos datos. Un ejemplo típico es cuando tienes un contenedor que genera datos y otro que los consume, que puede ser algo tan sencillo como un contenedor que genera logs y otro que los analiza.
+
+Por ejemplo vamos a crear un nuevo servidor nginx que almacene sus logs en un volumen con otro contenedor que lea esos logs:
 
 ```bash
-docker container run -dit --name second-halloween-web --mount source=halloween-data,target=/usr/share/nginx/html -p 8085:80 nginx
+
+cd 01-contenedores/contenedores-iv
+
+# Contenedor que genera logs
+docker run -d --name nginx-sharing-logs \
+  --mount source=halloween-logs,target=/logs \
+  -v "$PWD/nginx.conf":/etc/nginx/nginx.conf:ro \
+  -p 8086:80 nginx sh -c "mkdir -p /logs && chown -R nginx:nginx /logs && exec nginx -g 'daemon off;'"
+
+
+
+# Contenedor que lee los logs
+docker run --name container-reading-nginx-logs --rm -it \
+  --mount source=halloween-logs,target=/logs,readonly \
+  alpine sh -lc 'apk add --no-cache multitail >/dev/null && \
+                 multitail /logs/access.log -I /logs/error.log'
 ```
 
 Si quisieras comprobar a qué contenedores está asociado un volumen:
 
-```bash	
-docker ps --filter volume=halloween-data --format "table {{.Names}}\t{{.Mounts}}"
+```bash
+docker ps --filter volume=halloween-logs --format "table {{.Names}}\t{{.Mounts}}"
 ```
 
 ### Inspeccionar el volumen
@@ -173,8 +198,35 @@ docker ps --filter volume=halloween-data --format "table {{.Names}}\t{{.Mounts}}
 Al inspeccionar cualquiera de los volúmenes podemos ver cuál es la ruta donde se están almacenando: 🔍
 
 ```bash
-docker volume inspect halloween-data
+docker volume inspect halloween-logs
 ```
+
+### Ver el contenido de un volumen en Docker Desktop
+
+También puedes ver el contenido de un volumen directamente desde Docker Desktop. Solo tienes que ir a la sección de Volúmenes, seleccionar el volumen que quieres y podrás ver el contenido del mismo
+
+![Docker Desktop Volúmenes](imagenes/Explorar%20volumen%20en%20Docker%20Desktop.png)
+
+### Ver el contenido de un volumen desde la línea de comandos
+
+Si quieres ver el contenido de un volumen desde la línea de comandos, puedes crear un contenedor temporal que monte el volumen y te permita explorar su contenido. Por ejemplo:
+
+```bash
+docker run --rm -it \
+  --mount source=halloween-logs,target=/data \
+  alpine sh
+```
+
+Y dentro de este escribimos:
+
+```bash
+ls -la /data
+```
+
+### Ver el contenido de un volumen desde Visual Studio Code
+
+Si tienes la extensión de Docker instalada en Visual Studio Code, puedes explorar el contenido de un volumen directamente desde el editor. Solo tienes que ir a la sección de Docker, seleccionar Volúmenes, hacer clic derecho sobre el volumen que quieres explorar y seleccionar "Explore Volume". Esto abrirá una nueva ventana del editor con el contenido del volumen.
+
 
 ### Eliminar un volumen específico
 
@@ -196,7 +248,7 @@ docker volume prune -f
 
 ### 📦 Backup y restore de volúmenes
 
-Los volúmenes son críticos para la persistencia de datos. Aquí te mostramos cómo hacer backup y restore:
+Los volúmenes son críticos para la persistencia de datos, por lo que es importante saber cómo hacer backup y restaurar datos en caso de fallo. Aquí te muestro cómo hacerlo utilizando un contenedor temporal con la imagen `alpine` y el comando `tar`.
 
 #### Crear un backup de un volumen
 
@@ -233,6 +285,27 @@ docker run --rm -v halloween-data:/source -v new-volume:/destination alpine \
   sh -c "cp -r /source/* /destination/"
 ```
 
+### Exportar/Importar volumenes desde Docker Desktop
+
+Ahora desde Docker Desktop también puedes exportar un volumen directamente desde la interfaz gráfica. Solo tienes que ir a la sección de Volúmenes, seleccionar el volumen que quieres exportar y tienes una nueva sección llamada **Exports**
+
+![Docker Desktop Exportar Volumen](imagenes/Exportar%20volumenes%20desde%20la%20interfaz%20de%20Docker%20Desktop.png)
+
+
+La forma programada requiere una suscripción de pago pero el **Quick export** es gratuito. Si haces clic sobre el mismo verás que tienes diferentes opciones para exportar el volumen:
+
+![Docker Desktop Quick Export Volumen](imagenes/Exportar%20los%20datos%20de%20un%20volumen%20en%20un%20tar.png)
+
+y luego si creas o seleccionas un volumen puedes hacer importación o restauración de los datos:
+
+![Docker Desktop Importar Volumen](imagenes/Boton%20import%20dentro%20de%20los%20volúmenes.png)
+
+y si haces clic sobre el mismo podrás seleccionar el archivo `.tar` que has exportado previamente o incluso si lo has subido a tu Docker Hub puedes también indicarselo
+
+![Opciones de importación dentro de un volumen](imagenes/Opciones%20de%20importación%20dentro%20de%20un%20volumen.png)
+
+
+
 ### 💡 Comparación: Bind mounts vs Volúmenes
 
 | Característica | Bind Mounts | Volúmenes |
@@ -249,14 +322,18 @@ docker run --rm -v halloween-data:/source -v new-volume:/destination alpine \
 La última forma de almacenar datos en Docker es utilizando un tmpfs mount. Un tmpfs mount es un sistema de archivos temporal que se almacena en la memoria RAM de tu host. ⚡ Esto significa que si apagas tu máquina, perderás todos los datos que hayas almacenado en tu contenedor.
 
 ```bash
-docker run -dit --name tmptest --mount type=tmpfs,destination=/usr/share/nginx/html/ -p 8086:80 nginx
+docker run -dit --name tmptest \
+--mount type=tmpfs,destination=/usr/share/nginx/html/ \
+-p 8086:80 nginx
+
 docker container inspect tmptest 
 ```
 
 También se puede usar el parámetro `--tmpfs`:
 
 ```bash	
-docker run -dit --name tmptest2 --tmpfs /app nginx:latest
+docker run -dit --name tmptest2 \
+--tmpfs /app nginx:latest
 ```
 
 ```bash	
@@ -427,18 +504,6 @@ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}"
 docker stats --no-stream ping-service
 ```
 
-**Alertas básicas con scripts:**
-
-```bash
-# Script simple para alertar si CPU > 80%
-#!/bin/bash
-CPU_USAGE=$(docker stats --no-stream --format "{{.CPUPerc}}" ping-service | sed 's/%//')
-if (( $(echo "$CPU_USAGE > 80" | bc -l) )); then
-    echo "⚠️ ALERTA: CPU al ${CPU_USAGE}%"
-fi
-```
-
-
 ## 💾 Limitar recursos: CPU y Memoria
 
 Es importante limitar los recursos que puede usar un contenedor para evitar que consuma todos los recursos del host y afecte a otros contenedores o servicios.
@@ -466,7 +531,7 @@ docker run -d --memory="512m" --name web -p 8080:80 httpd
 Especifica cuántos núcleos de CPU puede usar el contenedor:
 
 ```bash
-docker run -d --cpus="1.5" --name web -p 8080:80 httpd
+docker run -d --cpus="1.5" --name web-limited -p 8090:80 httpd
 ```
 
 **Ejemplos de uso:**
@@ -481,10 +546,10 @@ docker run -d --cpus="1.5" --name web -p 8080:80 httpd
 
 ### 📋 Limitar CPU Priority (`--cpu-shares`)
 
-Controla la prioridad de CPU en caso de contención:
+Cuando hay competición por CPU entre contenedores, este parámetro controla la prioridad de CPU en caso de contención:
 
 ```bash
-docker run -d --cpu-shares=1024 --name web -p 8080:80 httpd
+docker run -d --cpu-shares=1024 --name web-cpu-shares -p 8091:80 httpd
 ```
 
 **Por defecto:** Cada contenedor tiene 1024 shares
@@ -510,11 +575,13 @@ docker run -d \
 - ✅ Máximo 1.5 núcleos de CPU
 - ✅ Prioridad normal en caso de contención
 
+Esto es útil para asegurar que tu servidor web no consuma todos los recursos del host y afecte a otros servicios. Y de la misma forma que si hay un contenedor que es más importante que otro, puedes ajustar los `--cpu-shares` para darle más prioridad.
+
 ### 📊 Ver uso de recursos en tiempo real
 
 ```bash
 # Ver estadísticas de un contenedor específico
-docker stats web
+docker stats web-limited
 
 # Ver estadísticas de todos los contenedores
 docker stats
@@ -535,9 +602,9 @@ docker stats --no-stream
 **⚠️ Importante:**
 - Si no especificas límites, el contenedor puede consumir todos los recursos
 - Establecer límites muy bajos puede hacer que la aplicación vaya lenta
-- Monitorea siempre el uso real vs los límites establecidos
+- Monitoriza siempre el uso real vs los límites establecidos
 
-**💡 Recomendación:** Para aplicaciones en producción, siempre establece límites de memoria y CPU para proteger la estabilidad del sistema.
+**💡 Recomendación:** Para aplicaciones en producción, siempre establece límites de memoria y CPU para proteger la estabilidad del sistema. Aunque es cierto que si estás en un entorno productivo posiblemente uses un clúster de contenedores, como Kubernetes o Docker Swarm.
 
 ## 🔌 Docker extensions
 
@@ -554,59 +621,11 @@ Existen varias extensiones de Docker que nos permiten monitorizar nuestros conte
 - **Volumes Backup & Share**: Backup y compartir volúmenes fácilmente
 - **Docker Scout**: Análisis de vulnerabilidades en imágenes
 
-### 🎯 Ejercicios prácticos para consolidar
+### 🎯 Ejercicios sugeridos
 
-**Ejercicio 1: Setup de desarrollo completo**
-```bash
-# 1. Crear un bind mount para desarrollo web
-# 2. Editar archivos en vivo y ver cambios
-# 3. Configurar logs en tiempo real
-# 4. Monitorizar recursos mientras desarrollas
-```
 
-**Ejercicio 2: Gestión de datos empresarial**
-```bash
-# 1. Crear volúmenes para datos persistentes
-# 2. Hacer backup de volúmenes
-# 3. Simular fallo y recuperación
-# 4. Compartir datos entre múltiples servicios
-```
 
-**Ejercicio 3: Optimización y monitorización**
-```bash
-# 1. Usar tmpfs para cachés temporales
-# 2. Monitorizar uso de recursos
-# 3. Analizar logs para troubleshooting
-# 4. Limpiar sistema manteniendo lo esencial
-```
+
 
 > [!TIP]
 > 💡 **Consejo final**: En producción, siempre usa volúmenes para datos críticos, bind mounts solo para desarrollo, y tmpfs para datos temporales que requieren alto rendimiento.
-
-<!--
-## ⏱️ Distribución temporal sugerida (3 horas)
-
-**Primera hora (60 min):**
-- 🔗 Bind mounts completo (45 min)
-  - Explicación conceptual (10 min)
-  - Práctica con --mount (15 min) 
-  - Práctica con -v (10 min)
-  - Read-only bind mount (10 min)
-- ☕ Mini break (15 min)
-
-**Segunda hora (60 min):**
-- 💾 Volúmenes - Parte 1 (60 min)
-  - Crear y usar volúmenes básicos (30 min)
-  - Volúmenes automáticos (15 min)
-  - Compartir entre contenedores (15 min)
-
-**Tercera hora (60 min):**
-- 💾 Volúmenes - Parte 2 (20 min)
-  - Inspección y limpieza
-- 🧠 Tmpfs mount (15 min)
-- 📊 Monitorización (20 min)
-  - Sesión práctica con docker events, stats, logs
-- 🔌 Docker extensions + tiempo libre (5 min)
-
-**Tiempo de buffer: ~30 minutos** - Perfecto para experimentación extra
--->
