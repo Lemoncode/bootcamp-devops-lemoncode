@@ -2,32 +2,31 @@
 
 ![Docker](imagenes/Cómo%20gestionar%20el%20almacenamiento%20en%20Docker.jpeg)
 
-## 📋 Agenda
+¡Hola lemoncoder 👋🏻🍋! En algún momento tus contenedores morirán 😥 y tendrás que volver a crearlos. Si no has guardado los datos que tenían, perderás toda la información que almacenaban o generaron. Por eso es importante saber cómo gestionar el almacenamiento en Docker y en esta clase vamos a preocuparnos de ello.
 
-- [🔗 Bind mounts](#-bind-mounts)
-  - [Crear bind mount con --mount](#crear-bind-mount-con---mount)
-  - [Crear bind mount con -v](#crear-bind-mount-con--v)
-  - [Bind mount read-only](#usar-el-bind-mount-como-read-only)
-- [💾 Volúmenes](#-volúmenes)
-  - [Crear un volumen](#crear-un-volumen)
-  - [Usar volumen en contenedor](#usar-volumen-en-contenedor)
-  - [Crear contenedor con volumen automático](#crear-un-contenedor-que-a-su-vez-crea-un-volumen)
-  - [Compartir volúmenes entre contenedores](#asociar-el-volúmens-a-varios-contenedores)
-  - [Inspeccionar volúmenes](#inspeccionar-el-volumen)
-  - [Eliminar volúmenes](#eliminar-un-volumen-específico)
-- [🧠 Tmpfs mount](#-tmpfs-mount)
-- [📊 Monitorización](#-monitorización)
-  - [Eventos en tiempo real](#eventos)
-  - [Métricas de contenedores](#métricas-de-un-contenedor)
-  - [Uso de disco](#cuánto-espacio-estamos-usando-del-disco-por-culpa-de-docker)
-  - [Logs de contenedores](#cómo-ver-los-logs-de-un-contenedor)
-- [🔌 Docker extensions](#-docker-extensions)
+
+## 🎬 Vídeos de la introducción en el campus
+
+Se asume que has visto los siguientes vídeos para comenzar con este módulo:
+
+| # | Tema | Contenido Clave |
+|---|------|-----------------|
+| 1 | Teoría Almacenamiento | Tipos (bind mount, volumen, tmpfs), casos de uso, performance, lifecycle y copia inicial de datos en volúmenes vacíos. |
+| 2 | Demo 1: Bind mount | Montaje de carpeta local web-content en contenedor nginx para hot-reload de contenido estático. |
+| 3 | Demo 2: Volume | Creación y uso de volúmenes named, ver copia inicial, inspección y persistencia tras recrear contenedor. |
+| 4 | Demo 3 - Tmpfs |Uso teórico/práctico de --mount type=tmpfs para datos efímeros en memoria y limitaciones en Docker Desktop. |
+| 5 | Teoría monitorización | Visión general: eventos, métricas de recursos, logs, buenas prácticas de observabilidad en entornos container. |
+| 6 | Demo docker events | Escucha en tiempo real de lifecycle de contenedores y creación/eliminación de recursos. |
+| 7 | Demo docker stats | Lectura de uso de CPU, memoria, red y bloqueos para varios contenedores simultáneamente. |
+| 8 | Demo  docker logs | Uso de docker logs -f, rotación básica, timestamps y filtrado. |
 
 ---
 
-En algún momento tus contenedores morirán 😥 y tendrás que volver a crearlos. Si no has guardado los datos que tenían, perderás toda la información que almacenaban o generaron. Por eso es importante saber cómo gestionar el almacenamiento en Docker.
+# 📂 Tipos de almacenamiento en Docker
 
-Existen diferentes formas de almacenar datos en Docker. En este módulo vamos a ver las siguientes:
+Antes de nada es importante que sepas que **la forma de asignar almacenamiento externo a un contenedor es mediante lo que se conoce montajes (mounts)**. Un montaje es una forma de conectar una carpeta del host (tu máquina) con una carpeta del contenedor. De esta forma, el contenedor puede leer y escribir datos en esa carpeta externa. Si vienes de Linux posiblemente te suene el concepto. Piensalo como si hicieras un `mount` en Linux para montar un disco externo o una carpeta compartida en tu sistema de archivos.
+
+Pues bien, en el mundo de los contenedores existen tres tipos principales de montajes:
 
 - 🔗 **Bind mounts**: Enlace directo entre carpetas del host y contenedor
 - 💾 **Volúmenes**: Almacenamiento persistente gestionado por Docker
@@ -44,14 +43,17 @@ Para crear un bind mount, utiliza la opción `--mount` o `-v` al crear un conten
 ```bash
 cd 01-contenedores/contenedores-iv
 
-docker run -d --name halloween-web --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/ -p 8080:80 nginx
+docker run -d \
+--name halloween-web \
+--mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/ \
+-p 8080:80 nginx
 ```
 
 Si analizamos este comando tenemos:
 
 - 🐳 `docker run`: Crea y arranca un contenedor.
 - 🌙 `-d`: Lo hace en segundo plano.
-- 🏷️ `--name devtest`: Le pone nombre al contenedor.
+- 🏷️ `--name halloween-web`: Le pone nombre al contenedor.
 - 📁 `--mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/`: Crea un bind mount. El tipo de montaje es bind, la carpeta de origen es la carpeta actual (`$(pwd)`) más `web-content` y la carpeta de destino es `/usr/share/nginx/html/`.
 
 > [!NOTE]
@@ -62,21 +64,13 @@ Si analizamos este comando tenemos:
 Si quisieras hacerlo con `-v`:
 
 ```bash
-docker run -d --name halloween-web-v -v "$(pwd)"/web-content:/usr/share/nginx/html/ -p 8081:80 nginx
+docker run -d --name halloween-web-v \
+-v "$(pwd)"/web-content:/usr/share/nginx/html/ \
+-p 8081:80 nginx
 ```
 
 🔄 Si cambias el contenido de la carpeta `web-content` en tu máquina local, también cambiará en la carpeta `/usr/share/nginx/html/` en tu contenedor.
 
-### 🚀 Ejemplo práctico: Desarrollo en vivo
-
-Vamos a ver el poder de los bind mounts para desarrollo. Con el contenedor corriendo, edita el archivo `web-content/index.html`:
-
-```bash
-# Edita el archivo (puedes usar cualquier editor)
-echo "<h1>¡Cambio en vivo!</h1><p>Hora actual: $(date)</p>" > web-content/index.html
-
-# Recarga la página en http://localhost:8081 y verás el cambio inmediatamente
-```
 
 **🎯 Casos de uso reales para bind mounts:**
 - **Desarrollo web**: Cambios instantáneos sin rebuild
@@ -94,7 +88,9 @@ echo "<h1>¡Cambio en vivo!</h1><p>Hora actual: $(date)</p>" > web-content/index
 También puedes montar un bind mount como read-only. Esto significa que desde tu máquina podrás cambiar el contenido sin problemas pero desde dentro del contenedor no se podrá. 🔒 Para hacerlo, añade la opción `readonly` al comando `--mount`. Por ejemplo:
 
 ```bash
-docker run -d --name halloween-readonly --mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/,readonly -p 8082:80 nginx
+docker run -d --name halloween-readonly \
+--mount type=bind,source="$(pwd)"/web-content,target=/usr/share/nginx/html/,readonly \
+-p 8082:80 nginx
 ```
 
 Como está en modo lectura, en teoría no podría crear ningún archivo dentro del directorio donde está montada mi carpeta local:
