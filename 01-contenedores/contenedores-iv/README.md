@@ -623,8 +623,36 @@ Existen varias extensiones de Docker que nos permiten monitorizar nuestros conte
 
 ### 🎯 Ejercicios sugeridos
 
+#### 1️⃣ **Bind Mount con Hot-Reload** 🔥
+**Objetivo:** Entender cómo sincronizar cambios en tiempo real entre tu máquina y el contenedor.
+
+Tenemos una aplicación web estática en la carpeta `ejercicio/` que muestra confeti animado. Los colores del confeti se modifican fácilmente en el CSS.
 
 
+Tu tarea es crear un contenedor nginx que sirva este contenido utilizando un bind mount para que cualquier cambio en el archivo `styles.css` se refleje inmediatamente en el contenedor.
+
+**Concepto clave:** El bind mount vincula directamente tu directorio local con la ruta del contenedor. Cualquier cambio que hagas en `ejercicio/styles.css` se refleja inmediatamente en `/usr/share/nginx/html/styles.css` del contenedor.
+
+**Ventajas para desarrollo:**
+- ✅ Sin necesidad de rebuild de imagen
+- ✅ Cambios instantáneos
+- ✅ Perfecto para desarrollo ágil
+- ✅ Mayor productividad
+
+---
+
+#### 2️⃣ **Persistencia con Volúmenes** 💾
+
+**Objetivo:** El mismo contenido que ya estás sirviendo para el confeti ahora vamos a montarlo en un volumen y que se comparta tanto en un nginx como en un httpd.
+
+
+Tu tarea es crear un volumen llamado `confetti-data` y montar este volumen en dos contenedores diferentes: uno con nginx y otro con httpd. Asegúrate de copiar el contenido inicial del directorio `ejercicio/` al volumen para que ambos contenedores puedan servir el mismo contenido.
+
+
+
+**Concepto clave:** Los volúmenes son almacenamiento administrado por Docker. Los datos en un volumen **persisten** incluso si eliminas el contenedor que lo usa. Con este ejercicio, aprenderás a compartir datos entre múltiples contenedores utilizando volúmenes, aunque estos estén basados en diferentes imágenes.
+
+---
 
 
 > [!TIP]
