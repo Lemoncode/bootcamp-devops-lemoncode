@@ -16,16 +16,22 @@ FROM dependencies AS test
 # Copy all files for testing
 COPY . .
 # Run tests
-RUN npm run test
+RUN npm run test && echo "tests passed" > /tmp/tests-passed
 
 # ---- Release ----
 FROM base AS release
-# Add environment variables
-# ENV NODE_ENV production
-# Copy only necessary files
+
+ENV NODE_ENV=production
+
+# Copy tests validation file (forces test execution)
+COPY --from=test /tmp/tests-passed /tmp/
+
+# Install only production dependencies
 RUN npm install --omit=dev
+
+# Copy all files
 COPY . .
+
 # Expose port and define CMD
 EXPOSE 3000
-# Specify what command it'll execute when you create a container
 CMD ["npm", "start"]
