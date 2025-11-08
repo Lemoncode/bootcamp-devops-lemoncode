@@ -1,227 +1,262 @@
-# Día V: Docker Networking - ¡Conectando contenedores como un jefe! 🕸️
+# Día V: Docker Networking# Día V: Docker Networking
 
-![Docker](imagenes/Docker%20y%20el%20networking.png)
+![Docker](imagenes/Docker%20y%20el%20networking.png)!
 
-¡Bienvenido al fascinante mundo de las redes en Docker! 🎉 Como este es un tema que asusta un poco, he preferido hacerlo algo más ameno.
+En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.
 
-Hoy vamos a aprender cómo nuestros contenedores pueden hablar entre ellos, desde susurros secretos hasta conversaciones a gritos que todo el mundo puede escuchar. Prepárate para convertirte en el casamentero de contenedores más famoso del barrio. 💕
+## 🎬 Vídeos de la introducción en el campus
 
-## 📋 Agenda
+Se asume que has visto los siguientes vídeos para comenzar con este módulo:
 
-- [🤔 ¿Qué diablos es esto del networking?](#-qué-diablos-es-esto-del-networking)
-- [🌉 La red bridge: El barrio por defecto (y por qué no es tan genial)](#-la-red-bridge-el-barrio-por-defecto-y-por-qué-no-es-tan-genial)
-- [🏘️ Redes VIP: Creando barrios exclusivos para tus contenedores](#️-redes-vip-creando-barrios-exclusivos-para-tus-contenedores)
-- [🤝 Contenedores bilingües: Hablando en múltiples redes](#-contenedores-bilingües-hablando-en-múltiples-redes)
-- [🚪 Port Mapping: Abriendo puertas al mundo exterior](#-port-mapping-abriendo-puertas-al-mundo-exterior)
-- [🏠 Red Host: Cuando tu contenedor se muda a tu casa](#-red-host-cuando-tu-contenedor-se-muda-a-tu-casa)
-- [🏝️ Contenedores ermitaños: Viviendo sin WiFi](#️-contenedores-ermitaños-viviendo-sin-wifi)
-- [🧹 Limpieza de redes: Marie Kondo para Docker](#-limpieza-de-redes-marie-kondo-para-docker)
-- [🎭 Los diferentes tipos de redes: Eligiendo tu estilo](#-los-diferentes-tipos-de-redes-eligiendo-tu-estilo)
-- [🎉 ¡Felicidades, eres oficialmente un ninja de redes!](#-felicidades-eres-oficialmente-un-ninja-de-redes)
+| # | Tema | Contenido Clave |
+|---|------|-----------------|
+| 1 | Teoría - Basics networking | Para ponernos un poco al día de conceptos básicos de networking en general |
+| 2 | Teoría - Redes en Docker | Tipos de redes y cómo funcionan |
+| 3 | Demo 1 - Listar redes y probar la red bridge | En esta demo, listaremos las redes disponibles y probaremos la conectividad en la red bridge. |
+| 4 | Demo 2 - Cómo crear redes | En esta demo, crearemos redes personalizadas y conectaremos contenedores a ellas. |
+| 5 | Demo 3 - Red de tipo host | En esta demo, exploraremos la red de tipo host y cómo se comporta en comparación con otras redes. |
+| 6 |  Demo 4 - Conectarse a la red no red | Uso de --network none, aislamiento completo y escenarios de pruebas / hardening. |
 
+---
 
-## 🤔 ¿Qué diablos es esto del networking?
+## ¿Qué es Docker Networking?
 
-Imagínate que tus contenedores son como vecinos en un edificio. Algunos viven en el mismo piso y pueden hablar por la pared, otros necesitan el intercomunicador, y algunos están tan antisociales que ni siquiera tienen timbre. Docker networking es básicamente el sistema de comunicación de este edificio de contenedores. 🏢
+Docker Networking permite que los contenedores se comuniquen entre sí y con sistemas externos. Cada contenedor puede estar conectado a una o más redes, facilitando la comunicación en función de las necesidades de la aplicación.
 
-### 🕵️ Espiando las redes disponibles
+Hasta ahora has estado usando la red por defecto en Docker, sin tu saberlo 🥲. Asi que durante esta clase vamosa a centrarnos con más cariño en toda la parte que tiene que ver con la conectividad entre mis contenedores.
 
-Primero, vamos a ver qué "barrios" tenemos disponibles en nuestro host. Es como hacer un censo, pero más divertido:
+### Listar redes disponibles
+
+Lo primero que necesitas saber es qué tipo de redes podemos usar en Docker.
+
+Para ver las redes disponibles en tu host:
 
 ```bash
 docker network ls
 ```
 
-**¿Qué vamos a encontrar en nuestro censo?** 📊
-- `bridge`: El barrio por defecto (piensa en él como "Las Flores", básico pero funcional)
-- `host`: El barrio donde todos comparten casa con el anfitrión 
-- `none`: El barrio de los ermitaños (sin WiFi, sin problemas)
+Las redes por defecto incluyen:
 
-## 🌉 La red bridge: El barrio por defecto (y por qué no es tan genial)
+- `bridge`: Red por defecto para contenedores en una sola máquina
 
-La red `bridge` es como ese barrio de clase media donde todos los contenedores van a parar cuando no especificas nada más. Es funcional, pero tiene sus... peculiaridades. 🤷‍♂️
+- `host`: El contenedor comparte la red del host
 
-### 🚨 ¡Alerta de spoiler!
-Esta red **NO es la opción premium** para entornos de producción. Es como usar Internet Explorer en 2024: funciona, pero hay mejores opciones. 😅
+- `none`: El contenedor no tiene conectividad de red
 
-### 🔍 Demo 1: Espiando a los vecinos del bridge
 
-Vamos a fisgar un poco y ver cómo está configurado este barrio:
+## Red Bridge
+
+La red bridge es la red por defecto de Docker. Proporciona aislamiento de red entre contenedores y el host.
+
+
+### Inspeccionar la red bridge
+
+Para poder ver la configuración de una red específica, usamos el comando `docker network inspect`:
 
 ```bash
-# Mirando los planos del barrio bridge
 docker network inspect bridge
+```
 
-# Versión más bonita (si tienes jq instalado, sino... ¡instálalo!)
+También es bastante cómodo apoyarnos en herramientas como `jq` para formatear la salida JSON:
+
+```bash
 docker network inspect bridge --format '{{json .Containers}}' | jq
 ```
 
-### 🏠 Demo 2: Mudando inquilinos al barrio bridge
+Esta es la red donde todo ha estado funcionando hasta ahora sin que te dieras cuenta 😉. Asi que ahora vamos a usar la misma con conocimiento de causa.
 
-Vamos a meter algunos contenedores en este barrio y ver cómo se llevan:
+### Crear contenedores en la red bridge
+
+Para crear un contenedor en la red bridge (que es la red por defecto), simplemente ejecutamos:
+
 
 ```bash
-# Primer inquilino: Nginx (el vecino silencioso)
 docker run -d --name web nginx
 
-# Segundo inquilino: Apache (el vecino ruidoso)
 docker run -d --name web-apache httpd
+```
 
-# ¿Quién vive aquí? ¡Vamos a verlo!
-docker ps
+Si ahora echamos la red bridge, veremos que ambos contenedores están conectados a ella:
 
-# Chismoseando quién está conectado al barrio bridge
+```bash
 docker network inspect bridge --format '{{json .Containers}}' | jq
 ```
 
-### 💬 Demo 3: Intentando que los vecinos se hablen
+### Comunicación entre contenedores
 
-Ahora viene la parte divertida. Vamos a intentar que nuestros contenedores se comuniquen. Spoiler: va a ser como intentar que tu abuelo use TikTok. 😂
+Ya que estamos en una red, yo puedo hacer que dos contenedores se comuniquen entre sí.
 
 ```bash
-# Entrando en la casa del vecino Nginx
 docker exec -ti web /bin/bash
+```
 
-# Instalando el "kit de supervivencia social" (herramientas de red)
+# Instalar herramientas de red
+
+```bash
 apt update && apt -y install net-tools iputils-ping
+```
 
-# Viendo las "ventanas" de red de nuestro contenedor
-ifconfig
 
-# Haciendo ping por IP (esto SÍ funciona, como gritar por la ventana)
+O ahora también puedo usar el comando debug de docker:
+
+```bash
+docker debug web
+```
+Y este ya viene con la herramienta necesaria para hacer ping.
+
+```bash
 ping 172.17.0.3
+```
 
-# Intentando llamar por nombre (esto NO funciona, como si no supiera el nombre del vecino)
+Sin embargo, si yo intento hacer ping por nombre de contenedor, no va a funcionar:
+
+```bash
 ping web-apache
-
-# Saliendo de la casa del vecino (antes de que se moleste)
-exit
 ```
 
-**🤔 ¿Qué acabamos de aprender?** En el barrio bridge básico, los contenedores pueden comunicarse por IP (como gritar el número de apartamento), pero **NO por nombre** (como si fueran antisociales y no se presentaran). 
+[!NOTE]>
+>Esta limitación se resuelve usando redes personalizadas. 
 
-## 🏘️ Redes VIP: Creando barrios exclusivos para tus contenedores
+## Redes personalizadas
 
-¡Ahora sí que vamos a ponernos serios! Las redes personalizadas son como crear un barrio privado donde todos se conocen por nombre y hasta se saludan por la mañana. ☕
+Las redes personalizadas permiten que los contenedores se comuniquen entre sí por su nombre, en lugar de por su dirección IP, gracias a un servidor DNS integrado. Esta es la mejor práctica para aplicaciones multi-contenedor.
 
-### 🌟 ¿Por qué las redes VIP son mejores que el barrio común?
-- ✅ **DNS automático**: Los contenedores se conocen por nombre (¡como gente civilizada!)
-- ✅ **Mejor seguridad**: Aislamiento total del resto de plebs
-- ✅ **Control total**: Tú decides quién entra y quién sale
-- ✅ **Flexibilidad**: Puedes conectar y desconectar inquilinos cuando quieras
 
-### 🏗️ Demo 4: Construyendo nuestro barrio VIP
+### Ventajas de las redes personalizadas
 
-Vamos a crear nuestro propio barrio exclusivo. Lo llamaremos "Lemoncode Estates" porque somos fancy así: 💅
+- ✅ Resolución DNS automática por nombre de contened
+
+- ✅ Mejor aislamiento y seguridad
+
+- ✅ Control total sobre la conectividad
+
+- ✅ Flexibilidad para conectar y desconectar contenedores
+
+
+### Crear una red personalizada#
+
+Para poder crear una red personalizada, usamos el comando `docker network create`:
 
 ```bash
-# Creando nuestro barrio VIP
 docker network create lemoncode-net
+```
 
-# Verificando que nuestro barrio está en el mapa
+Y puedes confirmar que la misma se ha creado sin problemas usando de nuevo el comando:
+
+```bash
 docker network ls
+```
 
-# Inspeccionando los planos de nuestro nuevo barrio
+También puedes inspeccionarla de la misma forma que hicimos con bridge:
+
+```bash
 docker network inspect lemoncode-net
 ```
 
-### 🏡 Demo 5: Mudando inquilinos VIP
+Y verás que la misma tiene asignado un rango de IPs diferente al de bridge.
 
-Ahora vamos a meter algunos contenedores en nuestro barrio exclusivo:
+### Crear contenedores en una red personalizada
+
+Vale y ahora ¿Cómo la uso?
+
+Lo único que debes añadir como parte del comando `docker run` es el flag `--network` seguido del nombre de la red personalizada que acabas de crear:
 
 ```bash
-# Primer inquilino VIP: Nginx Premium
-docker run -d --name web2 --network lemoncode-net nginx
+docker run -d --name lemon-web --network lemoncode-net nginx
+```
 
-# Entrando a visitar a nuestro inquilino VIP
-docker exec -ti web2 /bin/bash
+# Acceder al contenedor
 
-# Instalando las herramientas VIP
-apt update && apt -y install net-tools iputils-ping
+```bash
+docker debug lemon-web
+```
 
-# Viendo las conexiones premium
-ifconfig
+[!NOTE]>
+>Si es la primera vez que usas `docker debug`, tendrás que instalar el paquete ifconfig-net-tools. Ping ya está incluido.
 
-# Intentando hablar con los plebeyos del barrio común (NO va a funcionar)
+
+# Ver que no puede alcanzar la red bridge
+
+Si ahora quisieramos intentar comunicarnos con un contenedor que está en la red bridge, no vamos a poder:
+
+```bash
 ping 172.17.0.2
-
-exit
 ```
 
-```bash
-# Segundo inquilino VIP: Apache Premium
-docker run -d --name web-apache2 --network lemoncode-net httpd
+# Crear contenedor Apache en la misma red personalizadaexit
 
-# Verificando que ambos están en nuestro barrio VIP
+```bash
+docker run -d --name lemon-apache --network lemoncode-net httpd
+```
+
+Podrás ver que ahora sí ambos contenedores están en la misma red personalizada:
+
+```bash
 docker network inspect lemoncode-net
 ```
 
-### 🎉 Demo 6: ¡La magia de la comunicación VIP!
-
-Ahora viene el momento mágico. Nuestros contenedores VIP van a comunicarse como personas civilizadas:
+Y que por lo tanto pueden comunicarse por nombre:
 
 ```bash
-# Visitando de nuevo a nuestro inquilino Nginx VIP
-docker exec -ti web2 /bin/bash
-
-# Ping por IP (el método tradicional, sigue funcionando)
-ping 172.18.0.3
-
-# ¡Y ahora la magia! Ping por nombre (¡FUNCIONA!)
-ping web-apache2
-
-# Incluso podemos hacer una visita HTTP de cortesía
-curl http://web-apache2
-
-exit
+ping 172.18.0.2
 ```
 
-**� ¡BOOM!** ¡Magia pura! En los barrios VIP, ¡los contenedores se conocen por nombre! Es como si hubieran ido a la misma escuela. 
+### Comunicación por nombre
 
-## 🤝 Contenedores bilingües: Hablando en múltiples redes
-
-¿Y si te dijera que un contenedor puede vivir en DOS barrios a la vez? Es como ser bilingüe, pero para redes. Vamos a convertir a nuestro contenedor en un cosmopolita. 🌍
-
-### 🌉 Demo 7: El contenedor que vive en dos mundos
+Y ahora ya si, si intentamos hacer ping por nombre de contenedor, ¡FUNCIONA!
 
 ```bash
-# Conectando nuestro web2 al barrio plebeyo también
-docker network connect bridge web2
+ping lemon-apache
+```
 
-# Verificando que ahora es ciudadano de dos barrios
+## Conectar contenedores a múltiples redes
+
+Pero espera ¿Qué pasa si quiero que un contenedor esté en múltiples redes al mismo tiempo? Pues eso es totalmente posible.
+
+```bash
+docker network connect bridge lemon-web
+```
+
+Y ahora si intentamos volver a comunicarnos, en este caso por IP con alguno de la red bridge, ¡FUNCIONA!
+
+```bash
+ping 172.17.0.3
+```
+
+
+# Ver que está en ambas redes
+
+Como el nombre del contenedor sigue siendo único, podemos verificar que efectivamente está en ambas redes:
+
+```bash
 docker network inspect bridge
 
-# Entrando a ver su nueva doble vida
-docker exec -ti web2 /bin/bash
-
-# Viendo todas sus "casas" (ahora tiene múltiples interfaces)
-ifconfig
-
-# Ahora puede hablar con TODOS los vecinos
-ping 172.17.0.2  # Los del barrio plebeyo
-ping 172.18.0.2  # Los del barrio VIP
-
-exit
+docker network inspect lemoncode-net
 ```
 
-**🤯 ¡Mind blown!** Nuestro contenedor ahora es como esa persona popular que tiene amigos en todos los grupos sociales.
+## Port Mapping
 
-## 🚪 Port Mapping: Abriendo puertas al mundo exterior
+Como has podido ver, Docker lo que hace es crear una red interna para que los contenedores puedan comunicarse entre sí. Pero ¿Qué pasa si quiero que un contenedor sea accesible desde fuera de Docker? Aquí es donde entra el port mapping.
 
-Hasta ahora nuestros contenedores han estado charlando entre ellos como en una fiesta privada. Pero a veces necesitas que el mundo exterior pueda visitarlos. Aquí es donde entra el port mapping, que es básicamente como poner un portero en la entrada. 🕴️
+### Mapeo básico de puertos
 
-### 🔓 Demo 8: Abriendo la puerta principal
+Hasta ahora lo hemos hecho varias veces, pero ahora que sabes un poquito más de networking tiene todo más sentido.
+
+Como nuestros contenedores están en una red aislada, no son accesibles desde fuera de Docker por defecto. Para hacerlos accesibles, necesitamos mapear puertos del host a puertos del contenedor.
 
 ```bash
-# Creando un contenedor con puerta al mundo exterior
+# Mapear puerto 9090 del host al puerto 80 del contenedor
 docker run -d -p 9090:80 nginx
 ```
 
-**🎉 ¡Voilà!** Ahora cualquiera puede visitar tu nginx en `http://localhost:9090`. Es como tener una casa con dirección pública.
+Ahora puedes acceder al servidor en `http://localhost:9090`.### 🔓 Demo 8: Abriendo la puerta principal
 
-### 🏗️ Demo 9: El truco del Dockerfile con EXPOSE
 
-Primero, vamos a crear un Dockerfile que es como el plano de nuestra casa con todas las puertas marcadas:
+### Usar EXPOSE en Dockerfile
+
+# Creando un contenedor con puerta al mundo exterior
+
+El comando EXPOSE en un Dockerfile documenta los puertos que usa la aplicación:
 
 ```dockerfile
 FROM nginx
@@ -229,138 +264,78 @@ EXPOSE 80
 EXPOSE 443
 ```
 
+Pero simplemente hace eso, documentar. No mapea los puertos automáticamente. Lo que sí podemos hacer gracias a esta documentación es de forma automática mapear los puertos expuestos usando el flag `-P` o `--publish-all` al ejecutar el contenedor.
+
 ```bash
-# Construyendo nuestra casa personalizada
-docker build -t nginx-custom .
-
-# Espiando los planos para ver qué puertas tiene
-docker inspect nginx-custom
-
-# ¡Abriendo TODAS las puertas automáticamente! (modo fiesta)
-docker run -d --publish-all nginx-custom
-# O la versión para perezosos:
 docker run -d -P nginx-custom
-
-# Viendo qué puertas se abrieron
-docker ps
-
-# Siendo específicos sobre las puertas
-docker port <CONTAINER_ID>
 ```
 
-## 🏠 Red Host: Cuando tu contenedor se muda a tu casa
-
-La red `host` es como cuando tu primo se viene a vivir contigo y usa tu WiFi, tu nevera, y básicamente todo lo tuyo. El contenedor literalmente se muda a la red de tu máquina. 🏡
-
-### 🤲 Demo 10: El contenedor que se muda contigo
+o bien:
 
 ```bash
-# Creando un contenedor que literalmente vive en tu casa
-docker run -d --name web-apache3 --network host httpd
+docker run -d --publish-all nginx-custom
 
-# Verificando que efectivamente está en tu casa
-docker network inspect host
+Y luego puedes ver qué puertos se han mapeado automáticamente usando:
+
+```bash
+docker inspect nginx-custom
 ```
 
-**⚠️ ¡Cuidado!** En modo host, tu contenedor usa directamente los puertos de tu máquina. Es como dejarle las llaves de casa a tu primo.
-
-## 🏝️ Contenedores ermitaños: Viviendo sin WiFi
-
-A veces tienes contenedores que son como ese tío ermitaño que vive en la montaña sin Internet. No necesitan hablar con nadie, solo hacer su trabajo en silencio. 🧙‍♂️
-
-### 🚫 Demo 11: El contenedor antisocial
+También puedes verlo con `docker port`:
 
 ```bash
-# Creando un contenedor totalmente antisocial
+docker port lemon-web
+```
+
+## Red Host
+
+Ahora que ya hemos jugado un rato con la red bridge y las redes personalizadas, vamos a ver otro tipo de red que es la red host.
+
+Este tipo de red es un poco especial porque el contenedor no tiene su propia red aislada, sino que comparte la red del host. Esto significa que el contenedor puede usar directamente los puertos del host sin necesidad de mapearlos.
+
+Para usarlo lo único que debes hacer es usar el flag `--network host` al crear el contenedor:
+
+```bash
+docker run -dit --network host --name web-host nginx
+```
+
+
+### Crear un contenedor sin red
+
+Por último tenemos la red no red 😶. Esta hace que el contenedor esté totalmente aislado del mundo exterior.
+
+```bash
 docker run -dit --network none --name no-net-alpine alpine ash
+```
 
-# Verificando que efectivamente es un ermitaño
+Puedes comprobar que no tiene ninguna interfaz de red activa:
+
+```bash
 docker exec no-net-alpine ip link show
 ```
 
-**🔍 ¡Efectivamente!** Solo verás la interfaz `lo` (loopback). Es como tener un teléfono que solo puede llamarse a sí mismo.
+## Eliminar redes
 
-## 🧹 Limpieza de redes: Marie Kondo para Docker
-
-Cuando termines de jugar con las redes, es importante limpiar. Es como después de una fiesta: hay que recoger. 🎊➡️🧹
-
-### 🗑️ Eliminando redes específicas
+Para eliminar una red personalizada que ya no necesites, usa el comando `docker network rm` seguido del nombre de la red:
 
 ```bash
-# Eliminando nuestro barrio VIP (primero echa a los inquilinos)
-docker network rm lemoncode-net
+docker network rm mi-red
+```
 
-# Haciendo limpieza general de redes huérfanas
+
+# Limpiar redes no utilizadas (sin contenedores conectados)
+
+También puedes limpiar de un plumazo todas las redes que no estés usando con:
+
+```bash
 docker network prune
 ```
 
-**💡 Pro tip:** Docker es como ese amigo ordenado que no te deja eliminar una red si aún hay contenedores viviendo en ella.
-
-## 🎭 Los diferentes tipos de redes: Eligiendo tu estilo
-
-Como en la vida real, hay diferentes estilos de barrios para diferentes necesidades:
-
-### 🌉 Bridge
-- **¿Para qué?** Aplicaciones en una sola máquina (el típico apartamento compartido)
-- **¿Cómo es?** Aislamiento de red, comunicación entre contenedores
-
-### 🏠 Host
-- **¿Para qué?** Cuando necesitas máximo rendimiento (como mudarte con tus padres para ahorrar)
-- **¿Cómo es?** Sin aislamiento, comparte todo con el anfitrión
-
-### 🚫 None
-- **¿Para qué?** Contenedores que no necesitan red (los ermitaños digitales)
-- **¿Cómo es?** Sin conectividad de red
-
-### 🌐 Overlay
-- **¿Para qué?** Aplicaciones que viven en múltiples máquinas (como tener casas en diferentes países)
-- **¿Cómo es?** Comunicación entre contenedores en diferentes hosts
-
-### 🚀 Demo 12: El intento épico de crear una red overlay
+También puedes desconectar contenedores de una red específica antes de eliminarla:
 
 ```bash
-# Esto va a fallar espectacularmente (y está bien)
-docker network create --driver overlay multihost-net
+docker network disconnect lemoncode-net lemon-web
 ```
-
-**🤷‍♂️ ¿Por qué falló?** Porque las redes overlay necesitan Docker en modo "grupo de trabajo" (Docker Swarm). Es como intentar organizar una fiesta internacional sin coordinación previa.
-
-## 🎯 Resumen de supervivencia para networking en Docker
-
-Como todo buen manual de supervivencia, aquí tienes las reglas de oro:
-
-1. **🏘️ Usa redes VIP** en lugar del barrio plebeyo bridge
-2. **👥 Agrupa a la familia** - contenedores relacionados en la misma red
-3. **📞 Llama por nombre** - usa nombres de contenedores para comunicación interna
-4. **🚪 Solo abre las puertas necesarias** - mapea puertos solo cuando los necesites
-5. **🏃‍♂️ Usa red host con moderación** - solo para casos de alto rendimiento
-6. **🧹 Limpia regularmente** - nadie quiere redes huérfanas por ahí
-
-## � Limpieza post-fiesta
-
-Después de todas estas demos, tu Docker va a parecer después de una fiesta universitaria. Hora de limpiar:
-
-```bash
-# Parando toda la fiesta
-docker stop $(docker ps -aq)
-docker rm $(docker ps -aq)
-
-# Limpiando las redes
-docker network prune
-
-# Eliminando nuestras creaciones artísticas
-docker rmi nginx-custom
-```
-
----
-
-## 📚 Enlaces para seguir aprendiendo (porque somos nerds)
-
-- [Documentación oficial de Docker Network](https://docs.docker.com/network/) - La biblia
-- [Docker Network Drivers](https://docs.docker.com/network/drivers/) - Los diferentes sabores
-- [Docker Compose Networking](https://docs.docker.com/compose/networking/) - Nivel siguiente
-
----
 
 ## 🎉 ¡Felicidades, eres oficialmente un ninja de redes!
 
@@ -368,13 +343,12 @@ En esta épica aventura de networking has aprendido a:
 
 - 🕵️ **Espiar redes disponibles** como un verdadero detective de Docker
 - 🌉 **Dominar la red bridge** (y entender por qué es básica)
-- �️ **Crear barrios VIP** donde los contenedores se conocen por nombre
-- 🤝 **Hacer contenedores bilingües** que viven en múltiples redes
+- 🏙️ **Crear barrios VIP** donde los contenedores se conocen por nombre
 - 🚪 **Abrir puertas al mundo exterior** con port mapping como un portero profesional
 - 🏠 **Mudarte con tus contenedores** usando la red host
 - 🏝️ **Crear ermitaños digitales** con contenedores sin red
 - 🧹 **Limpiar como Marie Kondo** para mantener Docker organizado
-- 🎭 **Elegir el estilo de red perfecto** para cada situación
+
 
 Ahora ya no eres solo alguien que ejecuta contenedores. ¡Eres el arquitecto de redes, el casamentero de contenedores, el ninja del networking! 🥷
 
