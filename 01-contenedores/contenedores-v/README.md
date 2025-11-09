@@ -2,7 +2,7 @@
 
 ![Docker](imagenes/Docker%20y%20el%20networking.png)!
 
-En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.
+¡Hola lemoncoder 👋🏻🍋 !  En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.En esta lección aprenderemos cómo conectar contenedores entre sí y con el mundo exterior. Cubriremos los diferentes tipos de redes disponibles en Docker y cómo gestionarlas.
 
 ## 🎬 Vídeos de la introducción en el campus
 
@@ -336,6 +336,14 @@ También puedes desconectar contenedores de una red específica antes de elimina
 ```bash
 docker network disconnect lemoncode-net lemon-web
 ```
+
+
+## ⭐ Bonus: extensión ngrok para Docker Desktop
+
+Si usas Docker Desktop, puedes aprovechar la extensión de ngrok para exponer tus contenedores al mundo exterior de forma segura y sencilla. Esto es útil cuando quieres compartir tu trabajo con alguien sin necesidad de configurar puertos o redes complicadas.
+
+
+
 
 ## 🎉 ¡Felicidades, eres oficialmente un ninja de redes!
 

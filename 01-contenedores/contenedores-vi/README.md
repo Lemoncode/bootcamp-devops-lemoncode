@@ -2,31 +2,30 @@
 
 ![Docker Compose](imagenes/Docker%20compose.png)
 
-## 📋 Agenda
+¡Hola lemoncoder 👋🏻🍋 ! Con esta clase finalizamos el repaso a los contenedores. Y ha llegado el momento de aprender qué es Docker Compose y nuestra primera expidición a los clústeres de Docker.
 
-- [🏗️ Introducción a Docker Compose](#️-introducción-a-docker-compose)
-  - [🎯 Escenario: Blog con WordPress y MySQL](#-escenario-blog-con-wordpress-y-mysql)
-  - [📝 Manual vs Docker Compose](#-manual-vs-docker-compose)
-- [🐳 Docker Compose en acción](#-docker-compose-en-acción)
-  - [⚡ Comandos básicos de Compose](#-comandos-básicos-de-compose)
-  - [🔧 Gestión avanzada de proyectos](#-gestión-avanzada-de-proyectos)
-- [🌊 Introducción a Docker Swarm](#-introducción-a-docker-swarm)
-  - [🎪 Creando un cluster Swarm](#-creando-un-cluster-swarm)
-- [🚀 Desplegando servicios en Swarm](#-desplegando-servicios-en-swarm)
-  - [📊 Escalado y monitorización](#-escalado-y-monitorización)
-  - [🌐 Networking: Ingress vs Host](#-networking-ingress-vs-host)
-- [📦 Docker Stacks](#-docker-stacks)
-- [📚 Comandos Docker Compose más comunes](#-comandos-docker-compose-más-comunes)
-- [📚 Comandos Docker Swarm más comunes](#-comandos-docker-swarm-más-comunes)
-- [🎉 ¡Felicidades!](#-felicidades)
+## 🎬 Vídeos de la introducción en el campus
+
+Se asume que has visto los siguientes vídeos para comenzar con este módulo:
+
+| # | Tema | Contenido Clave |
+|---|------|-----------------|
+| 1 | Teoría - Docker Compose | El por qué y para qué de Docker Compose |
+| 2 | Demo 1 | Ejemplo sin Docker Compose |
+| 3 | Demo 2 - Ejemplo de un Wordpress con Docker Compose |
+| 4 | Teoría - Docker Swarm | Para qué sirve un clúster y cómo se gestiona |
+| 5 | Demo 3 - Crear un clúster con Docker Swarm | Crear un cluster y ejecutar nuestra primera aplicación |
+
+---
+
 
 ## 🏗️ Introducción a Docker Compose
 
-Docker Compose es una herramienta que te permite definir y ejecutar aplicaciones Docker multi-contenedor. En lugar de ejecutar múltiples comandos `docker run`, puedes definir toda tu aplicación en un archivo YAML y levantarla con un solo comando.
+Docker Compose es una herramienta que te permite definir y ejecutar aplicaciones Docker multi-contenedor. En lugar de ejecutar múltiples comandos `docker run`, `docker volume`, `docker network`, etc., puedes definir toda tu aplicación en un archivo YAML y levantarla con un solo comando.
 
 ### 🎯 Escenario: Blog con WordPress y MySQL
 
-Imaginemos que queremos desplegar un blog con WordPress. Este necesita una base de datos MySQL para funcionar. Vamos a ver primero cómo hacerlo manualmente y luego con Docker Compose.
+Para que lo entiendas perfectamente, imaginemos que queremos desplegar un blog con WordPress. Este necesita una base de datos MySQL para funcionar. Vamos a ver primero cómo hacerlo manualmente y luego con Docker Compose.
 
 ### 📝 Manual vs Docker Compose
 
@@ -82,6 +81,9 @@ Puedes verificar el contenido del volumen de WordPress:
 docker exec wordpress ls -l /var/www/html
 ```
 
+Y ahora si accedes a `http://localhost:8000` en tu navegador, deberías ver la pantalla de instalación de WordPress.
+
+
 **Para limpiar todo este despliegue manual:**
 
 ```bash
@@ -98,7 +100,7 @@ Como puedes ver, ¡son muchos comandos para una aplicación simple! 😰
 Ahora veamos cómo Docker Compose simplifica todo esto. Primero, echemos un vistazo al archivo de configuración:
 
 ```bash
-cat docker-compose.yml
+cat compose.yml
 ```
 
 Este archivo define toda nuestra aplicación en un formato legible y mantenible.
@@ -123,7 +125,23 @@ docker compose up &
 docker compose up -d
 ```
 
+Cuando la tienes abierta descubrirás que en la parte inferior del terminal te propone tres comandos rápidos: 
+
+- `v` View in Docker Desktop: si pulsas esta tecla te lleva directamente a una vista donde verás los contenedores involucrados.
+
+
+![View in Docker Desktop](imagenes/Docker%20Compose%20-%20View%20in%20Docker%20Desktop.png)
+
+- `o` View Config: si pulsas esta tecla te lleva de nuevo a Docker Desktop pero esta vez a una vista donde verás el archivo Docker Compose y opciones adicionales para entenderlo e incluso para convertirlo a los archivos que un clúster de Kubernetes necesita.
+
+![View Config](imagenes/Docker%20Compose%20-%20View%20Config.png)
+
+- `watch` Enable Watch: si pulsas esta tecla se activa la funcionalidad de Compose Watch que veremos más adelante en este mismo documento y que es ideal para desarrollo.
+
 **Parar la aplicación:**
+
+Si quisieramos parar todos los contenedores, podríamos usar `Control + C` o `Cmd + C` si lo hemos levantado en primer plano, pero si lo hemos hecho en segundo plano:
+
 
 ```bash
 docker compose stop
@@ -135,22 +153,54 @@ docker compose stop
 docker compose down
 ```
 
-## Compose Watch
+Hurra! 🎉 Has desplegado una aplicación completa con solo unos pocos comandos y un archivo súper descriptivo que te ayuda a entender perfectamente qué necesita tu aplicación.
+
+Ahora vamos a ver algunas funcionalidades avanzadas de Docker Compose.
+
+### Configuraciones avanzadas de Docker Compose
+
+Para esta sección vamos a usar otro ejemplo más complejo que puedes encontrar en `01-contenedores/contenedores-vi/my-app`, el cual contiene un frontend y un backend. Para levantarlo con docker compose, navega a esa carpeta y ejecuta:
+
+```bash
+cd 01-contenedores/contenedores-vi/my-app
+docker compose up 
+```
+
+
+### Docker Compose Watch
 
 Docker Compose Watch permite que los servicios se actualicen automáticamente cuando editas archivos en tu proyecto. Es ideal para desarrollo, ya que puedes ver los cambios reflejados en los contenedores sin reiniciar manualmente.
 
-Ventajas principales:
+### 🔭 Ventajas de Docker Compose Watch
 
-Sincronización automática de archivos entre tu máquina y el contenedor.
-Puedes ignorar carpetas (por ejemplo, node_modules/) para mejorar el rendimiento.
-Permite acciones como sync (sincronizar), rebuild (reconstruir imagen) y sync+restart (sincronizar y reiniciar servicio).
-Configuración básica:
+- 🔁 Sincronización automática de archivos entre tu máquina y el contenedor.
+- 🚫 Posibilidad de ignorar carpetas (ej. node_modules/) para mejorar rendimiento.
+- 🛠 Acciones soportadas: sync (sincronizar), rebuild (reconstruir imagen) y sync+restart (sincronizar y reiniciar servicio).
 
-Se añade la sección develop.watch en el servicio que quieres monitorizar.
-Ejemplo de acciones:
-sync: Sincroniza archivos modificados.
-rebuild: Reconstruye la imagen si se modifica un archivo clave (ej. package.json).
-sync+restart: Sincroniza y reinicia el servicio (útil para cambios en config).
+### ⚙️ Configuración básica
+
+Añade la sección develop.watch en el servicio que quieres monitorizar dentro del archivo compose.watch.yml.
+
+```yaml
+services:
+  app:
+    build: .
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: rebuild
+          path: package.json
+        - action: sync+restart
+          path: ./config
+```
+
+### 🧪 Acciones
+
+- sync: Copia al contenedor solo los archivos modificados.
+- rebuild: Reconstruye la imagen si cambia un archivo clave (ej. package.json).
+- sync+restart: Sincroniza y reinicia el servicio (útil para cambios de configuración).
 
 
 Para poder usar Compose Watch debes tener una configuración como la que se ve en `compose.watch.yml`:
