@@ -12,15 +12,14 @@ export const TopicRow: React.FC<Props> = (props) => {
   return (
     <div className="topic-card">
       <div className="topic-card-content">
-        <div className="topic-id"># {topic.id}</div>
+        <div className="topic-id">{topic.id}</div>
         <h3 className="topic-name">{topic.name}</h3>
-        <span className="topic-badge">📌 Active Topic</span>
         <button
           className="topic-delete-btn"
           onClick={() => onDelete(topic.id)}
           title="Delete this topic"
         >
-          ✕ Delete
+          Delete
         </button>
       </div>
     </div>

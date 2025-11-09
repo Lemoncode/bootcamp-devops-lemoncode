@@ -17,6 +17,11 @@ services:
     build:
       context: ./backend
 
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend
+
     ports:
       - 8080:8080
     depends_on:
