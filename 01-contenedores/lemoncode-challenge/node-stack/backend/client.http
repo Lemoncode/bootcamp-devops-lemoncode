@@ -1,0 +1,67 @@
+@baseUrl = http://localhost:5001/api
+@contentType = application/json
+
+###
+# ============================================
+# GET - Obtener todos los tópicos
+# ============================================
+GET {{baseUrl}}/topics
+
+###
+# ============================================
+# POST - Crear un nuevo tópico
+# ============================================
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "Name": "Docker"
+}
+
+###
+# ============================================
+# POST - Crear otro tópico
+# ============================================
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "Name": "Kubernetes"
+}
+
+###
+# ============================================
+# POST - Crear otro tópico
+# ============================================
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "Name": "DevOps"
+}
+
+###
+# ============================================
+# GET - Obtener un tópico específico (sustituir ID)
+# Nota: Copia el _id de una respuesta anterior
+# ============================================
+GET {{baseUrl}}/topics/PASTE_ID_HERE
+
+###
+# ============================================
+# PUT - Actualizar un tópico (sustituir ID)
+# Nota: Copia el _id de una respuesta anterior
+# ============================================
+PUT {{baseUrl}}/topics/PASTE_ID_HERE
+Content-Type: {{contentType}}
+
+{
+  "Name": "Docker Updated"
+}
+
+###
+# ============================================
+# DELETE - Eliminar un tópico (sustituir ID)
+# Nota: Copia el _id de una respuesta anterior
+# ============================================
+DELETE {{baseUrl}}/topics/PASTE_ID_HERE
