@@ -1,79 +1,68 @@
-﻿using System.Collections.Generic;
-using backend.Models;
+﻿using backend.Models;
 using backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+namespace backend.Controllers;
 
-namespace backend.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class TopicsController(TopicService topicService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TopicsController : ControllerBase
+    // GET: api/topics
+    [HttpGet]
+    public IEnumerable<Topic> Get() => topicService.Get();
+
+    // GET api/topics/{id}
+    [HttpGet("{id:length(24)}", Name = "GetTopic")]
+    public ActionResult<Topic> Get(string id)
     {
-        private readonly TopicService _topicService;
+        var topic = topicService.Get(id);
 
-        public TopicsController(TopicService topicService)
+        if (topic == null)
         {
-            _topicService = topicService;
+            return NotFound();
         }
 
-        // GET: api/<TopicsController>
-        [HttpGet]
-        public IEnumerable<Topic> Get() => _topicService.Get();
+        return topic;
+    }
 
+    // POST api/topics
+    [HttpPost]
+    public ActionResult<Topic> Create(Topic topic)
+    {
+        topicService.Create(topic);
+        return CreatedAtRoute("GetTopic", new { id = topic.Id }, topic);
+    }
 
-        // GET api/<TopicsController>/5
-        [HttpGet("{id:length(24)}", Name = "GetTopic")]
-        public ActionResult<Topic> Get(string id)
+    // PUT api/topics/{id}
+    [HttpPut("{id:length(24)}")]
+    public IActionResult Update(string id, Topic topicIn)
+    {
+        var topic = topicService.Get(id);
+
+        if (topic == null)
         {
-            var topic = _topicService.Get(id);
-
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            return topic;
+            return NotFound();
         }
 
-        // POST api/<TopicsController>
-        [HttpPost]
-        public ActionResult<Topic> Create(Topic topic)
-        {
-            _topicService.Create(topic);
+        topicService.Update(id, topicIn);
 
-            return topic;
+        return NoContent();
+    }
+
+    // DELETE api/topics/{id}
+    [HttpDelete("{id:length(24)}")]
+    public IActionResult Delete(string id)
+    {
+        var topic = topicService.Get(id);
+
+        if (topic == null)
+        {
+            return NotFound();
         }
 
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Topic topicIn)
-        {
-            var topic = _topicService.Get(id);
+        topicService.Remove(id);
 
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            _topicService.Update(id, topicIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
-        {
-            var topic = _topicService.Get(id);
-
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            _topicService.Remove(topic.Id);
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

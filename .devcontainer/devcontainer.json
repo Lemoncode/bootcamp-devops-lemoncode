@@ -40,7 +40,9 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"humao.rest-client"
+				"humao.rest-client",
+				"GitHub.copilot-chat",
+				"ms-dotnettools.csdevkit"
 			]
 		}
 	}
