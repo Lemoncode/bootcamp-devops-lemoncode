@@ -10,12 +10,12 @@ const app = express();
 // CONFIGURACIÓN
 // ============================================
 const DB_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017';
-const DB_NAME = process.env.DATABASE_NAME || 'TopicstoreDb';
+const DB_NAME = process.env.DATABASE_NAME || 'ClassesDb';
 const HOST = process.env.HOST || '0.0.0.0';
-const PORT = 5001;
+const PORT = 5000;
 
 let db;
-let topicsCollection;
+let classesCollection;
 let mongoClient;
 
 // ============================================
@@ -24,6 +24,13 @@ let mongoClient;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware de logging
+app.use((req, res, next) => {
+  const timestamp = new Date().toLocaleTimeString('es-ES');
+  console.log(`📍 [${timestamp}] ${req.method} ${req.path}`);
+  next();
+});
 
 // ============================================
 // CONEXIÓN A MONGODB
@@ -36,8 +43,8 @@ async function connectDB() {
     console.log('✅ Conexión a MongoDB exitosa');
 
     db = mongoClient.db(DB_NAME);
-    topicsCollection = db.collection('Topics');
-    console.log('📋 Colección Topics cargada');
+    classesCollection = db.collection('Classes');
+    console.log('📚 Colección Classes cargada');
   } catch (error) {
     console.error('❌ Error al conectar a MongoDB:', error.message);
     process.exit(1);
@@ -45,114 +52,115 @@ async function connectDB() {
 }
 
 // ============================================
-// RUTAS - TOPICS
+// RUTAS - CLASSES
 // ============================================
 
-// GET /api/topics - Obtener todos los tópicos
-app.get('/api/topics', async (req, res) => {
+// GET /api/classes - Obtener todas las clases
+app.get('/api/classes', async (req, res) => {
   try {
-    console.log('📥 GET /api/topics');
-    const topics = await topicsCollection.find({}).toArray();
-    console.log(`✅ Se obtuvieron ${topics.length} tópicos`);
-    res.json(topics);
+    const classes = await classesCollection.find({}).toArray();
+    console.log(`✅ Se obtuvieron ${classes.length} clases`);
+    res.json(classes);
   } catch (error) {
-    console.error('❌ Error al obtener tópicos:', error.message);
-    res.status(500).json({ error: 'Error al obtener tópicos' });
+    console.error('❌ Error al obtener clases:', error.message);
+    res.status(500).json({ error: 'Error al obtener clases' });
   }
 });
 
-// GET /api/topics/:id - Obtener un tópico por ID
-app.get('/api/topics/:id', async (req, res) => {
+// GET /api/classes/:id - Obtener una clase por ID
+app.get('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(`📥 GET /api/topics/${id}`);
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'ID inválido' });
     }
 
-    const topic = await topicsCollection.findOne({ _id: new ObjectId(id) });
-    if (!topic) {
-      return res.status(404).json({ error: 'Tópico no encontrado' });
+    const classItem = await classesCollection.findOne({ _id: new ObjectId(id) });
+    if (!classItem) {
+      return res.status(404).json({ error: 'Clase no encontrada' });
     }
 
-    console.log(`✅ Tópico ${id} obtenido`);
-    res.json(topic);
+    console.log(`✅ Clase ${id} obtenida`);
+    res.json(classItem);
   } catch (error) {
-    console.error('❌ Error al obtener tópico:', error.message);
-    res.status(500).json({ error: 'Error al obtener tópico' });
+    console.error('❌ Error al obtener clase:', error.message);
+    res.status(500).json({ error: 'Error al obtener clase' });
   }
 });
 
-// POST /api/topics - Crear un nuevo tópico
-app.post('/api/topics', async (req, res) => {
+// POST /api/classes - Crear una nueva clase
+app.post('/api/classes', async (req, res) => {
   try {
-    const topic = req.body;
-    console.log(`📥 POST /api/topics - ${JSON.stringify(topic)}`);
+    const classItem = req.body;
+    console.log(`📝 Creando clase: ${classItem.name}`);
 
-    if (!topic.Name) {
-      return res.status(400).json({ error: 'El campo Name es requerido' });
+    // Validación de campos requeridos
+    if (!classItem.name || !classItem.instructor || !classItem.level) {
+      return res.status(400).json({ 
+        error: 'Los campos name, instructor y level son requeridos' 
+      });
     }
 
-    const result = await topicsCollection.insertOne(topic);
-    const createdTopic = { _id: result.insertedId, ...topic };
-    console.log(`✅ Tópico creado: ${topic.Name}`);
-    res.status(201).json(createdTopic);
+    const result = await classesCollection.insertOne(classItem);
+    const createdClass = { _id: result.insertedId, ...classItem };
+    console.log(`✅ Clase creada: ${classItem.name}`);
+    res.status(201).json(createdClass);
   } catch (error) {
-    console.error('❌ Error al crear tópico:', error.message);
-    res.status(500).json({ error: 'Error al crear tópico' });
+    console.error('❌ Error al crear clase:', error.message);
+    res.status(500).json({ error: 'Error al crear clase' });
   }
 });
 
-// PUT /api/topics/:id - Actualizar un tópico
-app.put('/api/topics/:id', async (req, res) => {
+// PUT /api/classes/:id - Actualizar una clase
+app.put('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const topic = req.body;
-    console.log(`📥 PUT /api/topics/${id} - ${JSON.stringify(topic)}`);
+    const classItem = req.body;
+    console.log(`📝 Actualizando clase ${id}`);
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'ID inválido' });
     }
 
-    const result = await topicsCollection.updateOne(
+    const result = await classesCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: topic }
+      { $set: classItem }
     );
 
     if (result.matchedCount === 0) {
-      return res.status(404).json({ error: 'Tópico no encontrado' });
+      return res.status(404).json({ error: 'Clase no encontrada' });
     }
 
-    console.log(`✅ Tópico ${id} actualizado`);
-    res.json({ _id: id, ...topic });
+    console.log(`✅ Clase ${id} actualizada`);
+    res.json({ _id: id, ...classItem });
   } catch (error) {
-    console.error('❌ Error al actualizar tópico:', error.message);
-    res.status(500).json({ error: 'Error al actualizar tópico' });
+    console.error('❌ Error al actualizar clase:', error.message);
+    res.status(500).json({ error: 'Error al actualizar clase' });
   }
 });
 
-// DELETE /api/topics/:id - Eliminar un tópico
-app.delete('/api/topics/:id', async (req, res) => {
+// DELETE /api/classes/:id - Eliminar una clase
+app.delete('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(`📥 DELETE /api/topics/${id}`);
+    console.log(`🗑️  Eliminando clase ${id}`);
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'ID inválido' });
     }
 
-    const result = await topicsCollection.deleteOne({ _id: new ObjectId(id) });
+    const result = await classesCollection.deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Tópico no encontrado' });
+      return res.status(404).json({ error: 'Clase no encontrada' });
     }
 
-    console.log(`✅ Tópico ${id} eliminado`);
+    console.log(`✅ Clase ${id} eliminada`);
     res.status(204).send();
   } catch (error) {
-    console.error('❌ Error al eliminar tópico:', error.message);
-    res.status(500).json({ error: 'Error al eliminar tópico' });
+    console.error('❌ Error al eliminar clase:', error.message);
+    res.status(500).json({ error: 'Error al eliminar clase' });
   }
 });
 
@@ -161,16 +169,17 @@ app.delete('/api/topics/:id', async (req, res) => {
 // ============================================
 async function startServer() {
   try {
-    console.log('\n🔧 Inicializando backend...');
+    console.log('\n' + '═'.repeat(70));
+    console.log('🍋 LEMONCODE CALENDAR - BACKEND (Node.js + Express)');
+    console.log('═'.repeat(70));
     await connectDB();
 
     app.listen(PORT, HOST, () => {
       const url = `http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`;
-      console.log('');
-      console.log('═══════════════════════════════════════════════════════════════');
-      console.log(`🚀 Servidor ejecutándose en: ${url}/api/topics`);
-      console.log('═══════════════════════════════════════════════════════════════');
-      console.log('');
+      console.log(`🚀 Servidor ejecutándose en: ${url}`);
+      console.log(`📚 API: ${url}/api/classes`);
+      console.log(`⏰ Hora: ${new Date().toLocaleString('es-ES')}`);
+      console.log('═'.repeat(70) + '\n');
     });
   } catch (error) {
     console.error('❌ Error al iniciar servidor:', error.message);

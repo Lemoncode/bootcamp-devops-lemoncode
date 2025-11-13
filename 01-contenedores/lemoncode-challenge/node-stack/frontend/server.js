@@ -1,170 +1,51 @@
-require('dotenv').config();
+//Módulos
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const express = require('express'),
+    app = express();
 
-const express = require('express');
-const axios = require('axios');
-const path = require('path');
+const LOCAL = 'http://localhost:5000/api/classes';
+const PORT = 3000;
+const APP_URL = `http://localhost:${PORT}`;
 
-const app = express();
-
-// ============================================
-// CONFIGURACIÓN
-// ============================================
-const PORT = process.env.PORT || 3000;
-const API_URL = process.env.API_URL || 'http://localhost:5001';
-const HOST = process.env.HOST || '0.0.0.0';
-
-// ============================================
-// MIDDLEWARES
-// ============================================
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// ============================================
-// UTILIDADES - LLAMADAS A LA API
-// ============================================
-async function getTopics() {
-  try {
-    const response = await axios.get(`${API_URL}/api/topics`);
-    return response.data;
-  } catch (error) {
-    console.error('Error al obtener topics:', error.message);
-    return [];
-  }
-}
+// Middleware para logging mejorado
+app.use((req, res, next) => {
+    const timestamp = new Date().toLocaleTimeString('es-ES');
+    console.log(`📍 [${timestamp}] ${req.method} ${req.path}`);
+    next();
+});
 
-async function getTopic(id) {
-  try {
-    const response = await axios.get(`${API_URL}/api/topics/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error al obtener topic:', error.message);
-    return null;
-  }
-}
-
-async function createTopic(data) {
-  try {
-    const response = await axios.post(`${API_URL}/api/topics`, data);
-    return response.data;
-  } catch (error) {
-    console.error('Error al crear topic:', error.message);
-    throw error;
-  }
-}
-
-async function updateTopic(id, data) {
-  try {
-    const response = await axios.put(`${API_URL}/api/topics/${id}`, data);
-    return response.data;
-  } catch (error) {
-    console.error('Error al actualizar topic:', error.message);
-    throw error;
-  }
-}
-
-async function deleteTopic(id) {
-  try {
-    await axios.delete(`${API_URL}/api/topics/${id}`);
-    return true;
-  } catch (error) {
-    console.error('Error al eliminar topic:', error.message);
-    throw error;
-  }
-}
-
-// ============================================
-// RUTAS - VISTAS
-// ============================================
-
-// Página principal - Lista de topics
 app.get('/', async (req, res) => {
-  try {
-    const topics = await getTopics();
-    res.render('index', { topics, message: req.query.message });
-  } catch (error) {
-    res.status(500).render('error', { error: 'Error al cargar los topics' });
-  }
-});
-
-// Página para crear nuevo topic
-app.get('/create', (req, res) => {
-  res.render('create');
-});
-
-// Procesar formulario de creación
-app.post('/create', async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    
-    if (!name || !description) {
-      return res.render('create', { error: 'El nombre y descripción son obligatorios' });
+    try {
+        //Recuperar clases de la API
+        const apiUrl = process.env.API_URI || LOCAL;
+        console.log(`🔄 Conectando a la API: ${apiUrl}`);
+        
+        const response = await fetch(apiUrl);
+        const classes = await response.json();
+        
+        console.log(`✅ ${classes.length} clases cargadas correctamente`);
+        res.render('index', { classes });
+    } catch (error) {
+        console.error(`❌ Error al conectar con la API: ${error.message}`);
+        res.status(500).render('index', { classes: [] });
     }
-
-    await createTopic({ name, description });
-    res.redirect('/?message=Topic creado exitosamente');
-  } catch (error) {
-    res.render('create', { error: 'Error al crear el topic' });
-  }
 });
 
-// Página para editar topic
-app.get('/edit/:id', async (req, res) => {
-  try {
-    const topic = await getTopic(req.params.id);
-    if (!topic) {
-      return res.status(404).render('error', { error: 'Topic no encontrado' });
-    }
-    res.render('edit', { topic });
-  } catch (error) {
-    res.status(500).render('error', { error: 'Error al cargar el topic' });
-  }
+const server = app.listen(PORT, () => {
+    const apiUrl = process.env.API_URI || LOCAL;
+    console.log('\n' + '='.repeat(70));
+    console.log('🍋 LEMONCODE CALENDAR - FRONTEND SERVER');
+    console.log('='.repeat(70));
+    console.log(`🚀 Servidor iniciado correctamente`);
+    console.log(`📱 Web: \x1b]8;;${APP_URL}\x1b\\${APP_URL}\x1b]8;;\x1b\\`);
+    console.log(`🔗 API: ${apiUrl}`);
+    console.log(`⏰ Hora: ${new Date().toLocaleString('es-ES')}`);
+    console.log('='.repeat(70) + '\n');
 });
 
-// Procesar formulario de edición
-app.post('/edit/:id', async (req, res) => {
-  try {\n    const { name, description } = req.body;
-    
-    if (!name || !description) {
-      const topic = await getTopic(req.params.id);
-      return res.render('edit', { topic, error: 'El nombre y descripción son obligatorios' });
-    }
-
-    await updateTopic(req.params.id, { name, description });
-    res.redirect('/?message=Topic actualizado exitosamente');
-  } catch (error) {
-    res.status(500).render('error', { error: 'Error al actualizar el topic' });
-  }
-});
-
-// Eliminar topic
-app.post('/delete/:id', async (req, res) => {
-  try {
-    await deleteTopic(req.params.id);
-    res.redirect('/?message=Topic eliminado exitosamente');
-  } catch (error) {
-    res.status(500).render('error', { error: 'Error al eliminar el topic' });
-  }
-});
-
-// ============================================
-// MANEJO DE ERRORES
-// ============================================
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).render('error', { error: 'Algo salió mal' });
-});
-
-app.use((req, res) => {
-  res.status(404).render('error', { error: 'Página no encontrada' });
-});
-
-// ============================================
-// INICIO DEL SERVIDOR
-// ============================================
-app.listen(PORT, HOST, () => {
-  console.log(`🌐 Frontend ejecutándose en http://${HOST}:${PORT}`);
-  console.log(`📡 Conectando a API en ${API_URL}`);
+server.on('error', (error) => {
+    console.error(`❌ Error en el servidor: ${error.message}`);
+    process.exit(1);
 });

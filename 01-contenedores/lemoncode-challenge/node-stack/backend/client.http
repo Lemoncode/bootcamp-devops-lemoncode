@@ -1,67 +1,192 @@
-@baseUrl = http://localhost:5001/api
-@contentType = application/json
+@host=http://localhost:5000
 
-###
-# ============================================
-# GET - Obtener todos los tópicos
-# ============================================
-GET {{baseUrl}}/topics
+### Get all classes
+GET {{host}}/api/classes
 
-###
-# ============================================
-# POST - Crear un nuevo tópico
-# ============================================
-POST {{baseUrl}}/topics
-Content-Type: {{contentType}}
+### Session 1: Contenedores I
+POST {{host}}/api/classes
+Content-Type: application/json
 
 {
-  "Name": "Docker"
+  "name": "Contenedores I",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-17T18:00:00Z",
+  "endDate": "2025-10-17T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
 }
 
-###
-# ============================================
-# POST - Crear otro tópico
-# ============================================
-POST {{baseUrl}}/topics
-Content-Type: {{contentType}}
+### Session 2: Contenedores II
+POST {{host}}/api/classes
+Content-Type: application/json
 
 {
-  "Name": "Kubernetes"
+  "name": "Contenedores II",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-24T18:00:00Z",
+  "endDate": "2025-10-24T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
 }
 
-###
-# ============================================
-# POST - Crear otro tópico
-# ============================================
-POST {{baseUrl}}/topics
-Content-Type: {{contentType}}
+### Session 3: Contenedores III
+POST {{host}}/api/classes
+Content-Type: application/json
 
 {
-  "Name": "DevOps"
+  "name": "Contenedores III",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-31T18:00:00Z",
+  "endDate": "2025-10-31T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
 }
 
-###
-# ============================================
-# GET - Obtener un tópico específico (sustituir ID)
-# Nota: Copia el _id de una respuesta anterior
-# ============================================
-GET {{baseUrl}}/topics/PASTE_ID_HERE
-
-###
-# ============================================
-# PUT - Actualizar un tópico (sustituir ID)
-# Nota: Copia el _id de una respuesta anterior
-# ============================================
-PUT {{baseUrl}}/topics/PASTE_ID_HERE
-Content-Type: {{contentType}}
+### Session 4: Contenedores IV
+POST {{host}}/api/classes
+Content-Type: application/json
 
 {
-  "Name": "Docker Updated"
+  "name": "Contenedores IV",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-07T18:00:00Z",
+  "endDate": "2025-11-07T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
 }
 
-###
-# ============================================
-# DELETE - Eliminar un tópico (sustituir ID)
-# Nota: Copia el _id de una respuesta anterior
-# ============================================
-DELETE {{baseUrl}}/topics/PASTE_ID_HERE
+### Session 5: Contenedores V
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores V",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-14T18:00:00Z",
+  "endDate": "2025-11-14T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 6: Contenedores VI
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores VI",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-21T18:00:00Z",
+  "endDate": "2025-11-21T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 7: Azure Web Services I
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Azure Web Services I",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-02-20T18:00:00Z",
+  "endDate": "2026-02-20T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 8: Azure Web Services II
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Azure Web Services II",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-02-27T18:00:00Z",
+  "endDate": "2026-02-27T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 9: Kubernetes AKS
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Kubernetes AKS",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-03-13T18:00:00Z",
+  "endDate": "2026-03-13T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 10: SESIÓN IA I
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA I",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-04-17T18:00:00Z",
+  "endDate": "2026-04-17T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 11: SESIÓN IA II
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA II",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-04-24T18:00:00Z",
+  "endDate": "2026-04-24T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 12: SESIÓN IA III
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA III",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-05-01T18:00:00Z",
+  "endDate": "2026-05-01T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 13: Demo Class
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Demo Class",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-09-26T18:00:00Z",
+  "endDate": "2025-09-26T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Get a class by ID (replace {id} with actual ID)
+GET {{host}}/api/classes/{{classId}}
+
+### Update a class (replace {id} with actual ID)
+PUT {{host}}/api/classes/{{classId}}
+Content-Type: application/json
+
+{
+  "name": "Updated Class Name",
+  "instructor": "New Instructor",
+  "startDate": "2025-10-17T18:00:00Z",
+  "endDate": "2025-10-17T20:00:00Z",
+  "duration": 2,
+  "level": "Intermediate"
+}
+
+### Delete a class (replace {id} with actual ID)
+DELETE {{host}}/api/classes/{{classId}}
