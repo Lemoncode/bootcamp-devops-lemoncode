@@ -1,27 +1,203 @@
-GET http://localhost:5000/api/topics HTTP/1.1
+### Get all classes
+GET http://localhost:5000/api/classes HTTP/1.1
 
 ###
-POST http://localhost:5000/api/topics HTTP/1.1
+### Get class by ID
+GET http://localhost:5000/api/classes/{{classId}} HTTP/1.1
+
+###
+### Create a new class - Contenedores Docker - I
+POST http://localhost:5000/api/classes HTTP/1.1
 content-type: application/json
 
 {
-    "TopicName": "Docker images"    
+    "name": "Contenedores Docker - I",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-10-21T18:00:00",
+    "endDate": "2025-10-21T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
 }
 
 ###
 
-POST http://localhost:5000/api/topics HTTP/1.1
+### Create a new class - Contenedores Docker - II
+POST http://localhost:5000/api/classes HTTP/1.1
 content-type: application/json
 
 {
-    "TopicName": "Docker volumes"    
+    "name": "Contenedores Docker - II",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-10-23T18:00:00",
+    "endDate": "2025-10-23T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
 }
 
 ###
 
-POST http://localhost:5000/api/topics HTTP/1.1
+### Create a new class - Contenedores Docker - III
+POST http://localhost:5000/api/classes HTTP/1.1
 content-type: application/json
 
 {
-    "TopicName": "Docker networking"    
+    "name": "Contenedores Docker - III",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-11-04T18:00:00",
+    "endDate": "2025-11-04T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
 }
+
+###
+
+### Create a new class - Contenedores Docker - IV
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Contenedores Docker - IV",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-11-06T18:00:00",
+    "endDate": "2025-11-06T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - Contenedores Docker - V
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Contenedores Docker - V",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-11-11T18:00:00",
+    "endDate": "2025-11-11T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - Contenedores Docker - VI
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Contenedores Docker - VI",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-11-13T18:00:00",
+    "endDate": "2025-11-13T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - Azure Web Services I
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Azure Web Services I",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-02-03T18:00:00",
+    "endDate": "2026-02-03T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - Azure Web Services II
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Azure Web Services II",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-02-05T18:00:00",
+    "endDate": "2026-02-05T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - Proveedores de Kubernetes cloud - AKS
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Proveedores de Kubernetes cloud - AKS",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-03-10T18:00:00",
+    "endDate": "2026-03-10T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - SESIÓN IA - I
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "SESIÓN IA - I",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-04-07T18:00:00",
+    "endDate": "2026-04-07T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - SESIÓN IA - II
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "SESIÓN IA - II",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-04-09T18:00:00",
+    "endDate": "2026-04-09T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+
+### Create a new class - SESIÓN IA - III
+POST http://localhost:5000/api/classes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "SESIÓN IA - III",
+    "instructor": "Gisela Torres",
+    "startDate": "2026-04-14T18:00:00",
+    "endDate": "2026-04-14T20:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+### Update a class (replace {{classId}} with actual ID)
+PUT http://localhost:5000/api/classes/{{classId}} HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Clase Actualizada",
+    "instructor": "Gisela Torres",
+    "startDate": "2025-11-25T09:00:00",
+    "endDate": "2025-11-25T11:00:00",
+    "duration": 2,
+    "level": "Beginner"
+}
+
+###
+### Delete a class (replace {{classId}} with actual ID)
+DELETE http://localhost:5000/api/classes/{{classId}} HTTP/1.1

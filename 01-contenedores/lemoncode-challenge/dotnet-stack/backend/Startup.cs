@@ -22,9 +22,9 @@ namespace backend
         public void ConfigureServices(IServiceCollection services)
         {
             //requires using Microsoft.Extensions.Options
-            services.Configure<TopicstoreDatabaseSettings>(Configuration.GetSection(nameof(TopicstoreDatabaseSettings)));
-            services.AddSingleton<ITopicstoreDatabaseSettings>(sp => sp.GetRequiredService<IOptions<TopicstoreDatabaseSettings>>().Value);
-            services.AddSingleton<TopicService>();
+            services.Configure<ClassDatabaseSettings>(Configuration.GetSection(nameof(ClassDatabaseSettings)));
+            services.AddSingleton<IClassDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ClassDatabaseSettings>>().Value);
+            services.AddSingleton<ClassService>();
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
