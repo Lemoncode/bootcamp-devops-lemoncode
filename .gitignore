@@ -57,3 +57,8 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfoInputs.cache
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.GeneratedMSBuildEditorConfig.editorconfig
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs

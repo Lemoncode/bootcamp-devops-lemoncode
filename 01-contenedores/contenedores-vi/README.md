@@ -25,7 +25,7 @@ Docker Compose es una herramienta que te permite definir y ejecutar aplicaciones
 
 ### 🎯 Escenario: Blog con WordPress y MySQL
 
-Para que lo entiendas perfectamente, imaginemos que queremos desplegar un blog con WordPress. Este necesita una base de datos MySQL para funcionar. Vamos a ver primero cómo hacerlo manualmente y luego con Docker Compose.
+Para que lo entiendas perfectamente, imaginemos que queremos desplegar un blog con WordPress. Este necesita una base de datos MySQL para funcionar. Con todo lo que hemos aprendido hasta ahora, vamos a ver primero cómo hacerlo manualmente y luego con Docker Compose.
 
 ### 📝 Manual vs Docker Compose
 
@@ -163,9 +163,8 @@ Para esta sección vamos a usar otro ejemplo más complejo que puedes encontrar 
 
 ```bash
 cd 01-contenedores/contenedores-vi/my-app
-docker compose up 
+docker compose up
 ```
-
 
 ### Docker Compose Watch
 
@@ -202,16 +201,8 @@ services:
 - rebuild: Reconstruye la imagen si cambia un archivo clave (ej. package.json).
 - sync+restart: Sincroniza y reinicia el servicio (útil para cambios de configuración).
 
+Con el mismo entorno que tenemos si ahora pulsas la tecla `w` en la terminal donde tienes levantado el docker compose, se activará el modo watch y podrás ver los cambios reflejados automáticamente cuando los hagas en tu código fuente.
 
-Para poder usar Compose Watch debes tener una configuración como la que se ve en `compose.watch.yml`:
-
-Y levantar el entorno de la siguiente forma:
-
-```bash
-docker compose -f compose.watch.yml up --watch
-```
-
-### Combinar varios archivos de Compose
 
 ### Perfiles en Docker Compose
 
@@ -219,15 +210,7 @@ Los perfiles en Docker Compose permiten definir diferentes configuraciones para 
 
 ### 🔧 Gestión avanzada de proyectos
 
-**Construir y ejecutar (útil para aplicaciones propias):**
-
-Navega a la carpeta de ejemplo:
-
-```bash
-cd my-app
-```
-
-Ejecuta construyendo la imagen cada vez:
+Si quieres construir la imagen cada vez:
 
 ```bash
 docker compose up --build
@@ -242,6 +225,7 @@ docker compose ps
 > **Nota:** Este comando solo muestra contenedores del proyecto en la carpeta actual.
 
 **Ver todos los contenedores (como siempre):**
+
 
 ```bash
 docker ps -a
@@ -270,6 +254,12 @@ docker compose -p my_wordpress restart
 ```bash
 docker compose -p my_wordpress down
 ```
+
+## Dev Containers con Docker Compose
+
+Docker Compose también se puede utilizar para definir entornos de desarrollo en contenedores (Dev Containers). Esto es especialmente útil para proyectos que requieren múltiples servicios o dependencias.
+
+El propio repositorio de este bootcamp está configurado para usarse como un Dev Container usando Docker Compose. Si abres este proyecto en VS Code con la extensión de Dev Containers instalada, verás que se levanta un entorno completo con Node.js y todas las dependencias necesarias.
 
 ## 🌊 Introducción a Docker Swarm
 

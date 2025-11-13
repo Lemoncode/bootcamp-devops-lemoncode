@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "22.x.x"
+    "node": "25.x.x"
   },
   "scripts": {
     "start": "ts-node src/app",

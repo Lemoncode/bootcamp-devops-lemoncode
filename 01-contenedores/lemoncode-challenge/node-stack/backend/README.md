@@ -1,14 +1,14 @@
 # backend
 
-## Running Locally
+## Ejecutar Localmente
 
-This application has a direct dependency with mongo. To running locally by default the application expects that mongo is listening on port 27017.
+Esta aplicación tiene una dependencia directa con MongoDB. Para ejecutarla localmente, por defecto *la aplicación espera que MongoDB esté escuchando en el puerto 27017*.
 
-It's going to connect with `TopicstoreDb` on mongo server, and it's foing to interact with `Topics` collection.
+Se conectará con `TopicstoreDb` en el servidor MongoDB e interactuará con la colección `Topics`.
 
-It's important to mention, that the default connection string is `mongodb://localhost:27017`, we can override it, using env variables.
+Es importante mencionar que la cadena de conexión predeterminada es `mongodb://localhost:27017`, pero podemos sobrescribirla usando variables de entorno.
 
-The following are environment variables that we can set up:
+Las siguientes son las variables de entorno que podemos configurar:
 
 ```ini
 DATABASE_URL=
@@ -17,23 +17,32 @@ HOST=
 PORT=
 ```
 
-Notice that `HOST` is set by default on `localhost` and `PORT` on `5000`. These are the settings to stablish where the HTTP application is listening. You don't need to change it.
+Ten en cuenta que `HOST` está establecido por defecto en `localhost` y `PORT` en `5000`. Estos son los parámetros que establecen dónde está escuchando la aplicación HTTP. No necesitas cambiarlos.
 
-With the database running on local, you can check the appliaction by running:
+Con la base de datos ejecutándose localmente, puedes comprobar la aplicación ejecutando:
 
-> NOTE: If is the first time that you run it, no data will be available
+> NOTA: Si es la primera vez que la ejecutas, no habrá datos disponibles
+
+
+Instala las dependencias:
+
+```bash
+npm install
+```
+
+Luego inicia la aplicación con:
 
 ```bash
 npm start
 ```
 
-And then call it with:
+Y luego llamarla con:
 
 ```bash
 curl http://localhost:5000/api/topics
 ```
 
-If you want to feed some data you can try:
+Si quieres cargar algunos datos puedes intentar:
 
 ```bash
 curl -d '{"Name":"Devops"}' -H "Content-Type: application/json" -X POST http://localhost:5000/api/topics

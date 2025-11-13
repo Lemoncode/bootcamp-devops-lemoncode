@@ -3,7 +3,7 @@
 ![Laboratorio Docker](images/Laboratorio%20Docker.png)
 
 >[!IMPORTANT]
-> Antes de lanzarte a contenerizar todo, ¡relájate y prueba la aplicación tal como está! 😌 Lo único que necesitas es tener MongoDB funcionando. Empieza creando MongoDB en Docker y usa un cliente como MongoDB Compass (¡que ya viste en clase!) para añadir datos que tu API pueda devolver. A partide aquí ya estás list@ para comprobar lo que has aprendido.
+> Antes de lanzarte a contenerizar todo, ¡relájate y prueba la aplicación tal como está! 😌 Lo único que necesitas es tener MongoDB funcionando. Empieza creando MongoDB en Docker y usala extensión [MongoDB for VS Code](https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode) para añadir datos que tu API pueda devolver. A parti de aquí ya estás list@ para comprobar lo que has aprendido.
 
 ## 🎯 Misión 1: Dockeriza como un Pro
 
