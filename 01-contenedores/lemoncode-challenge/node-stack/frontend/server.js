@@ -1,7 +1,9 @@
 //Módulos
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const express = require('express'),
+const 
+    express = require('express'),
     app = express();
+require('dotenv').config();
 
 const LOCAL = 'http://localhost:5000/api/classes';
 const PORT = 3000;

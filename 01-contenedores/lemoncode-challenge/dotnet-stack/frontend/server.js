@@ -1,9 +1,10 @@
 //Módulos
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const express = require('express'),
     app = express();
+require('dotenv').config();
 
-const LOCAL = 'http://localhost:5000/api/classes';
+const LOCAL = process.env.API_URI || 'http://localhost:5000/api/classes';
 const PORT = 3000;
 const APP_URL = `http://localhost:${PORT}`;
 
@@ -21,10 +22,10 @@ app.get('/', async (req, res) => {
         //Recuperar clases de la API
         const apiUrl = process.env.API_URI || LOCAL;
         console.log(`🔄 Conectando a la API: ${apiUrl}`);
-        
+
         const response = await fetch(apiUrl);
         const classes = await response.json();
-        
+
         console.log(`✅ ${classes.length} clases cargadas correctamente`);
         res.render('index', { classes });
     } catch (error) {
