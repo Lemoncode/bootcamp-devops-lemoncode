@@ -1,4 +1,4 @@
-@host=http://localhost:5000
+@host=http://localhost:5001
 
 ### Get all classes
 GET {{host}}/api/classes
@@ -147,6 +147,7 @@ Content-Type: application/json
 }
 
 ### Session 12: SESIÓN IA III
+# @name class
 POST {{host}}/api/classes
 Content-Type: application/json
 
@@ -159,18 +160,9 @@ Content-Type: application/json
   "level": "Beginner"
 }
 
-### Session 13: Demo Class
-POST {{host}}/api/classes
-Content-Type: application/json
 
-{
-  "name": "Demo Class",
-  "instructor": "Gisela Torres",
-  "startDate": "2025-09-26T18:00:00Z",
-  "endDate": "2025-09-26T20:00:00Z",
-  "duration": 2,
-  "level": "Beginner"
-}
+### Get classes by from the previous posts
+@classId={{ class.response.body._id }}
 
 ### Get a class by ID (replace {id} with actual ID)
 GET {{host}}/api/classes/{{classId}}
