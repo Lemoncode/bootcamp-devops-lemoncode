@@ -9,21 +9,21 @@ public class Class
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
-    [BsonElement("Name")]
+    [BsonElement("name")]
     public string Name { get; set; } = null!;
 
-    [BsonElement("Instructor")]
+    [BsonElement("instructor")]
     public string Instructor { get; set; } = null!;
 
-    [BsonElement("StartDate")]
+    [BsonElement("startDate")]
     public DateTime StartDate { get; set; }
 
-    [BsonElement("EndDate")]
+    [BsonElement("endDate")]
     public DateTime EndDate { get; set; }
 
-    [BsonElement("Duration")]
+    [BsonElement("duration")]
     public int Duration { get; set; } // En horas
 
-    [BsonElement("Level")]
+    [BsonElement("level")]
     public string Level { get; set; } = null!; // Beginner, Intermediate, Advanced
 }
