@@ -4,7 +4,7 @@ const express = require('express'),
     app = express();
 require('dotenv').config();
 
-const LOCAL = process.env.API_URI || 'http://localhost:5000/api/classes';
+const LOCAL = process.env.API_URL || 'http://localhost:5000/api/classes';
 const PORT = 3000;
 const APP_URL = `http://localhost:${PORT}`;
 
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         //Recuperar clases de la API
-        const apiUrl = process.env.API_URI || LOCAL;
+        const apiUrl = process.env.API_URL || LOCAL;
         console.log(`🔄 Conectando a la API: ${apiUrl}`);
 
         const response = await fetch(apiUrl);
@@ -35,7 +35,7 @@ app.get('/', async (req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-    const apiUrl = process.env.API_URI || LOCAL;
+    const apiUrl = process.env.API_URL || LOCAL;
     console.log('\n' + '='.repeat(70));
     console.log('🍋 LEMONCODE CALENDAR - FRONTEND SERVER');
     console.log('='.repeat(70));
