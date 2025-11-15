@@ -1,9 +1,9 @@
-# Crear máquina virtual para la base de datos
+# 💾 Crear máquina virtual para la base de datos
 
 Ahora vamos a crear la máquina virtual para la base de datos. Para ello, vamos a necesitar las siguientes variables de entorno:
 
 ```bash
-# SQL Server VM on Azure
+# 🗄️ SQL Server VM en Azure
 DB_VM_NAME="db-vm"
 DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 DB_VM_ADMIN_USERNAME="dbadmin"
@@ -14,7 +14,7 @@ DB_VM_NSG_NAME="db-vm-nsg"
 o si estás en Windows:
 
 ```pwsh
-# SQL Server VM on Azure
+# 🗄️ SQL Server VM en Azure
 $DB_VM_NAME="db-vm"
 $DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 $DB_VM_ADMIN_USERNAME="dbadmin"
@@ -23,7 +23,7 @@ $DB_VM_NSG_NAME="db-vm-nsg"
 ```
 
 ```bash
-echo -e "Create a database vm named $DB_VM_NAME with image $DB_VM_IMAGE"
+echo -e "🖥️ Creando máquina virtual de base de datos $DB_VM_NAME"
 
 az vm create \
 --resource-group $RESOURCE_GROUP \
@@ -41,7 +41,7 @@ az vm create \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create a database vm named $DB_VM_NAME with image $DB_VM_IMAGE"
+echo -e "🖥️ Creando máquina virtual de base de datos $DB_VM_NAME"
 
 az vm create `
 --resource-group $RESOURCE_GROUP `
@@ -58,18 +58,19 @@ az vm create `
 
 Esta no necesita tener acceso desde fuera de la red virtual en la que se encuentra, por lo que no le asignamos una IP pública. Por otro lado, le hemos añadido un network security group (a través del parámetro --nsg), el cual es un conjunto de reglas que permiten o deniegan el tráfico de red entrante o saliente de los recursos de Azure.
 
-## Crear una cuenta de almacenamiento para los backups
+<!-- ## 💾 Crear una cuenta de almacenamiento para los backups
 
 Una buenísima práctica es tener backups de la base de datos. Para ello, vamos a crear una cuenta de almacenamiento en Azure para guardar los backups. Para ello, ejecuta el siguiente comando:
 
 ```bash
-echo -e "Create a storage acount for the backups"
+echo -e "📦 Creando cuenta de almacenamiento para backups"
 az storage account create \
 --name $STORAGE_ACCOUNT_NAME \
 --resource-group $RESOURCE_GROUP \
 --location $LOCATION \
 --sku Standard_LRS \
---kind StorageV2
+--kind StorageV2 \
+--allow-shared-key-access true
 
 STORAGE_KEY=$(az storage account keys list \
 --resource-group $RESOURCE_GROUP \
@@ -81,7 +82,7 @@ STORAGE_KEY=$(az storage account keys list \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create a storage acount for the backups"
+echo -e "📦 Creando cuenta de almacenamiento para backups"
 az storage account create `
 --name $STORAGE_ACCOUNT_NAME `
 --resource-group $RESOURCE_GROUP `
@@ -96,14 +97,15 @@ $STORAGE_KEY=$(az storage account keys list `
 --output tsv)
 ```
 
->Importante: Debes tener en cuenta que el nombre de la cuenta de almacenamiento debe ser único en Azure. Si te da un error, prueba a cambiar el nombre.
+>Importante: Debes tener en cuenta que el nombre de la cuenta de almacenamiento debe ser único en Azure. Si te da un error, prueba a cambiar el nombre. -->
 
-## Crear la extensión de SQL Server para la máquina virtual de la base de datos
+## ⚙️ Crear la extensión de SQL Server para la máquina virtual de la base de datos
 
-Si estás trabajando con SQL Server en máquinas virtuales en Azure puedes usar la extensión de SQL Server para automatizar las tareas de administración de este tipo de base de datos. Para ello, ejecuta el siguiente comando:
+Si estás trabajando con SQL Server en máquinas virtuales en Azure puedes usar la extensión de SQL Server gestionar esa máquina virtual con un sabor de base de datos. Para ello, ejecuta el siguiente comando:
 
+<!-- 
 ```bash
-echo -e "Add SQL Server extension to the database vm"
+echo -e "⚙️ Añadiendo extensión de SQL Server a la VM de base de datos"
 az sql vm create \
 --name $DB_VM_NAME \
 --license-type payg \
@@ -122,13 +124,13 @@ az sql vm create \
 --retention-period 30 \
 --log-backup-frequency 60
 
-echo -e "Database extension created"
+echo -e "✅ Extensión de base de datos creada"
 ```
 
 o si estás en Windows:
 
 ```bash
-echo -e "Add SQL Server extension to the database vm"
+echo -e "⚙️ Añadiendo extensión de SQL Server a la VM de base de datos"
 
 az sql vm create `
 --name $DB_VM_NAME `
@@ -149,14 +151,36 @@ az sql vm create `
 --log-backup-frequency 60
 
 echo -e "Database extension created"
+``` -->
+
+```bash
+echo -e "⚙️ Añadiendo extensión de SQL Server a la VM de base de datos"
+az sql vm create \
+--name $DB_VM_NAME \
+--license-type payg \
+--resource-group $RESOURCE_GROUP \
+--sql-mgmt-type Lightweight
+
+echo -e "✅ Extensión de base de datos creada"
 ```
 
-## Crear una regla de seguridad de red para SQL Server
+o si estás en Windows:
+
+```pwsh
+echo -e "⚙️ Añadiendo extensión de SQL Server a la VM de base
+az sql vm create `
+--name $DB_VM_NAME `
+--license-type payg `
+--resource-group $RESOURCE_GROUP `
+--sql-mgmt-type Lightweight 
+```
+
+## 🔒 Crear una regla de seguridad de red para SQL Server
 
 Para poder acceder a SQL Server desde la API, vamos a crear una regla de seguridad de red para SQL Server. Para ello, ejecuta el siguiente comando:
 
 ```bash
-echo -e "Create a network security group rule for SQL Server port 1433"
+echo -e "🔒 Creando regla de seguridad para SQL Server puerto 1433"
 
 az network nsg rule create \
 --resource-group $RESOURCE_GROUP \
@@ -172,7 +196,7 @@ az network nsg rule create \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create a network security group rule for SQL Server port 1433"
+echo -e "🔒 Creando regla de seguridad para SQL Server puerto 1433"
 
 az network nsg rule create `
 --resource-group $RESOURCE_GROUP `
@@ -191,4 +215,4 @@ Quedando la foto de la siguiente manera:
 
 ![VM para la base de datos](/04-cloud/azure/iaas/images/db-vm.png)
 
-Ahora que ya tenemos la base de datos creada, necesitamos una API que interactúe con ella. Puedes continuar en el siguiente [paso](../02-api-vm/README.md).
+Ahora que ya tenemos la base de datos creada, necesitamos una API que interactúe con ella. Puedes continuar en el siguiente [paso](../02-api-vm/README.md) 🚀.

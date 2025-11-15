@@ -42,7 +42,8 @@
 			"extensions": [
 				"humao.rest-client",
 				"GitHub.copilot-chat",
-				"ms-dotnettools.csdevkit"
+				"ms-dotnettools.csdevkit",
+				"ms-vscode.PowerShell"
 			]
 		}
 	}
