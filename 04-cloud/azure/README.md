@@ -163,7 +163,7 @@ PaaS es un modelo de computación en la nube donde **Azure gestiona** la infraes
 ## 🛠️ Requisitos Previos
 
 - Cuenta activa en Azure
-- Azure CLI instalado
+- Azure CLI instalado (lo tienes como parte del Dev Container de este repo, ya instalado y listo para usar)
 - Conocimientos básicos de:
   - Redes
   - Máquinas virtuales
