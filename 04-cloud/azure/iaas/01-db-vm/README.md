@@ -159,7 +159,11 @@ az sql vm create \
 --name $DB_VM_NAME \
 --license-type payg \
 --resource-group $RESOURCE_GROUP \
---sql-mgmt-type Lightweight
+--sql-mgmt-type Lightweight \
+--connectivity-type PRIVATE \
+--port 1433 \
+--sql-auth-update-username $DB_VM_ADMIN_USERNAME \
+--sql-auth-update-pwd $DB_VM_ADMIN_PASSWORD
 
 echo -e "✅ Extensión de base de datos creada"
 ```
@@ -172,7 +176,11 @@ az sql vm create `
 --name $DB_VM_NAME `
 --license-type payg `
 --resource-group $RESOURCE_GROUP `
---sql-mgmt-type Lightweight 
+--sql-mgmt-type Lightweight `
+--connectivity-type PRIVATE `
+--port 1433 `
+--sql-auth-update-username $DB_VM_ADMIN_USERNAME `
+--sql-auth-update-pwd $DB_VM_ADMIN_PASSWORD
 ```
 
 ## 🔒 Crear una regla de seguridad de red para SQL Server
