@@ -1,5 +1,5 @@
 #@base_url = http://tour-of-heroes-api-vm-<TU_NUMERO_RANDOM>.uksouth.cloudapp.azure.com/api/hero
-@base_url = http://tour-of-heroes-api-vm-23623.spaincentral.cloudapp.azure.com/api/hero
+@base_url = http://tour-of-heroes-api-vm-9807.spaincentral.cloudapp.azure.com/api/hero
 
 GET {{base_url}} HTTP/1.1
 

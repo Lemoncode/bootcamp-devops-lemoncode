@@ -3,6 +3,12 @@ param(
     [string]$api_url
 )
 
+# Crear carpeta Temp si no existe
+Write-Output "[INFO] Creando carpeta temporal C:\Temp"
+if (-not (Test-Path "C:\Temp")) {
+    New-Item -ItemType Directory -Path "C:\Temp" -Force | Out-Null
+}
+
 Write-Output "[INFO] Instalando IIS en la VM del frontend"
 Install-WindowsFeature -name Web-Server -IncludeManagementTools
 

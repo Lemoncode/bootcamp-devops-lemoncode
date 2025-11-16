@@ -18,7 +18,6 @@ Una vez hecho esto, te recomiendo que setees algunas variables de entorno para q
 # 📋 Variables generales
 RESOURCE_GROUP="tour-of-heroes-on-vms"
 LOCATION="spaincentral"
-VM_SIZE="Standard_B2s"
 ```
 
 o si estás en Windows con PowerShell:
@@ -27,7 +26,6 @@ o si estás en Windows con PowerShell:
 # 📋 Variables generales
 $RESOURCE_GROUP="tour-of-heroes-on-vms"
 $LOCATION="spaincentral"
-$VM_SIZE="Standard_B2s"
 ```
 
 Una vez que las tengas cargadas en tu terminal, deber saber que todo lo que crees en Azure tiene que estar dentro de lo que se conoce como **grupo de recursos** 📁. Un grupo de recursos es un contenedor lógico en el que se despliegan y se administran los recursos de Azure.

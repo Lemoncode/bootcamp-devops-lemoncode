@@ -6,10 +6,11 @@ Ahora vamos a crear la máquina virtual para el frontend. Para ello, vamos a nec
 # 🎨 VM del Frontend en Azure
 FRONTEND_VM_NAME="frontend-vm"
 FRONTEND_DNS_LABEL="tour-of-heroes-frontend-vm-$RANDOM"
-FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2022-Datacenter:latest"
+FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2019-Datacenter-Core:17763.8027.251112"
 FRONTEND_VM_ADMIN_USERNAME="frontendadmin"
 FRONTEND_VM_ADMIN_PASSWORD="fr0nt#nd@dmin123"
 FRONTEND_VM_NSG_NAME="frontend-vm-nsg"
+VM_SIZE="Standard_B1ms"
 ```
 
 o si estás en Windows:
@@ -17,7 +18,7 @@ o si estás en Windows:
 ```pwsh
 # 🎨 VM del Frontend en Azure
 $FRONTEND_VM_NAME="frontend-vm"
-$FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2022-Datacenter:latest"
+$FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2016-Datacenter:latest"
 $FRONTEND_VM_ADMIN_USERNAME="frontendadmin"
 $FRONTEND_VM_ADMIN_PASSWORD="fr0nt#nd@dmin123"
 $FRONTEND_VM_NSG_NAME="frontend-vm-nsg"

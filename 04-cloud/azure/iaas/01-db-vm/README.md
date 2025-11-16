@@ -9,6 +9,7 @@ DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 DB_VM_ADMIN_USERNAME="dbadmin"
 DB_VM_ADMIN_PASSWORD="Db@dmin123#-"
 DB_VM_NSG_NAME="db-vm-nsg"
+VM_SIZE="Standard_B2s"
 ```
 
 o si estás en Windows:
@@ -20,6 +21,7 @@ $DB_VM_IMAGE="MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:16.0.230613"
 $DB_VM_ADMIN_USERNAME="dbadmin"
 $DB_VM_ADMIN_PASSWORD="Db@dmin123!$"
 $DB_VM_NSG_NAME="db-vm-nsg"
+$VM_SIZE="Standard_B2s"
 ```
 
 ```bash

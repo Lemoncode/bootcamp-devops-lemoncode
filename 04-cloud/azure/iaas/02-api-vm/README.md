@@ -10,6 +10,7 @@ API_VM_IMAGE="Ubuntu2204"
 API_VM_ADMIN_USERNAME="apiadmin"
 API_VM_ADMIN_PASSWORD="Api@dmin-1232"
 API_VM_NSG_NAME="api-vm-nsg"
+VM_SIZE="Standard_B1ms"
 ```
 
 o si estás en Windows:
