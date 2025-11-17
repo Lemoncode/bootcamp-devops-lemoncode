@@ -1,6 +1,6 @@
 # Deploy Solutions Example
 
-## Creating bacckend services
+## Creating backend services
 
 ### Creating lc-age-service
 

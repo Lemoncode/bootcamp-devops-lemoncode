@@ -1,4 +1,4 @@
-# Trabajando conrecursos existentes
+# Trabajando con recursos existentes
 
 ## Introducción
 
