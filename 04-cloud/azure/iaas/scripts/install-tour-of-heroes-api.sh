@@ -1,23 +1,25 @@
-echo -e "Install nginx server"
+echo -e "🌐 Instalando servidor Nginx"
 sudo apt update && sudo apt install -y nginx unzip
 
-echo -e "Install .NET Core"
+echo -e "⚙️ Instalando .NET Core"
 wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && sudo dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb && sudo apt-get update && sudo apt-get install -y aspnetcore-runtime-7.0
 
 systemctl status nginx
 
+echo -e "📁 Creando directorio de la aplicación"
 sudo mkdir -p /var/www/tour-of-heroes-api
 sudo chown -R $USER:$USER /var/www/tour-of-heroes-api
 sudo chmod -R 755 /var/www/tour-of-heroes-api
 
-echo -e "Download the last release of the api app from github"
+echo -e "📥 Descargando la API desde GitHub"
 wget $1 -O drop.zip
 
-echo -e "Unzip the api app"
+echo -e "📦 Descomprimiendo la aplicación"
 unzip drop.zip -d /var/www/tour-of-heroes-api
 
 sudo sed -i 's/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 128;/g' /etc/nginx/nginx.conf
 
+echo -e "⚙️ Configurando Nginx como proxy inverso"
 sudo SERVER_NAME=$2 bash -c 'cat > /etc/nginx/sites-available/tour-of-heroes-api.conf <<EOF
 server {
      listen        80;
@@ -35,10 +37,12 @@ server {
  }
 EOF'
 
+echo -e "✅ Habilitando y reiniciando Nginx"
 sudo ln -s /etc/nginx/sites-available/tour-of-heroes-api.conf /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 
+echo -e "🔧 Creando servicio de systemd para la API"
 sudo bash -c "cat <<EOF > /etc/systemd/system/tour-of-heroes-api.service
 [Unit]
 Description=Tour of heroes .NET Web API App running on Ubuntu
@@ -59,9 +63,11 @@ Environment=ConnectionStrings__DefaultConnection='Server=192.168.1.4,1433;Initia
 WantedBy=multi-user.target
 EOF"
 
+echo -e "🚀 Iniciando el servicio de la API"
 sudo systemctl enable tour-of-heroes-api.service
 sudo systemctl start tour-of-heroes-api.service
 # sudo systemctl disable tour-of-heroes-api.service
 sudo systemctl status tour-of-heroes-api.service
 
+echo -e "✨ Instalación completada"
 # journalctl -u tour-of-heroes-api.service

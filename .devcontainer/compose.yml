@@ -1,0 +1,22 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/base:jammy
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    networks:
+      - lemoncode   
+    ports:
+      - "5010:5010"
+
+  db:
+    image: mcr.microsoft.com/azure-sql-edge
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: P@ssword
+      ACCEPT_EULA: Y
+    networks:
+      - lemoncode
+
+networks:
+  lemoncode:

@@ -1,0 +1,184 @@
+@host=http://localhost:5001
+
+### Get all classes
+GET {{host}}/api/classes
+
+### Session 1: Contenedores I
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores I",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-17T18:00:00Z",
+  "endDate": "2025-10-17T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 2: Contenedores II
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores II",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-24T18:00:00Z",
+  "endDate": "2025-10-24T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 3: Contenedores III
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores III",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-10-31T18:00:00Z",
+  "endDate": "2025-10-31T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 4: Contenedores IV
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores IV",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-07T18:00:00Z",
+  "endDate": "2025-11-07T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 5: Contenedores V
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores V",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-14T18:00:00Z",
+  "endDate": "2025-11-14T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 6: Contenedores VI
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Contenedores VI",
+  "instructor": "Gisela Torres",
+  "startDate": "2025-11-21T18:00:00Z",
+  "endDate": "2025-11-21T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 7: Azure Web Services I
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Azure Web Services I",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-02-20T18:00:00Z",
+  "endDate": "2026-02-20T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 8: Azure Web Services II
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Azure Web Services II",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-02-27T18:00:00Z",
+  "endDate": "2026-02-27T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 9: Kubernetes AKS
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "Kubernetes AKS",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-03-13T18:00:00Z",
+  "endDate": "2026-03-13T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 10: SESIÓN IA I
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA I",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-04-17T18:00:00Z",
+  "endDate": "2026-04-17T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 11: SESIÓN IA II
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA II",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-04-24T18:00:00Z",
+  "endDate": "2026-04-24T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+### Session 12: SESIÓN IA III
+# @name class
+POST {{host}}/api/classes
+Content-Type: application/json
+
+{
+  "name": "SESIÓN IA III",
+  "instructor": "Gisela Torres",
+  "startDate": "2026-05-01T18:00:00Z",
+  "endDate": "2026-05-01T20:00:00Z",
+  "duration": 2,
+  "level": "Beginner"
+}
+
+
+### Get classes by from the previous posts
+@classId={{ class.response.body._id }}
+
+### Get a class by ID (replace {id} with actual ID)
+GET {{host}}/api/classes/{{classId}}
+
+### Update a class (replace {id} with actual ID)
+PUT {{host}}/api/classes/{{classId}}
+Content-Type: application/json
+
+{
+  "name": "Updated Class Name",
+  "instructor": "New Instructor",
+  "startDate": "2025-10-17T18:00:00Z",
+  "endDate": "2025-10-17T20:00:00Z",
+  "duration": 2,
+  "level": "Intermediate"
+}
+
+### Delete a class (replace {id} with actual ID)
+DELETE {{host}}/api/classes/{{classId}}

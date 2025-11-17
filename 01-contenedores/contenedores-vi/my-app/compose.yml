@@ -1,0 +1,31 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/src
+    ports:
+      - 3000:8080
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend
+
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest

@@ -1,32 +1,45 @@
-# Azure Static Web Apps
+# 🎨 Azure Static Web Apps
 
-Si lo que tienes es una aplicación web estática, es decir, una aplicación web que no tiene ningún tipo de lógica de negocio en el lado del servidor, puedes desplegarla en [Azure Static Web Apps](https://docs.microsoft.com/es-es/azure/static-web-apps/overview).
+## ¿Qué es Azure Static Web Apps?
 
-Para poder desplegar el frontal de Tour of heroes lo primero que necesitas hacer es un fork de mi repositorio: [https://github.com/0GiS0/tour-of-heroes-angular](https://github.com/0GiS0/tour-of-heroes-angular) ya que al lanzar el comando que despliegue la aplicación este inyectará un flujo de GitHub Actions en el mismo para poder desplegarlo en Azure Static Web Apps.
+Es un servicio **PaaS** ideal para desplegar aplicaciones web **estáticas** (sin lógica de servidor). Perfectamente preparado para frameworks como **Angular, React, Vue.js**, etc.
 
-Como en el resto de los servicios, lo primero que vamos a hacer es cargar algunas variables de entorno:
+Características:
+- ⚡ **Despliegue automático** desde GitHub
+- 🚀 **CI/CD integrado** con GitHub Actions
+- 🌍 **CDN global** para máximo rendimiento
+- 📊 **Hosting de APIs** opcional
+- 🔒 **HTTPS automático**
 
+En este ejemplo, desplegaremos el **frontal de Tour of Heroes** (Angular) en Azure Static Web Apps.
+
+## 📋 Requisitos previos
+
+Necesitas un **fork** del repositorio de Tour of Heroes Angular:
+👉 [Haz un fork aquí](https://github.com/0GiS0/tour-of-heroes-angular)
+
+## 📝 Paso 1: Configurar variables de entorno
+
+**En Linux/macOS:**
 ```bash
 # Static Web App variables
-WEB_APP_NAME="tour-of-heroes-web"
-GITHUB_USER_NAME="<your-github-user-name>"
+WEB_APP_NAME="tour-of-heroes-web-$RANDOM"
+GITHUB_USER_NAME="<YOUR-GITHUB-USER-NAME>"
 ```
 
-o si estás en Windows:
-
+**En Windows PowerShell:**
 ```pwsh
 # Static Web App variables
-$WEB_APP_NAME="tour-of-heroes-web"
-$GITHUB_USER_NAME="<your-github-user-name>"
+$WEB_APP_NAME="tour-of-heroes-web-$RANDOM"
+$GITHUB_USER_NAME="<YOUR-GITHUB-USER-NAME>"
 ```
 
-## Crear el servicio de Azure Static Web Apps
+## 🚀 Paso 2: Crear Azure Static Web Apps
 
-Para crear el servicio de Azure Static Web Apps, ejecuta el siguiente comando:
+Ejecuta este comando para crear y conectar tu aplicación con GitHub:
 
+**En Linux/macOS:**
 ```bash
-echo -e "Create Azure Static Web App 🚀"
-
 az staticwebapp create \
 --name $WEB_APP_NAME \
 --resource-group $RESOURCE_GROUP \
@@ -38,11 +51,8 @@ az staticwebapp create \
 --login-with-github
 ```
 
-o si estás en Windows:
-
+**En Windows PowerShell:**
 ```pwsh
-echo -e "Create Azure Static Web App 🚀"
-
 az staticwebapp create `
 --name $WEB_APP_NAME `
 --resource-group $RESOURCE_GROUP `
@@ -54,14 +64,19 @@ az staticwebapp create `
 --login-with-github
 ```
 
-El resto de servicios se han desplegado en la región `uksouth`, pero en este caso, como no hay disponibilidad de Azure Static Web Apps en esa región, lo he desplegado en `westeurope`.
+**Nota:** Usamos `westeurope` porque Azure Static Web Apps no está disponible en `uksouth`.
 
-Cuando este comando termine de ejecutarse lo que va a ocurrir es que se habrá creado un workflow de GitHub Actions en el repositorio que le pasé como valor del parámetro `--source` y que se encargará de desplegar la aplicación en Azure Static Web Apps. Puedes ver el progreso en tu repo:
+## ✅ Verificar el despliegue
+
+Se habrá creado automáticamente un **workflow de GitHub Actions** en tu repositorio que desplegará la aplicación.
+
+Puedes ver el progreso en GitHub:
 
 <img src="../images/Workflow de GitHub Actions para desplegar el frontal de tour of heroes.png" width="800">
 
-Para recuperar la URL de esta aplicación lanza lo siguiente:
+Obtén la URL de tu aplicación con:
 
+**En Linux/macOS:**
 ```bash
 WEBAPP_URL=$(az staticwebapp show \
 --name $WEB_APP_NAME \
@@ -69,12 +84,11 @@ WEBAPP_URL=$(az staticwebapp show \
 --query "defaultHostname" \
 --output tsv)
 
-echo "Static Web App deployed 🚀"
-echo "Static Web App URL: https://$WEBAPP_URL"
+echo "✅ Static Web App deployed!"
+echo "📍 URL: https://$WEBAPP_URL"
 ```
 
-o si estás en Windows:
-
+**En Windows PowerShell:**
 ```pwsh
 $WEBAPP_URL=$(az staticwebapp show `
 --name $WEB_APP_NAME `
@@ -82,11 +96,15 @@ $WEBAPP_URL=$(az staticwebapp show `
 --query "defaultHostname" `
 --output tsv)
 
-echo "Static Web App deployed 🚀"
-echo "Static Web App URL: https://$WEBAPP_URL"
+echo "✅ Static Web App deployed!"
+echo "📍 URL: https://$WEBAPP_URL"
 ```
 
-Aunque verás que la aplicación se está ejecutando la misma no está apuntando a la API correcta. En este ejemplo tenemos que modificar el flujo de GitHub Actions para que pueda llamar a otro script dentro de mi package.json. Por lo que abre el mismo desde Github y modifica el paso Build and Deploy con lo siguiente:
+## ⚙️ Paso 3: Configurar la conexión a la API
+
+La aplicación está desplegada, pero aún no apunta a tu API. Necesitas modificar el workflow de GitHub Actions para pasar la URL de tu API.
+
+Abre el workflow en GitHub y modifica el paso **Build And Deploy** con lo siguiente:
 
 ```yaml
       - name: Build And Deploy
@@ -94,25 +112,49 @@ Aunque verás que la aplicación se está ejecutando la misma no está apuntando
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_BAY_0AF2E3F03 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_build_command: API_URL=${{ secrets.API_URL}} npm run build-with-api-url
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "dist/angular-tour-of-heroes" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: "/"
+          api_location: ""
+          output_location: "dist/angular-tour-of-heroes"
 ```
 
-Lo único que he hecho ha sido añadir la propiedad llamada **app_build_command** y le he pasado el valor `API_URL=${{ secrets.API_URL}} npm run build-with-api-url`. Esto lo que hace es que cuando se ejecute el comando `npm run build-with-api-url` se le pasará la variable de entorno `API_URL` con el valor que le hemos pasado en el secreto `API_URL`.
+### ¿Qué cambió?
 
->Cuidado: No copies y pegues el código anterior, ya que el secreto `AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_BAY_0AF2E3F03` es un secreto que se ha generado especificamente para tu Azure Static Web App. Solamente añade la propiedad **app_build_command**. También tienes que tener un secreto llamado **API_URL** con el valor de la URL de tu API.
+Solo añadimos la propiedad `app_build_command` que:
+- 📝 Ejecuta `npm run build-with-api-url` en tu package.json
+- 🔗 Inyecta la variable de entorno `API_URL` desde los secretos de GitHub
 
-¡Y ya está! Con esto ya tienes desplegada la aplicación Tour Of Heroes en servicios PaaS de Azure. Si quisieras eliminar todo lo creado hasta ahora es tan sencillo como ejecutar el siguiente comando:
+### 🔐 Configurar los secretos de GitHub
+
+Necesitas añadir un secreto en tu repositorio con la URL de la API:
+
+1. Ve a **Settings** → **Secrets and variables** → **Actions**
+2. Crea un secreto llamado `API_URL` con el valor de tu API (ej: `https://tour-of-heroes-api-xxxxx.azurewebsites.net`)
+
+⚠️ **Importante:** 
+- No copies el token `AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_BAY_0AF2E3F03`, es único para tu servicio
+- Solo añade la propiedad `app_build_command`
+- Asegúrate de tener el secreto `API_URL` configurado
+
+## 🎉 ¡Listo!
+
+Ya tienes **Tour of Heroes** completamente desplegado en Azure con:
+- ✅ Base de datos en Azure SQL
+- ✅ API REST en Azure App Service
+- ✅ Frontend en Azure Static Web Apps
+
+## 🧹 Eliminar todos los recursos
+
+Si quieres eliminar todo lo creado para evitar costes innecesarios:
 
 ```bash
 az group delete --name $RESOURCE_GROUP --yes --no-wait
 ```
 
-Happy coding! 🥸
+Esto eliminará todos los recursos del grupo de recursos.
+
+---
+
+**Happy coding!** 🥸

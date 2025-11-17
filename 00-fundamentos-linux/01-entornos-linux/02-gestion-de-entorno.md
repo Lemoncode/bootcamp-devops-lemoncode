@@ -188,9 +188,9 @@ El comando `ps` muestra un reporte de los procesos actuales del sistema.
 Tiene una gran variedad de opciones. Varios ejemplos de combinaciones de flags:
 
 - `ps aux` - Muestra información detallada de todos los procesos
-- `ps -fu &lt;username&gt; - Lista los procesos de varios usuarios separados por coma.
-- `ps --forest -fC &lt;command&gt; - Lista los procesos relacionados con el comando en árbol.
-- `ps -p &lt;pid&gt; - Lista los procesos en base al PID o PIDs separados por coma
+- `ps -fu <username>` - Lista los procesos de varios usuarios separados por coma.
+- `ps --forest -fC <command>` - Lista los procesos relacionados con el comando en árbol.
+- `ps -p <pid>` - Lista los procesos en base al PID o PIDs separados por coma
 
 ```
 $ ps -fu vagrant
@@ -217,7 +217,7 @@ Para enviar señales a un proceso podemos escribirlo de varias formas:
 - `-<ID-SEÑAL>`: `kill -15 229`
 - `-SIG<SEÑAL>`: `kill -SIGTERM 229`
 - `<SEÑAL>`: `kill SIGTERM 229`
-- `-s <SEÑAL>`: kill -s SIGTERM 229
+- `-s <SEÑAL>`: `kill -s SIGTERM 229`
 
 Para ver el objetivo de cada señal podemos verlos con `man 7 signal`. También un programa puede actuar de una forma u otra dependiendo de la señal que enviemos, por ejemplo, la señal `SIGHUP` en un proceso Nginx recarga su configuración o `SIGQUIT` espera a que todas las conexiones establecidas sean cerradas antes de abortar el proceso, a diferencia de `SIGTERM` que corta las conexiones y sale directamente.
 

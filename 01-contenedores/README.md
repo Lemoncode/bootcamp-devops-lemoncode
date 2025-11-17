@@ -1,6 +1,75 @@
-# Módulo 2 - Contenedores Docker
+# Módulo 01 - Contenedores Docker 📦🐳
 
-## Agenda
+¡Hola lemoncoder 🍋👩🏼‍💻🧑🏽‍💻! Bienvenid@ al módulo de contenedores Docker, donde aprenderás desde los conceptos básicos hasta técnicas avanzadas de contenerización y orquestación con Docker Compose y Docker Swarm.
+
+## 📋 Índice del Contenido
+
+### 📁 Estructura del Directorio
+
+- **[contenedores-i/](./contenedores-i/)** - Día I: Introducción a Docker
+- **[contenedores-ii/](./contenedores-ii/)** - Día II: Trabajando con imágenes
+- **[contenedores-iii/](./contenedores-iii/)** - Día III: Contenerización de aplicaciones
+- **[contenedores-iv/](./contenedores-iv/)** - Día IV: Almacenamiento y monitorización
+- **[contenedores-v/](./contenedores-v/)** - Día V: Networking
+- **[contenedores-vi/](./contenedores-vi/)** - Día VI: Docker Compose y Docker Swarm
+- **[lemoncode-challenge/](./lemoncode-challenge/)** - 🏆 Laboratorio final y desafíos
+
+### 🎯 Contenido por Directorio
+
+#### [`contenedores-i/`](./contenedores-i/) - Fundamentos Docker
+- **README.md**: Guía completa del Día I
+- **imagenes/**: Recursos visuales y diagramas
+- **Contenido**: Instalación, primeros comandos, gestión básica de contenedores
+
+#### [`contenedores-ii/`](./contenedores-ii/) - Gestión de Imágenes
+- **README.md**: Guía completa del Día II
+- **Dockerfile**: Ejemplos de construcción de imágenes
+- **deberes-ii.sh**: Script con ejercicios prácticos
+- **web/**: Aplicación de ejemplo para contenerizar
+- **imagenes/**: Recursos visuales
+
+#### [`contenedores-iii/`](./contenedores-iii/) - Contenerización Avanzada
+- **README.md**: Guía completa del Día III
+- **doom-web/**: Ejemplo práctico de aplicación web
+- **imagenes/**: Recursos visuales
+- **Contenido**: Dockerfiles multi-stage, buenas prácticas
+
+#### [`contenedores-iv/`](./contenedores-iv/) - Persistencia y Monitoreo
+- **README.md**: Guía completa del Día IV
+- **web-content/**: Contenido para ejemplos de volúmenes
+- **imagenes/**: Recursos visuales
+- **Contenido**: Volúmenes, bind mounts, monitoring con Prometheus/Grafana
+
+#### [`contenedores-v/`](./contenedores-v/) - Redes Docker
+- **contenedores-v.sh**: Comandos y ejemplos prácticos
+- **deberes-v.sh**: Ejercicios de networking
+- **Dockerfile**: Ejemplos para testing de redes
+- **01-load-balancer-host/**: Configuración de load balancer modo host
+- **02-load-balancer-user-define-networks/**: Load balancer con redes personalizadas
+
+#### [`contenedores-vi/`](./contenedores-vi/) - Orquestación
+- **contenedores-vi.sh**: Comandos Docker Compose y Swarm
+- **deberes-vi.sh**: Ejercicios de orquestación
+- **docker-compose.yml**: Ejemplos de aplicaciones multi-contenedor
+- **docker-compose-extension/**: Configuraciones avanzadas
+- **my-app/**: Aplicación de ejemplo completa
+- **stacks/**: Ejemplos de Docker Stacks para Swarm
+
+#### [`lemoncode-challenge/`](./lemoncode-challenge/) - 🏆 Laboratorio Final
+- **README.md**: Instrucciones del challenge
+- **dotnet-stack/**: Stack completo con backend .NET
+- **node-stack/**: Stack completo con backend Node.js
+- **images/**: Recursos del laboratorio
+- **Contenido**: Aplicación completa de 3 capas para dockerizar
+
+## 🚀 Cómo usar este contenido
+
+1. **Sigue el orden**: Los días están diseñados para construir conocimiento progresivamente
+2. **Practica**: Cada directorio incluye ejercicios hands-on
+3. **Experimenta**: Usa los scripts `.sh` para explorar comandos
+4. **Completa el challenge**: El laboratorio final integra todo lo aprendido
+
+## 📚 Agenda Detallada
 
 ### Día I: Introducción a Docker
 
@@ -222,4 +291,52 @@
 #### Chuleta de comandos
 #### Ejercicios
 
-### Laboratorio de Docker
+## 🎓 Laboratorio Final - Lemoncode Challenge
+
+El [`lemoncode-challenge/`](./lemoncode-challenge/) contiene un ejercicio integrador donde pondrás en práctica todo lo aprendido:
+
+### 🎯 Objetivo
+Dockerizar una aplicación completa de 3 capas:
+- **Frontend**: Aplicación web en Node.js
+- **Backend**: API REST (puedes elegir entre .NET o Node.js)
+- **Base de datos**: MongoDB para persistencia
+
+### 📋 Requisitos técnicos
+- Crear red personalizada `lemoncode-challenge`
+- Configurar comunicación entre servicios
+- Implementar persistencia con volúmenes
+- Exponer frontend en puerto 8080
+- Poblar base de datos con estructura específica
+
+### 💼 Stacks disponibles
+- **`dotnet-stack/`**: Backend en .NET Core
+- **`node-stack/`**: Backend en Node.js
+
+## 🛠️ Herramientas y Comandos Principales
+
+### Scripts de práctica incluidos:
+- **`contenedores-v.sh`**: Comandos de networking
+- **`deberes-v.sh`**: Ejercicios de redes
+- **`contenedores-vi.sh`**: Docker Compose y Swarm
+- **`deberes-vi.sh`**: Ejercicios de orquestación
+- **`deberes-ii.sh`**: Ejercicios de imágenes
+
+### Tecnologías cubiertas:
+- **Docker Engine**: Gestión de contenedores
+- **Docker Images**: Creación y gestión de imágenes
+- **Docker Networks**: Comunicación entre contenedores
+- **Docker Volumes**: Persistencia de datos
+- **Docker Compose**: Aplicaciones multi-contenedor
+- **Docker Swarm**: Orquestación y clustering
+- **Docker Registry**: Distribución de imágenes
+
+## 📖 Recursos adicionales
+
+Cada directorio incluye:
+- 📝 **README.md**: Guías detalladas paso a paso
+- 🖼️ **imagenes/**: Diagramas y capturas explicativas
+- 🔧 **Scripts**: Comandos listos para ejecutar
+- 💡 **Ejemplos**: Aplicaciones reales para practicar
+- 📋 **Chuletas**: Resúmenes de comandos importantes
+
+¡Feliz aprendizaje con Docker! 🐳✨

@@ -10,26 +10,508 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-    <title>Lemoncode Challenge</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.12/index.global.min.css" rel="stylesheet" />
+
+    <title>Lemoncode Classes Calendar</title>
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --primary-dark-green: #059669;
+            --light-green: #ecfdf5;
+            --lemon-yellow: #fbbf24;
+            --lemon-dark: #f59e0b;
+            --success-color: #28a745;
+            --light-bg: #f9fafb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .header-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #10b981 0%, #fbbf24 50%, #10b981 100%);
+        }
+
+        .header-container::after {
+            content: '🍋';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 80px;
+            opacity: 0.08;
+        }
+
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #10b981;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+            color: #10b981;
+        }
+
+        .lemon-accent {
+            color: #fbbf24;
+        }
+
+        .header-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: #065f46;
+            margin-top: 0.5rem;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .connection-status.error {
+            background: #fee2e2;
+            border-color: #dc3545;
+            color: #7f1d1d;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.error {
+            background: #dc3545;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #10b981;
+        }
+
+        #calendar {
+            max-width: 100%;
+        }
+
+        .fc {
+            font-size: 0.95rem;
+        }
+
+        .fc .fc-button-primary {
+            background-color: #10b981 !important;
+            border-color: #10b981 !important;
+        }
+
+        .fc .fc-button-primary:not(:disabled).fc-button-active,
+        .fc .fc-button-primary:not(:disabled):hover {
+            background-color: #059669 !important;
+            border-color: #059669 !important;
+        }
+
+        .fc .fc-today {
+            background-color: #ecfdf5 !important;
+        }
+
+        .fc .fc-button-primary:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3) !important;
+        }
+
+        .fc-col-header-cell {
+            background-color: #ecfdf5;
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .fc-daygrid-day.fc-day-other {
+            background-color: #f3f4f6;
+        }
+
+        .class-details {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: none;
+            animation: slideInUp 0.3s ease-out;
+            margin-top: 2rem;
+            border-left: 5px solid #fbbf24;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .class-details h5 {
+            color: #10b981;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .class-detail-item {
+            margin-bottom: 1.2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .class-detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .class-detail-label {
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .class-detail-label i {
+            font-size: 0.9rem;
+            color: #fbbf24;
+        }
+
+        .class-detail-value {
+            color: #374151;
+            font-size: 1rem;
+        }
+
+        .class-level-badge {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .level-beginner {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .level-intermediate {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .level-advanced {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .fc-event.beginner {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+        }
+
+        .fc-event.intermediate {
+            background-color: #fbbf24 !important;
+            border-color: #f59e0b !important;
+            color: #000 !important;
+        }
+
+        .fc-event.intermediate .fc-event-title {
+            color: #000 !important;
+        }
+
+        .fc-event.advanced {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+            box-shadow: 0 0 0 2px #fbbf24 !important;
+        }
+
+        .fc-event-title {
+            font-weight: 700;
+            padding: 0.3rem 0;
+        }
+
+        .no-classes-alert {
+            background: linear-gradient(135deg, #ecfdf5 0%, #fef3c7 100%);
+            border: 2px dashed #10b981;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .no-classes-alert i {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .no-classes-alert h5 {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .calendar-container {
+                padding: 1rem;
+            }
+
+            .fc {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <h1>Topics</h1>
+    <div class="container-lg">
+        <!-- Header Section -->
+        <div class="header-container">
+            <div class="header-title">
+                <i class="bi bi-calendar-event header-icon"></i>
+                Calendario Lemoncode
+            </div>
+            <p class="header-subtitle">
+                <i class="bi bi-book"></i>
+                Horario de cursos disponibles
+            </p>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span>Backend conectado</span>
+            </div>
         </div>
-        <div class="row">
 
-            <ul class="list-group">
-                <% topics.forEach(function(topic){ %>
-                    <li class="list-group-item">
-                        <%- topic.Name %>
-                    </li>
-                    <%});%>
-            </ul>
+        <!-- Calendar Section -->
+        <div class="calendar-container">
+            <% if (classes && classes.length > 0) { %>
+                <div id="calendar"></div>
+            <% } else { %>
+                <div class="no-classes-alert">
+                    <i class="bi bi-inbox"></i>
+                    <h5>No hay clases disponibles</h5>
+                    <p class="text-muted">No hay clases programadas en este momento. ¡Vuelve pronto!</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Class Details Section -->
+        <div id="selected-event" class="class-details">
+            <h5>
+                <i class="bi bi-info-circle"></i>
+                Detalles de la clase
+            </h5>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-pencil-square"></i>
+                    Nombre
+                </div>
+                <div class="class-detail-value" id="event-name"></div>
+            </div>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-person-fill"></i>
+                    Instructor
+                </div>
+                <div class="class-detail-value" id="event-instructor"></div>
+            </div>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-star-fill"></i>
+                    Nivel
+                </div>
+                <div class="class-detail-value" id="event-level"></div>
+            </div>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-calendar-check"></i>
+                    Fecha de inicio
+                </div>
+                <div class="class-detail-value" id="event-start"></div>
+            </div>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-calendar-x"></i>
+                    Fecha de fin
+                </div>
+                <div class="class-detail-value" id="event-end"></div>
+            </div>
+            <div class="class-detail-item">
+                <div class="class-detail-label">
+                    <i class="bi bi-hourglass-split"></i>
+                    Duración
+                </div>
+                <div class="class-detail-value" id="event-duration"></div>
+            </div>
         </div>
     </div>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.12/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const selectedEventEl = document.getElementById('selected-event');
+            const connectionStatus = document.getElementById('connectionStatus');
+
+            // Convert server data to FullCalendar events
+            const classes = <%- JSON.stringify(classes || []) %>;
+            
+            // Check if we have classes and show connection status
+            if (classes && classes.length > 0) {
+                connectionStatus.innerHTML = '<span class="status-dot"></span><span><i class="bi bi-check-circle"></i> Backend conectado (' + classes.length + ' clases cargadas)</span>';
+            } else if (classes && classes.length === 0) {
+                connectionStatus.innerHTML = '<span class="status-dot"></span><span><i class="bi bi-check-circle"></i> Backend conectado (sin clases disponibles)</span>';
+            }
+
+            const events = classes.map(cls => ({
+                id: cls._id || cls.id,
+                title: cls.name,
+                start: cls.startDate,
+                end: cls.endDate,
+                extendedProps: {
+                    instructor: cls.instructor,
+                    level: cls.level,
+                    duration: cls.duration
+                },
+                classNames: [(cls.level || '').toLowerCase()]
+            }));
+
+            if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'es',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    buttonText: {
+                        today: 'Hoy',
+                        month: 'Mes',
+                        week: 'Semana',
+                        day: 'Día'
+                    },
+                    events: events,
+                    editable: false,
+                    selectable: true,
+                    eventClick: function(info) {
+                        const event = info.event;
+                        document.getElementById('event-name').textContent = event.title;
+                        document.getElementById('event-instructor').textContent = event.extendedProps.instructor;
+                        
+                        const levelBadge = `<span class="class-level-badge level-${event.extendedProps.level.toLowerCase()}">${event.extendedProps.level}</span>`;
+                        document.getElementById('event-level').innerHTML = levelBadge;
+                        
+                        const startDate = new Date(event.start).toLocaleString('es-ES', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                        const endDate = new Date(event.end).toLocaleString('es-ES', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                        document.getElementById('event-start').textContent = startDate;
+                        document.getElementById('event-end').textContent = endDate;
+                        document.getElementById('event-duration').textContent = event.extendedProps.duration + ' horas';
+                        
+                        selectedEventEl.style.display = 'block';
+                        selectedEventEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                });
+
+                calendar.render();
+            }
+        });
+    </script>
+
+    <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
         crossorigin="anonymous"></script>

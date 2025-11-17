@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confetti Celebration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="confetti-container" id="confetti-container"></div>
+        <div class="content">
+            <h1>🎉 ¡Celebración!</h1>
+            <p>Bind Mount Docker en Acción</p>
+            <button onclick="launchConfetti()">Lanzar Confeti</button>
+            <div class="color-panel">
+                <h3>Personaliza los colores en styles.css</h3>
+                <p>Modifica la variable CSS en la raíz del archivo:</p>
+                <code> --confetti-color: #00FF00;</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function launchConfetti() {
+            const container = document.getElementById('confetti-container');
+            
+            // Limpiar confeti anterior
+            container.innerHTML = '';
+            
+            // Crear 80 confetis para más efecto
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.animationDelay = (Math.random() * 0.8) + 's';
+                confetti.style.animationDuration = (2 + Math.random() * 1) + 's';
+                container.appendChild(confetti);
+            }
+            
+            // Limpiar después de la animación
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 4000);
+        }
+        
+        function getRandomColor() {
+            // Todos los confetis usan el mismo color definido en CSS
+            return getComputedStyle(document.documentElement).getPropertyValue('--confetti-color').trim();
+        }
+        
+        // Lanzar confeti automáticamente al cargar
+        window.addEventListener('load', () => {
+            setTimeout(launchConfetti, 500);
+        });
+    </script>
+</body>
+</html>

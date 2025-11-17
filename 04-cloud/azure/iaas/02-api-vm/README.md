@@ -1,21 +1,22 @@
-# Crear la máquina virtual para la API en .NET
+# 🔌 Crear la máquina virtual para la API en .NET
 
 Para esta pieza de la arquitectura de Tour of Heroes vamos a usar una máquina virtual que utilice como sistema operativo Ubuntu. Para este componente vas a necesitar que cargues las siguientes variables:
 
 ```bash
-# API VM on Azure
+# 🔌 API VM en Azure
 API_VM_NAME="api-vm"
 API_VM_DNS_LABEL="tour-of-heroes-api-vm-$RANDOM"
 API_VM_IMAGE="Ubuntu2204"
 API_VM_ADMIN_USERNAME="apiadmin"
 API_VM_ADMIN_PASSWORD="Api@dmin-1232"
 API_VM_NSG_NAME="api-vm-nsg"
+VM_SIZE="Standard_B1ms"
 ```
 
 o si estás en Windows:
 
 ```pwsh
-# API VM on Azure
+# 🔌 API VM en Azure
 $API_VM_NAME="api-vm"
 $API_VM_DNS_LABEL="tour-of-heroes-api-vm-$RANDOM"
 $API_VM_IMAGE="Ubuntu2204"
@@ -27,7 +28,7 @@ $API_VM_NSG_NAME="api-vm-nsg"
 Ahora con estas vamos a crear la máquina virtual de la misma forma que lo hicimos con la base de datos:
 
 ```bash
-echo -e "Create an API VM named $API_VM_NAME with image $API_VM_IMAGE"
+echo -e "🖥️ Creando VM de API $API_VM_NAME"
 
 FQDN_API_VM=$(az vm create \
 --resource-group $RESOURCE_GROUP \
@@ -41,13 +42,13 @@ FQDN_API_VM=$(az vm create \
 --nsg $API_VM_NSG_NAME \
 --size $VM_SIZE --query "fqdns" -o tsv)
 
-echo -e "API VM created"
+echo -e "✅ VM de API creada"
 ```
 
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create an api vm named $API_VM_NAME with image $API_VM_IMAGE"
+echo -e "🖥️ Creando VM de API $API_VM_NAME"
 
 $FQDN_API_VM=az vm create `
 --resource-group $RESOURCE_GROUP `
@@ -61,14 +62,14 @@ $FQDN_API_VM=az vm create `
 --nsg $API_VM_NSG_NAME `
 --size $VM_SIZE --query "fqdns" -o tsv
 
-echo -e "Api VM created"
+echo -e "✅ VM de API creada"
 ```
 
 Sin embargo, con esto solo no basta ya que por ahora sólo tenemos la máquina virtual pero no está ni configurada para poder hospedar mi API en .NET ni configurado ningún servidor web que la sirva. Para ello vamos a hacer uso del subcomando **run-command** de la CLI de Azure. Este nos permite ejecutar comandos en la máquina virtual de forma remota:
 
 ```bash
 # https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-7.0&tabs=linux-ubuntu
-echo -e "Execute script to install nginx, .NET Core, deploy the app and create the service"
+echo -e "⚙️ Ejecutando script para instalar Nginx, .NET Core y la API"
 az vm run-command invoke \
 --resource-group $RESOURCE_GROUP \
 --name $API_VM_NAME \
@@ -81,7 +82,7 @@ o si estás en Windows:
 
 ```pwsh
 # https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-7.0&tabs=linux-ubuntu
-echo -e "Execute script to install nginx, .NET Core, deploy the app and create the service"
+echo -e "⚙️ Ejecutando script para instalar Nginx, .NET Core y la API"
 az vm run-command invoke `
 --resource-group $RESOURCE_GROUP `
 --name $API_VM_NAME `
@@ -95,7 +96,7 @@ Con este comando estamos ejecutando un script que se encuentra en la carpeta **s
 Por último necesitamos crear una **network security rule** para permitir el acceso a través del puerto 80 a la API:
 
 ```bash
-echo -e "Create a network security group rule for port 80"
+echo -e "🔒 Creando regla de seguridad para permitir puerto 80"
 az network nsg rule create \
 --resource-group $RESOURCE_GROUP \
 --nsg-name $API_VM_NSG_NAME \
@@ -108,7 +109,7 @@ az network nsg rule create \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create a network security group rule for port 80"
+echo -e "🔒 Creando regla de seguridad para permitir puerto 80"
 
 az network nsg rule create `
 --resource-group $RESOURCE_GROUP `
@@ -133,4 +134,4 @@ El resultado hasta ahora debería ser el siguiente:
 
 ![VM para la API](/04-cloud/azure/iaas/images/api-vm-y-db-vm.png)
 
-Y con esto ya tendríamos la API desplegada en una máquina virtual de Azure. Ahora vamos a desplegar el frontend en otra máquina virtual de Azure. Puedes continuar en el siguiente [paso](../03-frontend-vm/README.md).
+Y con esto ya tendríamos la API desplegada en una máquina virtual de Azure. Ahora vamos a desplegar el frontend en otra máquina virtual de Azure. Puedes continuar en el siguiente [paso](../03-frontend-vm/README.md) 🚀.

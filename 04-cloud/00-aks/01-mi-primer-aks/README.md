@@ -5,9 +5,9 @@ Para poder ejecutar los siguientes comando necesitas tener instalado Azure CLI c
 Una vez lo tengas, utiliza estas variables de entorno para configurar las tuyas propias si fuera necesario:
 
 ```bash
-RESOURCE_GROUP="bootcamp-lemoncode"
-AKS_NAME="lemoncode-cluster"
-LOCATION="uksouth"
+RESOURCE_GROUP="bootcamp-lemoncode$RANDOM"
+AKS_NAME="lemoncode-cluster$RANDOM"
+LOCATION="spaincentral"
 ```
 
 o si estás en Windows:
@@ -15,7 +15,7 @@ o si estás en Windows:
 ```pwsh
 $RESOURCE_GROUP="bootcamp-lemoncode"
 $AKS_NAME="lemoncode-cluster"
-$LOCATION="uksouth"
+$LOCATION="spaincentral"
 ```
 
 Con estas estamos diciendo cuál sería el nombre del grupo de recursos donde voy a almacenar mi nuevo clúster de Kubernetes, el nombre que le voy a dar al mismo, así como la localización donde se desplegará este. Con estas ya puedo crear primeramente el grupo de recursos:

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Confetti Party!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+        .confetti:nth-child(2n) { background: #4ecdc4; }
+        .confetti:nth-child(3n) { background: #45b7d1; }
+        .confetti:nth-child(4n) { background: #f9ca24; }
+        .confetti:nth-child(5n) { background: #f0932b; }
+        .confetti:nth-child(6n) { background: #eb4d4b; }
+        .confetti:nth-child(7n) { background: #6c5ce7; }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 ¡Confetti Party! 🎉</h1>
+        <p class="subtitle">¡Tu aplicación Python está funcionando perfectamente!</p>
+        <p class="subtitle">🐳 Contenerizada con Docker</p>
+    </div>
+    
+    <script>
+        // Generar confetti
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+                
+                // Remover confetti después de la animación
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // Crear confetti cada 2 segundos
+        setInterval(createConfetti, 2000);
+        createConfetti(); // Crear confetti inicial
+    </script>
+</body>
+</html>

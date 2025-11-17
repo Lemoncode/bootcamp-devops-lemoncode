@@ -10,7 +10,6 @@ WORKDIR /app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
 #Instalo las dependencias de mi aplicación, ejecutando el comando npm install
-# RUN npm install --silent --production && mv node_modules ../
 RUN npm install
 
 #Copio el resto de los archivos en el directorio /app

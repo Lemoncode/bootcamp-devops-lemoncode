@@ -1,23 +1,24 @@
-# Crear una máquina virtual para el frontend en Angular
+# 🎨 Crear una máquina virtual para el frontend en Angular
 
 Ahora vamos a crear la máquina virtual para el frontend. Para ello, vamos a necesitar las siguientes variables de entorno:
 
 ```bash
-# Frontend VM on Azure
+# 🎨 VM del Frontend en Azure
 FRONTEND_VM_NAME="frontend-vm"
 FRONTEND_DNS_LABEL="tour-of-heroes-frontend-vm-$RANDOM"
-FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2022-Datacenter:latest"
+FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2019-Datacenter-Core:17763.8027.251112"
 FRONTEND_VM_ADMIN_USERNAME="frontendadmin"
 FRONTEND_VM_ADMIN_PASSWORD="fr0nt#nd@dmin123"
 FRONTEND_VM_NSG_NAME="frontend-vm-nsg"
+VM_SIZE="Standard_B1ms"
 ```
 
 o si estás en Windows:
 
 ```pwsh
-# Frontend VM on Azure
+# 🎨 VM del Frontend en Azure
 $FRONTEND_VM_NAME="frontend-vm"
-$FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2022-Datacenter:latest"
+$FRONTEND_VM_IMAGE="MicrosoftWindowsServer:WindowsServer:2016-Datacenter:latest"
 $FRONTEND_VM_ADMIN_USERNAME="frontendadmin"
 $FRONTEND_VM_ADMIN_PASSWORD="fr0nt#nd@dmin123"
 $FRONTEND_VM_NSG_NAME="frontend-vm-nsg"
@@ -26,7 +27,7 @@ $FRONTEND_VM_NSG_NAME="frontend-vm-nsg"
 Con ellas ya podemos crear la máquina virtual de la misma forma que el resto:
 
 ```bash
-echo -e "Create a frontend vm named $FRONTEND_VM_NAME with image $FRONTEND_VM_IMAGE"
+echo -e "🖥️ Creando VM del frontend $FRONTEND_VM_NAME"
 
 FQDN_FRONTEND_VM=$(az vm create \
 --resource-group $RESOURCE_GROUP \
@@ -44,7 +45,7 @@ FQDN_FRONTEND_VM=$(az vm create \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Create a frontend vm named $FRONTEND_VM_NAME with image $FRONTEND_VM_IMAGE"
+echo -e "🖥️ Creando VM del frontend $FRONTEND_VM_NAME"
 
 $FQDN_FRONTEND_VM=az vm create `
 --resource-group $RESOURCE_GROUP `
@@ -62,7 +63,7 @@ $FQDN_FRONTEND_VM=az vm create `
 Para que veas que la ejecución de scripts no es solo para máquinas Linux y que también se puede hacer con Windows, vamos a utilizar un script en PowerShell para poder configurar también esta máquina con un IIS y con lo que Angular necesita para poder funcionar.
 
 ```bash
-echo -e "Execute script to install IIS and deploy tour-of-heroes-angular SPA"
+echo -e "⚙️ Ejecutando script para instalar IIS y desplegar Angular"
 az vm run-command invoke \
 --resource-group $RESOURCE_GROUP \
 --name $FRONTEND_VM_NAME \
@@ -74,7 +75,7 @@ az vm run-command invoke \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Execute script to install IIS and deploy tour-of-heroes-angular SPA"
+echo -e "⚙️ Ejecutando script para instalar IIS y desplegar Angular"
 
 az vm run-command invoke `
 --resource-group $RESOURCE_GROUP `
@@ -89,8 +90,9 @@ En este ejemplo he desplegado la aplicación en otro puerto, en el 8080, para qu
 Lo último que nos queda es habilitar los puertos 80 y 8080 en el NSG de la máquina virtual del frontend:
 
 ```bash
-echo -e "Frontend vm created with FQDN $FQDN_FRONTEND_VM"
+echo -e "✅ VM del frontend creada con FQDN $FQDN_FRONTEND_VM"
 
+echo -e "🔒 Creando reglas de seguridad para puertos 80 y 8080"
 az network nsg rule create \
 --resource-group $RESOURCE_GROUP \
 --nsg-name $FRONTEND_VM_NSG_NAME \
@@ -111,8 +113,9 @@ az network nsg rule create \
 o si estás en Windows:
 
 ```pwsh
-echo -e "Frontend vm created with FQDN $FQDN_FRONTEND_VM"
+echo -e "✅ VM del frontend creada con FQDN $FQDN_FRONTEND_VM"
 
+echo -e "🔒 Creando reglas de seguridad para puertos 80 y 8080"
 az network nsg rule create `
 --resource-group $RESOURCE_GROUP `
 --nsg-name $FRONTEND_VM_NSG_NAME `
@@ -133,7 +136,7 @@ az network nsg rule create `
 Para probar que todo funciona, abre un navegador y accede a la dirección:
 
 ```bash
-echo http://$FRONTEND_DNS_LABEL.$LOCATION.cloudapp.azure.com:8080
+echo "🌐 Accede a: http://$FRONTEND_DNS_LABEL.$LOCATION.cloudapp.azure.com:8080"
 ```
 
 y deberías ver la aplicación Angular funcionando.
@@ -145,6 +148,7 @@ Ahora la arquitectura de nuestra aplicación en Azure debería ser la siguiente:
 Si quisieras acceder a la máquina virtual del frontend, deberías habilitar en el NSG el puerto 3389 para poder acceder por RDP.
 
 ```bash
+echo -e "🔐 Habilitando acceso RDP (puerto 3389)"
 az network nsg rule create \
 --resource-group $RESOURCE_GROUP \
 --nsg-name $FRONTEND_VM_NSG_NAME \
@@ -168,4 +172,4 @@ az network nsg rule create `
 
 Y desde el portal de Azure, en la máquina virtual del frontend, en la pestaña **Overview** puedes hacer clic en **Connect** y luego en **Download RDP File** para descargar el fichero de conexión RDP.
 
-Lo último que nos queda es crear un balanceador de carga para poder acceder a la aplicación desde el puerto 80 y no tener que poner el puerto 8080 en la URL. Puedes seguir los pasos [aquí](../04-load-balancer/README.md).
+Lo último que nos queda es crear un balanceador de carga para poder acceder a la aplicación desde el puerto 80 y no tener que poner el puerto 8080 en la URL. Puedes seguir los pasos [aquí](../04-load-balancer/README.md) 🚀.

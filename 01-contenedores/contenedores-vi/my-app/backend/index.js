@@ -67,6 +67,22 @@ router.get("/topics", async (_, res) => {
   }
 });
 
+router.delete("/topics/:id", async (req, res) => {
+  console.log("[DELETE] Topic by ID:", req.params.id);
+
+  try {
+    const result = await Topic.findByIdAndDelete(req.params.id);
+    if (!result) {
+      return res.status(404).send({ error: "Topic not found" });
+    }
+    console.log("Deleted topic:", result);
+    res.send({ message: "Topic deleted successfully", id: req.params.id });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ error: error.message });
+  }
+});
+
 //all routes will be prefixed with /api
 app.use("/api", router);
 

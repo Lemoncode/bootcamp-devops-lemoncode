@@ -1,38 +1,50 @@
-## Desplegando Tour of heroes en servicios PaaS de Azure
+## 🚀 Desplegando Tour of Heroes en servicios PaaS de Azure
 
-Antes de empezar a montar servicios PaaS como loc@s lo primero que necesitas es tener una cuenta de Azure. Si no tienes una, puedes crear una gratuita [aquí](https://azure.microsoft.com/es-es/free/).
+### 📋 Requisitos previos
 
-Por otro lado, necesitas tener instalado el [CLI de Azure](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest) en tu máquina local.
+Antes de empezar a montar servicios PaaS necesitas tener:
 
-Todos los comandos que te comparto aquí puedes ejecutarlos en un terminal e ir construyendo poco a poco tu entorno.
+- ☁️ **Cuenta de Azure**: Si no tienes una, puedes crear una [gratuita aquí](https://azure.microsoft.com/es-es/free/)
+- 🖥️ **Azure CLI**: Necesitas tener instalado el [CLI de Azure](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli?view=azure-cli-latest) en tu máquina local
 
-Una vez que tengas una cuenta de Azure y el CLI instalado, lo primero que tienes que hacer es logarte en tu cuenta de Azure desde el CLI. Para ello, ejecuta el siguiente comando:
+### 🔑 Paso 1: Autenticarse en Azure
+
+Ejecuta el siguiente comando para iniciar sesión en tu cuenta de Azure:
 
 ```bash
-az login
+az login --use-device-code
 ```
 
-Una vez hecho esto, te recomiendo que setees algunas variables de entorno para que no tengas que escribir tanto, ni acordarte de los nombres que has dado a los recursos que crearemos a continuación. Para ello, ejecuta los siguientes comandos:
+### 📝 Paso 2: Configurar variables de entorno
 
+Para facilitar la creación de recursos, te recomendamos que definas estas variables en tu terminal:
+
+**En Linux/macOS:**
 ```bash
 # General variables
 RESOURCE_GROUP="tour-of-heroes-paas"
-LOCATION="uksouth"
+LOCATION="spaincentral"
 ```
-o si estás en Windows:
 
+**En Windows PowerShell:**
 ```pwsh
 # General variables
 $RESOURCE_GROUP="tour-of-heroes-paas"
-$LOCATION="uksouth"
+$LOCATION="spaincentral"
 ```
 
-Una vez que las tengas cargadas en tu terminal, deber saber que todo lo que crees en Azure tiene que estar dentro de lo que se conoce como **grupo de recursos**. Un grupo de recursos es un contenedor lógico en el que se despliegan y se administran los recursos de Azure.
+### 📦 Paso 3: Crear un grupo de recursos
 
-Para crear uno, ejecuta el siguiente comando:
+Un **grupo de recursos** es un contenedor lógico en el que se despliegan y administran todos tus recursos de Azure.
+
+Crea uno ejecutando:
 
 ```bash
 az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-Ahora que ya tienes lo mínimo indispensable, vamos a empezar creando la base de datos. Para seguir los pasos puedes hacerlo en este otro [README](/04-cloud/azure/paas/01-sql-database/README.md).
+### 🗄️ Paso 4: Crear la base de datos
+
+Ahora que tienes los requisitos básicos listos, vamos a crear la base de datos. 
+
+Continúa con el siguiente paso en este [README](./01-sql-database/README.md) 📖

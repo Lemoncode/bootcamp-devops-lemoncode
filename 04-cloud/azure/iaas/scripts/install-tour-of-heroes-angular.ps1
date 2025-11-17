@@ -3,46 +3,54 @@ param(
     [string]$api_url
 )
 
-Write-Output "Install IIS on the frontend vm"
+# Crear carpeta Temp si no existe
+Write-Output "[INFO] Creando carpeta temporal C:\Temp"
+if (-not (Test-Path "C:\Temp")) {
+    New-Item -ItemType Directory -Path "C:\Temp" -Force | Out-Null
+}
+
+Write-Output "[INFO] Instalando IIS en la VM del frontend"
 Install-WindowsFeature -name Web-Server -IncludeManagementTools
 
-Write-Output "Download URL Rewrite Module from here https://www.iis.net/downloads/microsoft/url-rewrite"
+Write-Output "[INFO] Descargando modulo URL Rewrite"
 Invoke-WebRequest -Uri "https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi" -OutFile C:\Temp\rewrite_amd64_en-US.msi
 
-Write-Output "Install URL Rewrite Module"
+Write-Output "[INFO] Instalando modulo URL Rewrite"
 Start-Process -FilePath "C:\Temp\rewrite_amd64_en-US.msi" -ArgumentList "/quiet" -Wait
 
-Write-Output "Modify the default website index.html with the name of the computer"
+Write-Output "[INFO] Modificando pagina index.html predeterminada"
 $new_content =
 @"
 <!DOCTYPE html>
 <html>
 <body>
-<h1>Hello developer!</h1>
-<p>Running on <b>$env:computername</b></p>
+<h1>Hola desarrollador!</h1>
+<p>Ejecutandose en <b>$env:computername</b></p>
 </body>
 </html>
 "@
 
 Set-Content -Path C:\inetpub\wwwroot\index.html -Value $new_content
 
-Write-Output "Create a folder for the frontend app"
+Write-Output "[INFO] Creando carpeta para la aplicacion del frontend"
 mkdir $env:systemdrive\inetpub\wwwroot\frontend
 
-Write-Output "Download the last release of the frontend app from github"
+Write-Output "[INFO] Descargando la ultima version de la aplicacion desde GitHub"
 Invoke-WebRequest -Uri $release_url -OutFile C:\Temp\dist.zip
 
-Write-Output "Unzip the frontend app in the folder"
+Write-Output "[INFO] Descomprimiendo la aplicacion del frontend"
 Expand-Archive -Path C:\Temp\dist.zip -DestinationPath C:\inetpub\wwwroot\frontend
 
-Write-Output "Replace environment variables like envsubst in linux"
+Write-Output "[INFO] Reemplazando variables de entorno"
 ((Get-Content -path C:\inetpub\wwwroot\frontend\assets\env.template.js -Raw) -replace ([regex]::Escape('${API_URL}')), $api_url) | Set-Content -Path C:\inetpub\wwwroot\frontend\assets\env.js
  
-Write-Output "Create a new website in IIS"
+Write-Output "[INFO] Creando nuevo sitio web en IIS"
 New-IISSite -Name "TourOfHeroesAngular" -BindingInformation "*:8080:" -PhysicalPath "$env:systemdrive\inetpub\wwwroot\frontend"
 
-Write-Output "Create an aplication inside the new site"
+Write-Output "[INFO] Creando aplicacion dentro del nuevo sitio"
 New-WebApplication -Name "TourOfHeroesAngular" -Site "TourOfHeroesAngular" -ApplicationPool "TourOfHeroesAngular" -PhysicalPath "$env:systemdrive\inetpub\wwwroot\frontend"
 
-Write-Output "Enable 8080 port in the firewall"
-New-NetFirewallRule -DisplayName "Allow 8080" -Direction Inbound -LocalPort 8080 -Protocol TCP -Action Allow
+Write-Output "[INFO] Habilitando puerto 8080 en el firewall"
+New-NetFirewallRule -DisplayName "Permitir 8080" -Direction Inbound -LocalPort 8080 -Protocol TCP -Action Allow
+
+Write-Output "[SUCCESS] Instalacion completada!"

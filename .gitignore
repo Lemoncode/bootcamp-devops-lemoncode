@@ -36,3 +36,33 @@ private.readme.md
 .vagrant
 01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.assets.cache
 01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.GeneratedMSBuildEditorConfig.editorconfig
+
+
+# Gradle
+.gradle
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+# Ignorar el directorio obj en cualquier nivel
+**/[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfoInputs.cache
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.GeneratedMSBuildEditorConfig.editorconfig
+01-contenedores/lemoncode-challenge/dotnet-stack/backend/obj/Debug/netcoreapp3.1/backend.AssemblyInfo.cs
+
+# Challenge solutions for instructors only
+01-contenedores/lemoncode-challenge/**/CHALLENGE.md
+01-contenedores/lemoncode-challenge/LAB_CONTENEDORES.md
