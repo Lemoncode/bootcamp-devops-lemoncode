@@ -12,6 +12,7 @@ We will deploy the metrics server using [Kubernetes Metrics Server](https://gith
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.7.2/components.yaml
 ```
 
 Lets' verify the status of the metrics-server APIService (it could take a few minutes).

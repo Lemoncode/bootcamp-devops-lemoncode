@@ -70,7 +70,7 @@ kubectl -n kube-system logs -f deployment/cluster-autoscaler
 Confirm the autoscaling by visiting `EC2 AWS Management Console` or by using
 
 ```bash
-$ kubectl get nodes
+kubectl get nodes
 NAME                                           STATUS   ROLES    AGE    VERSION
 ip-192-168-2-232.eu-west-3.compute.internal    Ready    <none>   99s    v1.18.9-eks-d1db3c
 ip-192-168-27-247.eu-west-3.compute.internal   Ready    <none>   107s   v1.18.9-eks-d1db3c

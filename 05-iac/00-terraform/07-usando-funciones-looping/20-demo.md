@@ -45,7 +45,6 @@ Actualizamos `s3.tf`
 
 ```
 
-
 ## Clean Up
 
 ```bash
