@@ -27,7 +27,7 @@ Por ejemplo, si las queremos alimentar desde la consola:
 terraform plan -var=billing_code="FOO9999" -var=project="web-app" -var=aws_access_key="YOUR_ACCESS_KEY" -var=aws_secret_key="YOUR_SECRET_KEY" -out d2.tfplan
 ```
 
-Cómo podemos observar este comando puede ser muy extenso. Ua mejor forma es creando un fichero `tfvars`
+Cómo podemos observar este comando puede ser muy extenso. Una mejor forma es creando un fichero `tfvars`
 
 Crear `lab/lc_web_app/terraform.tfvars`
 

@@ -1,6 +1,8 @@
 # For Expression
 
-We are trying to create a tuple of cidrsubnet addresses to pass to the public subnets argument. The number of elements in the tuple should equal the value stored in vpc_subnet_count, which means we'll need an input to the for expression that is a list of integers from 0 to the value in vpc_subnet_count. Fortunately, there is a function called range that will do exactly that. Let me pull up the terminal, and we'll start up terraform console to test out these expressions. 
+We are trying to create a tuple of cidrsubnet addresses to pass to the public subnets argument. The number of elements in the tuple should equal the value stored in `vpc_subnet_count`, which means we'll need an input to the for expression that is a list of integers from 0 to the value in `vpc_subnet_count`. Fortunately, there is a function called range that will do exactly that. 
+
+Let me pull up the terminal, and we'll start up terraform console to test out these expressions. 
 
 ```bash
 terraform console
@@ -16,7 +18,9 @@ tolist([
 ])
 ```
 
-That sounds good; that's a good start. Now we have a list to use as an input value for the for expression. For the evaluation portion of the expression, we can use the cidrsubnet function, passing it the vpc_cidr_block variable, 8 bits to add to the subnet mask, and the element value in our input list. Let's try to construct a for expression with that information. 
+That sounds good; that's a good start. Now we have a list to use as an input value for the for expression. For the evaluation portion of the expression, we can use the cidrsubnet function, passing it the `vpc_cidr_block` variable, 8 bits to add to the subnet mask, and the element value in our input list. 
+
+Let's try to construct a for expression with that information. 
 
 ```bash
 > [ for subnet in range(var.vpc_subnet_count) : cidrsubnet(var.vpc_cidr_block, 8, subnet) ]
@@ -26,7 +30,9 @@ That sounds good; that's a good start. Now we have a list to use as an input val
 ]
 ```
 
-We'll start the expression with square brackets because we want a tuple back, we'll have the for keyword to start our for expression, we can set an iterator for our list, we'll call it subnet, and that's going to be in the range, and we'll set the range to var.vpc_subnet_count, which we know will return a list with two elements, 0 and 1. Then we'll add the colon and then the expression we want to use for the result of each element. We'll do the cidrsubnet function, we'll feed it the variable vpc_cidr_block, 8, to add 8 bits to the subnet mask, and then the subnet iterator. That will be 0 on the first evaluation and 1 on the second. We'll close that parentheses for the cidrsubnet function and close the for expression with a square bracket. I'll go ahead and hit Enter, and we get back a tuple that has two subnets in it. Perfect, that's exactly what we need. And this will be dynamic based off of the values of the cidr_block and the subnet_count. 
+We'll start the expression with square brackets because we want a tuple back, we'll have the for keyword to start our for expression, we can set an iterator for our list, we'll call it subnet, and that's going to be in the range, and we'll set the range to `var.vpc_subnet_count`, which we know will return a list with two elements, 0 and 1. 
+
+Then we'll add the colon and then the expression we want to use for the result of each element. We'll do the `cidrsubnet` function, we'll feed it the variable `vpc_cidr_block`, 8, to add 8 bits to the subnet mask, and then the subnet iterator. That will be 0 on the first evaluation and 1 on the second. We'll close that parentheses for the `cidrsubnet` function and close the for expression with a square bracket. I'll go ahead and hit Enter, and we get back a tuple that has two subnets in it. Perfect, that's exactly what we need. And this will be dynamic based off of the values of the `cidr_block` and the `subnet_count`. 
 
 Let's go ahead and copy this entire expression, and I'll hide the terminal. Scrolling up to our vpc module, we can replace the value for public_subnets with our new expression. 
 
@@ -35,7 +41,7 @@ Let's go ahead and copy this entire expression, and I'll hide the terminal. Scro
 ```diff
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "=5.4.0"
+  version = "6.6.0"
 
   cidr = var.vpc_cidr_block
 
@@ -73,7 +79,7 @@ For our tags, we can go down and grab the tags argument from our existing VPC re
 ```diff
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "=5.5.1"
+  version = "6.6.0"
 
   cidr = var.vpc_cidr_block
 
@@ -99,7 +105,7 @@ Set up map_public_ip_on_launch and enable_dns_host_names
 ```diff
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "=5.4.0"
+  version = "6.6.0"
 
   cidr = var.vpc_cidr_block
 
@@ -124,7 +130,7 @@ With our vpc module ready to go, we can remove the other resources.
 ```diff
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "=5.5.1"
+  version = "6.6.0"
 
   cidr = var.vpc_cidr_block
 
@@ -271,7 +277,7 @@ resource "aws_security_group" "connection-sg" {
 
 ```
 
-There we go, I have removed all the resources that we're replacing with the vpc module. Now the next thing we need to do is replace any of the references to our VPC resources with the module references. There are two output values that you'll need to use to update the rest of the configuration. 
+There we go, I have removed all the resources that we're replacing with the *vpc module*. Now the next thing we need to do is replace any of the references to our VPC resources with the module references. There are two output values that you'll need to use to update the rest of the configuration. 
 
 The first is the **vpc_id**, and the second is the **public_subnets** list. For the vpc_id, we'll update the expression to module.vpc.vpc_id. 
 
@@ -378,8 +384,7 @@ resource "aws_instance" "nginx" {
   ....
 ```
 
-
-If you have any questions, you can always reference the solution that's in the m8_solution directory. Go ahead and pause the video now, and when we come back we are going to create our S3 module.
+Now wecan create a new plan 
 
 ```bash
 terraform init

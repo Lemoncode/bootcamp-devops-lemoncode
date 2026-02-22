@@ -13,6 +13,8 @@ import {
 
 The to argument is set to `module.main.aws_vpc.this[0]`. Now, how did I know that's the value it should be? Well, I actually just ran a `terraform plan` without the import blocks to see what resources the module would create, and the address for each resource was listed in the output. 
 
+> NOTE: **MOVE OUT** temporally imports
+
 ```bash
 # move out temporally imports.tf
 terraform init
@@ -67,7 +69,7 @@ That's a handy trick to know if you plan on using modules during your import. No
 +-------------------------------------+--------------------------------------------------+
 
 
-I'll copy the VPC ID and paste it into the identifier argument. If you'd like to challenge yourself, you can try and create the rest of the import blocks for the module instead of using the ones I've provided. I'll note that we will not be using the VPC module for our security groups, so you can skip that one. I'll pause the video now while you give it a try. Okay, we're back, and I'm going to show you the import blocks I've created. 
+I'll copy the VPC ID and paste it into the identifier argument. If you'd like to challenge yourself, you can try and create the rest of the import blocks for the module instead of using the ones I've provided. I'll note that we will not be using the VPC module for our security groups, so you can skip that one. 
 
 ```diff
 ##################################################################################
@@ -131,4 +133,4 @@ import {
 
 I've added import blocks for the subnets, the `internet_gateway`, the route_tables, and the `route_table_associations`. Now the `route_table_associations` are a little bit strange, as they are a combination of the subnet ID and the `route_table` ID. And the default route is the `route_table` ID and the route destination. 
 
-So, always consult the docs when importing resources because the identifier it's not always intuitive. I've also added an import block for the `security_group`, which is not part of the VPC module, so the to address is a resource block in the root module that doesn't exist yet. We'll see how Terraform handles that in a moment.
+So, always consult the docs when importing resources because the identifier it's not always intuitive. I've also added an import block for the `security_group`, which **is not part of the VPC module**, so the to address is a resource block in the root module that doesn't exist yet. We'll see how Terraform handles that in a moment.

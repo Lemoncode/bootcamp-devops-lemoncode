@@ -77,8 +77,7 @@ resource "aws_security_group" "ingress" {
 
 ```
 
-
-Inside the file, we have our resource block for the security group, and there's a nice comment noting that Terraform created this block automatically. All of the entries in the block are hard coded, including the vpc_id reference. That's not what we want. Let's update this to reference the actual VPC ID. The reference should be module.main, and the name of the output for the VPC ID is vpc_id. I'll also update the tags argument to use our local.common tags value.
+Inside the file, we have our resource block for the security group, and there's a nice comment noting that Terraform created this block automatically. All of the entries in the block are hard coded, including the `vpc_id` reference. That's not what we want. Let's update this to reference the actual VPC ID. The reference should be `module.main`, and the name of the output for the VPC ID is `vpc_id`. I'll also update the tags argument to use our `local.common` tags value.
 
 Update `generated.tf`
 
@@ -138,7 +137,7 @@ locals {
 
 module "main" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "5.0.0"
+  version = "6.6.0"
 
   name = var.prefix
   cidr = var.cidr_block
@@ -213,8 +212,8 @@ Update `variables.tf`
 # ....
 variable "prefix" {
   type        = string
-  description = "(Optional) Prefix to use for all resources in this module. Default: globo-dev"
-  default     = "globo-dev"
+  description = "(Optional) Prefix to use for all resources in this module. Default: lc-dev"
+  default     = "lc-dev"
 }
 # diff #
 variable "environment" {

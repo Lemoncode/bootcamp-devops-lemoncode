@@ -1,6 +1,6 @@
 # Deploying Template
 
-I'll go ahead and pull the TERMINAL up again, and I'll switch over to the m3_commands and make sure that I'm in the correct directory, which is m3/cloud_formation_template. There we go. 
+I'll go ahead and pull the TERMINAL up again, and I'll make sure that I'm in the correct directory, which is `./cloud_formation_template`. There we go. 
 
 ```bash
 cd ./cloud-formation-template

@@ -23,7 +23,7 @@ locals {
 
 module "main" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "5.0.0"
+  version = ""6.6.0""
 
   name = var.prefix
   cidr = var.cidr_block

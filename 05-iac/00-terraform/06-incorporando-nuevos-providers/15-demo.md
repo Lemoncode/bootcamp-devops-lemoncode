@@ -133,27 +133,21 @@ El resultado final del `json` que debemos aplicar:
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      }
+      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*"
     },
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
-      "Action": "s3:GetBucketAcl",
+      "Action": "s3:ListBucket",
       "Resource": "arn:aws:s3:::${local.s3_bucket_name}"
     }
   ]
 }
-
 ```
 
 ### Paso 3. Generamos el Bucket
@@ -187,22 +181,17 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      }
+      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*"
     },
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
-      "Action": "s3:GetBucketAcl",
+      "Action": "s3:ListBucket",
       "Resource": "arn:aws:s3:::${local.s3_bucket_name}"
     }
   ]

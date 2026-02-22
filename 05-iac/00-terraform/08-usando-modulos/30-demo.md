@@ -21,13 +21,13 @@ export AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
 export AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
 ```
 
-And after that, we'll run Terraform plan and send the output to m8.tfplan. We'll go ahead and run that now. Since we're moving a lot of things to modules, it's also going to have to recreate a lot of our infrastructure. Again, I'm glad we're doing this all in development before we roll anything out to production. Let's go ahead and run terraform apply to apply all of these changes. 
+And after that, we'll run Terraform plan and send the output to d7.tfplan. We'll go ahead and run that now. Since we're moving a lot of things to modules, it's also going to have to recreate a lot of our infrastructure. Again, I'm glad we're doing this all in development before we roll anything out to production. Let's go ahead and run terraform apply to apply all of these changes. 
 
 ```bash
-terraform plan -out m8.tfplan
-terraform apply m8.tfplan
+terraform plan -out d7.tfplan
+terraform apply d7.tfplan
 ```
 
-If you happen to be running in production and you needed to move resources from the root module to a child module, that's a case where using the terraform state mv command can help you move things from the existing address to a new address that's inside the module, and that would stop Terraform from destroying the target infrastructure that you're trying to update. That's a pretty advanced topic, which we're not going to get into here. For our purposes, we're still in the development environment, so tearing down this infrastructure and recreating it is no big deal. 
+If you happen to be running in production and you needed to move resources from the root module to a child module, that's a case where using the `terraform state mv` command can help you move things from the existing address to a new address that's inside the module, and that would stop Terraform from destroying the target infrastructure that you're trying to update. That's a pretty advanced topic, which we're not going to get into here. For our purposes, we're still in the development environment, so tearing down this infrastructure and recreating it is no big deal. 
 
 This is going to take a while, so I'll go ahead and pause the recording now, and we'll resume when the deployment has completed successfully. All right, our deployment is successful, let's go and check on our website. Copy that address, and go over to a browser. And there we go, our website is up and running and we are now using a VPC module and an S3 module. That's awesome.

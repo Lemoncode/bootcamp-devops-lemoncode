@@ -110,7 +110,7 @@ Outputs:
 
 Tomaremos los resultados y los guardaremos en un archivo de texto para facilitar su consulta. Ahora que hemos revisado la plantilla, implementémosla en AWS. 
 
-[Demo: Deploying Template](./01-deploying-template/readme.md)
+[Demo: Deploying Template](./31-demo.md)
 
 ## Import Command
 
@@ -141,14 +141,14 @@ Pero, ¿cómo se puede saber cuál debería ser ese identificador? Si saltamos a
 
 Esa sección nos dice que el identificador único es el ID de VPC. Cualquier recurso que pueda importarse incluirá una sección de importación en la documentación. Y no todos los recursos se pueden importar, pero la mayoría sí.
 
-Entonces, si importáramos una VPC existente a nuestra configuración de Terraform, el comando podría verse como terraform import aws_vpc.main para la dirección en nuestra configuración y vpc‑123654789 para el identificador de la VPC y AWS.
+Entonces, si importáramos una VPC existente a nuestra configuración de Terraform, el comando podría verse como terraform import `aws_vpc.main` para la dirección en nuestra configuración y vpc‑123654789 para el identificador de la VPC y AWS.
 
 ```bash
 # Importing a vpc into a configuration
 terraform import aws_vpc.main vpc-123456789
 ```
 
-¿Cuál es el proceso real para usar el comando de importación? Vamos a ver. Cuando ejecuta el comando de importación de terraform, Terraform simplemente actualiza los datos de estado con una nueva entrada. Se trata de agregar el recurso al estado en la dirección que especifique y completar el recurso con atributos del recurso real en su entorno de destino.
+¿Cuál es el proceso real para usar el comando de importación? Cuando ejecutamos el comando de importación de terraform, Terraform simplemente actualiza los datos de estado con una nueva entrada. Se trata de agregar el recurso al estado en la dirección que especifique y completar el recurso con atributos del recurso real en su entorno de destino.
 
 ```json
 // terraform.tfstate

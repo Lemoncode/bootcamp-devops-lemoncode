@@ -21,7 +21,7 @@ Creamos infrastructura para ser consumida por otros equipos / desarrolladores. C
 
 Los datos de estado se almacenan en formato JSON, y es muy importante que no vaya al lugar donde está almacenado su estado y comience a jugar con el `JSON`. `JSON` es bastante fácil de romper, lo que significa que es bastante fácil estropear lo que sucede en los datos de ese estado, y a Terraform realmente no le gusta eso.
 
-¿Qué hay en esos datos estatales? Además de los metadatos estatales, hay tres tipos de objetos almacenados en recursos estatales, fuentes de datos y salidas.
+¿Qué hay en esos datos de estado? Además de los metadatos de estado, hay tres tipos de objetos almacenados en recursos de estado, fuentes de datos y salidas.
 
 - Mapping of configuration to actual resources
 - Stored in JSON (don't touch!)
@@ -91,8 +91,6 @@ Debido a que puedes crear múltiples instancias de un recurso usando los metaarg
 Outputs se puede utilizar para compartir información entre equipos.
 
 ## Interacting with State Data
-
-HashiCorp has been trying to limit the commands that alter state data to just `apply` and `destroy`, which is basically `apply` with the destroy flag. Each of those commands produce an execution plan before Terraform will make any changes. Commands that change state data directly like `refresh`, `taint`, `untaint`, and `import` are all either deprecated or discouraged from use. Why don't we take a look at some of those commands and see what the replacement is starting with refresh. 
 
 HashiCorp ha estado tratando de limitar los comandos que alteran los datos de estado a simplemente `apply` y `destroy`, que es básicamente `apply` con la `flag` _destroy_. Cada uno de esos comandos produce un plan de ejecución antes de que Terraform realice cambios. Los comandos que cambian el estado de los datos directamente, como "refresh", "taint", "untaint" e "import", están obsoletos o no se recomiendan.
 
@@ -187,7 +185,7 @@ resource "aws_vpc" "web" {
 
 > Change **main** to **web**
 
-El comando mv mueve la información del recurso de la dirección antigua a la nueva en los datos de estado. Pero nuevamente, lo hace sin generar un plan de ejecución y también podría arruinar la colaboración.
+El comando `mv` mueve la información del recurso de la dirección antigua a la nueva en los datos de estado. Pero nuevamente, lo hace sin generar un plan de ejecución y también podría arruinar la colaboración.
 
 Entonces, la opción preferida para la mayoría de situaciones es el bloque _moved_. El bloque _moved_ hace lo mismo que el comando MV, pero de forma declarativa como parte de la configuración. El bloque contiene la dirección anterior y la nueva dirección. Cuando ejecuta un plan, Terraform le mostrará el cambio que realizará en los datos del estado. Y cuando ejecuta una solicitud, Terraform moverá el recurso de la dirección anterior a la nueva dirección.
 
@@ -216,7 +214,7 @@ El comando `terraform state mv` no está obsoleto porque todavía hay algunos ca
 
 El único comando que todavía cambia el estado de Terraform directamente y no tiene un reemplazo real es "terraform state rm". `rm` es la abreviatura de eliminar y hace lo que implica.
 
-Le permite eliminar el recurso de los datos estatales. Esto es útil si desea eliminar un recurso de su configuración, pero no desea destruir el recurso real.
+Le permite eliminar el recurso de los datos de estado. Esto es útil si desea eliminar un recurso de su configuración, pero no desea destruir el recurso real.
 
 Puede usar `terraform state rm` para eliminarlo de los datos de estado y luego eliminar el recurso de su código, y luego Terraform ya no lo administrará.
 
@@ -274,7 +272,6 @@ Nuestro estado actual se encuentra en un fichero en local. Básicamente existe d
 ### Backend Options
 
 Básicamente, si un servicio puede almacenar datos JSON, probablemente podría escribir una implementación de backend para usarlo. 
-
 
 Sin embargo, eso no significa que todos los backends sean iguales. Hay algunas distinciones importantes entre ellos. Las dos primeras distinciones tienen que ver con las características de Terraform, es decir, `locking` y `workspaces`.
 
@@ -358,11 +355,71 @@ terraform init -backend-config="bucket=state-12345"
 terraform init -backend-config="backend-settings.txt"
 ```
 
+## Understanding Workspaces
+
+Each Terraform configuration has an associated [backend](https://developer.hashicorp.com/terraform/language/backend) that defines how Terraform executes operations and where Terraform stores persistent data, like [state](https://developer.hashicorp.com/terraform/language/state/purpose).
+
+The persistent data stored in the backend belongs to a workspace. The backend initially has only one workspace containing one Terraform state associated with that configuration. Some backends support multiple named workspaces, allowing multiple states to be associated with a single configuration. The configuration still has only one backend, but you can deploy multiple distinct instances of that configuration without configuring a new backend or changing authentication credentials.
+
+### Workspaces Use Cases
+
+You can create multiple [working directories](https://developer.hashicorp.com/terraform/cli/init) to maintain multiple instances of a configuration with completely separate state data. However, Terraform installs a separate cache of plugins and modules for each working directory, so maintaining multiple directories can waste bandwidth and disk space. This approach also requires extra tasks like updating configuration from version control for each directory separately and reinitializing each directory when you change the configuration. Workspaces are convenient because they let you create different sets of infrastructure with the same working copy of your configuration and the same plugin and module caches.
+
+A common use for multiple workspaces is to create a parallel, distinct copy of a set of infrastructure to test a set of changes before modifying production infrastructure.
+
+Non-default workspaces are often related to feature branches in version control. The default workspace might correspond to the `main` or `trunk` branch, which describes the intended state of production infrastructure. When a developer creates a feature branch for a change, they might also create a corresponding workspace and deploy into it a temporary copy of the main infrastructure. They can then test changes on the copy without affecting the production infrastructure. Once the change is merged and deployed to the default workspace, they destroy the test infrastructure and delete the temporary workspace.
+
+```
+worspace / main ---> O ---> O ----->
+worspace / dev  ---> X ---> X ----->
+```
+
+```
+worspace / main ---> O ---> O -----> X
+```
+
+### Workspace Demos
+
+- [Demo: Using Local Backend](./02-using-local-backend/readme.md)
+
+- [Demo: Directory per Environment](./03-directory-per-environment/readme.md)
+
+### Worspaces vs Directories
+
+| **Feature** |               **Workspaces**              |           **Directory per Environment**          |
+|:-----------:|:-----------------------------------------:|:------------------------------------------------:|
+| Visibility  | Hidden (need `terraform workspace list`)  | Visible (folders in your IDE)                    |
+| Isolation   | Shared backend/config. Highrisk of "oops" | Fully isolated. Each has its own backend config. |
+| Code        | 100% DRY (no duplication)                 | Requires "wrapper" code to call modules.         |
+| Best For    | Temporary feature branches/testing        | Long-lived environments (Dev, Stage, Prod)       |
+
+### Mixed solution: Folders for Durability, Worspaces for Speed
+
+Use folders for your **static, long-lived environments** (like Production) and workspaces for your **dynamic, ephemeral environments** (like feature testing or developer sandboxes).
+
+- **Directories/Folders:** Use these for `prod` and `staging`. These folders have their own separate backends and strictly controlled access.
+
+- **Workspaces (within a folder):** Use these inside the dev or testing folder to spin up multiple copies of the same infrastructure for different feature branches or developers without creating new folders.
+
+```
+.
+├── modules/                        # Reusable code
+│   └── web_app/                    # Standard module
+└── environments/
+    ├── dev/                        # <--- WORKSPACES LIVE HERE
+    │   ├── main.tf                 # Uses ${terraform.workspace} for names
+    │   └── terraform.tfstate       # Dev-specific local state directory
+    └── prod/                       # <--- NO WORKSPACES HERE (Just "default")
+        ├── main.tf                 # Hardcoded prod values or prod.tfvars
+        └── terraform.tfstate       # Prod-specific local state directory
+```
+
+
 ## Backend Planning and Prerequisites
 
 Terraform Cloud puede almacenar sus datos de estado y organizar ejecuciones de Terraform. También proporciona muchas otras características. Pero el objetivo principal del uso de Terraform Cloud es el almacenamiento de datos de estado y la automatización del flujo de trabajo. Vamos a configurar Terraform Cloud y luego preparar nuestra configuración para usar Terraform Cloud como backend remoto.
 
-[Demo: Terraform Cloud Set Up](./02-terraform-cloud-setup/readme.md)
+[Demo: Terraform Cloud Set Up](./04-terraform-cloud-setup/readme.md)
 
 ## Cloud Block Syntax and Setup
 
@@ -384,7 +441,7 @@ terraform {
 }
 ```
 
-[Demo: Using Terraform Cloud for State](./03-using-terraform-cloud/readme.md)
+[Demo: Using Terraform Cloud for State](./05-using-terraform-cloud/readme.md)
 
 ## Migrating State Data
 
@@ -396,7 +453,7 @@ Y una vez que haya actualizado la configuración, deberá volver a ejecutar terr
 - Run terraform init with any required flags
 - Confirm state data migration
 
-[Demo: Migrating State Data](./04-migrating-state-data/readme.md)
+[Demo: Migrating State Data](./06-migrating-state-data/readme.md)
 
 ## Summary
 

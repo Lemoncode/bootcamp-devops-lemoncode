@@ -11,7 +11,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "(Optional) Prefix to use for all resources in this module. Default: globo-dev"
-  default     = "globo-dev"
+  default     = "lc-dev"
 }
 
 variable "cidr_block" {

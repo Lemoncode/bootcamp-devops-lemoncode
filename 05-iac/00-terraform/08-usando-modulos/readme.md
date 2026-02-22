@@ -61,9 +61,9 @@ La motivación detrás de la creación o el uso de módulos es aprovechar un con
 
 Los módulos alojados en un registro también tienen versiones de la misma manera que los proveedores. Puede especificar una versión para usar al invocar un módulo. Mantener su versión preferida puede evitar que los cambios importantes afecten sus implementaciones.
 
-Una vez que haya agregado el módulo a su configuración, `terraform init` descargará el módulo desde la ubicación de origen a su directorio de trabajo. Si el módulo ya está en el directorio de trabajo actual, Terraform no hará una copia del mismo. 
+Una vez que hayamos agregado el módulo a la configuración, `terraform init` descargará el módulo desde la ubicación de origen a nuestro directorio de trabajo. Si el módulo ya está en el directorio de trabajo actual, Terraform no hará una copia del mismo. 
 
-Puedes crear múltiples instancias de un módulo usando los metaargumentos count o for_each.
+Puedes crear múltiples instancias de un módulo usando los metaargumentos `count` o `for_each`.
 
 ### Module Components
 
@@ -77,7 +77,7 @@ Los módulos generalmente tienen variables de entrada, por lo que puede proporci
 
 No es necesario que un módulo tenga ninguno de estos componentes, pero probablemente no sería muy útil sin ellos. 
 
-## Actualizacione
+## Actualizaciones
 
 * Aprovechar el módulo VPC para la creación de redes
 * Crear un módulo para S3 bucket
@@ -141,7 +141,6 @@ Como repaso rápido, un objeto es básicamente un conjunto de pares clave-valor 
 
 
 Ejemplo:
-
 
 ```ini
 # Example

@@ -2,7 +2,7 @@
 
 ## Pre requisitos
 
-> Si has destruidfo el entorno recrealo
+> Si has destruido el entorno recrealo
 
 ```bash
 cd lab/lc_web_app/
@@ -113,7 +113,7 @@ variable "subnet_cidr_block" {
 
 variable "subnet_map_public_ip_on_launch" {
   type        = bool
-  description = "Launched instances into subnet assign a public IP"
+  description = "Launched instances into Subnet get a Public IP assignation"
   default     = true
 }
 ```

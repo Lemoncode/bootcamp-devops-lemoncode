@@ -34,3 +34,14 @@ Antes de aplicar nuestros cambios, sería estupendo poder validar que la configu
 ## Desplegando la Configuración Actualizada
 
 [Desplegando la Configuración Actualizada - Demo 06](06-demo.md)
+
+## Variables vs Locals
+
+Para aclarar, en Terraform los `locals` y `variables` sirven a propositos distintos. Las `variables` son entradas externas, y los `locals` calculan valores a nivel de módulo. 
+
+| Aspect     | Variables                                                                  | Locals                                                                                     |
+| ---------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Scope      | Global or module input; can be passed between modules                      | Module-only; not accessible outside the defining module spacelift+1                        |
+| Assignment | Set externally (e.g., CLI, tfvars files, defaults); no expressions allowed | Defined internally via expressions, functions, or other values; fixed once set spacelift+2 |
+| Mutability | Overridable at runtime                                                     | Immutable after definition; used for reuse without repetition spacelift+1                  |
+| Use Case   | Dynamic inputs from users/environments                                     | Data transformation, constants, reducing duplication (e.g., tags, computed names) reddit+1 |
