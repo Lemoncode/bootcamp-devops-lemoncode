@@ -1,6 +1,6 @@
 resource "github_repository" "main" {
   name        = var.repository_name
-  description = "Terraform Deep Dive Repository for Globomantics Networking"
+  description = "Terraform Deep Dive Repository for Lemon Networking"
   visibility  = "public"
   auto_init   = true
   gitignore_template = "Terraform"

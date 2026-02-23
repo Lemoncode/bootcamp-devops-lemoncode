@@ -1,10 +1,10 @@
 # Terraform Cloud Integration
 
-When we initially migrated our state to Terraform Cloud, we were using what is called the CLI workflow i.e. running commands against Terraform Cloud from the terminal, like we always have. Now we are going to shift to the VCS workflow, where the Terraform runs will be initiated based on events from our repository on GitHub. 
+When we initially migrated our state to Terraform Cloud, we were using what is called the CLI workflow i.e. running commands against Terraform Cloud from the terminal, like we always have. Now we are going to shift to the VCS workflow, where the Terraform runs will be initiated based on **events from our repository on GitHub**. 
 
 To set up the VCS workflow, we first need to connect our Terraform Cloud organization to our GitHub repository. Now we could do that by going through the Terraform Cloud UI, but that's no fun. Instead, we're going to use the Terraform Cloud provider and Terraform to do it. 
 
-First, we'll head into the m5/terraform_cloud_config directory and we'll run the usual terraform init command to initialize the Terraform Cloud provider. 
+First, we'll head into the `terraform_cloud_config` directory and we'll run the usual `terraform init` command to initialize the Terraform Cloud provider. 
 
 ```bash
 cd terraform_cloud_config
@@ -50,7 +50,7 @@ Terraform will perform the following actions:
 Plan: 1 to add, 0 to change, 0 to destroy.
 ```
 
-Now our Terraform Cloud organization is connected to our GitHub account. Next, we are going to update our workspace to use the globo‑networking repository. Back in the Terraform Cloud UI, you can find the GitHub connection under Settings for the organization and down in the VCS Providers section. 
+Now our Terraform Cloud organization is connected to our GitHub account. Next, we are going to update our workspace to use the lemon‑networking repository. Back in the Terraform Cloud UI, you can find the GitHub connection under Settings for the organization and down in the VCS Providers section. 
 
 ![TC General Settings](./resources/01-general-settings.png)
 

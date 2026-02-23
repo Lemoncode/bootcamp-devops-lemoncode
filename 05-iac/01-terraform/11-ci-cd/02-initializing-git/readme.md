@@ -59,7 +59,7 @@ At this point, we've committed our files, and the last thing to do is push those
 We'll use the git remote add origin command and specify the ORIGIN_URL of the GitHub repository that we recently created. If you didn't copy that URL from earlier, you can go back to the github_config directory and run `terraform output` to see what the remote URL is. 
 
 ```bash
-git remote add origin "https://github.com/JaimeSalas/globo-networking.git"
+git remote add origin "https://github.com/JaimeSalas/lemon-networking.git"
 ```
 
 Now that we've created the link between our local repository and the remote or origin repository, we are going to use git fetch to fetch the information about that remote repository. 
@@ -80,4 +80,6 @@ And finally, we are going to force push our code up to GitHub. Because there's a
 git push origin --force
 ```
 
-At this point, you might be prompted for your GitHub username and personal access token if you haven't set up the Git CLI before. You may be also prompted to set your username and email address. There's a link in the exercise resources that will walk you through that process. And that's it. If we head over to GitHub, we can see the new repository with our code in it. I'll click on my account and select repositories from the list. And because it's sorted by most recent commit, globo‑networking should come up as the first repository. Clicking into the repository, there are all the files that we pushed from our local workstation. Now we can create our GitHub Action to run our CI process. But first, we need to take a moment to review some considerations when using Terraform in a version‑controlled setting that leverages automation.
+At this point, you might be prompted for your GitHub username and personal access token if you haven't set up the Git CLI before. You may be also prompted to set your username and email address. There's a link in the exercise resources that will walk you through that process. And that's it. 
+
+If we head over to GitHub, we can see the new repository with our code in it. I'll click on my account and select repositories from the list. And because it's sorted by most recent commit, lemon‑networking should come up as the first repository. Clicking into the repository, there are all the files that we pushed from our local workstation. Now we can create our GitHub Action to run our CI process. But first, we need to take a moment to review some considerations when using Terraform in a version‑controlled setting that leverages automation.

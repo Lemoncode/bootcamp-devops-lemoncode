@@ -29,11 +29,11 @@ jobs:
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v5
 
     # Install the preferred version of Terraform CLI 
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
+      uses: hashicorp/setup-terraform@v3
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
@@ -63,7 +63,7 @@ Under the steps section, we first clone the repository to the runner machine. Th
 
 Now we don't want it to fail immediately because we also want to run the validate command even if our formatting is bad, so we will include the if statement in our validate step and set it to success or failure. Meaning that this step will run regardless of the exit code of the previous step. Then we'll run the validate command. And if the code is valid and the formatting is good, the entire action will be successful. That'll do it for the GitHub Action. 
 
-And next, as I mentioned earlier, we're going to remove the `backend.tf` file from the remote repository. We'll do that by first renaming it to `backend_local.tf`. As far as Git is concerned, the backend.tf file no longer exists. We'll add backend_local.tf to our gitignore file. 
+And next, as I mentioned earlier, we're going to remove the `backend.tf` file from the remote repository. We'll do that by first renaming it to `backend_local.tf`. As far as Git is concerned, the backend.tf file no longer exists. We'll add `backend_local.tf` to our gitignore file. 
 
 ```bash
 mv backend.tf backend_local.tf
@@ -75,7 +75,7 @@ Update `.gitignore`
 +backend_local.tf
 ```
 
-That way we can still test things locally, but we won't have to worry about `terraform init` failing in the GitHub Action. I'll add backend_local.tf to the bottom of the gitignore file, and then I'll stage the files by running git add . 
+That way we can still test things locally, but we won't have to worry about `terraform init` failing in the GitHub Action. I'll add `backend_local.tf` to the bottom of the gitignore file, and then I'll stage the files by running git add . 
 
 ```bash
 git add .

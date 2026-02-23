@@ -91,7 +91,7 @@ With all that in mind, let's move on to the first automation piece we're trying 
 
 GitHub Actions are workflows that are triggered by events in GitHub. They can be triggered by things like a pull request, a commit being pushed to a branch, or a new release being created. The actions are defined in a YAML file that lives in the `.github/workflows` directory of your repository. Actions can include things like running a script, executing Terraform commands, or building a Docker image.
 
-We are going to copy the GitHub Actions defined in the m5 GitHub Actions directory into our repository, and then we'll push those changes up to GitHub. Now what would we want to check when code is pushed into GitHub?
+We are going to copy the GitHub Actions defined in the GitHub Actions directory into our repository, and then we'll push those changes up to GitHub. Now what would we want to check when code is pushed into GitHub?
 
 Well, we probably want to make sure that the code is valid and maybe that it has been formatted properly. Terraform has the validate and fmt commands that can help us out with that.
 
@@ -118,7 +118,7 @@ That seems unnecessary to just validate the code. And, in fact, we won't need th
 
 We've added a lot of moving pieces, so let's step back for a moment to see how they all work together to apply a potential change to our code. 
 
-Globomantics has some changes they'd like to make to the existing environment. They'd like to add a third public subnet, and they'd like to add a tag to all network resources, a billing code. We're going to make some adjustments to the code and to Terraform Cloud to support this change. 
+There are some changes we'd like to make to the existing environment. We'd like to add a third public subnet, and we'd like to add a tag to all network resources, a billing code. We're going to make some adjustments to the code and to Terraform Cloud to support this change. 
 
 - Requested changes
   - Add a third public subnet
@@ -130,7 +130,9 @@ First, let's walk through the process, and the process starts by creating a new 
 
 This will create a new branch there and also trigger our GitHub CI Action to check for formatting and validity. Assuming those checks pass, **we can create a pull request to merge the changes into the default branch**. This **will trigger a speculative plan in Terraform Cloud**, which will show us what changes will be made if we merge the pull request. 
 
-If we're not happy with what we see, we can make changes locally, commit and push them to the remote branch, and the GitHub Actions and speculative plan will be run again. Assuming we're happy with the change, we can merge the change into the default branch. This will trigger a `plan` and `apply` run in Terraform Cloud. Now since we picked a manual apply, it will pause after the plan is done and wait for us to approve the plan. Once we approve it, Terraform will apply the changes to the networking environment. Lastly, we will pull the merge changes down to our local repository and delete the feature branch. That's the overall workflow. Now let's see it in action.
+If we're not happy with what we see, we can make changes locally, commit and push them to the remote branch, and the GitHub Actions and speculative plan will be run again. Assuming we're happy with the change, we can merge the change into the default branch. This will trigger a `plan` and `apply` run in Terraform Cloud. 
+
+Now since we picked a manual apply, it will pause after the plan is done and wait for us to approve the plan. Once we approve it, Terraform will apply the changes to the networking environment. Lastly, we will pull the merge changes down to our local repository and delete the feature branch. That's the overall workflow. Now let's see it in action.
 
 ## Updating the Code
 

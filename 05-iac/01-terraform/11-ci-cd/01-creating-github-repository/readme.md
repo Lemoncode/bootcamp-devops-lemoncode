@@ -65,12 +65,12 @@ Then I'll run `terraform apply` to create the repository.
 terraform apply
 ```
 
-The repository name is going to be `globo‑networking`, but you can go into the configuration and change it if you want. 
+The repository name is going to be `lemon‑networking`, but you can go into the configuration and change it if you want. 
 
 Once the repository is created, we are going to push our existing `network_config` code up to it. 
 
 Make note of the remote URL in the output as we're going to need that in a minute.
 
 ```
-remote_url = "https://github.com/JaimeSalas/globo-networking.git"
+remote_url = "https://github.com/JaimeSalas/lemon-networking.git"
 ```
