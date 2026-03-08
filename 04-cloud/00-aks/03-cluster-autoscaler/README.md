@@ -23,7 +23,7 @@ kubectl get nodes -w
 Por otro lado, en otro terminal, vamos a modificar el deployment de la API para que tenga 10 réplicas en lugar de 3, con el fin de que el clúster tenga que escalar.
 
 ```bash
-kubectl scale deployment tour-of-heroes-api -n tour-of-heroes --replicas=30
+kubectl scale deployment tour-of-heroes-api -n tour-of-heroes --replicas=200
 kubectl get pods -n tour-of-heroes -l app=tour-of-heroes-api -w
 ```
 Lo primero que te darás cuenta es que varios pods se quedan en estado `Pending`. Esto es porque el clúster no tiene suficientes nodos para poder desplegarlos. Si esperas un poco, verás que el número de nodos se ha incrementado y los pods que estaban en estado `Pending` ya están corriendo.

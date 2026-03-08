@@ -35,8 +35,8 @@ Una vez que ya lo tienes, en este se pueden o bien generar imágenes en local y 
 
 ```bash
 az acr login -n ${ACR_NAME}
-docker build -t ${ACR_NAME}.azurecr.io/hello-world:v1 04-cloud/00-aks/02-azure-container-registry
-docker push ${ACR_NAME}.azurecr.io/hello-world:v1
+docker build -t ${ACR_NAME}.azurecr.io/hello-lemoncode:v1 04-cloud/00-aks/02-azure-container-registry
+docker push ${ACR_NAME}.azurecr.io/hello-lemoncode:v1
 ```
 
 O bien, puedes hacer uso de la funcionalidad de `acr build` que te permite hacer el build y el push en un solo paso:
@@ -73,7 +73,7 @@ echo "La última imagen de hello-lemoncode es ${LAST_TAG}"
 
 kubectl run hello-lemoncode --image=${ACR_NAME}.azurecr.io/hello-lemoncode:${LAST_TAG}
 
-kubectl get pods -w
+kubectl get pods
 
 kubectl logs -f hello-lemoncode --tail=-1
 ```
