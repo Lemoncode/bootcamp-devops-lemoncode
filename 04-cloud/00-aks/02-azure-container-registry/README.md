@@ -67,13 +67,13 @@ Y con esto ya puedes hacer uso de tus imágenes almacenadas en tu ACR en tu clú
 ```bash
 az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME} --overwrite-existing
 
-LAST_TAG=$(az acr repository show-tags -n ${ACR_NAME} --repository hello-world --orderby time_desc --top 1 --output tsv)
+LAST_TAG=$(az acr repository show-tags -n ${ACR_NAME} --repository hello-lemoncode --orderby time_desc --top 1 --output tsv)
 
-echo "La última imagen de hello-world es ${LAST_TAG}"
+echo "La última imagen de hello-lemoncode es ${LAST_TAG}"
 
-kubectl run hello-lemoncode --image=${ACR_NAME}.azurecr.io/hello-world:${LAST_TAG}
+kubectl run hello-lemoncode --image=${ACR_NAME}.azurecr.io/hello-lemoncode:${LAST_TAG}
 
 kubectl get pods -w
 
-kubectl logs hello-lemoncode
+kubectl logs -f hello-lemoncode --tail=-1
 ```

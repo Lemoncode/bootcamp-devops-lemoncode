@@ -1,4 +1,10 @@
-FROM nginx:alpine
+FROM alpine:3.20
 
-COPY index.html /usr/share/nginx/html/index.html
+WORKDIR /app
+
+COPY ascii-party.sh /app/ascii-party.sh
+
+RUN chmod +x /app/ascii-party.sh
+
+CMD ["/app/ascii-party.sh"]
 

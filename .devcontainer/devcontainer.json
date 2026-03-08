@@ -23,7 +23,9 @@
 				"GitHub.copilot-chat",
 				"ms-dotnettools.csdevkit",
 				"ms-vscode.PowerShell",
-				"cweijan.vscode-postgresql-client2"
+				"cweijan.vscode-postgresql-client2",
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"ms-kubernetes-tools.vscode-aks-tools"
 			]
 		}
 	}
