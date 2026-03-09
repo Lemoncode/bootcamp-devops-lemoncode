@@ -221,65 +221,19 @@ Sin embargo, **en un entorno de producción lo ideal es usar un servicio PaaS co
 
 > 🎯 **Recomendación**: Usa SQL Server en contenedor para desarrollo, demos o aprendizaje. Para producción, usa **Azure SQL Database** o **Azure SQL Managed Instance**.
 
-# Características interesantes de ACA
+# Otras características de ACA
 
-## Escalado automático
+Azure Container Apps ofrece muchas más funcionalidades que no hemos explorado en este tutorial:
 
-ACA escala automáticamente basándose en peticiones HTTP. Puedes configurar las reglas:
+- **Escalado automático**: Escala basándose en peticiones HTTP, mensajes en cola o métricas personalizadas. Con `--min-replicas 0` la app puede escalar a cero cuando no hay tráfico. [Documentación](https://learn.microsoft.com/es-es/azure/container-apps/scale-app)
 
-```bash
-az containerapp update \
--n tour-of-heroes-api \
--g ${RESOURCE_GROUP} \
---min-replicas 0 \
---max-replicas 30 \
---scale-rule-name http-scaling \
---scale-rule-type http \
---scale-rule-http-concurrency 100
-```
+- **Revisiones y Traffic Splitting**: Cada actualización crea una nueva revisión. Puedes dividir el tráfico entre revisiones para hacer canary deployments o blue-green. [Documentación](https://learn.microsoft.com/es-es/azure/container-apps/revisions)
 
-Con `--min-replicas 0` la app puede escalar a cero cuando no hay tráfico, ¡así no pagas nada!
+- **Secretos**: En lugar de variables de entorno en texto plano, puedes usar secretos gestionados por ACA o integrar con Azure Key Vault. [Documentación](https://learn.microsoft.com/es-es/azure/container-apps/manage-secrets)
 
-## Revisiones y Traffic Splitting
+- **Dapr**: Integración nativa con Dapr para pub/sub, state management y service invocation. [Documentación](https://learn.microsoft.com/es-es/azure/container-apps/dapr-overview)
 
-Cada vez que actualizas una Container App, ACA crea una nueva **revisión**. Puedes dividir el tráfico entre revisiones para hacer canary deployments:
-
-```bash
-# Ver las revisiones
-az containerapp revision list -n tour-of-heroes-api -g ${RESOURCE_GROUP} -o table
-
-# Dividir tráfico: 80% a la revisión actual, 20% a la nueva
-az containerapp ingress traffic set \
--n tour-of-heroes-api \
--g ${RESOURCE_GROUP} \
---revision-weight latest=20 <nombre-revision-anterior>=80
-```
-
-## Ver logs
-
-Para ver los logs de tu aplicación:
-
-```bash
-az containerapp logs show \
--n tour-of-heroes-api \
--g ${RESOURCE_GROUP} \
---follow
-```
-
-## Secretos
-
-En lugar de pasar secretos como variables de entorno en texto plano, puedes usar secretos de ACA:
-
-```bash
-# Crear la app con un secreto
-az containerapp create \
--n mi-app \
--g ${RESOURCE_GROUP} \
---environment ${ENVIRONMENT_NAME} \
---image mi-imagen \
---secrets "sql-conn=${SQL_CONNECTION_STRING}" \
---env-vars "ConnectionStrings__DefaultConnection=secretref:sql-conn"
-```
+- **Jobs**: Además de apps, puedes ejecutar trabajos programados o bajo demanda. [Documentación](https://learn.microsoft.com/es-es/azure/container-apps/jobs)
 
 # Comparativa de comandos: AKS vs ACA
 
