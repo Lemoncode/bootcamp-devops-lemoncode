@@ -130,15 +130,15 @@ Haz clic en el botón `New App` y rellena los campos:
 
 **Primera parte** - Nombre y proyecto:
 
-![Crear aplicación - Parte 1](images/Crear%20aplicación%20-%20Parte%201.png)
+![Crear aplicación - Parte 1](images/Crear%20aplicación%20-%20Parte%201.png)
 
 **Segunda parte** - Repositorio y destino. Indica la URL del repo, la rama `master` y la carpeta `04-cloud/00-aks/01-mi-primer-aks/manifests`. Como destino usa `https://kubernetes.default.svc` (el mismo clúster) y el namespace `tour-of-heroes`:
 
-![Crear aplicación - Parte 2](images/Crear%20aplicación%20-%20Parte%202.png)
+![Crear aplicación - Parte 2](images/Crear%20aplicación%20-%20Parte%202.png)
 
 **Tercera parte** - ¡No olvides marcar `Recursive`! Sin esto ArgoCD no entrará en las subcarpetas:
 
-![Crear aplicación - Parte 3](images/Crear%20aplicación%20-%20Parte%203.png)
+![Crear aplicación - Parte 3](images/Crear%20aplicación%20-%20Parte%203.png)
 
 Cuando pulses `Create` verás un mapa con todos los recursos que se van a desplegar, pero todavía no estarán aplicados. Para eso pulsa `Sync` y confirma la acción.
 
