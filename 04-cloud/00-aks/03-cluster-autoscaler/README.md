@@ -18,7 +18,7 @@ Si recuerdas el comando de creación del clúster, le indicamos que tuviera un n
 Para comprobar que todo está funcionando correctamente, puedes ejecutar este comando:
 
 ```bash
-kubectl get nodes -w
+watch kubectl get nodes
 ```
 Por otro lado, en otro terminal, vamos a modificar el deployment de la API para que tenga 10 réplicas en lugar de 3, con el fin de que el clúster tenga que escalar.
 

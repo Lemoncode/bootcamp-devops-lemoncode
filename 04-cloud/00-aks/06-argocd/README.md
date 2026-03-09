@@ -135,15 +135,32 @@ Si no tienes un Ingress Controller configurado, puedes publicar la UI de ArgoCD 
 kubectl -n argocd expose service argocd-server \
 	--type LoadBalancer \
 	--name argocd-server-lb \
-	--port 80 \
+	--port 443 \
 	--target-port 8080
 ```
+
+> Nota: ArgoCD sirve HTTPS (TLS) en el puerto 8080, por lo que exponemos el puerto 443 para acceder con `https://<IP>`.
 
 Después puedes consultar la IP pública:
 
 ```bash
 kubectl get svc -n argocd argocd-server-lb
 ```
+
+## Obtener las credenciales de ArgoCD
+
+El usuario por defecto es `admin`. La contraseña inicial se almacena en un Secret:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d && echo
+```
+
+> Nota: Por seguridad, se recomienda cambiar esta contraseña después del primer acceso o eliminar el Secret.
+
+Una vez que inicies sesion verás una pantalla como esta:
+
+![UI de ArgoCD](images/UI%20ArgoCD.png)
+
 
 ## Crear el namespace de la aplicación
 
@@ -154,6 +171,28 @@ kubectl create namespace tour-of-heroes
 ```
 
 ## Crear la aplicación de ArgoCD para tus manifiestos
+
+
+Para que lo veas en acción de forma gráfica, vamos a desplegar la aplicación de Tour of Heroes usando ArgoCD. Para ello solamente debes hacer clic en el botón `New App` de la UI de ArgoCD y rellenar los campos con la información de tu repositorio y la carpeta donde están tus manifiestos.
+
+En la primera parte rellenas el nombre de la aplicación, el proyecto (puedes dejar `default`) y que se auto cree el namespace si no existe:
+
+![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%201.png)
+
+Una vez que ya lo tienes debes indicar cuál es la URL de tu repositorio, la rama y la carpeta donde están tus manifiestos.Además también tienes que indicar en qué clúster y namespace quieres que se despliegue la aplicación. En este caso, el clúster es el mismo donde tienes ArgoCD, por lo que puedes usar `https://kubernetes.default.svc` y el namespace `tour-of-heroes`, pero que sepas que puedes tener múltiples clústeres y namespaces gestionados por el mismo ArgoCD.
+
+![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%202.png)
+
+Por último en este caso debemos marcar el check de `Recursive` porque nuestros manifiestos están organizados en subcarpetas (`backend`, `db` y `frontend`).
+
+![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%203.png)
+
+Cuando pulsemos el botón `Create` ArgoCD  podrás ver un mapa de todos los recursos que se van a desplegar pero todavía no estarán aplicados en el clúster. Para eso, debes pulsar el botón `Sync` y confirmar la acción.
+
+
+### Lo mismo pero con `kubectl`
+
+Esto mismo que hemos hecho con la UI de ArgoCD, también se puede hacer con `kubectl` aplicando un manifiesto de tipo `Application` que es el recurso de ArgoCD que representa una aplicación a desplegar.
 
 Ahora crea un recurso `Application` que apunte al repositorio y a la carpeta donde están tus manifiestos.
 
@@ -166,25 +205,25 @@ kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-	name: tour-of-heroes
-	namespace: argocd
+  name: tour-of-heroes-desde-kubectl
+  namespace: argocd
 spec:
-	project: default
-	source:
-		repoURL: TU_REPO_URL
-		targetRevision: master
-		path: 04-cloud/00-aks/01-mi-primer-aks/manifests
-		directory:
-			recurse: true
-	destination:
-		server: https://kubernetes.default.svc
-		namespace: tour-of-heroes
-	syncPolicy:
-		automated:
-			prune: true
-			selfHeal: true
-		syncOptions:
-			- CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://github.com/Lemoncode/bootcamp-devops-lemoncode
+    targetRevision: master
+    path: 04-cloud/00-aks/01-mi-primer-aks/manifests
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tour-of-heroes-desde-kubectl
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
 EOF
 ```
 
@@ -198,9 +237,9 @@ Puedes comprobarlo con:
 
 ```bash
 kubectl get application -n argocd
-kubectl get all -n tour-of-heroes
-kubectl get pvc -n tour-of-heroes
-kubectl get secret -n tour-of-heroes
+kubectl get all -n tour-of-heroes-desde-kubectl -o wide
+kubectl get pvc -n tour-of-heroes-desde-kubectl
+kubectl get secret -n tour-of-heroes-desde-kubectl
 ```
 
 Si quieres observar el progreso:
@@ -216,11 +255,11 @@ Tus `Service` de frontend y backend son de tipo `LoadBalancer`, por lo que AKS l
 Puedes obtenerlas con:
 
 ```bash
-API_IP=$(kubectl get service tour-of-heroes-api -n tour-of-heroes -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-WEB_IP=$(kubectl get service tour-of-heroes-web -n tour-of-heroes -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+API_IP=$(kubectl get service tour-of-heroes-api -n tour-of-heroes-desde-kubectl -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+WEB_IP=$(kubectl get service tour-of-heroes-web -n tour-of-heroes-desde-kubectl -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-echo ${API_IP}
-echo ${WEB_IP}
+echo http://${API_IP}/api/hero
+echo http://${WEB_IP}
 ```
 
 ## Ajuste importante en tus manifiestos
