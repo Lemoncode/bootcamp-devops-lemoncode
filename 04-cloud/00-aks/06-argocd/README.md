@@ -1,44 +1,14 @@
-# ArgoCD en AKS
+# GitOps con ArgoCD en AKS
 
-En este apartado vamos a instalar ArgoCD sobre un clúster de AKS usando la extensión de Azure descrita en la documentación oficial de Microsoft:
+En esta unidad vamos a montar [ArgoCD](https://argo-cd.readthedocs.io/) sobre tu clúster de AKS para que el repositorio Git sea la fuente de verdad y ArgoCD despliegue automáticamente los manifiestos de la aplicación `tour-of-heroes` que ya tienes en [01-mi-primer-aks/manifests](../01-mi-primer-aks/manifests).
 
-- https://learn.microsoft.com/en-us/azure/azure-arc/kubernetes/tutorial-use-gitops-argocd
+Para ello usaremos la extensión oficial de Azure descrita en la [documentación de Microsoft](https://learn.microsoft.com/en-us/azure/azure-arc/kubernetes/tutorial-use-gitops-argocd).
 
-La idea es que el repositorio Git sea la fuente de verdad y que ArgoCD despliegue automáticamente los manifiestos de la aplicación `tour-of-heroes` que ya tienes en:
+> ⚠️ **Nota importante**: En el momento de escribir este documento, la extensión de ArgoCD para AKS sigue en `preview`. Para entornos productivos Microsoft recomienda valorar Flux.
 
-- `04-cloud/00-aks/01-mi-primer-aks/manifests`
+## Prerequisitos
 
-> Importante: en el momento de escribir este documento, la extensión de ArgoCD para AKS sigue en `preview`. Para entornos productivos Microsoft recomienda valorar Flux.
-
-## Qué vamos a desplegar
-
-Tus manifiestos están organizados en tres carpetas:
-
-- `backend/`
-- `db/`
-- `frontend/`
-
-Dentro de ellas tienes:
-
-- Un `Deployment` para la API `tour-of-heroes-api`.
-- Un `Deployment` para la base de datos SQL Server `tour-of-heroes-sql`.
-- Un `Deployment` para el frontal `tour-of-heroes-web`.
-- `Service` de tipo `LoadBalancer` para API y frontend.
-- `Secret` para la conexión a SQL Server y la contraseña de `sa`.
-- Un `PersistentVolumeClaim` para la base de datos.
-
-Como los manifiestos están repartidos en subcarpetas, la aplicación de ArgoCD debe configurarse con despliegue recursivo.
-
-## Prerrequisitos
-
-Debes tener:
-
-- Un clúster de AKS funcionando.
-- Azure CLI actualizado.
-- `kubectl` instalado.
-- Permisos para gestionar el clúster y extensiones.
-
-Si todavía no tienes definidas tus variables, puedes usar estas:
+Si ya tienes un clúster de AKS funcionando de las unidades anteriores, solo asegúrate de tener las variables de entorno definidas y el contexto descargado:
 
 ```bash
 RESOURCE_GROUP="bootcamp-lemoncode"
@@ -46,16 +16,16 @@ AKS_NAME="lemoncode-cluster"
 LOCATION="spaincentral"
 ```
 
-Si tu clúster ya existe, no necesitas volver a crearlo. Solo asegúrate de tener el contexto descargado:
-
 ```bash
 az aks get-credentials -g ${RESOURCE_GROUP} -n ${AKS_NAME} --overwrite-existing
 kubectl get nodes
 ```
 
-## Registrar proveedores necesarios
+Si todavía no tienes clúster, puedes crearlo siguiendo los pasos de [01-mi-primer-aks](../01-mi-primer-aks/README.md).
 
-La documentación de Microsoft indica que debes registrar estos proveedores de recursos:
+# Instalar ArgoCD en AKS
+
+Lo primero que necesitas es registrar los proveedores de recursos de Azure que hacen falta para trabajar con extensiones de Kubernetes:
 
 ```bash
 az provider register --namespace Microsoft.ContainerService
@@ -63,7 +33,7 @@ az provider register --namespace Microsoft.KubernetesConfiguration
 az provider register --namespace Microsoft.Kubernetes
 ```
 
-Puedes comprobar que el registro ha terminado correctamente con:
+Puedes comprobar que el registro ha terminado con:
 
 ```bash
 az provider show -n Microsoft.KubernetesConfiguration --query registrationState -o tsv
@@ -71,134 +41,110 @@ az provider show -n Microsoft.ContainerService --query registrationState -o tsv
 az provider show -n Microsoft.Kubernetes --query registrationState -o tsv
 ```
 
-El valor esperado es `Registered`.
+Cuando todos devuelvan `Registered`, ya puedes continuar.
 
-## Instalar extensiones de Azure CLI
-
-La guía oficial utiliza estas extensiones:
+Ahora instala las extensiones de Azure CLI que necesitas:
 
 ```bash
 az extension add -n k8s-configuration
 az extension add -n k8s-extension
 ```
 
-Si ya las tienes instaladas, puedes actualizarlas:
+Si ya las tenías instaladas, actualízalas:
 
 ```bash
 az extension update -n k8s-configuration
 az extension update -n k8s-extension
 ```
 
-## Instalar la extensión de ArgoCD en AKS
-
-La instalación más simple para AKS se hace con `az k8s-extension create`.
-
-En el clúster que has creado en esta unidad se usó un único nodo, así que conviene desactivar `redis-ha`, ya que el modo HA por defecto requiere más nodos.
-
-Ejecuta:
+¡Ahora sí! Ya puedes instalar ArgoCD en tu clúster. Como en esta unidad estamos usando un único nodo, desactivamos `redis-ha` (el modo HA necesita más nodos):
 
 ```bash
 az k8s-extension create \
-	--resource-group ${RESOURCE_GROUP} \
-	--cluster-name ${AKS_NAME} \
-	--cluster-type managedClusters \
-	--name argocd \
-	--extension-type Microsoft.ArgoCD \
-	--release-train preview \
-	--config "redis-ha.enabled=false" \
-	--config "configs.params.application\.namespaces=argocd,tour-of-heroes"
+-g ${RESOURCE_GROUP} \
+-c ${AKS_NAME} \
+-t managedClusters \
+--name argocd \
+--extension-type Microsoft.ArgoCD \
+--release-train preview \
+--config "redis-ha.enabled=false" \
+--config "configs.params.application\.namespaces=argocd,tour-of-heroes"
 ```
 
-Con esto Azure instalará ArgoCD en el namespace `argocd` y permitirá crear aplicaciones de ArgoCD en los namespaces `argocd` y `tour-of-heroes`.
+Azure instalará ArgoCD en el namespace `argocd` y permitirá crear aplicaciones en `argocd` y `tour-of-heroes`.
 
-Puedes comprobar el estado de la extensión con:
-
-```bash
-az k8s-extension show \
-	--resource-group ${RESOURCE_GROUP} \
-	--cluster-name ${AKS_NAME} \
-	--cluster-type managedClusters \
-	--name argocd
-```
-
-Y también revisando los pods:
+Para comprobar que todo ha ido bien:
 
 ```bash
+az k8s-extension show -g ${RESOURCE_GROUP} -c ${AKS_NAME} -t managedClusters --name argocd
 kubectl get pods -n argocd
 ```
 
-## Exponer la interfaz de ArgoCD
+Cuando todos los pods estén en `Running`, ya tienes ArgoCD listo 🎉
 
-Si no tienes un Ingress Controller configurado, puedes publicar la UI de ArgoCD con un `LoadBalancer` como propone Microsoft:
+# Acceder a la UI de ArgoCD
+
+Lo siguiente es exponer la interfaz web de ArgoCD. Si no tienes un Ingress Controller configurado, lo más rápido es crear un `LoadBalancer`:
 
 ```bash
 kubectl -n argocd expose service argocd-server \
-	--type LoadBalancer \
-	--name argocd-server-lb \
-	--port 443 \
-	--target-port 8080
+--type LoadBalancer \
+--name argocd-server-lb \
+--port 443 \
+--target-port 8080
 ```
 
-> Nota: ArgoCD sirve HTTPS (TLS) en el puerto 8080, por lo que exponemos el puerto 443 para acceder con `https://<IP>`.
+> ⚠️ **Importante**: ArgoCD sirve HTTPS (TLS) en el puerto 8080, por eso exponemos el puerto 443. Si usaras el puerto 80 tendrías timeout porque el navegador envía HTTP plano a un servidor que espera TLS.
 
-Después puedes consultar la IP pública:
+Espera a que Azure le asigne una IP pública:
 
 ```bash
 kubectl get svc -n argocd argocd-server-lb
 ```
 
-## Obtener las credenciales de ArgoCD
+Cuando tengas la `EXTERNAL-IP`, ya puedes acceder a `https://<IP>` desde tu navegador (acepta el certificado autofirmado).
 
-El usuario por defecto es `admin`. La contraseña inicial se almacena en un Secret:
+## Credenciales de acceso
+
+El usuario por defecto es `admin`. La contraseña inicial está en un Secret:
 
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d && echo
 ```
 
-> Nota: Por seguridad, se recomienda cambiar esta contraseña después del primer acceso o eliminar el Secret.
+> 🔒 Por seguridad, se recomienda cambiar esta contraseña después del primer acceso o eliminar el Secret.
 
-Una vez que inicies sesion verás una pantalla como esta:
+Una vez que inicies sesión verás una pantalla como esta:
 
 ![UI de ArgoCD](images/UI%20ArgoCD.png)
 
+# Desplegar Tour of Heroes con ArgoCD
 
-## Crear el namespace de la aplicación
+Ahora viene lo interesante: vamos a hacer que ArgoCD despliegue automáticamente la aplicación Tour of Heroes desde los manifiestos que ya tienes en el repositorio.
 
-Tus manifiestos están pensados para desplegarse juntos dentro de un mismo namespace. Crea el namespace antes de que ArgoCD sincronice la aplicación:
+Los manifiestos están organizados en tres carpetas (`backend/`, `db/` y `frontend/`), así que tendremos que activar el modo recursivo en ArgoCD.
 
-```bash
-kubectl create namespace tour-of-heroes
-```
+## Opción 1: Desde la UI de ArgoCD
 
-## Crear la aplicación de ArgoCD para tus manifiestos
+Haz clic en el botón `New App` y rellena los campos:
 
+**Primera parte** - Nombre y proyecto:
 
-Para que lo veas en acción de forma gráfica, vamos a desplegar la aplicación de Tour of Heroes usando ArgoCD. Para ello solamente debes hacer clic en el botón `New App` de la UI de ArgoCD y rellenar los campos con la información de tu repositorio y la carpeta donde están tus manifiestos.
+![Crear aplicación - Parte 1](images/Crear%20aplicación%20-%20Parte%201.png)
 
-En la primera parte rellenas el nombre de la aplicación, el proyecto (puedes dejar `default`) y que se auto cree el namespace si no existe:
+**Segunda parte** - Repositorio y destino. Indica la URL del repo, la rama `master` y la carpeta `04-cloud/00-aks/01-mi-primer-aks/manifests`. Como destino usa `https://kubernetes.default.svc` (el mismo clúster) y el namespace `tour-of-heroes`:
 
-![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%201.png)
+![Crear aplicación - Parte 2](images/Crear%20aplicación%20-%20Parte%202.png)
 
-Una vez que ya lo tienes debes indicar cuál es la URL de tu repositorio, la rama y la carpeta donde están tus manifiestos.Además también tienes que indicar en qué clúster y namespace quieres que se despliegue la aplicación. En este caso, el clúster es el mismo donde tienes ArgoCD, por lo que puedes usar `https://kubernetes.default.svc` y el namespace `tour-of-heroes`, pero que sepas que puedes tener múltiples clústeres y namespaces gestionados por el mismo ArgoCD.
+**Tercera parte** - ¡No olvides marcar `Recursive`! Sin esto ArgoCD no entrará en las subcarpetas:
 
-![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%202.png)
+![Crear aplicación - Parte 3](images/Crear%20aplicación%20-%20Parte%203.png)
 
-Por último en este caso debemos marcar el check de `Recursive` porque nuestros manifiestos están organizados en subcarpetas (`backend`, `db` y `frontend`).
+Cuando pulses `Create` verás un mapa con todos los recursos que se van a desplegar, pero todavía no estarán aplicados. Para eso pulsa `Sync` y confirma la acción.
 
-![UI de ArgoCD](images/Crear%20aplicación%20-%20Parte%203.png)
+## Opción 2: Desde kubectl
 
-Cuando pulsemos el botón `Create` ArgoCD  podrás ver un mapa de todos los recursos que se van a desplegar pero todavía no estarán aplicados en el clúster. Para eso, debes pulsar el botón `Sync` y confirmar la acción.
-
-
-### Lo mismo pero con `kubectl`
-
-Esto mismo que hemos hecho con la UI de ArgoCD, también se puede hacer con `kubectl` aplicando un manifiesto de tipo `Application` que es el recurso de ArgoCD que representa una aplicación a desplegar.
-
-Ahora crea un recurso `Application` que apunte al repositorio y a la carpeta donde están tus manifiestos.
-
-Como la carpeta `manifests/` contiene subdirectorios (`backend`, `db` y `frontend`), debes activar el modo recursivo con `directory.recurse: true`.
-
-Sustituye `TU_REPO_URL` por la URL real de tu repositorio y, si hace falta, ajusta `targetRevision`.
+Si prefieres hacerlo por línea de comandos, aplica este manifiesto:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -227,32 +173,23 @@ spec:
 EOF
 ```
 
-> Nota: aunque aquí se incluye `CreateNamespace=true`, sigue siendo buena práctica crear el namespace previamente para dejar el flujo más explícito.
+Con `syncPolicy.automated` ArgoCD sincronizará automáticamente cada vez que detecte cambios en Git. `prune: true` eliminará recursos que ya no estén en el repo y `selfHeal: true` revertirá cambios manuales en el clúster.
 
-## Comprobar el despliegue
+# Comprobar el despliegue
 
-Una vez creada la `Application`, ArgoCD empezará a sincronizar los recursos del repositorio contra tu clúster.
-
-Puedes comprobarlo con:
+Una vez creada la `Application`, ArgoCD empezará a sincronizar. Puedes ver el estado con:
 
 ```bash
 kubectl get application -n argocd
-kubectl get all -n tour-of-heroes-desde-kubectl -o wide
-kubectl get pvc -n tour-of-heroes-desde-kubectl
-kubectl get secret -n tour-of-heroes-desde-kubectl
 ```
 
-Si quieres observar el progreso:
+Y si quieres ver cómo van apareciendo los recursos:
 
 ```bash
-watch kubectl get all -n tour-of-heroes
+watch kubectl get all -n tour-of-heroes-desde-kubectl
 ```
 
-## Obtener las IPs públicas de la API y del frontend
-
-Tus `Service` de frontend y backend son de tipo `LoadBalancer`, por lo que AKS les asignará IP pública.
-
-Puedes obtenerlas con:
+Cuando todo esté desplegado, recupera las IPs públicas de la API y el frontend:
 
 ```bash
 API_IP=$(kubectl get service tour-of-heroes-api -n tour-of-heroes-desde-kubectl -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -262,64 +199,44 @@ echo http://${API_IP}/api/hero
 echo http://${WEB_IP}
 ```
 
-## Ajuste importante en tus manifiestos
+## ⚠️ Ajuste importante: la variable API_URL
 
-Tu manifiesto de frontend tiene definida la variable `API_URL` con una IP fija:
+El manifiesto del frontend tiene la variable `API_URL` con una IP fija. Eso significa que aunque ArgoCD despliegue correctamente la aplicación, el frontal seguirá intentando llamar a esa IP concreta.
 
-```yaml
-env:
-	- name: API_URL
-		value: http://20.23.122.26/api/hero
-```
-
-Eso significa que, aunque ArgoCD despliegue correctamente la aplicación, el frontal seguirá intentando llamar a esa IP concreta.
-
-Para mantener un flujo GitOps correcto, cuando tengas la IP pública real de la API deberías actualizar el archivo `frontend/deployment.yaml` en Git y dejar algo parecido a esto:
+Para que el flujo GitOps quede completo, actualiza el archivo `frontend/deployment.yaml` en Git con la IP real de tu API:
 
 ```yaml
 env:
-	- name: API_URL
-		value: http://<API_IP>/api/hero
+  - name: API_URL
+    value: http://<TU_API_IP>/api/hero
 ```
 
-Después haces commit y push al repositorio y ArgoCD aplicará el cambio automáticamente.
+Haz commit, push, y ArgoCD aplicará el cambio automáticamente. ¡Así es como funciona GitOps! 🚀
 
-Si prefieres no depender de una IP pública para el frontend, otra opción más robusta es cambiarlo para que consuma el servicio interno de Kubernetes, siempre que la aplicación frontend pueda resolverlo correctamente.
+# Gestionar ArgoCD
 
-## Actualizar la configuración de la extensión
+## Actualizar la configuración
 
-Si más adelante necesitas actualizar parámetros de ArgoCD gestionados por la extensión, hazlo con Azure CLI y no tocando directamente los ConfigMaps, porque Azure podría sobrescribir los cambios.
-
-Ejemplo:
+Si necesitas cambiar parámetros de ArgoCD gestionados por la extensión, hazlo siempre con Azure CLI (no toques los ConfigMaps directamente porque Azure podría sobrescribirlos):
 
 ```bash
 az k8s-extension update \
-	--resource-group ${RESOURCE_GROUP} \
-	--cluster-name ${AKS_NAME} \
-	--cluster-type managedClusters \
-	--name argocd \
-	--config "configs.cm.url=https://<ARGOCD_PUBLIC_IP>/auth/callback"
+-g ${RESOURCE_GROUP} \
+-c ${AKS_NAME} \
+-t managedClusters \
+--name argocd \
+--config "configs.cm.url=https://<ARGOCD_PUBLIC_IP>/auth/callback"
 ```
 
-## Eliminar la extensión
+## Desinstalar ArgoCD
 
-Si quieres desinstalar ArgoCD del clúster:
+Si quieres eliminar ArgoCD del clúster:
 
 ```bash
 az k8s-extension delete \
-	-g ${RESOURCE_GROUP} \
-	-c ${AKS_NAME} \
-	-n argocd \
-	-t managedClusters \
-	--yes
+-g ${RESOURCE_GROUP} \
+-c ${AKS_NAME} \
+-n argocd \
+-t managedClusters \
+--yes
 ```
-
-## Resumen del flujo
-
-1. Registrar proveedores de Azure.
-2. Instalar o actualizar extensiones `k8s-configuration` y `k8s-extension`.
-3. Instalar la extensión `Microsoft.ArgoCD` en el clúster AKS.
-4. Exponer la UI de ArgoCD.
-5. Crear la aplicación `Application` apuntando a la carpeta `04-cloud/00-aks/01-mi-primer-aks/manifests` con despliegue recursivo.
-6. Verificar que ArgoCD sincroniza `backend`, `db` y `frontend` en `tour-of-heroes`.
-7. Actualizar en Git el valor de `API_URL` del frontend con la IP real de la API para que el flujo GitOps quede completo.
