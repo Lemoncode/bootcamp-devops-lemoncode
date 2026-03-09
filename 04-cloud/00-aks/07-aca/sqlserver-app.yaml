@@ -1,0 +1,25 @@
+properties:
+  template:
+    containers:
+    - name: sqlserver
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      resources:
+        cpu: 1
+        memory: 2Gi
+      env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: MSSQL_SA_PASSWORD
+        value: "YourStrong!Passw0rd"
+      - name: MSSQL_PID
+        value: "Developer"
+      volumeMounts:
+      - volumeName: sql-data-volume
+        mountPath: /var/opt/mssql/data
+    scale:
+      minReplicas: 1
+      maxReplicas: 1
+    volumes:
+    - name: sql-data-volume
+      storageName: sqlstorage
+      storageType: AzureFile
