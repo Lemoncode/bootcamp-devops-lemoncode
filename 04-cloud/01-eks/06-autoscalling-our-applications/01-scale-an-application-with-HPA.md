@@ -11,8 +11,24 @@ These metrics will drive the scaling behavior of the *deployments*.
 We will deploy the metrics server using [Kubernetes Metrics Server](https://github.com/kubernetes-sigs/metrics-server).
 
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.7.2/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+Since we are on `eks` context the `metrics-server` is already installed by defaul. To check that plugin is already installed we can run:
+
+```bash
+# Check add-on status
+aws eks describe-addon --cluster-name YOUR_CLUSTER_NAME --addon-name metrics-server --region YOUR_REGION
+```
+
+If for what ever reason the addon installation failed, we can delete it and re install it:
+
+```bash
+# If failed, delete and reinstall
+aws eks delete-addon --cluster-name YOUR_CLUSTER_NAME --addon-name metrics-server --region YOUR_REGION
+
+# Wait for deletion to complete, then reinstall
+aws eks create-addon --cluster-name YOUR_CLUSTER_NAME --addon-name metrics-server --region YOUR_REGION
 ```
 
 Lets' verify the status of the metrics-server APIService (it could take a few minutes).
@@ -67,7 +83,7 @@ This HPA scales up when CPU exceeds 50% of the allocated container resource.
 
 ```bash
 kubectl autoscale deployment php-apache `#The target average CPU utilization` \
-    --cpu-percent=50 \
+    --cput="50%" \
     --min=1 `#The lower limit for the number of pods that can be set by the autoscaler` \
     --max=10 `#The upper limit for the number of pods that can be set by the autoscaler`
 
@@ -84,9 +100,8 @@ kubectl get hpa
 **Open a new terminal**
 
 ```bash
-kubectl run -it --rm --restart=Never busybox --image=gcr.io/google-containers/busybox sh
+kubectl run -it --rm --restart=Never busybox --image=busybox sh
 ```
-
 
 > Reference: https://medium.com/better-programming/kubernetes-tips-create-pods-with-imperative-commands-in-1-18-62ea6e1ceb32
 

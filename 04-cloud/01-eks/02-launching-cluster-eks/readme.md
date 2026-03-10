@@ -22,7 +22,7 @@ Modify permissions over the private key to avoid future warnings
 
 ```bash
 chmod 400 EksKeyPair.pem
-``` 
+```
 
 With this new private key we can go ahead and generate a public one, that's the key that will be upload into the node (EC2 instance). If we provide this key, and we have the private one, we can connect to the remote instance.
 
@@ -39,7 +39,7 @@ kind: ClusterConfig
 metadata:
   name: lc-cluster
   region: eu-west-3
-  version: "1.28"
+  version: "1.35"
 
 iam:
   withOIDC: true
@@ -53,22 +53,22 @@ managedNodeGroups:
     ssh:
       allow: true
       publicKeyPath: "./eks_key.pub"
-``` 
+```
 
 ```bash
 eksctl create cluster \
---name lc-cluster \
---version 1.28 \
---region eu-west-3 \
---nodegroup-name lc-nodes \
---node-type t2.small \
---nodes 3 \
---nodes-min 1 \
---nodes-max 4 \
---with-oidc \
---ssh-access=true \
---ssh-public-key=eks_key.pub \
---managed
+  --name lc-cluster \
+  --version 1.35 \
+  --region eu-west-3 \
+  --nodegroup-name lc-nodes \
+  --node-type t2.small \
+  --nodes 3 \
+  --nodes-min 1 \
+  --nodes-max 4 \
+  --with-oidc \
+  --ssh-access=true \
+  --ssh-public-key=eks_key.pub \
+  --managed
 ```
 
 Both forms are going to create exactly the same, but if we want to get all the power of `eksctl` we have to use the declarative way using the yaml form.
@@ -84,7 +84,7 @@ kind: ClusterConfig
 metadata:
   name: lc-cluster # [1]
   region: eu-west-3 # [2]
-  version: "1.18" # [3]
+  version: "1.35" # [3]
 
 iam:
   withOIDC: true # [4]
@@ -98,7 +98,7 @@ managedNodeGroups: # [5]
     ssh: # [11]
       allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
       publicKeyPath: "./eks_key.pub" # Add path to key
-``` 
+```
 
 1. This is the cluster name, in our case `lc-cluster`
 2. The AZ where the cluster is going to be deplyed
@@ -112,7 +112,6 @@ managedNodeGroups: # [5]
 10. If the cluster infrastructure is updated the max number of instances that we want on the node group
 11. The `ssh` key to connect to our EC2 instances.
 
-
 ## Launching the Cluster
 
 Before launchin the cluster we can use the `dry-run` feature, this will allow us to inspect and change the instances matched by the instance selector before proceeding to creating a nodegroup. If we run `eksctl create cluster <options> --dry-run`, `eksctl` will output a ClusterConfig file containing a nodegroup representing the CLI options and the instance types set to the instances matched by the instance selector resource criteria.
@@ -125,14 +124,22 @@ Now we're ready to launch the cluster
 
 ```bash
 eksctl create cluster -f demos.yml
-``` 
+```
 
 ## Test the cluster
 
-Now we can test that our cluster is up and running.
+Now we can test that our cluster is up and running by running the .
 
 ```bash
-kubectl get nodes
+eksctl get cluster --name lc-cluster --region eu-west-3
+```
+
+```bash
+kubectl get nodes -o wide
+```
+
+```bash
+kubectl describe nodes
 ```
 
 > `eksctl` has edit `./kube/config` to make `kubectl` point to the new created cluster.

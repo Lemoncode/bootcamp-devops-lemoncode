@@ -36,7 +36,7 @@ resource "local_file" "example" {
 
 ### The Dev Environment
 
-Create `lab-directories/environments/dev/local_file/main.tf`
+Create `lab-directories/environments/dev/main.tf`
 
 ```ini
 module "app" {

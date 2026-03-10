@@ -1,5 +1,7 @@
 # Deploy the Kubernetes Dashboard 
 
+> NOTE: Deploying the Kubernetes Dashboard has not too much sense since more or less the same data could be found out on EKS dashboard.
+
 ## Deploy the Official Kubernetes Dashboard
 
 The official Kubernetes dashboard is not deployed by default, but there are instructions in the official documentation
