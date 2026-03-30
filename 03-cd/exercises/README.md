@@ -22,7 +22,7 @@ Para ejecutar Jenkins en local y tener las dependencias necesarias disponibles p
 
 * Utilizar Docker in Docker a la hora de levantar Jenkins para realizar este ejercicio
 * Como plugins deben estar instalados `Docker` y `Docker Pipeline`
-* Usar la imagen de Docker `gradle:6.6.1-jre14-openj9`
+* Usar la imagen de Docker `gradle:7.6.6-jdk17`
 
 ## Ejercicios GitLab
 
