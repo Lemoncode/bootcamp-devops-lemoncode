@@ -25,6 +25,8 @@ client = OpenAI(base_url=LLM_ENDPOINT, api_key=LLM_API_KEY)
 model = LLM_MODEL
 
 
+# Esta tool se define como una funcion Python local del agente.
+# No es un MCP server: el framework la expone directamente al modelo durante la ejecucion.
 @tool(approval_mode="never_required")
 def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
@@ -53,8 +55,8 @@ async def main():
         tools=get_weather,
     )
 
-    # Registrar la función get_weather como una herramienta que el agente puede usar
-    # agent.register_tool("get_weather", get_weather)
+    # La tool se registra al crear el agente, pasandola en tools=get_weather.
+    # En este ejemplo no hace falta registrarla aparte.
 
     # Definir el prompt para el agente
     prompt = "¿Cuál es el clima en Madrid?"
