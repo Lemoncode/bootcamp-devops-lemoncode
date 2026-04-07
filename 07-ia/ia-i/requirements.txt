@@ -1,6 +1,4 @@
 openai==2.29.0
-chromadb==1.5.5
-sentence-transformers==5.3.0
 python-dotenv==1.2.2
 httpx==0.28.1
 markitdown==0.1.5

@@ -49,7 +49,7 @@ response = client.chat.completions.create(
         {
             "role": "user",
             "content": """Soy programadora, trabajo 10 horas sentada y mi único ejercicio 
-es ir a la nevera. Dame 5 ejercicios que pueda hacer en casa para mantenerme activa, sin necesidad de material y que no me lleven más de 10 minutos.""",
+es ir a la nevera. Dame 5 ejercicios que pueda hacer en casa para mantenerme activa, sin necesidad de material.""",
         },
     ],
 )

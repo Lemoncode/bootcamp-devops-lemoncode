@@ -36,6 +36,7 @@ def get_weather(
         "Madrid": "☀️ Soleado, 25°C",
         "Barcelona": "☁️ Nublado, 22°C",
         "Valencia": "🌧️ Lluvioso, 18°C",
+        "Málaga": "🌤️ Parcialmente nublado, 24°C",
     }
     return weather_data.get(
         location, "No se dispone de información del clima para esa ubicación."
@@ -66,7 +67,7 @@ async def main():
     # 🧠 Si quisieras mantener memoria entre turnos, en este framework es mejor
     # 🧠 reutilizar una sesion compartida, por ejemplo:
     # from agent_framework import AgentSession
-    # session = AgentSession()
+    session = AgentSession()
     # Lo dejamos comentado para que se vea la diferencia con este ejemplo,
     # donde cada pregunta va aislada.
     console.print("Escribe una pregunta para el agente o 'salir' para terminar.\n")
@@ -84,8 +85,8 @@ async def main():
         # response = await agent.run(prompt, session=session)
 
         # 🚀 Ejecutamos el agente y dejamos que decida si necesita usar la tool.
-        response = await agent.run(prompt)
-        # response = await agent.run(prompt, session=session)
+        # response = await agent.run(prompt)
+        response = await agent.run(prompt, session=session)
 
         # 📄 Mostramos la respuesta final del agente.
         console.print(Markdown(f"## Respuesta del agente\n\n{response}"))

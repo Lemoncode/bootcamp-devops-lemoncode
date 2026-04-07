@@ -23,13 +23,13 @@ print(f"🔌 Proveedor: {LLM_PROVIDER}")
 print(f"🔍 Endpoint: {LLM_ENDPOINT}")
 print(f"🧠 Modelo: {model}")
 
-SIMPLE_PROMPT = "¿Cuál es la capital de España?"
+SIMPLE_PROMPT = "¿Cuál es la capital de España? Devuelmelo en formato json con la siguiente estructura: { 'capital': 'Nombre de la capital' } "
 
 DETAILED_PROMPT = """Soy programadora, trabajo 10 horas sentada y mi único ejercicio 
 es ir a la nevera. Dame 5 ejercicios que pueda hacer en casa para mantenerme activa, sin necesidad de material y que no me lleven más de 10 minutos."""
 
 # ✍️ Elegimos qué prompt queremos enviar en esta ejecucion.
-user_prompt = SIMPLE_PROMPT
+user_prompt = DETAILED_PROMPT
 
 # 🚀 Esta es la llamada mas basica posible: un mensaje de usuario y una respuesta del modelo.
 with console.status("[bold green]Esperando respuesta del modelo...", spinner="dots"):
