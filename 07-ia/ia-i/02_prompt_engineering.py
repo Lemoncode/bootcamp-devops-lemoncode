@@ -9,23 +9,26 @@ load_dotenv()
 
 console = Console()
 
-# Debes tener un archhivo .env con las variables de entornos elegidas. Estas pueden ser  para Ollama, Docker, GitHub Models, Foundry.
+# ⚙️ Cargamos la configuracion del proveedor desde el archivo .env.
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
 LLM_MODEL = os.getenv("LLM_MODEL")
 LLM_ENDPOINT = os.getenv("LLM_ENDPOINT")
 LLM_API_KEY = os.getenv("LLM_API_KEY")
 
-# Se crea un cliente de OpenAI con el endpoint y la API Key para el mismo
+# 🔌 Creamos un cliente OpenAI-compatible con el endpoint y la API key elegidos.
 client = OpenAI(base_url=LLM_ENDPOINT, api_key=LLM_API_KEY)
-# Guardamos el modelo en una variable para usarlo luego en la llamada al LLM
+# 🧠 Guardamos el nombre del modelo para reutilizarlo en la llamada.
 model = LLM_MODEL
 
 console.print(f"🔌 Proveedor: {LLM_PROVIDER}")
 console.print(f"🔍 Endpoint: {LLM_ENDPOINT}")
 console.print(f"🧠 Modelo: {model}")
 
+# 🎛️ Estos parametros ayudan a controlar la respuesta del modelo.
+temperature = 0.3
+max_tokens = 300
 
-# System prompt para dar contexto al modelo sobre cómo debe comportarse y qué información tiene disponible. Es importante para guiar la respuesta del modelo.
+# 🧭 El system prompt define el rol del modelo y marca el tono de la respuesta.
 system_prompt = """Eres un entrenador personal que ayuda a las personas a mantenerse activas con ejercicios sencillos que puedan hacer en casa, sin necesidad de material y que no les lleven más
 de 10 minutos. Tienes en cuenta que el tipo de usuario puede variar en edad, nivel de condición física y posibles limitaciones físicas. 
 Lo más probable es que el usuario no tenga experiencia previa con el ejercicio físico, por lo que tus recomendaciones deben ser accesibles y fáciles de seguir. 
@@ -33,9 +36,11 @@ Además, siempre debes incluir una breve explicación de cada ejercicio y sus be
 
 console.print(f"\n📋 System Prompt:\n{system_prompt}\n")
 
-# la llamada al modelo con el system prompt y un mensaje de usuario
+# 🚀 Llamamos al modelo enviando un system prompt y un mensaje de usuario.
 response = client.chat.completions.create(
     model=model,
+    temperature=temperature,
+    max_completion_tokens=max_tokens,
     messages=[
         {
             "role": "system",
@@ -49,10 +54,13 @@ es ir a la nevera. Dame 5 ejercicios que pueda hacer en casa para mantenerme act
     ],
 )
 
-# La respuesta
+console.print(f"🌡️ Temperature: {temperature}")
+console.print(f"✂️ Max tokens: {max_tokens}")
+
+# 📄 Mostramos la respuesta del modelo con formato Markdown.
 console.print(Markdown(response.choices[0].message.content))
 
-# Métricas de uso (si el proveedor las devuelve)
+# 📊 Si el proveedor devuelve uso de tokens, lo enseñamos en consola.
 if response.usage:
     console.print("\n📊 Tokens usados:")
     console.print(f"  - Input:  {response.usage.prompt_tokens}")

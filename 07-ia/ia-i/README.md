@@ -2,9 +2,15 @@
 
 > **Objetivo:** Entender qué es la IA Generativa, cómo funciona por dentro, y ser capaz de llamar a un LLM desde código, hacer prompt engineering, construir un agente con tools y hacer RAG básico.
 
+Este bloque esta pensado para ir de menos a mas:
+- primero una llamada simple a un modelo,
+- luego una llamada con mejor contexto usando `system prompt`,
+- despues un agente con tools,
+- y por ultimo un ejemplo sencillo de RAG con Qdrant.
+
 ---
 
-## ¿Qué es la IA Generativa?
+## ✨ ¿Qué es la IA Generativa?
 
 La IA Generativa es una rama de la inteligencia artificial capaz de **crear contenido nuevo**: texto, imágenes, código, audio, vídeo...
 
@@ -12,7 +18,7 @@ A diferencia de la IA tradicional (que clasifica o predice), la IA Generativa **
 
 ---
 
-## ¿Cómo funciona un LLM?
+## 🧠 ¿Cómo funciona un LLM?
 
 **LLM = Large Language Model** (Modelo de Lenguaje Grande)
 
@@ -27,7 +33,7 @@ Output: "azul" (con alta probabilidad)
 - Aproximadamente 3/4 de una palabra en inglés, algo menos en español
 - Los modelos tienen un **límite de contexto** (context window): cuántos tokens pueden procesar a la vez
 
-### El proceso de entrenamiento (simplificado)
+### 🏋️ El proceso de entrenamiento (simplificado)
 
 ```
 1. Pre-training    → El modelo lee internet entero (Wikipedia, GitHub, libros...)
@@ -39,7 +45,7 @@ Output: "azul" (con alta probabilidad)
 3. Inferencia      → Tú mandas un prompt, el modelo genera la respuesta
 ```
 
-### Parámetros clave de las APIs
+### 🎛️ Parámetros clave de las APIs
 
 | Parámetro | Qué hace | Valores típicos |
 |-----------|----------|-----------------|
@@ -50,9 +56,9 @@ Output: "azul" (con alta probabilidad)
 
 ---
 
-## Conceptos clave
+## 🧩 Conceptos clave
 
-### Prompt Engineering
+### ✍️ Prompt Engineering
 
 El arte de escribir buenas instrucciones para el modelo.
 
@@ -66,13 +72,13 @@ El arte de escribir buenas instrucciones para el modelo.
 [INPUT]          <error>...</error>
 ```
 
-**Técnicas básicas:**
+**Tecnicas basicas:**
 - **Zero-shot** → le preguntas directamente sin ejemplos
 - **Few-shot** → le das 2-3 ejemplos antes de la pregunta real
 - **Chain of Thought** → le pides que "piense paso a paso"
 - **Role prompting** → le asignas un rol experto
 
-### Embeddings
+### 🔢 Embeddings
 
 Representaciones numéricas (vectores) del significado semántico de un texto.
 
@@ -85,7 +91,7 @@ Representaciones numéricas (vectores) del significado semántico de un texto.
 
 **¿Para qué sirven?** → Para búsqueda semántica. La base de RAG.
 
-### RAG (Retrieval-Augmented Generation)
+### 📚 RAG (Retrieval-Augmented Generation)
 
 El modelo no sabe nada de tu documentación interna. **RAG es la solución:**
 
@@ -95,7 +101,7 @@ El modelo no sabe nada de tu documentación interna. **RAG es la solución:**
 3. El LLM genera una respuesta basada en TU documentación
 ```
 
-### Agentes (Agents)
+### 🧰 Agentes (Agents)
 
 Un LLM que puede **tomar decisiones y usar herramientas** de forma autónoma.
 
@@ -110,9 +116,9 @@ Agente:
 
 ---
 
-## El ecosistema: modelos y proveedores
+## 🌐 El ecosistema: modelos y proveedores
 
-### Opciones gratuitas
+### 🆓 Opciones gratuitas
 
 | Herramienta | Qué es | Instalación |
 |-------------|--------|-------------|
@@ -121,9 +127,9 @@ Agente:
 | **[GitHub Models](https://github.com/marketplace/models)** | API gratis en la nube (con límites) | Solo necesitas cuenta de GitHub |
 | **[Docker Model Runner](https://docs.docker.com/desktop/features/model-runner/)** | Modelos en contenedores Docker | Docker Desktop con la feature habilitada |
 
-> Todas estas opciones tienen API compatible con OpenAI. El código que escribas funcionará con cualquiera de ellas.
+> 🔌 Todas estas opciones tienen API compatible con OpenAI. El código que escribas funcionara con cualquiera de ellas.
 
-### Modelos recomendados (según tu hardware)
+### 💻 Modelos recomendados (segun tu hardware)
 
 | RAM disponible | Modelo recomendado | Comando |
 |----------------|-------------------|----------|
@@ -133,7 +139,7 @@ Agente:
 
 > 🔍 Usa [canirun.ai](https://www.canirun.ai/) para saber qué modelo puede correr tu máquina.
 
-### Proveedores de pago (referencia)
+### 💳 Proveedores de pago (referencia)
 
 | Proveedor | Modelos destacados |
 |-----------|-------------------|
@@ -144,7 +150,7 @@ Agente:
 
 ---
 
-## Setup
+## ⚙️ Setup
 
 ```bash
 cd 07-ia/ia-i
@@ -158,49 +164,55 @@ pip install -r requirements.txt
 
 # Configurar variables de entorno
 cp .env.example .env
-# Edita .env según el proveedor que uses (Ollama, GitHub Models, Docker...)
+# La plantilla deja GitHub Models como opcion activa por defecto.
+# Edita .env si prefieres usar Ollama, Docker Model Runner, LM Studio u otro proveedor.
 ```
 
 ---
 
-## Ejemplos
+## 🧪 Ejemplos
 
-### 01 — Tu primera llamada a un LLM (`01_primer_prompt.py`)
+### 01 — 🚀 Tu primera llamada a un LLM (`01_primer_prompt.py`)
 
-La llamada más básica posible: un mensaje de usuario y una respuesta del modelo usando el SDK de OpenAI (compatible con todos los proveedores).
+La llamada mas basica posible: un mensaje de usuario y una respuesta del modelo usando el SDK de OpenAI compatible con distintos proveedores.
 
 ```bash
 python 01_primer_prompt.py
 ```
 
-### 02 — Prompt Engineering (`02_prompt_engineering.py`)
+### 02 — 🧭 Prompt Engineering (`02_prompt_engineering.py`)
 
-Cómo usar el system prompt para dar contexto al modelo y guiar sus respuestas. Muestra la diferencia entre un prompt simple y uno bien estructurado.
+Como usar el `system prompt` para dar contexto al modelo y guiar sus respuestas. Muestra la diferencia entre preguntar sin contexto y preguntar con instrucciones mas claras.
 
 ```bash
 python 02_prompt_engineering.py
 ```
 
-### 03 — Mi primer agente (`03_mi_primer_agente.py`)
+### 03 — 🤖 Mi primer agente (`03_mi_primer_agente.py`)
 
-Un agente con tools que puede tomar decisiones y ejecutar funciones de forma autónoma. El LLM decide qué herramientas usar y cuándo ha terminado (bucle agéntico).
+Un agente con una tool local en Python. El modelo decide si necesita usar esa herramienta para responder y luego compone la respuesta final.
 
 ```bash
 python 03_mi_primer_agente.py
 ```
 
-### 04 — Bonus: RAG básico (`04_bonus_rag.py`)
+### 04 — 📦 Bonus: RAG básico (`04_bonus_rag.py` y `05_bonus_rag_chat.py`)
 
-RAG local con recetas de la abuela de Zoe: genera embeddings usando el modelo configurado en `LLM_MODEL_EMBEDDINGS` a traves del proveedor OpenAI-compatible. Para GitHub Models, el ejemplo queda preparado con `openai/text-embedding-3-large`, indexa los documentos en Qdrant corriendo en Docker y responde preguntas recuperando primero las recetas mas relevantes.
+RAG local con recetas de la abuela de Zoe dividido en dos scripts para que el proceso se vea con claridad:
+- `04_bonus_rag.py` genera los embeddings y rellena la base de datos vectorial en Qdrant.
+- `05_bonus_rag_chat.py` abre el modo chat y responde preguntas recuperando primero las recetas mas relevantes.
+
+Para GitHub Models, el ejemplo queda preparado con `openai/text-embedding-3-large`.
 
 ```bash
 docker run --rm -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant
 python 04_bonus_rag.py
+python 05_bonus_rag_chat.py
 ```
 
 ---
 
-## Resumen de conceptos
+## 📝 Resumen de conceptos
 
 | Concepto | En una frase |
 |----------|--------------|
@@ -215,15 +227,15 @@ python 04_bonus_rag.py
 
 ---
 
-## Recursos
+## 🔗 Recursos
 
-**Frameworks para construir con LLMs:**
+**🛠️ Frameworks para construir con LLMs:**
 - [LangChain](https://python.langchain.com) — El más popular, muchos conectores
 - [LlamaIndex](https://docs.llamaindex.ai) — Especializado en RAG
 - [Instructor](https://python.useinstructor.com) — Para extraer JSON estructurado de LLMs
 - [Pydantic AI](https://ai.pydantic.dev) — Agentes con tipado fuerte
 
-**Plataformas para explorar modelos:**
+**🔎 Plataformas para explorar modelos:**
 - [Hugging Face](https://huggingface.co) — El GitHub de los modelos de IA
 - [OpenRouter](https://openrouter.ai) — Una API, todos los modelos
 - [Groq](https://groq.com) — Inferencia ultrarrápida, free tier generoso
