@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Torrijas",
+    "text": "Las torrijas de la abuela de Zoe se preparan con pan del dia anterior, leche, canela, limon, azucar, huevos y aceite para freir. Se infusiona la leche con canela y piel de limon, se empapan las rebanadas de pan, se pasan por huevo y se frien hasta que queden doradas. Al final se rebozan con azucar y canela. Es una receta de postre tradicional, ideal para merienda o para Semana Santa."
+  },
+  {
+    "id": 2,
+    "title": "Boniatos con carne y queso",
+    "text": "Los boniatos con carne y queso se hacen asando primero los boniatos hasta que queden tiernos. Luego se vacian un poco y se rellenan con carne picada sofrita con cebolla, tomate y especias. Por encima se añade queso rallado y se gratinan unos minutos. Es una receta completa, sabrosa y muy apropiada para una comida o una cena contundente."
+  },
+  {
+    "id": 3,
+    "title": "Lentejas",
+    "text": "Las lentejas de la abuela de Zoe llevan lentejas pardinas, cebolla, zanahoria, pimiento, ajo, tomate, patata, laurel, pimenton y a veces chorizo. Se cuecen a fuego lento hasta que el caldo quede espeso y las verduras bien integradas. Es un plato de cuchara, reconfortante y muy util para comer varios dias."
+  },
+  {
+    "id": 4,
+    "title": "Bizcocho de yogur",
+    "text": "El bizcocho de yogur se prepara usando un yogur natural como medida para el resto de ingredientes: aceite, azucar y harina. Tambien lleva huevos y levadura. Se mezcla todo hasta obtener una masa homogenea y se hornea hasta que suba y quede esponjoso. Es una receta sencilla de reposteria casera, perfecta para desayunos y meriendas."
+  },
+  {
+    "id": 5,
+    "title": "Croquetas de pollo",
+    "text": "Las croquetas de pollo de la abuela de Zoe aprovechan restos de pollo asado o cocido. Se prepara una bechamel espesa con mantequilla, harina y leche, se mezcla con el pollo muy picado y un poco de nuez moscada, y se deja enfriar. Luego se forman las croquetas, se pasan por huevo y pan rallado y se frien hasta que queden crujientes por fuera y cremosas por dentro. Son ideales para cena, aperitivo o para aprovechar sobras."
+  },
+  {
+    "id": 6,
+    "title": "Tortilla de patatas",
+    "text": "La tortilla de patatas lleva patatas, huevos, cebolla si se quiere, aceite de oliva y sal. Las patatas se pochan despacio en aceite hasta que queden tiernas, se mezclan con el huevo batido y se cuajan en la sarten por ambos lados. Es una receta clasica, muy versatil, que sirve tanto para comida como para cena o bocadillo."
+  },
+  {
+    "id": 7,
+    "title": "Pollo al ajillo",
+    "text": "El pollo al ajillo se prepara dorando trozos de pollo con abundante ajo y aceite de oliva. Se anade laurel, un poco de vino blanco y a veces perejil para que reduzca la salsa. El resultado es un plato jugoso, con mucho sabor y muy adecuado para acompanar con patatas o pan. Es una receta tradicional de cocina casera y bastante facil de preparar."
+  },
+  {
+    "id": 8,
+    "title": "Arroz con leche",
+    "text": "El arroz con leche de la abuela de Zoe se hace cociendo arroz lentamente en leche con canela en rama, piel de limon y azucar. Se remueve con frecuencia para que quede cremoso y al servir se espolvorea con canela molida. Es un postre de cuchara muy tradicional, suave y perfecto para tomar frio o templado."
+  },
+  {
+    "id": 9,
+    "title": "Albóndigas en salsa",
+    "text": "Las albondigas en salsa se preparan con carne picada mezclada con ajo, perejil, huevo y pan remojado en leche. Se forman bolas, se sellan en la sarten y luego se cocinan en una salsa de cebolla, zanahoria, tomate y caldo. Es un plato muy completo y familiar, ideal para comer con arroz, pure o patatas fritas."
+  },
+  {
+    "id": 10,
+    "title": "Pisto manchego",
+    "text": "El pisto manchego lleva tomate, pimiento verde, pimiento rojo, calabacin, cebolla y aceite de oliva. Las verduras se sofrien poco a poco hasta que queden tiernas y bien integradas, formando un guiso meloso. Se puede servir solo, con huevo frito o como acompanamiento de carne o pescado. Es una receta muy saludable y tipica de la cocina espanola."
+  },
+  {
+    "id": 11,
+    "title": "Macarrones con tomate y chorizo",
+    "text": "Los macarrones con tomate y chorizo son una receta rapida y muy popular en casa. Se cuece la pasta y se mezcla con una salsa de tomate casera en la que se ha sofreido cebolla y chorizo en trocitos. A menudo se terminan con queso rallado gratinado al horno. Es un plato contundente, muy del gusto de ninos y mayores."
+  },
+  {
+    "id": 12,
+    "title": "Flan de huevo",
+    "text": "El flan de huevo se elabora con huevos, leche, azucar y caramelo. Primero se hace un caramelo dorado para el molde y luego se vierte la mezcla batida de leche y huevo. Se cocina al bano maria hasta que cuaje y se deja enfriar antes de desmoldar. Es un postre muy clasico, sencillo y siempre funciona en comidas familiares."
+  }
+]

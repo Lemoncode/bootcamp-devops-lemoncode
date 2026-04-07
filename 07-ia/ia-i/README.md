@@ -191,9 +191,10 @@ python 03_mi_primer_agente.py
 
 ### 04 — Bonus: RAG básico (`04_bonus_rag.py`)
 
-RAG completo: descarga un PDF, lo convierte a markdown, divide en chunks, crea embeddings con `sentence-transformers`, indexa en ChromaDB y responde preguntas basándose en el contenido del documento.
+RAG local con recetas de la abuela de Zoe: genera embeddings usando el modelo configurado en `LLM_MODEL_EMBEDDINGS` a traves del proveedor OpenAI-compatible. Para GitHub Models, el ejemplo queda preparado con `openai/text-embedding-3-large`, indexa los documentos en Qdrant corriendo en Docker y responde preguntas recuperando primero las recetas mas relevantes.
 
 ```bash
+docker run --rm -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant
 python 04_bonus_rag.py
 ```
 
