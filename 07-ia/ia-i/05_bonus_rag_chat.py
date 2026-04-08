@@ -1,6 +1,4 @@
 import os
-import json
-from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
@@ -25,9 +23,25 @@ LLM_MODEL_EMBEDDINGS = os.getenv(
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 COLLECTION_NAME = "recetas_abuela_zoe"
 TOP_K = 2
-RECIPES_PATH = Path(__file__).with_name("recetas_abuela_zoe.json")
 
 client = OpenAI(base_url=LLM_ENDPOINT, api_key=LLM_API_KEY)
+
+
+def read_user_question() -> str | None:
+    try:
+        raw_question = input("Tu pregunta: ")
+    except EOFError:
+        return None
+
+    user_question = raw_question.strip()
+
+    if not user_question:
+        return ""
+
+    if user_question.lower() in {"salir", "exit", "quit"}:
+        return None
+
+    return user_question
 
 
 def get_embeddings(texts: list[str], embedding_model: str) -> list[list[float]]:
@@ -107,16 +121,17 @@ def main() -> None:
     console.print(f"🧠 Modelo LLM: {LLM_MODEL}")
     console.print(f"📦 Qdrant: {QDRANT_URL}")
     console.print(f"🧬 Modelo de embeddings: {LLM_MODEL_EMBEDDINGS}")
+    console.print("💬 Escribe tu pregunta y pulsa Enter. Usa 'salir' para terminar.\n")
 
     with httpx.Client(timeout=30.0) as http_client:
         while True:
-            user_question = input("Tu pregunta: ").strip()
+            user_question = read_user_question()
 
-            if not user_question:
-                continue
-
-            if user_question.lower() in {"salir", "exit", "quit"}:
+            if user_question is None:
                 break
+
+            if user_question == "":
+                continue
 
             with console.status(
                 "[bold green]Buscando recetas relevantes...", spinner="dots"

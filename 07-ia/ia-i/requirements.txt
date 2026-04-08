@@ -1,6 +1,5 @@
-openai==2.29.0
+openai==2.30.0
 python-dotenv==1.2.2
 httpx==0.28.1
-markitdown==0.1.5
 rich==14.3.3
-agent-framework-core==1.0.0rc5
+agent-framework-core==1.0.0
