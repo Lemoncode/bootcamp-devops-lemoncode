@@ -146,6 +146,31 @@ cp .env.example .env
 
 ## Ejemplos
 
+### 00 — Usar MCP servers de terceros con Agent Framework (`00_mcp_servers_de_otros.py`)
+
+Una demo donde el agente **no usa tools propias**, sino que se conecta a
+**MCP servers ya publicados** y los combina en una sola ejecucion.
+
+En este ejemplo se usan:
+
+- `@modelcontextprotocol/server-filesystem` para leer el repositorio local.
+- `@playwright/mcp` para abrir documentacion web y extraer informacion.
+
+```bash
+# Requiere Node.js + npx
+# Si Playwright falla la primera vez:
+npx playwright install chromium
+
+python 00_mcp_servers_de_otros.py
+
+# O con un prompt personalizado
+python 00_mcp_servers_de_otros.py "Lee el README del modulo y compáralo con la doc oficial de MCP"
+```
+
+Este ejemplo es util para enseñar la idea importante de MCP: el agente puede
+descubrir y usar capacidades nuevas conectandose a servidores ya existentes,
+sin reimplementar integraciones en Python.
+
 ### 01 — Crear un MCP Server (`01_mcp_server.py`)
 
 Un MCP Server con herramientas de un asistente personal (recetas, lista de la compra,
