@@ -230,7 +230,7 @@ web (estilo ChatGPT) conectada a un LLM. Sirve como base para luego conectarle
 herramientas MCP u otras integraciones.
 
 ```bash
-chainlit run 03_mcp_con_chainlit.py
+chainlit run 03_mcp_con_chainlit.py --port 8001
 # Se abrirá un navegador con la interfaz de chat
 ```
 

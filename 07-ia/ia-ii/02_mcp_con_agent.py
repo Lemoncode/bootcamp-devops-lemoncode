@@ -133,12 +133,6 @@ async def main():
             tools=[mcp_server],
         ) as agent,
     ):
-        prompt = (
-            "Quiero hacer algo con pollo para cenar. Busca recetas, "
-            "y añade a la lista de la compra: pollo, ajo y limón. "
-            "Ah, y dime cuántas libras son 2 kg de pollo."
-        )
-
         # 🗂️ La sesión permite mantener contexto entre varias preguntas del usuario.
         session = AgentSession()
 

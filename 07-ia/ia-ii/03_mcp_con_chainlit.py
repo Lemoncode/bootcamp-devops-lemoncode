@@ -7,7 +7,7 @@
 # - Recrea el agente usando esos servidores en cada mensaje
 # - Puede pedir aprobación antes de ejecutar una tool MCP
 #
-# Ejecutar: chainlit run 03_mcp_con_chainlit.py
+# Ejecutar: chainlit run 03_mcp_con_chainlit.py --port 8001
 
 import json
 import os
