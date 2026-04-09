@@ -1,8 +1,32 @@
 from fastmcp import FastMCP
+from fastmcp.server.middleware import Middleware, MiddlewareContext
+
+
+class ToolAuditMiddleware(Middleware):
+    """Muestra en terminal qué tool se ha llamado y con qué argumentos."""
+
+    async def on_call_tool(self, context: MiddlewareContext, call_next):
+        tool_name = context.message.name
+        arguments = context.message.arguments or {}
+
+        print(f"🔧 Tool llamada: {tool_name} | args={arguments}")
+
+        try:
+            result = await call_next(context)
+        except Exception as exc:
+            print(f"❌ Tool falló: {tool_name} | error={type(exc).__name__}: {exc}")
+            raise
+
+        print(f"✅ Tool completada: {tool_name}")
+        return result
+
 
 # 🍳 Creamos un servidor MCP con temática de cocina.
 # El nombre ayuda a identificarlo cuando un cliente MCP se conecta.
 mcp = FastMCP("MCP Server de Cocina")
+
+# 👀 Este middleware deja una traza en terminal cada vez que un cliente invoca una tool.
+mcp.add_middleware(ToolAuditMiddleware())
 
 # 🧠 Estado en memoria: esta lista vive mientras el proceso siga arrancado.
 # Si se reinicia el servidor, su contenido se pierde porque no hay base de datos real.
@@ -145,4 +169,5 @@ def tips_conservacion() -> str:
 
 if __name__ == "__main__":
     print("🚀 MCP Asistente Personal arrancando en http://localhost:8000/mcp")
+    print("👀 Logging de tools activado: verás en esta terminal cada llamada recibida.")
     mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
