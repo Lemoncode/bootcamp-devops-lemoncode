@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from agent_framework import Agent, MCPStdioTool
+from agent_framework import Agent, AgentSession, MCPStdioTool
 from agent_framework.openai import OpenAIChatClient
 from dotenv import load_dotenv
 from rich.console import Console
@@ -66,6 +66,8 @@ async def main() -> None:
             tools=[filesystem_mcp, playwright_mcp],
         ) as agent,
     ):
+        session = AgentSession()
+
         console.print("Escribe una pregunta para el agente o 'salir' para terminar.\n")
 
         while True:
@@ -83,6 +85,7 @@ async def main() -> None:
             response = agent.run(
                 prompt,
                 stream=True,
+                session=session,  # Reutilizamos la misma sesión para mantener contexto entre preguntas.
             )
 
             async for chunk in response:

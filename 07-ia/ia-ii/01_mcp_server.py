@@ -1,17 +1,22 @@
 from fastmcp import FastMCP
 
+# 🍳 Creamos un servidor MCP con temática de cocina.
+# El nombre ayuda a identificarlo cuando un cliente MCP se conecta.
 mcp = FastMCP("MCP Server de Cocina")
 
-# ── Base de datos en memoria ───────────────────────────────────────────────
+# 🧠 Estado en memoria: esta lista vive mientras el proceso siga arrancado.
+# Si se reinicia el servidor, su contenido se pierde porque no hay base de datos real.
 
 lista_compra: list[str] = []
 
-# ── Tools: acciones que el LLM puede ejecutar ─────────────────────────────
+# 🛠️ Tools: funciones que el cliente o el LLM puede invocar como acciones.
+# Piensa en ellas como "capacidades" activas del servidor.
 
 
 @mcp.tool()
 def buscar_receta(ingrediente: str) -> str:
     """Busca recetas que contengan un ingrediente"""
+    # 📚 Diccionario simple que actúa como catálogo de recetas de ejemplo.
     recetas = {
         "pollo": [
             "🍗 Pollo al ajillo (30 min)",
@@ -34,6 +39,7 @@ def buscar_receta(ingrediente: str) -> str:
             "🥘 Guiso de patatas (45 min)",
         ],
     }
+    # 🔎 Normalizamos el texto a minúsculas para evitar fallos por mayúsculas del usuario.
     ingrediente_lower = ingrediente.lower()
     if ingrediente_lower in recetas:
         return f"Recetas con {ingrediente}:\n" + "\n".join(
@@ -45,6 +51,7 @@ def buscar_receta(ingrediente: str) -> str:
 @mcp.tool()
 def gestionar_lista_compra(accion: str, item: str = "") -> str:
     """Gestiona la lista de la compra. Acciones: ver, añadir, quitar, vaciar."""
+    # 🌍 `global` permite modificar la lista compartida definida fuera de la función.
     global lista_compra
 
     if accion == "ver":
@@ -74,6 +81,7 @@ def gestionar_lista_compra(accion: str, item: str = "") -> str:
 @mcp.tool()
 def convertir_unidades(valor: float, de: str, a: str) -> str:
     """Convierte entre unidades: km/mi, kg/lb, °C/°F, eur/usd."""
+    # 🧮 Cada clave representa un par origen-destino y su fórmula de conversión.
     conversiones = {
         ("km", "mi"): lambda v: v * 0.621371,
         ("mi", "km"): lambda v: v / 0.621371,
@@ -84,6 +92,7 @@ def convertir_unidades(valor: float, de: str, a: str) -> str:
         ("eur", "usd"): lambda v: v * 1.08,
         ("usd", "eur"): lambda v: v / 1.08,
     }
+    # 🔑 Convertimos las unidades a minúsculas para construir una clave homogénea.
     key = (de.lower(), a.lower())
     if key in conversiones:
         resultado = conversiones[key](valor)
@@ -92,7 +101,8 @@ def convertir_unidades(valor: float, de: str, a: str) -> str:
     return f"Conversión no soportada. Disponibles: {unidades}"
 
 
-# ── Resources: datos que el LLM puede leer como contexto ──────────────────
+# 📖 Resources: información de solo lectura que el modelo puede consultar.
+# A diferencia de las tools, aquí no ejecutamos acciones; solo aportamos contexto.
 
 
 @mcp.resource("recetas://favoritas")
@@ -130,7 +140,8 @@ def tips_conservacion() -> str:
 """
 
 
-# ── Arranque ───────────────────────────────────────────────────────────────
+# 🚀 Punto de entrada del servidor.
+# Se expone por HTTP en local para que otros clientes MCP puedan conectarse.
 
 if __name__ == "__main__":
     print("🚀 MCP Asistente Personal arrancando en http://localhost:8000/mcp")

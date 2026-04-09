@@ -12,19 +12,18 @@
 
 import os
 import asyncio
-from agent_framework import Agent, MCPStreamableHTTPTool
+from agent_framework import Agent, AgentSession, MCPStreamableHTTPTool
 from agent_framework.openai import OpenAIChatClient
 from dotenv import load_dotenv
 from rich.console import Console
-from rich.markdown import Markdown
 
 load_dotenv()
 console = Console()
 
+LLM_PROVIDER = os.getenv("LLM_PROVIDER")
 LLM_MODEL = os.getenv("LLM_MODEL")
-LL_ENDPOINT = os.getenv("LL_ENDPOINT")
+LLM_ENDPOINT = os.getenv("LLM_ENDPOINT")
 LLM_API_KEY = os.getenv("LLM_API_KEY")
-
 MCP_SERVER_URL = "http://localhost:8000/mcp"
 
 
@@ -36,7 +35,7 @@ async def main():
         ) as mcp_server,
         Agent(
             client=OpenAIChatClient(
-                base_url=LL_ENDPOINT,
+                base_url=LLM_ENDPOINT,
                 api_key=LLM_API_KEY,
                 model_id=LLM_MODEL,
             ),
@@ -51,12 +50,36 @@ async def main():
             "Ah, y dime cuántas libras son 2 kg de pollo."
         )
 
+        session = AgentSession()
+
         console.print(f"🔌 Conectado al MCP Server en {MCP_SERVER_URL}")
-        console.print(f"💬 [bold]{prompt}[/bold]\n")
 
-        response = await agent.run(prompt)
+        console.print("Escribe una pregunta para el agente o 'salir' para terminar.\n")
 
-        console.print(Markdown(str(response)))
+        while True:
+            # 💬 Leemos la pregunta del usuario desde consola para enviársela al agente.
+            prompt = input("Tu pregunta: ").strip()
+
+            if not prompt:
+                continue
+
+            # 🚪 Permitimos varias palabras habituales para salir cómodamente del programa.
+            if prompt.lower() in {"salir", "exit", "quit"}:
+                break
+
+            # 📡 `stream=True` hace que la respuesta llegue por fragmentos, como en un chat en tiempo real.
+            response = agent.run(
+                prompt,
+                stream=True,
+                session=session,  # Reutilizamos la misma sesión para mantener contexto entre preguntas.
+            )
+
+            async for chunk in response:
+                # 🧱 Cada fragmento puede contener parte del texto generado; lo mostramos según llega.
+                if chunk.text:
+                    console.print(chunk.text, end="")
+
+            console.print()
 
 
 if __name__ == "__main__":
