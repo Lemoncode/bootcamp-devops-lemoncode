@@ -2,42 +2,26 @@
 
 body {
     font-family: system-ui, -apple-system, sans-serif;
-    background: #0f0f23;
+    background: linear-gradient(135deg, #0c4a6e, #0e7490, #f43f5e88);
     color: #e2e8f0;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 header {
     text-align: center;
     padding: 2rem 1rem;
-    background: linear-gradient(135deg, #1a1a3e, #2d1b69);
-    border-bottom: 2px solid #4c1d95;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
 }
 
 header h1 { font-size: 2rem; }
-header p { color: #a78bfa; margin-top: 0.5rem; }
+header p { color: #7dd3fc; margin-top: 0.5rem; }
 
-.filters {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1.5rem 1rem;
-    flex-wrap: wrap;
-}
-
-.filters button {
-    padding: 0.5rem 1rem;
-    border: 1px solid #4c1d95;
-    border-radius: 2rem;
-    background: transparent;
-    color: #c4b5fd;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: all 0.2s;
-}
-
-.filters button:hover,
-.filters button.active {
-    background: #4c1d95;
-    color: #fff;
+vacation-game {
+    flex: 1;
+    width: 100%;
 }
