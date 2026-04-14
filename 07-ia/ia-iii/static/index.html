@@ -7,14 +7,42 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>✈️ Vacation Swipe</h1>
-        <p>¿Dónde te vas de vacaciones? Desliza y descúbrelo</p>
-    </header>
+    <nav class="navbar">
+        <a class="nav-logo" href="#jugar">✈️ Vacation Swipe</a>
 
-    <vacation-game></vacation-game>
+        <button class="nav-hamburger" aria-label="Menú">☰</button>
+
+        <div class="nav-items">
+            <a class="nav-item active" data-route="jugar" href="#jugar">🎮 Jugar</a>
+            <a class="nav-item" data-route="destinos" href="#destinos">🌍 Destinos</a>
+            <a class="nav-item" data-route="mis-destinos" href="#mis-destinos">📁 Mis destinos</a>
+            <a class="nav-item" data-route="crear" href="#crear">➕ Crear</a>
+            <a class="nav-item" data-route="estadisticas" href="#estadisticas">📊 Estadísticas</a>
+            <a class="nav-item" data-route="admin" href="#admin">⚙️ Admin</a>
+        </div>
+
+        <div class="nav-actions">
+            <button class="nav-action" aria-label="Buscar">🔍</button>
+            <button class="nav-action" aria-label="Notificaciones">🔔</button>
+            <button class="nav-action" aria-label="Perfil">👤</button>
+        </div>
+    </nav>
+
+    <app-router></app-router>
 
     <script src="components/destination-card.js"></script>
     <script src="components/vacation-game.js"></script>
+    <script src="components/placeholder-view.js"></script>
+    <script src="components/app-router.js"></script>
+    <script>
+        document.querySelector('.nav-hamburger').addEventListener('click', () => {
+            document.querySelector('.nav-items').classList.toggle('open');
+        });
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelector('.nav-items').classList.remove('open');
+            });
+        });
+    </script>
 </body>
 </html>

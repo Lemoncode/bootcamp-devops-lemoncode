@@ -10,16 +10,131 @@ body {
     align-items: center;
 }
 
-header {
-    text-align: center;
-    padding: 2rem 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+/* ── Navbar ── */
+.navbar {
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+    height: 3.5rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-header h1 { font-size: 2rem; }
-header p { color: #7dd3fc; margin-top: 0.5rem; }
+.nav-logo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: 1rem;
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.nav-items::-webkit-scrollbar { display: none; }
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.85rem;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+    position: relative;
+}
+
+.nav-item:hover {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-item.active {
+    color: #38bdf8;
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+.nav-action {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.55rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color 0.2s, background 0.2s;
+}
+.nav-action:hover {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: #e2e8f0;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 0.75rem 1rem;
+    }
+    .nav-hamburger { display: block; }
+    .nav-items {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.15rem;
+        padding: 0.5rem 0;
+    }
+    .nav-items.open { display: flex; }
+    .nav-item {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border-radius: 0.5rem;
+    }
+    .nav-actions { display: none; }
+    .nav-items.open ~ .nav-actions { display: flex; }
+}
+
+/* ── Main content ── */
+app-router {
+    flex: 1;
+    width: 100%;
+}
 
 vacation-game {
     flex: 1;
