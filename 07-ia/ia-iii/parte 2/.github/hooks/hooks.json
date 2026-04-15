@@ -1,0 +1,11 @@
+// {
+//     "hooks": {
+//         "PostToolUse": [
+//             {
+//                 "type": "command",
+//                 // "command": "npx prettier -y --write \"$TOOL_INPUT_FILE_PATH\""
+//                 // "command": "./scripts/format-changed-files.sh"
+//             }
+//         ]
+//     }
+// }
