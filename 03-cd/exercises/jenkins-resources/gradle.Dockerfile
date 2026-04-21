@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
@@ -6,7 +6,7 @@ USER root
 RUN apt update
 
 # Gradle version
-ARG GRADLE_VERSION=6.6.1
+ARG GRADLE_VERSION=7.6.6
 
 # Define the URL where gradle can be downloaded
 ARG GRADLE_BASE_URL=https://services.gradle.org/distributions
@@ -25,6 +25,6 @@ RUN mkdir -p /usr/share/gradle /usr/share/gradle/ref \
   && echo "Clenaing and setting links" && rm -f /tmp/gradle.zip \
   && ln -s /usr/share/gradle/gradle-${GRADLE_VERSION} /usr/bin/gradle
 
-ENV GRADLE_VERSION 6.6.1
+ENV GRADLE_VERSION 7.6.6
 ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
