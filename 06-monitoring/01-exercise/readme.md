@@ -11,7 +11,12 @@
 
 ## 3. Explica el contenido de la carpeta [01-start-up-loki](./01-start-up-loki/)
 
-## 4. Expl
+## 4. Explica la estructura de una traza en Jaeger
+
+- span
+- traza
+- scope 
+- tags
 
 ## 5. Desafíos
 
