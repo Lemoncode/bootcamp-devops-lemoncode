@@ -23,9 +23,11 @@
 ### 5.1 Crea un docker compose para realizar un setup con Prometheus 
 
 - Debe incluir como servicio del docker compose la siguiente [App](https://github.com/JaimeSalas/non-political-map/tree/main/app_map)
-- Instala la librería [cliente de Python]() para extraer métricas por defecto
+- Instala la librería [cliente de Python](https://github.com/prometheus/client_python) para extraer métricas por defecto
 - Genera usn servicio Prometheus que como 'target' tenga la app anterior
 - Verifica que el 'target' es alcanzado por Prometheus
+
+> NOTA: Para instalar la librería seguir los pasos [aquí](https://prometheus.github.io/client_python/exporting/http/fastapi-gunicorn/) detallados
 
 ### 5.2 Desafío Jaeger 
 
