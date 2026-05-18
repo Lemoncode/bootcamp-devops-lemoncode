@@ -195,6 +195,7 @@ Accedemos desde la interfaz clásica de Jenkins http://localhost:8080
 - Añadimos la credencial de tipo Username with password. Usaremos el username de GitHub y como Password pondremos nuestro token. Guardamos.
 - Seleccionamos nuestra credencial.
 - Reemplazamos `master` por `main` en el nombre de la rama.
+- Editamos la ruta del Jenkinsfile a `01-intro/1.3/Jenkinsfile`.
 - Guardamos la pipeline y ejecutamos. Vemos los logs.
 
 Vemos que tenemos un error de que no encuentra los ficheros por no tenerlos en la ruta raíz. Modificamos nuestro Jenkinsfile con una nueva directiva `dir`:
@@ -202,7 +203,7 @@ Vemos que tenemos un error de que no encuentra los ficheros por no tenerlos en l
 ```diff
   stage('stage-1') {
       steps {
-+         dir('01-intro/1.1') {
++         dir('01-intro/1.3') {
               echo "This is the build number $BUILD_NUMBER of demo $DEMO"
               sh '''
                   echo "Using a multi-line shell step"
