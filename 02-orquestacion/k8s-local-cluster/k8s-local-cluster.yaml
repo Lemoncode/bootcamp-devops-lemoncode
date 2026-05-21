@@ -1,0 +1,8 @@
+---
+- import_playbook: 01-containerd.yaml
+- import_playbook: 11-k8s-base.yaml
+- import_playbook: 21-k8s-control_panel_node.yaml
+- import_playbook: 31-k8s-add_worker_nodes.yaml
+- import_playbook: 32-k8s-set_worker_nodes_role.yaml
+- import_playbook: 41-k8s-connect_local_kubectl.yaml
+- import_playbook: 99-clean.yaml

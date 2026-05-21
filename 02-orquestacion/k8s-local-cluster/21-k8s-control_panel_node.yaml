@@ -1,0 +1,110 @@
+---
+
+- hosts: controller
+  vars: 
+  - _subnet: 192.168.0.0/16
+  
+  tasks:
+  - name: Read parameters
+    include_vars:
+      name: _params
+      file: .deploy.json
+
+  - name: Setup Network policy with Calico
+    block:
+    - name: Get default Network policy config file
+      get_url: 
+        url: https://docs.projectcalico.org/manifests/calico.yaml
+        dest: ./calico.yaml
+        force: yes
+
+    - name: Configure Network policy
+      vars: 
+      - substitutions:
+        - regexp: "# - name: CALICO_IPV4POOL_CIDR"
+          line: "            - name: CALICO_IPV4POOL_CIDR"
+        - regexp: "#   value: \"192.168.0.0/16\""
+          line: "              value: \"192.168.0.0/16\""
+      lineinfile:
+        path: calico.yaml
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        backup: yes
+      with_items: 
+      - "{{ substitutions }}"
+
+  - name: Configure K8s
+    block:
+    - name: Generate default config
+      shell: kubeadm config print init-defaults > ClusterConfiguration.yaml
+    - name: Configure k8s for cotainerd
+      vars: 
+      - substitutions:
+        - regexp: "advertiseAddress"
+          line: "  advertiseAddress: {{ _params.net.controller.ip }}"
+        - regexp: "criSocket"
+          line: "  criSocket: unix:///run/containerd/containerd.sock"
+        - regexp: "name"
+          line: "  name: {{ _params.project.name }}-cp1"
+        - regexp: "kubernetesVersion"
+          line: "kubernetesVersion: {{ _params.k8s.version }}"
+        - regexp: "kubernetesVersion"
+          line: "kubernetesVersion: {{ _params.k8s.version }}"
+      lineinfile:
+        path: ClusterConfiguration.yaml
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        backup: yes
+      with_items: 
+      - "{{ substitutions }}"
+
+    - name: Configure subnet for pods
+      lineinfile:
+        path: ClusterConfiguration.yaml
+        insertafter: "serviceSubnet"
+        line: "  podSubnet: 192.168.0.0/16"
+        state: present
+        backup: yes
+
+    - name: Add KubeletConfiguration
+      lineinfile:
+        path: ClusterConfiguration.yaml
+        insertafter: EOF
+        line: "---\napiVersion: kubelet.config.k8s.io/v1beta1\nkind: KubeletConfiguration\ncgroupDriver: systemd\n"
+
+  - name: Initialize cluster
+    become: yes
+    block:
+    - name: Initialize kubeadm
+      shell: kubeadm init --config ClusterConfiguration.yaml
+    - name: create .kube directory
+      file:
+        path: /home/vagrant/.kube
+        state: directory
+        mode: 0755
+    - name: Check admin.conf file exists.
+      stat:
+        path: /etc/kubernetes/admin.conf
+      register: k8s_conf
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/vagrant/.kube/config
+        remote_src: yes
+        owner: vagrant
+      when: k8s_conf.stat.exists
+
+  - name: Create a Pod Network
+    shell: kubectl apply -f calico.yaml
+
+  - name: Obtain CA cert hash
+    block:
+    - name: Generate CA cert Hash
+      command: kubeadm token create --print-join-command
+      register: join_command
+    - name: Save it in local file
+      local_action: copy content="{{ join_command.stdout_lines[0] }}" dest=.join_command
+
+    

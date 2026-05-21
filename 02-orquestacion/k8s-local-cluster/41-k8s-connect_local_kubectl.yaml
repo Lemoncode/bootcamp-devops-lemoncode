@@ -1,0 +1,8 @@
+---
+- hosts: controller
+  tasks: 
+  - name: Copy Kubernetes config to local folder
+    fetch: 
+      src: .kube/config
+      dest: .kubeconfig
+      flat: yes

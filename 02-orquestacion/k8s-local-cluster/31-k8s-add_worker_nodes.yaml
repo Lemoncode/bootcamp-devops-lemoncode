@@ -1,0 +1,11 @@
+---
+
+- hosts: workers
+  vars: 
+  - _cmd: "{{ lookup('file', '.join_command') }}"
+
+  tasks: 
+  - name: Add node to Kubernetes cluster
+    become: yes
+    shell: "{{ _cmd }}"
+

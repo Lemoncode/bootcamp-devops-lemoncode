@@ -1,0 +1,72 @@
+---
+
+- hosts: all
+  become: true
+  tasks: 
+  - name: Add the overlay module
+    modprobe:
+      name: overlay
+      state: present
+  - name: Add the br_netfilter module
+    modprobe:
+      name: br_netfilter
+      state: present
+  - name: Load modules on system boot
+    copy:
+      dest: "/etc/modules-load.d/containerd.conf"
+      content: |
+        overlay
+        br_netfilter
+  - name: Configure sysctl parameters
+    copy:
+      dest: "/etc/sysctl.d/99-kubernetes-cri.conf"
+      content: |
+        net.bridge.bridge-nf-call-iptables  = 1
+        net.ipv4.ip_forward                 = 1
+        net.bridge.bridge-nf-call-ip6tables = 1
+  - name: "sysctl: set net.bridge.bridge-nf-call-iptables to 1"
+    sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: 1
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: "sysctl: set net.ipv4.ip_forward to 1"
+    sysctl:
+      name: net.ipv4.ip_forward
+      value: 1
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: "sysctl: set net.bridge.bridge-nf-call-ip6tables to 1"
+    sysctl:
+      name: net.bridge.bridge-nf-call-ip6tables
+      value: 1
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: Install containerd
+    apt:
+      name: containerd
+      state: latest
+      update_cache: yes
+  - name: Configure containerd
+    block: 
+    - name: Create config directory
+      file:
+        path: /etc/containerd
+        state: directory
+    - name: Create default containerd config file
+      shell: |
+        containerd config default | tee /etc/containerd/config.toml
+    - name: Configure Containerd to use the cgroup of systemd
+      lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: "SystemdCgroup = false"
+        line: "SystemdCgroup = true"
+        state: present
+        backup: yes
+    - name: Start containerd service
+      systemd:
+        name: containerd
+        state: restarted

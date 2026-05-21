@@ -1,0 +1,15 @@
+---
+
+- hosts: 127.0.0.1
+  tasks: 
+  - name: Clean temporary files
+    block:
+    - name: Delete temporary local files
+      vars: 
+      - files_to_delete: 
+        - .join_command
+      local_action: 
+        module: file
+        path: "{{ item }}"
+        state: absent
+      with_items: "{{ files_to_delete }}"
