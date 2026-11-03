@@ -30,13 +30,29 @@ Cortamos el contenido en `network.tf`
 -   subnet_id              = aws_subnet.subnet1.id
 -   vpc_security_group_ids = [aws_security_group.nginx-sg.id]
 -
--   user_data = <<EOF
-- #! /bin/bash
-- sudo amazon-linux-extras install -y nginx1
-- sudo service nginx start
-- sudo rm /usr/share/nginx/html/index.html
-- echo '<html><head><title>Lemon Land Server</title></head><body style=\"background-color:#1F778D\"><p style=\"text-align: center;\"><span style=\"color:#FFFFFF;\"><span style=\"font-size:28px;\">Welcome to &#127819; land</span></span></p></body></html>' | sudo tee /usr/share/nginx/html/index.html
-- EOF
+-   user_data                   = <<-EOF
+-             #!/bin/bash
+-             # Update package lists
+-             yum update -y
+-             # Install NGINX from Amazon Linux Extras
+-             amazon-linux-extras install -y nginx1
+-
+-             # Create custom landing page before starting the service
+-             cat <<'HTML' > /usr/share/nginx/html/index.html
+-             <!DOCTYPE html>
+-             <html>
+-             <head><title>Lemon Land Server</title></head>
+-             <body style="background-color:#1F778D;">
+-               <p style="text-align: center;">
+-                 <span style="color:#FFFFFF; font-size:28px;">You did it! Have a &#127790;</span>
+-               </p>
+-             </body>
+-             </html>
+-             HTML
+-
+-             # Enable and start NGINX
+-             systemctl enable --now nginx
+-             EOF
 -
 -   tags = local.common_tags
 -
@@ -48,22 +64,39 @@ Y lo añadimos a `instances.tf`
 ```ini
 # INSTANCES #
 resource "aws_instance" "nginx1" {
-  ami                    = nonsensitive(data.aws_ssm_parameter.ami.value)
-  instance_type          = var.aws_instance_type
-  subnet_id              = aws_subnet.subnet1.id
-  vpc_security_group_ids = [aws_security_group.nginx-sg.id]
+  ami                         = nonsensitive(data.aws_ssm_parameter.ami.value)
+  instance_type               = var.aws_instance_type
+  subnet_id                   = aws_subnet.subnet1.id
+  vpc_security_group_ids      = [aws_security_group.nginx-sg.id]
+  
+  user_data                   = <<-EOF
+              #!/bin/bash
+              # Update package lists
+              yum update -y
 
-  user_data = <<EOF
-#! /bin/bash
-sudo amazon-linux-extras install -y nginx1
-sudo service nginx start
-sudo rm /usr/share/nginx/html/index.html
-echo '<html><head><title>Lemon Land Server</title></head><body style=\"background-color:#1F778D\"><p style=\"text-align: center;\"><span style=\"color:#FFFFFF;\"><span style=\"font-size:28px;\">Welcome to &#127819; land</span></span></p></body></html>' | sudo tee /usr/share/nginx/html/index.html
-EOF
+              # Install NGINX from Amazon Linux Extras
+              amazon-linux-extras install -y nginx1
 
+              # Create custom landing page before starting the service
+              cat <<'HTML' > /usr/share/nginx/html/index.html
+              <!DOCTYPE html>
+              <html>
+              <head><title>Lemon Land Server</title></head>
+              <body style="background-color:#1F778D;">
+                <p style="text-align: center;">
+                  <span style="color:#FFFFFF; font-size:28px;">You did it! Have a &#127790;</span>
+                </p>
+              </body>
+              </html>
+              HTML
+
+              # Enable and start NGINX
+              systemctl enable --now nginx
+              EOF
+  
   tags = local.common_tags
-
 }
+
 ```
 
 ### Paso 3. Nos preparamos para añadir los recursos del balanceo de carga 
